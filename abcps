@@ -1,0 +1,20 @@
+#!/usr/bin/env js24
+// abc2svg with js24 (Mozilla JavaScript shell - Spidermonkey)
+// and PostScript support
+
+function readFile(fname) {
+	return read(fname)
+}
+
+load("abcps2svg-1.js")
+load("cmdline.js")
+load("toxhtml.js")
+
+// main
+    var	args = scriptArgs
+	if (!args[0])
+		print("abcps-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
+			"	ABC to SVG translator with PostScript\n" +
+			"	Usage: abcps [options] ABC_file");
+	else
+		abc_cmd("abcps", args)

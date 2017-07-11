@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link href="edit-@MAJOR@.css" rel="stylesheet" type="text/css"/>
+<script src="edit-@MAJOR@.js" type="text/javascript" async="true"></script>
+<script src="@JS@" type="text/javascript" async="true"></script>
+<title>ABC edit with abc2svg@PS@</title>
+
+</head>
+<body ontouchstart="">
+
+<!-- left -->
+<div id="dleft">
+
+<!-- menu bar -->
+<nav>
+    <ul class="navul">
+	<li class="dropbutton"><label id="f">File</label>
+		<ul class="droplinks">
+		    <li><input type="file" id="abcfile" accept="text/*"
+				style="display:none" onchange="loadtune()"/>
+			<label id="fl" for="abcfile">Load file</label>
+		    </li>
+		    <li><label id="saveas">Save file</label></li>
+		</ul>
+	</li>
+	<li class="dropbutton"><label id="pr">Preferences</label>
+		<ul class="droplinks">
+			<li><label id="fs">Font size</label>
+			    <input type="number" id="fontsize"
+				 min="10" max="20" value="14" onchange="setfont()"/>
+			</li>
+			<li id="playdiv1" style="display: none">
+				<label id="sful">Sound font URL</label>
+				 <input id="sfu" type="text" maxlength="120"
+					size="50"
+					onchange="abcplay.set_sfu(this.value)"/>
+				<label id="sftl">type</label>
+				 <select id="sft"
+					onchange="abcplay.set_sft(['js', 'mp3'][this.selectedIndex])">
+					<option>js</option>
+					<option>mp3</option>
+				 </select>
+			</li>
+			<li id="playdiv2" style="display: none">
+				<label id="fo">Follow music</label>
+				 <input id="fol" type="checkbox" value="false"
+					onchange="abcplay.set_follow(this.value)"/>
+			</li>
+			<li id="playdiv3" style="display: none">
+				<label id="gv">Volume</label>
+				 <input id="gvol" type="range" min="1" max="10" value="7"
+					onchange="abcplay.set_vol(this.value / 10)"/>
+			</li>
+		</ul>
+	</li>
+	<li class="dropbutton"><label id="lg">Language</label>
+		<ul class="droplinks">
+			<li onclick="loadlang('en')">
+				English
+			</li>
+			<li onclick="loadlang('fr')">
+				Français
+			</li>
+			<li onclick="loadlang('de')">
+				Deutsch
+			</li>
+			<li onclick="loadlang('pt_BR')">
+				Português do Brasil
+			</li>
+		</ul>
+	</li>
+	<li class="dropbutton" id="playbutton" style="display: none">Play</li>
+	<li class="dropbutton"><label id="h">Help</label>
+		<ul class="droplinks">
+			<li id="ha" onclick="popshow('help', true)">Help</li>
+			<li>
+   <a id="df" target="_blank" href="../abcm2ps-doc/features.xhtml">abc2svg features</a>
+			</li>
+			<li>
+   <a id="dp" target="_blank" href="../abcm2ps-doc/index.xhtml">abc2svg parameters</a>
+			</li>
+			<li id="a" onclick="popshow('about', true)">About</li>
+		</ul>
+	</li>
+    </ul>
+</nav>
+<br/>
+
+<!-- buttons -->
+<p>
+<label id="b">ABC files:</label>
+<input id="s0" type="button" style="display: inline; background-color: #80ff80"
+	value="(noname)"/>
+<input id="s1" type="button" style="display: none; background-color: #ffd0d0"
+	value=""/>
+<div id="er" onclick="popshow('errlist', true)"
+ style="display: none; background: #ff8080">Errors</div>
+
+<!-- ABC source in textarea (main and include) -->
+</p>
+<textarea id="source" rows="40" cols="73"
+	style="font: 14px monospace"
+	onselect="seltxt(this)"
+	ondrop="dropped(event)" ondragenter="drag_over(event)"
+	ondragover="drag_over(event)"
+	oninput="src_change()"></textarea>
+<textarea id="src1" rows="40" cols="73"
+	style="font: 14px monospace; display: none"
+	oninput="src_change()"></textarea>
+</div>
+
+<!-- right - needed for the scrollbars -->
+<div id="dright">
+
+<!-- rendering area -->
+<div id="target">
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xml:space="preserve"
+	width="8.3in" height="2in" viewBox="0 0 595 144">
+<title>(void)</title>
+<text x="250" y="100" font-family="serif" font-size="12">(void)</text>
+</svg>
+</div>
+</div>
+
+<!-- error popup window -->
+<div id="errlist" class="popup" style="width: 500px">
+<div class="close" onclick="popshow('errlist')">x</div>
+<div id="diverr">
+</div>
+</div>
+
+<!-- help popup window -->
+<div id="help" class="popup" style="width: 550px">
+<div class="close" onclick="popshow('help')">x</div>
+<ul id="hlp">
+<li>You may either:
+    <ul>
+	<li>directly write ABC code in the text area, or</li>
+	<li>paste ABC code in the text area, or</li>
+	<li>load a local ABC file ('Load a ABC file' button), or</li>
+	<li>drag &amp; drop a local file from your file manager
+		or a selected text to the text area.</li>
+    </ul></li>
+<li>You may change at will the ABC code in the text area.<br/>
+	Rendering is done 2 seconds later.</li>
+<li>The 'Print' button of the browser outputs the rendering area.</li>
+</ul>
+</div>
+
+<!-- about popup window -->
+<div id="about" class="popup" style="width: 350px">
+<div class="close" onclick="popshow('about')">x</div>
+<p id="abc2svg">abc2svg</p>
+<p>Copyright &#x00A9; 2016-2017 Jean-François Moine</p>
+</div>
+
+</body>
+</html>

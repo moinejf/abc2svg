@@ -1,0 +1,88 @@
+/* edit.css - file used in the abc2svg editor */
+@page {margin-top: 1cm; margin-left: 0cm; margin-right: 0cm}
+text tspan {white-space:pre; fill:currentColor}
+svg {display:block}
+.abcr {fill: #d00000; fill-opacity: 0; z-index: 15}
+@media screen {
+	body, html {height: 90%}
+	text, path {pointer-events: none}
+	#dleft {
+		width: auto;
+		position: absolute; top: 0; bottom:0; left: 0;
+		background-color:#faf0e6;
+		z-index: 2;
+		overflow: auto;
+	}
+	.navul {
+		position:relative;
+		padding: 0;
+		margin: 2px 0 0 2px;
+	}
+	.dropbutton {
+		float: left;
+		display:inline-block;
+		width: 90px;
+		text-align: center;
+	}
+	.dropbutton:hover {
+		outline: solid; outline-width: 2px;
+	}
+	.dropbutton:hover > ul {
+		display: block;
+	}
+	.droplinks {
+		list-style-type: none;
+		position: absolute;
+		min-width: 90px;
+		background-color: #e0e0e0;
+		display: none;
+		z-index: 20;
+		text-align: left;
+		padding-left: 0;
+		margin: 0;
+	}
+	.droplinks li:hover {
+		outline: solid; outline-width: 2px;
+	}
+	.droplinks li {
+		padding: 0;
+		margin: 0;
+	}
+	#dright {
+		width: 80%;
+		max-width: 800px;
+		position: absolute; top: 0; bottom:0; right:0;
+		background-color: white;
+		overflow: auto
+	}
+	#dright:hover {z-index: 10 !important}
+	#dright:active {z-index: 10 !important}
+	.popup {
+		position: absolute; top: 0; right: 20px;
+		padding: 10px;
+		background-color:#e0e0e0;
+		border-radius: 5px;
+		visibility: hidden;
+		z-index:20;
+	}
+	.close {
+		position: absolute;
+		top: 10px;
+		right: 20px;
+		font-size: 20px;
+		font-weight: bold;
+		color: red;
+	}
+}
+@media print {
+	#dleft, .popup {
+		display: none;
+	}
+	body {
+		margin:0; padding:0; border:0;
+		background-color: white;
+	}
+	#dright { margin:0; padding:0; border:0; }
+	.newpage { page-break-before: always }
+	.nobrk { page-break-inside: avoid }
+}

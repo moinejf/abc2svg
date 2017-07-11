@@ -1,0 +1,34 @@
+#!/bin/sh
+# abc2svg with d8 (libv8 Google)
+progdir=`dirname $0`
+
+exec d8 -e "var args='$*', progdir='${progdir}/'
+function readFile(fname) {
+	return read(fname)
+}
+
+load(progdir + 'abc2svg-1.js');
+load(progdir + 'cmdline.js')
+
+// main
+	args = args.split(/\s+/)
+	if (args[0] && args[0].match(/\.js$/)) {
+		load(args[0])
+		args.shift()
+	} else {
+		load(progdir + 'toxhtml.js')
+	}
+	if (!args[0]) {
+		print('ABC translator with d8 (Google v8 shell)\
+ and abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
+Usage:\n\
+  abcv8 [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
+Arguments:\n\
+  script.js  script to load - default: tosvg.js (SVG generation)\n\
+  g_options  global ABC options\n\
+  ABC_file   ABC file\n\
+  f_options  file options')
+		quit()
+	}
+	abc_cmd('abcv8', args)
+"

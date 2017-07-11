@@ -1,0 +1,50 @@
+#!/bin/sh
+# abc2svg with jsc-1 (webkitgtk2)
+progdir=`dirname $0`
+
+exec jsc-1 -e "var progdir='${progdir}/'
+
+// function to do utf-8 work...
+// uncommenting this function asks for also uncommenting its call in cmdline.js
+//function utf_convert(fin) {
+//	var	b1, b2,
+//		fout = ''
+//	for (var i = 0; i < fin.length; i++) {
+//		b1 = fin.charCodeAt(i)
+//		if (b1 >= 128) {
+//			b2 = fin.charCodeAt(++i);
+//			fout += String.fromCharCode(((b1 & 0x3f) << 6) + (b2 & 0x7f))
+//		} else {
+//			fout += fin[i]
+//		}
+//	}
+//	return fout
+//}
+
+load(progdir + 'abc2svg-1.js')
+load(progdir + 'cmdline.js')
+
+function main(args) {
+	if (args[0] && args[0].match(/\.js$/)) {
+		load(args[0])
+		args.shift()
+	} else {
+		load(progdir + 'toxhtml.js')
+	}
+	if (!args[0]) {
+		print('ABC translator with jsc-1 (webkitgtk2)\
+ and abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
+Usage:\n\
+  abcjsc [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
+Arguments:\n\
+  script.js  script to load - default: toxhtml.js (XHTML+SVG generation)\n\
+  g_options  global ABC options\n\
+  ABC_file   ABC file\n\
+  f_options  file options')
+		quit()
+	}
+	abc_cmd('abcjsc', args)
+}
+
+main(arguments)
+" -- "$@"

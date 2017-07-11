@@ -1,0 +1,41 @@
+#!/bin/sh
+
+cat abc2svg-1.js cmdline.js > /tmp/toto.js
+case $1 in
+	*.js)
+		cat $1 >> /tmp/toto.js
+		shift
+		;;
+	*)
+		cat toxhtml.js >> /tmp/toto.js
+		;;
+esac
+cat <<EOF >> /tmp/toto.js
+var fs = require("fs")
+
+function print(str) {
+	console.log(str)
+}
+
+function readFile(fname) {
+	return fs.readFileSync(fname).toString()
+}
+
+function quit() {
+	process.exit(1)
+}
+
+// main
+	var args = process.argv
+	if (!args[2]) {
+		print("abcnode-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
+			"	ABC to SVG translator\n" +
+			"	Usage: abcnode [options] ABC_file");
+		exit(1)
+	}
+	args.shift()
+	args.shift()
+	abc_cmd("abcnode", args)
+EOF
+
+node /tmp/toto.js "$@"

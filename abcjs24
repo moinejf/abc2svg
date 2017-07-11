@@ -1,0 +1,34 @@
+#!/usr/bin/env js24
+// abc2svg with js24 (Mozilla JavaScript shell - Spidermonkey
+//		packages: debian: libmozjs-24-bin, voidlinux: mozjs24)
+
+function readFile(fname) {
+	return read(fname)
+}
+loadRelativeToScript("abc2svg-1.js")
+loadRelativeToScript("cmdline.js")
+
+// main
+	var	args = scriptArgs
+
+	if (args[0] && args[0].match(/\.js$/)) {
+		load(args[0])
+		args.shift()
+	}
+	if (typeof abc_init != 'function')
+		loadRelativeToScript("toxhtml.js")
+	if (!args[0]) {
+		printErr('ABC translator with js24 (SpiderMonkey)\
+ and abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
+Usage:\n\
+  abcjs24 [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
+Arguments:\n\
+  script.js  generation script to load - default: toxhtml.js (XHTML+SVG)\n\
+  g_options  global ABC options\n\
+  ABC_file   ABC file\n\
+  f_options  file options')
+		quit()
+	}
+	abc_cmd("abcjs24", args)
+// check the lack of 'var'
+//for (var i in this) {printErr(i)}

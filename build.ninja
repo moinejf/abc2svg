@@ -1,0 +1,75 @@
+# rules for ninja (ninja-build)
+
+MAJOR=1
+MINOR=13
+PATCH=0
+VERSION=$MAJOR.$MINOR.$PATCH
+
+rule cp
+  command = cp $in $out
+
+rule font
+  command = echo "// abc2svg music font" > font.js;$
+   echo -n "var musicfont = 'url(\"data:application/font-woff;base64," >> font.js;$
+   base64 -w 0 abc2svg.woff >> font.js;$
+   echo "\")'" >> font.js
+
+rule font-gen
+  command = fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.woff")'
+
+rule jsc
+  command = cp core/license $out;$
+   echo '"use strict"' >> $out;$
+   date +'const abc2svg={version:"$VERSION",vdate:"%F"}' >> $out;$
+   cat $in | uglifyjs - >> $out
+# uglifyjs options
+#	-c 'evaluate,join_vars'
+
+rule jscu
+  command = cp core/license $out;$
+   date +'// $out for abc2svg-$VERSION (%F)' >> $out;$
+   cat $in | uglifyjs - >> $out
+
+rule edit
+  command = sed "$
+s+@JS@+abc2svg-$MAJOR.js+;$
+s+@MAJOR@+$MAJOR+;$
+s+@PS@++$
+" editor/edit.xhtml > edit-$MAJOR.xhtml;$
+   sed "$
+s+@JS@+abcps2svg-$MAJOR.js+;$
+s+@MAJOR@+$MAJOR+;$
+s+@PS@+ with PostScript+$
+" editor/edit.xhtml > psedit-$MAJOR.xhtml;$
+   sed "$
+s+@MAJOR@+$MAJOR+$
+" editor/edit.js | uglifyjs - > edit-$MAJOR.js
+
+build abc2svg.woff: font-gen | font/abc2svg.sfd
+build font.js: font | abc2svg.woff
+
+build abc2svg-$MAJOR.js: jsc core/head.js core/abc2svg.js core/deco.js core/draw.js $
+ font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
+ core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js
+
+build abcps2svg-$MAJOR.js: jsc core/head.js core/abc2svg.js core/deco.js core/draw.js $
+ font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
+ core/svg.js core/tune.js core/lyrics.js core/gchord.js $
+ core/wps.js core/psvg.js core/pstail.js
+
+build edit-$MAJOR.css: cp editor/edit.css
+
+build abcdoc-$MAJOR.js: jscu util/abcdoc.js
+build abcemb-$MAJOR.js: jscu util/abcemb.js
+build json-$MAJOR.js: jscu util/json.js
+build midi-$MAJOR.js: jscu util/midi.js
+build play-$MAJOR.js: jscu util/play.js
+
+build edit-$MAJOR.xhtml psedit-$MAJOR.xhtml edit-$MAJOR.js: edit $
+ editor/edit.xhtml editor/edit.js
+
+build all: phony abc2svg-$MAJOR.js abcps2svg-$MAJOR.js abcdoc-$MAJOR.js $
+ abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js play-$MAJOR.js $
+ edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml psedit-$MAJOR.xhtml
+
+default all

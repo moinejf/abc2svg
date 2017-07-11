@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<style type="text/css">
+	svg {display:block}
+</style>
+<title>abc2svg interface 1</title>
+</head>
+<body bgcolor="#faf0e6">
+
+<h2>abc2svg interface 1</h2>
+
+<p>
+This document describes the interface of the abc2svg core
+version <code>1</code> (abc2svg-1.js).
+</p>
+
+<h3>Initialization</h3>
+<p>
+The abc2svg core may be included in html/xhtml documents by:
+<pre>&lt;script src="http://moinejf.free.fr/js/abc2svg-1.js" type="text/javascript"&gt;&lt;/script&gt;</pre>
+</p>
+<p>
+Before any first or new ABC to SVG translation, an instance of the class
+<code>Abc</code> must be created:
+<pre>	var abc = new Abc(user)</pre>
+</p>
+<p>
+The <code>user</code> argument of this function is a javascript Object which
+must or may contain:
+<dl>
+<dt><b>img_out</b> (optional)</dt>
+	<dd>Callback function which called when a new SVG image has been generated.<br/>
+	This function receives one argument, a string, which is a part of
+	a SVG image.<br/>
+	This function may be absent when no graphic generation is needed
+	as, for example, for playing only.</dd>
+<dt><b>errbld</b> (mandatory if no errmsg)</dt>
+	<dd>Callback function which is called when some error has been found
+	during the ABC parsing or the SVG generation<br/>
+	This function receives 5 arguments:
+	<dl>
+	<dt>severity_level</dt><dd>It may be:
+		<dl>
+		<dd><code>0</code>: warning</dd>
+		<dd><code>1</code>: error</dd>
+		<dd>other value: fatal error</dd>
+		</dl></dd>
+	<dt>message</dt><dd>Text of the error.</dd>
+	<dt>file_name</dt><dd>The file name may be <code>undefined</code>.</dd>
+	<dt>line_number and column_number</dt>
+		<dd>Position of the error in the ABC source.<br/>
+		This information may not be known in which case
+		line_number is <code>undefined</code>.<br/>
+		The line and column numbers start from 0.</dd>
+	</dl></dd>
+<dt><b>errmsg</b> (mandatory if no errbld)</dt>
+	<dd>Callback function which is called when some error has been found
+	during the ABC parsing or the SVG generation<br/>
+	This function receives 3 arguments:
+	<dl>
+	<dt>message</dt><dd>Text of the error.<br/>
+		Generally, this text includes a reference of the error in the
+		ABC source format:
+		<pre>file_name ":" line_number ":" column_number " " error_message</pre>
+		</dd>
+	<dt>line_number and column_number</dt>
+		<dd>Position of the error in the ABC source, same as the
+		corresponding argument in <code>errbld()</code>.</dd>
+	</dl></dd>
+<dt><b>read_file</b> (mandatory)</dt>
+	<dd>Callback function which is called to read a file.<br/>
+	This function receives one argument, the name of the file as a string.
+	It must return the file content as a string.<br/>
+	It is called when a <code>%%abc-include</code> command has been found
+	in the ABC source.</dd>
+<dt><b>anno_start</b> (optional)</dt>
+	<dd>Callback function for setting ABC references in the SVG images.<br/>
+	This function is called just before the generation of a music element.
+	It receives 7 arguments:
+	<dl>
+		<dt>music_type</dt>
+		<dd>It is one of <code>annot</code>, <code>bar</code>, <code>clef</code>,
+			<code>gchord</code>, <code>grace</code>, <code>key</code>,
+			<code>meter</code>, <code>note</code>, <code>part</code>,
+			<code>rest</code>, <code>tempo</code>.</dd>
+		<dt>start_offset</dt>
+			<dd>Offset of the music element in the ABC source.</dd>
+		<dt>stop_offset</dt>
+			<dd>Offset of the end of music element in the ABC source.</dd>
+		<dt>x, y, w, h</dt>
+			<dd>Coordinates of a rectangle which
+				covers the music element.</dd>
+	</dl></dd>
+<dt><b>anno_stop</b> (optional)</dt>
+	<dd>Callback function for setting ABC references in the SVG images.<br/>
+	This function is called just after the generation of a music element.
+	It receives same 7 arguments as the callback function <b>anno_stop</b>.</dd>
+<dt><b>get_abcmodel</b> (optional)</dt>
+	<dd>Callback function to get the internal representation of the music
+	just before SVG generation.<br/>
+	This function receives 4 arguments:
+	<dl>
+		<dt><b>tsfirst</b> (object)</dt>
+			<dd>First musical symbol in the time sequence.<br/>
+				The symbols are double-linked by time by
+				<code>ts_next</code> / <code>ts_prev</code>.<br/>
+				The start of a new sequence is marked by
+					<code>seqst</code>.</dd>
+		<dt><b>voice_tb</b> (array of objects)</dt>
+			<dd>Voice table.<br/>
+				The first symbol of a voice is <code>sym</code>.<br/>
+				The symbols are double-linked in a voice by
+				<code>next</code> / <code>prev</code>.</dd>
+		<dt><b>music_types</b> (array of strings)</dt>
+			<dd>Array giving the symbol type from integer
+				value of the symbol attribute <code>type</code>.</dd>
+		<dt><b>info</b> (object)</dt>
+			<dd>Text of the information fields (T:, M:, Q:, P:...).<br/>
+			A newline ('\n') separates the appended values.</dd>
+	</dl>
+	<p>
+	The returned representation is destroyed by the generation, so, either
+	<ul>
+	<li>use it immediately before returning from the function, or</li>
+	<li>unset the <code>user.img_out</code> function.</li>
+	</ul>
+	</p>
+	</dd>
+<dt><b>imagesize</b> (string)</dt>
+	<dd>Define the SVG image size.<br/>
+	When <code>imagesize</code> is not set, the size of the SVG images
+	is the one of a sheet, as defined by %%paperwidth.<br/>
+	When <code>imagesize</code> is defined, it must contain
+	<code>width="<i>image_width</i>" height="<i>image_height</i>"</code>,
+	<i>image_width</i> and <i>image_height</i> being any value
+	accepted in the &lt;svg&gt; tag.
+	</dd>
+<dt><b>page_format</b> (boolean)</dt>
+	<dd>Group the SVG images into non-page-breakable blocks.<br/>
+	When <code>page_format</code> is not set, the SVG images are generated
+	as text, on the right of the previous markup element (inlined images).<br/>
+	When <code>page_format</code> is set, the images are vertically aligned.
+	</dd>
+</dl>
+</p>
+
+<h3>ABC to SVG translation</h3>
+<p>
+A ABC to SVG translation is done calling the Abc method <code>tosvg</code>:
+<pre>	abc.tosvg(file_name, ABC_source)</pre>
+<dl>
+<dt><code>file_name</code></dt><dd>is the name of the ABC source.
+	It is used for information only in error messages.</dd>
+<dt><code>ABC_source</code></dt><dd>is the ABC source as a (UTF-16) string
+with the <code>'\n' (\u000a)</code> as the end of line marker.</dd>
+</dl>
+</p>
+<p>
+This function may be called many times in which case the values set by
+previous calls are kept.<br/>
+The ABC source must contain full tunes, i.e. a same tune cannot be continued
+by a second call to <code>tosvg</code>.
+</p>
+
+<h3>Exported attributes and methods of the Abc class</h3>
+
+<dl>
+<dt><b>blk_out</b> function to start the output of a block of images</dt>
+<dd>
+<p>
+It is useful in case of fatal error. See blk_flush.
+</p>
+<p>
+This function takes no argument.
+</p>
+</dd>
+
+<dt><b>blk_flush</b> function to terminate a block of images.</dt>
+<dd>
+<p>
+In case of crash during the SVG generation in page_format mode,
+<b>blk_out</b> and <b>blk_flush</b> (in this order) may be called
+in the error callback function to output the last SVG elements.
+</p>
+<p>
+This function takes no argument.
+</p>
+</dd>
+
+<dt><b>out_svg</b> function to add text in the current SVG image</dt>
+<dd>
+<p>
+It may be used only in the callback functions.
+</p>
+<p>
+This function expects one mandatory argument:
+<dl>
+	<dt><b>text</b> (string)</dt><dd>Text to be added.</dd>
+</dl>
+</p>
+</dd>
+
+<dt><b>sx</b> function to convert the x coordinate</dt>
+<dd>
+<p>
+This function expects one mandatory argument:
+<dl>
+	<dt><b>x</b> (number)</dt><dd>Local <code>x</code>.</dd>
+</dl>
+It returns the absolute <code>x</code> coordinate.
+</p>
+</dd>
+
+<dt><b>sy</b> function to convert the y coordinate</dt>
+<dd>
+<p>
+This function expects one mandatory argument:
+<dl>
+	<dt><b>y</b> (number)</dt><dd>Local <code>y</code>.</dd>
+</dl>
+It returns the absolute <code>y</code> coordinate.
+</p>
+</dd>
+
+<dt><b>out_sxsy</b> function to output x,y coordinates</dt>
+<dd>
+<p>
+It may be used only in the callback functions.
+</p>
+<p>
+This function expects 3 mandatory arguments:
+<dl>
+	<dt><b>x</b> (number)</dt><dd>x offset</dd>
+	<dt><b>separator</b> (string)</dt>
+		<dd>text between x and y in the SVG element</dd>
+	<dt><b>y</b> (number)</dt><dd>y offset</dd>
+</dl>
+</p>
+</dd>
+</dl>
+
+<h3>Global variables</h3>
+<p>
+The global variable <code>abc2svg</code> is an object which contains:
+<dl>
+<dt><b>version</b></dt><dd>current version of abc2svg</dd>
+<dt><b>vdate</b></dt><dd>date of the distribution of current version</dd>
+</dl>
+</p>
+</body>
+</html>
