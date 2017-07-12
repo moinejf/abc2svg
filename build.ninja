@@ -20,7 +20,7 @@ rule font-gen
 rule jsc
   command = cp core/license $out;$
    echo '"use strict"' >> $out;$
-   date +'const abc2svg={version:"$VERSION",vdate:"%F"}' >> $out;$
+   date +'var abc2svg={version:"$VERSION",vdate:"%F"}' >> $out;$
    cat $in | uglifyjs - >> $out
 # uglifyjs options
 #	-c 'evaluate,join_vars'

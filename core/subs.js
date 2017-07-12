@@ -21,7 +21,7 @@
 /* these are the widths for Times-Roman, extracted from the 'a2ps' package */
 /*fixme-hack: set 500 to control characters for utf-8*/
 
-const cw_tb = [
+var cw_tb = [
 	.500,.500,.500,.500,.500,.500,.500,.500,	// 00
 	.500,.500,.500,.500,.500,.500,.500,.500,
 	.500,.500,.500,.500,.500,.500,.500,.500,	// 10

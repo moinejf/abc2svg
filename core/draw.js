@@ -18,7 +18,7 @@
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
 // constants
-const	STEM_MIN	= 16,	/* min stem height under beams */
+var	STEM_MIN	= 16,	/* min stem height under beams */
 	STEM_MIN2	= 14,	/* ... for notes with two beams */
 	STEM_MIN3	= 12,	/* ... for notes with three beams */
 	STEM_MIN4	= 10,	/* ... for notes with four beams */
@@ -88,7 +88,7 @@ function sym_dup(s_orig) {
 
 /* -- calculate a beam -- */
 /* (the staves may be defined or not) */
-const min_tb = [
+var min_tb = [
 	[STEM_MIN, STEM_MIN,
 		STEM_MIN2, STEM_MIN3, STEM_MIN4, STEM_MIN4],
 	[STEM_CH_MIN, STEM_CH_MIN,
@@ -811,7 +811,7 @@ function draw_hl(x, yl, yu, st, hltype) {
 }
 
 /* -- draw a key signature -- */
-const	sharp_cl = new Int8Array([24, 9, 15, 21, 6, 12, 18]),
+var	sharp_cl = new Int8Array([24, 9, 15, 21, 6, 12, 18]),
 	flat_cl = new Int8Array([12, 18, 24, 9, 15, 21, 6]),
 	sharp1 = new Int8Array([-9, 12, -9, -9, 12, -9]),
 	sharp2 = new Int8Array([12, -9, 12, -9, 12, -9]),
@@ -1015,7 +1015,7 @@ function draw_bar(s, bot, h) {
 
 /* -- draw a rest -- */
 /* (the staves are defined) */
-const rest_tb = [
+var rest_tb = [
 	"r128", "r64", "r32", "r16", "r8",
 	"r4",
 	"r2", "r1", "r0", "r00"]

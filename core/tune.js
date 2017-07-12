@@ -127,7 +127,7 @@ function mrest_expand(s) {
 
 /* -- sort all symbols by time and vertical sequence -- */
 // weight of the symbols !! depends on the symbol type !!
-const w_tb = new Uint8Array([
+var w_tb = new Uint8Array([
 	2,	// bar
 	1,	// clef
 	8,	// custos
@@ -1887,7 +1887,7 @@ function get_staves(cmd, parm) {
 		curvoice = null
 }
 
-const err_no_strt_ov = "No note in voice overlay"
+var err_no_strt_ov = "No note in voice overlay"
 
 /* -- get a voice overlay -- */
 function get_vover(type) {

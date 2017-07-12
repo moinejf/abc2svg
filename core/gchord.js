@@ -150,7 +150,7 @@ function parse_gchord(type) {
 }
 
 // transpose a chord indication
-const	note_names = "CDEFGAB",
+var	note_names = "CDEFGAB",
 	latin_names = [ "Do", "Ré", "Mi", "Fa", "Sol", "La", "Si" ],
 	acc_name = ["bb", "b", "", "#", "##"]
 
@@ -308,7 +308,8 @@ function gch_build(s) {
 		y_right = 0,
 		h_gch = gch_font.size,
 		h_ann = ann_font.size,
-		box = cfmt.gchordbox;
+		box = cfmt.gchordbox,
+		GCHPRE = .4;		// portion of chord before note
 
 	s.a_gch = a_gch;
 	a_gch = null
@@ -319,7 +320,6 @@ function gch_build(s) {
 	// change the accidentals in the chord symbols,
 	// convert the escape sequences in annotations, and
 	// set the offsets
-	const	GCHPRE = .4		// portion of chord before note
 	for (ix in s.a_gch) {
 		gch = s.a_gch[ix]
 		if (gch.type == 'g') {

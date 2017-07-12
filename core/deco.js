@@ -21,7 +21,7 @@ var	dd_tb= {},		// table of decoration definitions
 	a_de = []		// array of the decoration elements
 
 // standard decorations
-const std_deco = {
+var std_deco = {
 	dot: "0 stc 5 1 1",
 	tenuto: "0 emb 5 2 2",
 	slide: "1 sld 3 7 0",
@@ -593,7 +593,7 @@ function d_upstaff(de) {
 }
 
 /* deco function table */
-const func_tb = [
+var func_tb = [
 	d_near,		/* 0 - near the note */
 	d_slide,	/* 1 */
 	d_arp,		/* 2 */

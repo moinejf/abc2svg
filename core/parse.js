@@ -25,7 +25,7 @@ var	a_gch,		// array of parsed guitar chords
 			//	[0] array of heads
 			//	[1] print
 			//	[2] color
-const	not_ascii = "Not an ASCII character"
+var	not_ascii = "Not an ASCII character"
 
 // -- %% pseudo-comment
 
@@ -115,7 +115,7 @@ function new_clef(clef_def) {
 }
 
 // get a transposition value
-const pit_st = [0, 2, 4, 5, 7, 9, 11]
+var pit_st = [0, 2, 4, 5, 7, 9, 11]
 
 function get_transp(param,
 			type) {		// undefined or "instr"
@@ -1311,7 +1311,7 @@ function new_bar() {
 	}
 }
 
-const err_mispl_sta_s = "Misplaced '$1' in %%staves"
+var err_mispl_sta_s = "Misplaced '$1' in %%staves"
 
 // parse %%staves / %%score
 // return an array of [vid, flags] / null
@@ -1731,7 +1731,7 @@ function parse_vpos() {
 	return ti1 + SL_AUTO
 }
 
-const	cde2fcg = [0, 2, 4, -1, 1, 3, 5],
+var	cde2fcg = [0, 2, 4, -1, 1, 3, 5],
 	cgd2cde = [0, 4, 1, 5, 2, 6, 3],
 	acc2 = [-2, -1, 3, 1, 2]
 
@@ -2193,7 +2193,7 @@ function new_note(grace, tp_fact) {
 }
 
 // characters in the music line (ASCII only)
-const nil = ["0"]
+var nil = ["0"]
 var char_tb = [
 	nil, nil, nil, nil,		/* 00 - .. */
 	nil, nil, nil, nil,

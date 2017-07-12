@@ -19,7 +19,7 @@
 
 // -- constants --
 // symbol types
-const	BAR = 0,
+var	BAR = 0,
 	CLEF = 1,
 	CUSTOS = 2,
 //	FORMAT = 3,

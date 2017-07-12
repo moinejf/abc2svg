@@ -257,7 +257,7 @@ function set_infoname(param) {
 }
 
 // get the text option
-const textopt = {
+var textopt = {
 	align: 'j',
 	center: 'c',
 	fill: 'f',
@@ -271,7 +271,7 @@ function get_textopt(param) {
 }
 
 /* -- position of a voice element -- */
-const posval = {
+var posval = {
 	above: SL_ABOVE,
 	auto: 0,		// !! not SL_AUTO !!
 	below: SL_BELOW,

@@ -39,7 +39,7 @@ var	output = [],		// output buffer
 	block = {}		/* started & newpage */
 
 // glyphs in music font
-const tgls = {
+var tgls = {
   sgno: {x: -6, y:4, c:"&#xe047;"},
   coda: {x:-12, y:6, c:"&#xe048;"},
   tclef: {x:-8, y:0, c:"&#xe050;"},
@@ -400,7 +400,7 @@ function delayed_update() {
 
 // output the annotations
 // !! tied to the symbol types in abc2svg.js !!
-const anno_type = ['bar', 'clef', 'custos', '', 'grace',
+var anno_type = ['bar', 'clef', 'custos', '', 'grace',
 		'key', 'meter', 'Zrest', 'note', 'part',
 		'rest', 'yspace', 'staves', 'Break', 'tempo',
 		'', 'block', 'remark']
@@ -748,7 +748,7 @@ function out_wln(x, y, w) {
 }
 
 // decorations with string
-const deco_str_style = {
+var deco_str_style = {
 crdc:	{
 		dx: 0,
 		dy: 5,

@@ -45,7 +45,7 @@ var	gene,
 //]
 
 // accidental x offset - index = note head type
-const dx_tb = new Float32Array([
+var dx_tb = new Float32Array([
 	10,		// FULL
 	10,		// EMPTY
 	11,		// OVAL
@@ -54,7 +54,7 @@ const dx_tb = new Float32Array([
 ])
 
 // head width  - index = note head type
-const hw_tb = new Float32Array([
+var hw_tb = new Float32Array([
 	4.5,		// FULL
 	5,		// EMPTY
 	6,		// OVAL
@@ -1185,7 +1185,7 @@ function to_rest(s) {
 }
 
 /* -- set the repeat sequences / measures -- */
-const	err_no_s = 'Not enough notes/rests for %%repeat',
+var	err_no_s = 'Not enough notes/rests for %%repeat',
 	err_no_m = 'Not enough measures for %%repeat'
 
 function set_repeat(s) {	// first note
@@ -2153,7 +2153,7 @@ function set_clefs() {
 /* this function is called at start of tune generation and
  * then, once per music line up to the old sequence */
 
-const delta_tb = {
+var delta_tb = {
 	t: 0 - 2 * 2,
 	c: 6 - 3 * 2,
 	b: 12 - 4 * 2,
@@ -2161,7 +2161,7 @@ const delta_tb = {
 }
 
 /* upper and lower space needed by rests */
-const rest_sp = [
+var rest_sp = [
 	[18, 18],
 	[12, 18],
 	[12, 12],
@@ -2952,7 +2952,7 @@ function set_rb(p_voice) {
 /* -- initialize the generator -- */
 /* this function is called only once per tune  */
 
-const delpit = [0, -7, -14, 0]
+var delpit = [0, -7, -14, 0]
 
 function set_global() {
 	var p_voice, st, v, nv, sy
@@ -3259,7 +3259,7 @@ function same_head(s1, s2) {
 }
 
 /* width of notes for voice overlap - index = note head type */
-const w_note = [
+var w_note = [
 	3.5,		// FULL
 	3.7,		// EMPTY
 	5,		// OVAL
@@ -3296,7 +3296,7 @@ function unison_acc(s1, s2, i1, i2) {
 	}
 }
 
-const MAXPIT = 48 * 2
+var MAXPIT = 48 * 2
 
 /* set the left space of a note/chord */
 function set_left(s) {

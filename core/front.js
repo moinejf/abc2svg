@@ -315,7 +315,7 @@ function do_include(fn) {
 	include--
 }
 
-const	err_ign_s = "$1: inside tune - ignored",
+var	err_ign_s = "$1: inside tune - ignored",
 	err_bad_val_s = "Bad value in $1"
 
 // parse ABC code
