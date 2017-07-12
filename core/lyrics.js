@@ -441,8 +441,8 @@ function draw_all_lyrics() {
 				y = y_get(p_voice.st, 0, x, w)
 				if (bot > y)
 					bot = y
-				if (nly < a_ly.length)
-					nly = a_ly.length
+				while (nly < a_ly.length)
+					h_tb[v][nly++] = 0
 				for (i in a_ly) {
 					ly = a_ly[i]
 					if (!ly)
