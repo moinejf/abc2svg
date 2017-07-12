@@ -397,17 +397,18 @@ function draw_lyrics(p_voice, nly, a_h, y,
 function draw_all_lyrics() {
 	var	p_voice, s, v, nly, i, x, y, w, a_ly, ly,
 		lyst_tb = new Array(nstaff),
-		h_tb = new Array(voice_tb.length),
-		nly_tb = new Array(voice_tb.length),
-		above_tb = new Array(voice_tb.length),
-		rv_tb = new Array(voice_tb.length),
+		nv = voice_tb.length,
+		h_tb = new Array(nv),
+		nly_tb = new Array(nv),
+		above_tb = new Array(nv),
+		rv_tb = new Array(nv),
 		top = 0,
 		bot = 0,
 		st = -1
 
 	/* compute the number of lyrics per voice - staff
 	 * and their y offset on the staff */
-	for (v in voice_tb) {
+	for (v = 0; v < nv; v++) {
 		p_voice = voice_tb[v]
 		if (!p_voice.sym)
 			continue
