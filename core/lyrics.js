@@ -423,15 +423,17 @@ function draw_all_lyrics() {
 				h_tb[v] = []
 			for (s = p_voice.sym; s; s = s.next) {
 				a_ly = s.a_ly
-				if (!a_ly || !a_ly[0])
+				if (!a_ly)
 					continue
 /*fixme:should get the real width*/
-				x = s.x
-				if (a_ly[0].w != 0) {
-					x -= a_ly[0].shift;
-					w = a_ly[0].w
-				} else {
-					w = 10
+				x = s.x;
+				w = 10
+				for (i in a_ly) {
+					if (a_ly[i].w != 0) {
+						x -= a_ly[i].shift;
+						w = a_ly[i].w
+						break
+					}
 				}
 				y = y_get(p_voice.st, 1, x, w)
 				if (top < y)
