@@ -1,0 +1,12 @@
+#
+.*
+*.gz
+*-1.css
+*-1.js
+*edit-1.xhtml
+*~
+abc2svg.woff
+psvg
+font.js
+# important!
+!.gitignore
