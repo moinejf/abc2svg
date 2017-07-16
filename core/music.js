@@ -68,19 +68,8 @@ function set_head_shift(s) {
 		dir = s.stem,
 		n = s.nhd
 
-//	if (s.dur >= BASE_LEN * 2 && s.head == OVAL)
-//	if (s.dur >= BASE_LEN * 2)
-//		dx_head = 15.8
-
-	/* special case when single note */
-	if (n == 0) {
-		if (s.notes[0].acc) {
-			if (s.grace)
-				dx_head *= .7;
-			s.notes[0].shac = dx_head
-		}
-		return
-	}
+	if (n == 0)
+		return			// single note
 
 	/* set the head shifts */
 	dx = dx_head * .78
@@ -134,69 +123,69 @@ function set_head_shift(s) {
 	s.xmx = dx_max				/* shift the dots */
 }
 
+// set the accidental shifts for a set of chords
+function acc_shift(notes, dx_head) {
+	var	i, i1, dx, dx1, ps, p1, acc,
+		n = notes.length
+
+	// set the shifts from the head shifts
+	for (i = n - 1; --i >= 0; ) {	// (no shift on top)
+		dx = notes[i].shhd
+		if (!dx || dx > 0)
+			continue
+		dx = dx_head - dx;
+		ps = notes[i].pit
+		for (i1 = n; --i1 >= 0; ) {
+			if (!notes[i1].acc)
+				continue
+			p1 = notes[i1].pit
+			if (p1 < ps - 3)
+				break
+			if (p1 > ps + 3)
+				continue
+			if (notes[i1].shac < dx)
+				notes[i1].shac = dx
+		}
+	}
+
+	// set the shifts from accidental shifts
+	for (i = n; --i >= 0; ) {		// from top to bottom
+		acc = notes[i].acc
+		if (!acc)
+			continue
+		dx = notes[i].shac
+		if (!dx) {
+			dx = notes[i].shhd
+			if (dx < 0)
+				dx = dx_head - dx
+			else
+				dx = dx_head
+		}
+		ps = notes[i].pit
+		for (i1 = n; --i1 > i; ) {
+			if (!notes[i1].acc)
+				continue
+			p1 = notes[i1].pit
+			if (p1 >= ps + 4) {	// pitch far enough
+				if (p1 > ps + 4	// if more than a fifth
+				 || acc < 0	// if flat/dble flat
+				 || notes[i1].acc < 0)
+					continue
+			}
+			if (dx > notes[i1].shac - 6) {
+				dx1 = notes[i1].shac + 7
+				if (dx1 > dx)
+					dx = dx1
+			}
+		}
+		notes[i].shac = dx
+	}
+}
+
 /* set the horizontal shift of accidentals */
 /* this routine is called only once per tune */
 function set_acc_shft() {
-	var s, s2, st, i, acc, st, t, dx_head
-
-	// set the accidental shifts for a set of chords
-	function acc_shift(notes, dx_head) {
-		var i, i1, dx, dx1, ps, p1, acc,
-			n = notes.length
-
-		// set the shifts from the head shifts
-		for (i = n - 1; --i >= 0; ) {	// (no shift on top)
-			dx = notes[i].shhd
-			if (!dx || dx > 0)
-				continue
-			dx = dx_head - dx;
-			ps = notes[i].pit
-			for (i1 = n; --i1 >= 0; ) {
-				if (!notes[i1].acc)
-					continue
-				p1 = notes[i1].pit
-				if (p1 < ps - 3)
-					break
-				if (p1 > ps + 3)
-					continue
-				if (notes[i1].shac < dx)
-					notes[i1].shac = dx
-			}
-		}
-
-		// set the shifts from accidental shifts
-		for (i = n; --i >= 0; ) {		// from top to bottom
-			acc = notes[i].acc
-			if (!acc)
-				continue
-			dx = notes[i].shac
-			if (!dx) {
-				dx = notes[i].shhd
-				if (dx < 0)
-					dx = dx_head - dx
-				else
-					dx = dx_head
-			}
-			ps = notes[i].pit
-			for (i1 = n; --i1 > i; ) {
-				if (!notes[i1].acc)
-					continue
-				p1 = notes[i1].pit
-				if (p1 >= ps + 4) {	// pitch far enough
-					if (p1 > ps + 4	// if more than a fifth
-					 || acc < 0	// if flat/dble flat
-					 || notes[i1].acc < 0)
-						continue
-				}
-				if (dx > notes[i1].shac - 6) {
-					dx1 = notes[i1].shac + 7
-					if (dx1 > dx)
-						dx = dx1
-				}
-			}
-			notes[i].shac = dx
-		}
-	}
+	var s, s2, st, i, acc, st, t, dx_head;
 
 	// search the notes with accidentals at the same time
 	s = tsfirst
@@ -572,7 +561,7 @@ function set_float() {
 
 /* -- set the x offset of the grace notes -- */
 function set_graceoffs(s) {
-	var	next, m,
+	var	next, m, dx,
 		gspleft = Number(cfmt.gracespace[0]),
 		gspinside = Number(cfmt.gracespace[1]),
 		gspright = Number(cfmt.gracespace[2]),
@@ -582,14 +571,13 @@ function set_graceoffs(s) {
 	g.beam_st = true
 	for ( ; ; g = g.next) {
 		set_head_shift(g)
+		acc_shift(g.notes, 7);
+		dx = 0
 		for (m = g.nhd; m >= 0; m--) {
-			if (g.notes[m].acc) {
-				xx += 5
-				if (g.notes[m].micro)
-					xx += 2
-				break
-			}
+			if (g.notes[m].shac > dx)
+				dx = g.notes[m].shac
 		}
+		xx += dx;
 		g.x = xx
 
 		if (g.nflags <= 0) {
