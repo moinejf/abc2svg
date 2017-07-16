@@ -3596,18 +3596,25 @@ function draw_systems(indent) {
 			for (s2 = s.ts_next; s2; s2 = s2.ts_next) {
 				if (s2.time != s.time)
 					break
-				if (s2.type == BAR) {
+				switch (s2.type) {
+				case BAR:
+				case CLEF:
+				case KEY:
+				case METER:
 					staves_bar = s2.x
-					break
+					continue
 				}
+				break
 			}
+			if (!s2)
+				staves_bar = realwidth;
 			cur_sy = cur_sy.next
 			for (st = 0; st <= nstaff; st++) {
 				x = xstaff[st]
 				if (x < 0) {		// no staff yet
 					if (cur_sy.st_print[st])
-						xstaff[st] = staves_bar ||
-								(s.x - s.wl - 2)
+						xstaff[st] = s.type == BAR ?
+							s.x : (s.x - s.wl - 2)
 					continue
 				}
 				if (cur_sy.st_print[st]) // if not staff stop
@@ -3678,8 +3685,8 @@ function draw_systems(indent) {
 	for (st = 0; st <= nstaff; st++) {
 		if (bar_force && !cur_sy.st_print[st])
 			continue
-		if ((x = xstaff[st]) < 0)
-//		 || x >= realwidth - 8)
+		x = xstaff[st]
+		if (x < 0 || x >= realwidth)
 			continue
 		draw_staff(st, x, realwidth)
 	}
