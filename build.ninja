@@ -1,9 +1,6 @@
 # rules for ninja (ninja-build)
 
 MAJOR=1
-MINOR=13
-PATCH=1
-VERSION=$MAJOR.$MINOR.$PATCH
 
 rule cp
   command = cp $in $out
@@ -18,16 +15,22 @@ rule font-gen
   command = fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.woff")'
 
 rule jsc
-  command = cp core/license $out;$
+  command = if [ -x /usr/bin/git -a -d .git ]; then$
+	VERSION=`git describe`;$
+	VERSION=$${VERSION#abc2svg-};$
+   else$
+	VERSION=local;$
+   fi;$
+   cp core/license $out;$
    echo '"use strict"' >> $out;$
-   date +'var abc2svg={version:"$VERSION",vdate:"%F"}' >> $out;$
+   date +"var abc2svg={version:\"$$VERSION\",vdate:\"%F\"}" >> $out;$
    cat $in | uglifyjs - >> $out
 # uglifyjs options
 #	-c 'evaluate,join_vars'
 
 rule jscu
   command = cp core/license $out;$
-   date +'// $out for abc2svg-$VERSION (%F)' >> $out;$
+   date +'// $out for abc2svg-$MAJOR (%F)' >> $out;$
    cat $in | uglifyjs - >> $out
 
 rule edit
