@@ -74,20 +74,6 @@ function psdeco(f, x, y, de) {
 	return pscall(f, x, y, script)
 }
 
-// try to generate a head decoration by PS
-function pshdeco(f, x, y, dd) {
-	var	script,
-		Os = wpsobj.parse('/' + f + ' where'),
-		A = Os.pop()
-	if (!A)
-		return false
-	Os.pop();
-	script = ''
-	if (dd.str)
-		script += '(' + dd.str + ') ';
-	return pscall(f, x, y, script)
-}
-
 // try to generate a glyph by PS
 function psxygl(x, y, gl){
 	var	Os = wpsobj.parse('/' + gl + ' where'),

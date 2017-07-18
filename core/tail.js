@@ -20,7 +20,6 @@
 // end of the Abc object
 // empty ps functions
 	function psdeco(f, x, y, de) { return false }
-	function pshdeco(f, x, y, dd) { return false }
 	function psxygl(x, y, gl) { return false }
 
 // initialize
