@@ -18,19 +18,28 @@ rule jsc
   command = if [ -x /usr/bin/git -a -d .git ]; then$
 	VERSION=`git describe`;$
 	VERSION=$${VERSION#abc2svg-};$
+	DATE=`git log -1 --pretty=format:%ci HEAD | cut -d' ' -f1`;$
    else$
 	VERSION=local;$
+	DATE=`stat --printf=%y build.ninja | cut -d' ' -f1`;$
    fi;$
    cp core/license $out;$
    echo '"use strict"' >> $out;$
-   date +"var abc2svg={version:\"$$VERSION\",vdate:\"%F\"}" >> $out;$
+   echo "var abc2svg={version:\"$$VERSION\",vdate:\"$$DATE\"}" >> $out;$
    cat $in | uglifyjs - >> $out
 # uglifyjs options
 #	-c 'evaluate,join_vars'
 
 rule jscu
-  command = cp core/license $out;$
-   date +'// $out for abc2svg-$MAJOR (%F)' >> $out;$
+  command = if [ -x /usr/bin/git -a -d .git ]; then$
+	VERSION=`git describe`;$
+	DATE=`git log -1 --pretty=format:%ci HEAD | cut -d' ' -f1`;$
+   else$
+	VERSION=abcm2ps-local;$
+	DATE=`stat --printf=%y build.ninja | cut -d' ' -f1`;$
+   fi;$
+   cp core/license $out;$
+   echo "// $out for \"$$VERSION\" (\"$$DATE\")" >> $out;$
    cat $in | uglifyjs - >> $out
 
 rule edit
