@@ -26,7 +26,7 @@ rule jsc
    cp core/license $out;$
    echo '"use strict"' >> $out;$
    echo "var abc2svg={version:\"$$VERSION\",vdate:\"$$DATE\"}" >> $out;$
-   cat $in | uglifyjs - >> $out
+   cat $in | uglifyjs >> $out
 # uglifyjs options
 #	-c 'evaluate,join_vars'
 
