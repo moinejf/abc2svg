@@ -17,6 +17,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
+// start of the Abc object
+function Abc(user) {
+	this.user = user
+
 // -- constants --
 // symbol types
 var	BAR = 0,

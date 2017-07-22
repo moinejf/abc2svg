@@ -40,7 +40,7 @@ rule jscu
    fi;$
    cp core/license $out;$
    echo "// $out for \"$$VERSION\" (\"$$DATE\")" >> $out;$
-   cat $in | uglifyjs - >> $out
+   uglifyjs $in >> $out
 
 rule edit
   command = sed "$
@@ -60,11 +60,11 @@ s+@MAJOR@+$MAJOR+$
 build abc2svg.woff: font-gen | font/abc2svg.sfd
 build font.js: font | abc2svg.woff
 
-build abc2svg-$MAJOR.js: jsc core/head.js core/abc2svg.js core/deco.js core/draw.js $
+build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
  core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js
 
-build abcps2svg-$MAJOR.js: jsc core/head.js core/abc2svg.js core/deco.js core/draw.js $
+build abcps2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
  core/svg.js core/tune.js core/lyrics.js core/gchord.js $
  core/wps.js core/psvg.js core/pstail.js
