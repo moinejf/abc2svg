@@ -35,7 +35,7 @@
 function AbcPlay(i_onend, sf, i_onnote) {
 
 	// constants from Abc
-	const	BAR = 0,
+	var	BAR = 0,
 		CLEF = 1,
 		GRACE = 4,
 		KEY = 5,

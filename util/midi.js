@@ -40,7 +40,7 @@
 function AbcMIDI() {
 
 	// constants from Abc
-	const	BAR = 0,
+	var	BAR = 0,
 		CLEF = 1,
 		GRACE = 4,
 		KEY = 5,
@@ -50,9 +50,8 @@ function AbcMIDI() {
 	this.add = function(s,		// starting symbol
 			    voice_tb) {	// voice table
 
-		const	scale = [0, 2, 4, 5, 7, 9, 11]	// note to pitch
-
-		var	bmap = [],			// measure base map
+		var	scale = [0, 2, 4, 5, 7, 9, 11],	// note to pitch
+			bmap = [],			// measure base map
 			map = [],			// current map - 10 octaves
 			i, n, pit, lrep, g, v,
 			rep_en_map = [],
