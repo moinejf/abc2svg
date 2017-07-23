@@ -1,0 +1,52 @@
+{
+  "name": "abc2svg",
+  "version": "1.13.1",
+  "description": "ABC music notation translator",
+  "devDependencies": {
+    "uglify-js": "^2.5.0"
+  },
+  "directories": {
+    "doc": "doc"
+  },
+  "files": [
+    "COPYING.LESSER",
+    "abc2svg-1.js",
+    "abcdoc-1.js",
+    "abcemb-1.js",
+    "cmdline.js",
+    "edit-1.css",
+    "edit-1.js",
+    "edit-1.xhtml",
+    "edit-de.js",
+    "edit-en.js",
+    "edit-fr.js",
+    "edit-pt_BR.js",
+    "err-de.js",
+    "err-en.js",
+    "err-fr.js",
+    "err-pt_BR.js",
+    "json-1.js",
+    "midi-1.js",
+    "play-1.js",
+    "toxhtml.js"
+  ],
+  "scripts": {
+    "postversion": "git push && git push --tags",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moinejf/abc2svg.git"
+  },
+  "keywords": [
+    "ABC",
+    "music",
+    "SVG"
+  ],
+  "author": "Jean-François Moine",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/moinejf/abc2svg/issues"
+  },
+  "homepage": "https://github.com/moinejf/abc2svg#readme"
+}
