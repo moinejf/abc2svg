@@ -9,6 +9,7 @@
     "doc": "doc"
   },
   "files": [
+    "COPYING",
     "COPYING.LESSER",
     "abc2svg-1.js",
     "abcdoc-1.js",

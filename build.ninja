@@ -17,10 +17,10 @@ rule font-gen
 rule jsc
   command = if [ -x /usr/bin/git -a -d .git ]; then$
 	VERSION=`git describe`;$
-	VERSION=$${VERSION#abc2svg-};$
+	VERSION=$${VERSION#v};$
 	DATE=`git log -1 --pretty=format:%ci HEAD | cut -d' ' -f1`;$
    else$
-	VERSION=local;$
+	VERSION=`grep '"version"' package.json|cut -d'"' -f4`;$
 	DATE=`stat --printf=%y build.ninja | cut -d' ' -f1`;$
    fi;$
    cp core/license $out;$
@@ -33,13 +33,14 @@ rule jsc
 rule jscu
   command = if [ -x /usr/bin/git -a -d .git ]; then$
 	VERSION=`git describe`;$
+	VERSION=$${VERSION#v};$
 	DATE=`git log -1 --pretty=format:%ci HEAD | cut -d' ' -f1`;$
    else$
-	VERSION=abcm2ps-local;$
+	VERSION=`grep '"version"' package.json|cut -d'"' -f4`;$
 	DATE=`stat --printf=%y build.ninja | cut -d' ' -f1`;$
    fi;$
    cp core/license $out;$
-   echo "// $out for \"$$VERSION\" (\"$$DATE\")" >> $out;$
+   echo "// $out for abc2svg-$$VERSION ($$DATE)" >> $out;$
    uglifyjs $in >> $out
 
 rule edit
@@ -62,20 +63,20 @@ build font.js: font | abc2svg.woff
 
 build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
- core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js
+ core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js | package.json
 
 build abcps2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
  core/svg.js core/tune.js core/lyrics.js core/gchord.js $
- core/wps.js core/psvg.js core/pstail.js
+ core/wps.js core/psvg.js core/pstail.js | package.json
 
 build edit-$MAJOR.css: cp editor/edit.css
 
-build abcdoc-$MAJOR.js: jscu util/abcdoc.js
-build abcemb-$MAJOR.js: jscu util/abcemb.js
-build json-$MAJOR.js: jscu util/json.js
-build midi-$MAJOR.js: jscu util/midi.js
-build play-$MAJOR.js: jscu util/play.js
+build abcdoc-$MAJOR.js: jscu util/abcdoc.js | package.json
+build abcemb-$MAJOR.js: jscu util/abcemb.js | package.json
+build json-$MAJOR.js: jscu util/json.js | package.json
+build midi-$MAJOR.js: jscu util/midi.js | package.json
+build play-$MAJOR.js: jscu util/play.js | package.json
 
 build edit-$MAJOR.xhtml psedit-$MAJOR.xhtml edit-$MAJOR.js: edit $
  editor/edit.xhtml editor/edit.js
