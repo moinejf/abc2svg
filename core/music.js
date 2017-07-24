@@ -2695,6 +2695,7 @@ function init_music_line() {
 		p_voice = voice_tb[v]
 		if (last_s.v == v && last_s.type == KEY) {
 			p_voice.last_sym = last_s;
+			last_s.k_old_sf = last_s.k_sf;	// no key cancel
 			last_s = last_s.ts_next
 			continue
 		}
