@@ -2156,6 +2156,8 @@ function get_key(parm) {
 		key_transp(s_key)
 	}
 
+	s_key.k_old_sf = curvoice.ckey.k_sf;	// memorize the key changes
+
 	curvoice.ckey = s_key
 
 	if (is_voice_sig()) {
@@ -2167,9 +2169,6 @@ function get_key(parm) {
 //		}
 		return
 	}
-
-	// memorize the key changes
-	s_key.k_old_sf = curvoice.ckey.k_sf;
 
 	/* the key signature must appear before a time signature */
 	s = curvoice.last_sym
