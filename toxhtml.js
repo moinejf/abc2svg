@@ -40,6 +40,7 @@ user.page_format = true
 function abc_init() {
 	function get_date() {
 		var now = new Date()
+
 		return now.toUTCString()
 	} // get_date()
 
@@ -71,4 +72,11 @@ function abc_end() {
 	if (errtxt)
 		print("<pre>" + errtxt + "</pre>")
 	print("</body>\n</html>")
+}
+
+// nodejs
+if (typeof module == 'object') {
+	exports.abort = abort;
+	exports.abc_init = abc_init;
+	exports.abc_end = abc_end;
 }

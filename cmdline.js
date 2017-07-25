@@ -95,3 +95,11 @@ function abc_cmd(cmd, args) {
 
 	abc_end()
 }
+
+// nodejs
+if (typeof module == 'object') {
+	exports.abc = abc;
+	exports.errtxt = errtxt;
+	exports.user = user;
+	exports.abc_cmd = abc_cmd
+}
