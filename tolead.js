@@ -17,7 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-// from core/abc2svg.js
 var	BASE_LEN = 1536
 
 function lead(tsfirst, voice_tb, music_types, info) {
@@ -87,7 +86,6 @@ function lead(tsfirst, voice_tb, music_types, info) {
 	}
 	print(line)
 }
-user.get_abcmodel = lead
 
 // -- local functions
 function abort(e) {
@@ -98,6 +96,7 @@ function abort(e) {
 }
 
 function abc_init() {
+	user.get_abcmodel = lead
 }
 function abc_end() {
 	if (errtxt)
