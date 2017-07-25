@@ -38,4 +38,4 @@ function quit() {
 	abc_cmd("abcnode", args)
 EOF
 
-nodejs /tmp/toto.js "$@"
+node /tmp/toto.js "$@"
