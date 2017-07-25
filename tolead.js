@@ -17,7 +17,8 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-const	BASE_LEN = 1536
+// from core/abc2svg.js
+var	BASE_LEN = 1536
 
 function lead(tsfirst, voice_tb, music_types, info) {
 	var	s, beat, cur_beat, i,
