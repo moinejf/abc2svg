@@ -27,3 +27,9 @@
 
 	return this
 }	// end of Abc()
+
+// nodejs
+if (typeof module == 'object') {
+	exports.abc2svg = abc2svg;
+	exports.Abc = Abc
+}
