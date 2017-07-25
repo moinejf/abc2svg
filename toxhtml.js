@@ -40,12 +40,7 @@ user.page_format = true
 function abc_init() {
 	function get_date() {
 		var now = new Date()
-		const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-				"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-		return months[now.getMonth()] + ' ' +
-			now.getDate() + ', ' + now.getFullYear() + ' ' +
-			now.getHours() + ':' + now.getMinutes()
+		return now.toUTCString()
 	} // get_date()
 
 	print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
