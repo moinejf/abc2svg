@@ -1,0 +1,59 @@
+#! /usr/bin/env node
+
+// abc2svg with native nodeJS
+
+// define the system functions
+var	fs = require("fs");
+
+// interpreter specific functions
+function print(str) {
+	process.stdout.write(str + '\n')
+}
+
+function readFile(fname) {
+	return fs.readFileSync(fname).toString()
+}
+
+function quit() {
+	process.exit(1)
+}
+
+global.print = print;
+global.readFile = readFile;
+global.quit = quit;
+
+// load the abc2svg core
+var m = require("abc2svg/abc2svg-1");
+global.abc2svg = m.abc2svg;
+global.Abc = m.Abc;
+
+// load the command line
+m = require("abc2svg/cmdline");
+global.abc = m.abc;
+global.errtxt = m.errtxt;
+global.user = m.user;
+global.abc_cmd = m.abc_cmd
+
+// if no rendering engine, load xhtml
+if (typeof abc_init != 'function') {
+	m = require("abc2svg/toxhtml");
+	global.abort = m.abort;
+	global.abc_init = m.abc_init;
+	global.abc_end = m.abc_end
+} else {
+	global.abort = abort;
+	global.abc_init = abc_init;
+	global.abc_end = abc_end
+}
+
+// main
+var args = process.argv
+if (!args[2]) {
+	print("abc2svg-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
+		"	ABC to SVG translator\n" +
+		" Usage: abc2svg [options] ABC_files");
+	quit()
+}
+args.shift()
+args.shift()
+abc_cmd("nodeJS", args)

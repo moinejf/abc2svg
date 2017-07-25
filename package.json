@@ -11,6 +11,7 @@
   "files": [
     "COPYING",
     "COPYING.LESSER",
+    "abc2svg",
     "abc2svg-1.js",
     "abcdoc-1.js",
     "abcemb-1.js",
@@ -34,6 +35,9 @@
   "scripts": {
     "postversion": "git push && git push --tags",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "abc2svg": "./abc2svg"
   },
   "repository": {
     "type": "git",

@@ -80,6 +80,16 @@ and render the music.
 - The .js and .xhtml file names have a suffix which is the version of
   the core interface (actually `-1`).
 
+### nodeJS usage
+
+Installed via **npm**, the **abc2svg** package comes with the
+command line program `abc2svg`.
+
+This one may be used as **abcm2ps** to generate XHTML files,
+but it writes to standard output:
+
+    abc2svg mytunes.abc > Out.xhtml
+
 ### Build
 
 To build the **abc2svg** scripts in your machine, you must first get the files
