@@ -42,18 +42,6 @@ var user = {
 	},
 }
 
-//test
-function dump_obj(obj) {
-	print("<!-- dump")
-	if (obj && typeof(obj) == 'object') {
-		for (var k in obj)
-			print("  " + k + ": " + obj[k])
-	} else {
-		print(" not an object:", obj)
-	}
-	print(" -->")
-}
-
 function do_file(fn) {
 	var	file = user.read_file(fn)
 
