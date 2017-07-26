@@ -30,6 +30,7 @@
     "json-1.js",
     "midi-1.js",
     "play-1.js",
+    "toaudio-1.js",
     "toxhtml.js"
   ],
   "scripts": {
