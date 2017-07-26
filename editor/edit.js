@@ -35,10 +35,10 @@ var	abc_images,			// image buffer
 	}
 
 // -- Abc create argument
-const ignore_types = {
-		beam: true,
-		slur: true,
-		tuplet: true
+var ignore_types = {
+	beam: true,
+	slur: true,
+	tuplet: true
 }
 var user = {
 	// -- required methods
@@ -454,7 +454,7 @@ function play_tune() {
 			a_pe = null
 			return
 		}
-		a_pe = abcplay.clear();	// keep the playing events
+		a_pe = abcplay.clear()	// keep the playing events
 	}
 	document.getElementById("playbutton").innerHTML = texts.stop;
 	abcplay.play(0, 1000000, a_pe)	// play all events
@@ -488,7 +488,7 @@ function edit_init() {
 		script.onload = function() {
 			var	e,
 				t = null,
-				test = document.createElement('audio');
+				test = document.createElement('audio')
 			if (test.canPlayType
 			 && test.canPlayType('audio/mp3') != '')
 				t = {type: "mp3"};
