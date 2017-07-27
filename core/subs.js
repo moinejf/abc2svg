@@ -123,8 +123,10 @@ function out_str(str) {
 					n_font.fid + cfmt.fullsvg + '">'
 			}
 		}))
-	if (c_font != o_font)
-		output.push("</tspan>")
+	if (c_font != o_font) {
+		output.push("</tspan>");
+		gene.curfont = c_font	// keep current font for next paragraph
+	}
 }
 
 // output a string, handling the font changes
