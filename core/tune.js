@@ -1427,6 +1427,7 @@ function do_pscom(text) {
 			return
 		}
 		if (cmd == "newpage") {
+			blk_flush();
 			block.newpage = true
 			return
 		}

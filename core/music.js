@@ -4363,6 +4363,8 @@ function gen_init(page_chg) {
 				user.img_out(s.text)
 				break
 			case "newpage":
+				blk_out();
+				blk_flush();
 				block.newpage = true
 				break
 			case "sep":
