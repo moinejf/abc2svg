@@ -35,6 +35,7 @@ user.textrans = {
 	"%%repeat cannot start a tune": "%%repeat não pode estar no início de uma música",
 	"%%select ignored": "%%select ignorado",
 	"%%staffwidth too big": "%%staffwidth muito grande",
+	"%%staffwidth too small": "%%staffwidth muito pequeno",
 	"%%tune not treated yet": "%%tune ainda não é tratado",
 	"%%voice ignored": "%%voice ignorado",
 	"%%vskip cannot be negative": "%%vskip não pode ser negativo",
