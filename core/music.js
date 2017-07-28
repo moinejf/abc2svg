@@ -4437,8 +4437,8 @@ function output_music() {
 	if (cfmt.singleline) {
 		lwidth = get_ck_width() +
 				get_width(tsfirst, null, indent);
-		cfmt.pagewidth = (lwidth + cfmt.leftmargin + cfmt.rightmargin)
-				* cfmt.scale
+		cfmt.pagewidth = lwidth * cfmt.scale +
+				cfmt.leftmargin + cfmt.rightmargin
 	} else {
 
 	/* else, split the tune into music lines */
