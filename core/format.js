@@ -536,8 +536,13 @@ function set_format(cmd, param, lock) {
 		cfmt.sound = "sounding"
 		break
 	case "staffwidth":
-		v = cfmt.pagewidth - get_unitp(param) - cfmt.leftmargin
-		if (v < 0)
+		v = get_unitp(param)
+		if (v < 100) {
+			syntax(1, "%%staffwidth too small")
+			break
+		}
+		v = cfmt.pagewidth - v - cfmt.leftmargin
+		if (v < 100)
 			syntax(1, "%%staffwidth too big")
 		else
 			cfmt.rightmargin = v
