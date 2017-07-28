@@ -4358,6 +4358,7 @@ function gen_init(page_chg) {
 			case "pagescale":
 			case "pagewidth":
 			case "scale":
+			case "staffwidth":
 				set_format(s.subtype, s.param);
 				page_chg = true
 				break

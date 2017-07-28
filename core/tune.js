@@ -1421,6 +1421,7 @@ function do_pscom(text) {
 	case "pagescale":
 	case "pagewidth":
 	case "scale":
+	case "staffwidth":
 		if (parse.state == 3) {			// tune body
 			s = new_block(cmd);
 			s.param = param
