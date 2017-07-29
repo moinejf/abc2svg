@@ -1546,9 +1546,10 @@ function get_ck_width() {
 		p_voice.meter.wl + p_voice.meter.wr;
 }
 
-/* get the whole width of the music */
-function get_width(first, last, w) {
+// get the width of the symbols up to the next eoln or eof
+function get_width(first, last) {
 	var	s, shrink, space,
+		w = 0,
 		sp_fac = (1 - cfmt.maxshrink)
 
 	for (s = first; s != last; s = s.ts_next) {
@@ -1574,7 +1575,7 @@ function set_lines(	s,		/* first symbol */
 		nlines, cut_here;
 
 	/* calculate the whole size of the piece of tune */
-	wwidth = get_width(s, last, indent)
+	wwidth = get_width(s, last) + indent
 
 	/* loop on cutting the tune into music lines */
 	while (1) {
@@ -1717,7 +1718,6 @@ function cut_tune(lwidth, indent) {
 				break
 			xmin = s.shrink;
 			indent = 0
-//fixme: added in 1.2.5
 			continue
 		}
 		if (!s.eoln)
@@ -4310,7 +4310,6 @@ function set_sym_line() {
 		p_voice = voice_tb[v];
 		s = p_voice.s_next;		// (set in set_piece)
 		p_voice.sym = s
-//		p_voice.s_prev = s.prev
 		if (s)
 			s.prev = null
 	}
@@ -4436,7 +4435,7 @@ function output_music() {
 	/* if single line, adjust the page width */
 	if (cfmt.singleline) {
 		lwidth = get_ck_width() +
-				get_width(tsfirst, null, indent);
+				get_width(tsfirst, null) + indent;
 		cfmt.pagewidth = lwidth * cfmt.scale +
 				cfmt.leftmargin + cfmt.rightmargin
 	} else {
