@@ -1574,6 +1574,11 @@ function set_lines(	s,		/* first symbol */
 	var	first, s2, s3, x, xmin, xmax, wwidth, shrink, space,
 		nlines, cut_here;
 
+	for ( ; last; last = last.ts_next) {
+		if (last.eoln)
+			break
+	}
+
 	/* calculate the whole size of the piece of tune */
 	wwidth = get_width(s, last) + indent
 
@@ -1709,10 +1714,6 @@ function cut_tune(lwidth, indent) {
 //			if (cfmt.linewarn)
 //				error(0, s, "Line overfull (%.0fpt of %.0fpt)",
 //					xmin, lwidth)
-			for ( ; s; s = s.ts_next) {
-				if (s.eoln)
-					break
-			}
 			s = s2 = set_lines(s2, s, lwidth, indent)
 			if (!s)
 				break
