@@ -198,6 +198,10 @@ function trim_title(title, is_subtitle) {
 	return title
 }
 
+function get_lwidth() {
+	return (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin) / cfmt.scale
+}
+
 // header generation functions
 function write_title(title, is_subtitle) {
 	var font, sz
@@ -217,9 +221,7 @@ function write_title(title, is_subtitle) {
 	if (cfmt.titleleft)
 		xy_str(0, sz * .2, title)
 	else
-		xy_str((cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin)
-				/ 2 / cfmt.scale,
-				sz * .2, title, "c")
+		xy_str(get_lwidth() / 2, sz * .2, title, "c")
 }
 
 /* -- output a header format '111 (222)' -- */
@@ -241,8 +243,7 @@ function write_text(text, action) {
 	if (action == 's')
 		return				// skip
 	set_font("text")
-	var	strlw = (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin) /
-				cfmt.scale,
+	var	strlw = get_lwidth(),
 		lineskip = gene.curfont.size * cfmt.lineskipfac,
 		parskip = gene.curfont.size * cfmt.parskipfac,
 		i, j, x
@@ -360,8 +361,7 @@ function put_words(words) {
 	set_font("words")
 
 	/* see if we may have 2 columns */
-	var	middle = .5 * (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin) /
-				cfmt.scale,
+	var	middle = get_lwidth() / 2,
 		max2col = (middle - 45.) / (cwid('a') * gene.curfont.swfac);
 	n = 0;
 	words = words.split('\n');
@@ -674,8 +674,7 @@ function write_headform(lwidth) {
 /* -- output the tune heading -- */
 function write_heading() {
 	var	i, j, area, composer, origin, rhythm, down1, down2,
-		lwidth = (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin) /
-				cfmt.scale
+		lwidth = get_lwidth()
 
 	vskip(cfmt.topspace)
 

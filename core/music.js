@@ -4442,12 +4442,7 @@ function output_music() {
 	} else {
 
 	/* else, split the tune into music lines */
-		lwidth = (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin)
-				/ cfmt.scale
-//		if (lwidth < 50) {
-//			error(1, null, "Bad page width $1", lwidth);
-//			lwidth = 10 * CM
-//		}
+		lwidth = get_lwidth();
 		cut_tune(lwidth, indent)
 	}
 
