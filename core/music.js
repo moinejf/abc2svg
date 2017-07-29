@@ -1677,6 +1677,12 @@ function set_lines(	s,		/* first symbol */
 /* -- cut the tune into music lines -- */
 function cut_tune(lwidth, indent) {
 	var	s, s2, i, xmin,
+		pg_sav = {
+			leftmargin: cfmt.leftmargin,
+			rightmargin: cfmt.rightmargin,
+			pagewidth: cfmt.pagewidth,
+			scale: cfmt.scale
+		},
 		s = tsfirst
 
 	/* adjust the line width according to the starting clef
@@ -1707,6 +1713,19 @@ function cut_tune(lwidth, indent) {
 	xmin = indent;
 	s2 = s
 	for ( ; s; s = s.ts_next) {
+		if (s.type == BLOCK) {
+			switch (s.subtype) {
+			case "leftmargin":
+			case "rightmargin":
+			case "pagescale":
+			case "pagewidth":
+			case "scale":
+			case "staffwidth":
+				set_format(s.subtype, s.param)
+				break
+			}
+			continue
+		}
 		if (!s.seqst && !s.eoln)
 			continue
 		xmin += s.shrink
@@ -1731,6 +1750,12 @@ function cut_tune(lwidth, indent) {
 		xmin = s.shrink;
 		indent = 0
 	}
+
+	// restore the page parameters at start of line
+	cfmt.leftmargin = pg_sav.leftmargin,
+	cfmt.rightmargin = pg_sav.rightmargin,
+	cfmt.pagewidth = pg_sav.pagewidth,
+	cfmt.scale = pg_sav.scale
 }
 
 /* -- set the y values of some symbols -- */
@@ -4479,7 +4504,8 @@ function output_music() {
 			break
 		blk_out();
 		tsfirst.ts_prev = null;
-		set_sym_line()
+		set_sym_line();
+		lwidth = get_lwidth()	// the image size may have changed
 	}
 }
 
