@@ -1611,10 +1611,10 @@ function set_lines(	s,		/* first symbol */
 			s2 = s				// keep the last bar
 //fixme: might go further ?
 		}
+		if (!s)
+			return	// undefined
 
 		/* if a bar, cut here */
-		if (s == last)
-			return last
 		if (s.type == BAR)
 			cut_here = true
 
