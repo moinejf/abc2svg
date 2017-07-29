@@ -3041,23 +3041,21 @@ function set_indent() {
 			i = j + 1
 		}
 	}
+	if (font)
+		maxw += 4 * cwid(' ') * font.swfac;
 
-	if (maxw != 0) {
-		w = 0
-//fixme:nstaff: cur_sy may not have all staves
-		for (st = 0; st <= cur_sy.nstaff; st++) {
-			if (cur_sy.staves[st].flags
-					& (OPEN_BRACE2 | OPEN_BRACKET2)) {
-				w = 20
-				break
-			}
-			if ((cur_sy.staves[st].flags
-					& (OPEN_BRACE | OPEN_BRACKET))
-			 && w == 0)
-				w = 10
+	w = 0
+	for (st = 0; st <= cur_sy.nstaff; st++) {
+		if (cur_sy.staves[st].flags
+				& (OPEN_BRACE2 | OPEN_BRACKET2)) {
+			w = 16
+			break
 		}
-		maxw += 4 * cwid(' ') * font.swfac + w
+		if (cur_sy.staves[st].flags & (OPEN_BRACE | OPEN_BRACKET))
+			w = 8
 	}
+	maxw += w
+
 	if (insert_meter & 2)			/* if indent */
 		maxw += cfmt.indent
 	return maxw
