@@ -24,7 +24,6 @@ rule jsc
 	DATE=`stat --printf=%y build.ninja | cut -d' ' -f1`;$
    fi;$
    cp core/license $out;$
-   echo '"use strict"' >> $out;$
    echo "var abc2svg={version:\"$$VERSION\",vdate:\"$$DATE\"}" >> $out;$
    cat $in | uglifyjs >> $out
 # uglifyjs options

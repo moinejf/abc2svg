@@ -19,6 +19,7 @@
 
 // start of the Abc object
 function Abc(user) {
+"use strict"
 	this.user = user
 
 // -- constants --
