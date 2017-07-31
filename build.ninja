@@ -87,3 +87,16 @@ build all: phony abc2svg-$MAJOR.js abcps2svg-$MAJOR.js abcdoc-$MAJOR.js $
  edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml psedit-$MAJOR.xhtml
 
 default all
+
+# npm/git new release
+# (needs 'npm set git-tag-version false')
+rule version
+  command = npm version $out;$
+	tag=`grep '"version"' package.json|cut -d'"' -f4`;$
+	git commit -a -m "New release v$$tag";$
+	git tag -a v$$tag;$
+	git push;$
+	git push --tags;$
+	echo "*** Don't forget 'ninja build' and 'npm publish'"
+build minor: version
+build patch: version

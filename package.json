@@ -34,7 +34,6 @@
     "toxhtml.js"
   ],
   "scripts": {
-    "postversion": "git push && git push --tags",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
