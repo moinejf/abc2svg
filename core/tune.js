@@ -1420,6 +1420,7 @@ function do_pscom(text) {
 	case "rightmargin":
 	case "pagescale":
 	case "pagewidth":
+	case "print-leftmargin":
 	case "scale":
 	case "staffwidth":
 		if (parse.state == 3) {			// tune body
@@ -1436,6 +1437,7 @@ function do_pscom(text) {
 		switch (cmd) {
 		case "leftmargin":
 		case "pagescale":
+		case "print-leftmargin":
 		case "scale":
 			set_posx()
 			break

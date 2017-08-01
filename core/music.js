@@ -4341,7 +4341,7 @@ function set_sym_line() {
 
 // set the left offset the images
 function set_posx() {
-	posx = cfmt.leftmargin / cfmt.scale
+	posx = (cfmt.leftmargin - cfmt["print-leftmargin"]) / cfmt.scale
 }
 
 // initialize the start of generation / new music line

@@ -78,6 +78,7 @@ H "History: "',
 //		voc: 0,
 //		vol: 0
 //	},
+	"print-leftmargin": 0,
 	rightmargin: 1.7 * CM,
 	rbdbstop: true,
 	rbmax: 4,
@@ -462,6 +463,7 @@ function set_format(cmd, param, lock) {
 	case "pagewidth":
 	case "rightmargin":
 //	case "topmargin":
+	case "print-leftmargin":
 		cfmt[cmd] = get_unitp(param)
 		break
 	case "concert-score":
