@@ -4339,6 +4339,11 @@ function set_sym_line() {
 	}
 }
 
+// set the left offset the images
+function set_posx() {
+	posx = cfmt.leftmargin / cfmt.scale
+}
+
 // initialize the start of generation / new music line
 // and output the inter-staff blocks if any
 function gen_init(page_chg) {
@@ -4353,7 +4358,7 @@ function gen_init(page_chg) {
 			error(0, undefined, "Bad staff width");
 			cfmt.pagewidth = cfmt.leftmargin + cfmt.rightmargin + 200
 		}
-		posx = cfmt.leftmargin / cfmt.scale
+		set_posx()
 	} // set_page()
 
 	for ( ; s; s = s.ts_next) {

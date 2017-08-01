@@ -1117,7 +1117,7 @@ function do_pscom(text) {
 				s.param = multicol.rmarg.toFixed(2)
 			} else {
 				cfmt.leftmargin = multicol.lmarg;
-				posx = cfmt.leftmargin / cfmt.scale;
+				set_posx();
 				cfmt.rightmargin = multicol.rmarg
 			}
 			posy = multicol.posy
@@ -1136,7 +1136,7 @@ function do_pscom(text) {
 				s.param = multicol.rmarg.toFixed(2)
 			} else {
 				cfmt.leftmargin = multicol.lmarg;
-				posx = cfmt.leftmargin / cfmt.scale;
+				set_posx();
 				cfmt.rightmargin = multicol.rmarg
 			}
 			multicol = undefined;
@@ -1437,7 +1437,7 @@ function do_pscom(text) {
 		case "leftmargin":
 		case "pagescale":
 		case "scale":
-			posx = cfmt.leftmargin / cfmt.scale
+			set_posx()
 			break
 		}
 		return

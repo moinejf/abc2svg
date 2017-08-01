@@ -24,8 +24,8 @@ var	output = [],		// output buffer
 \n.music {font-family: music; font-size: 24px; fill: currentColor}\
 \n.music text, .music tspan {fill:currentColor}',
 	font_style = '',
+	posx = cfmt.leftmargin / cfmt.scale,	// default x offset of the images
 	posy = 0,		// y offset in the block
-	posx = cfmt.leftmargin / cfmt.scale,	// indentation
 	defined_glyph = {},
 	defs = '',
 	stv_g = {		/* staff/voice graphic parameters */

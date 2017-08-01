@@ -401,7 +401,7 @@ function tosvg(in_fname,		// file name
 		blk_flush();
 		parse.state = 0;		// file header
 		cfmt = cfmt_sav;
-		posx = cfmt.leftmargin / cfmt.scale;
+		set_posx();
 		info = info_sav;
 		char_tb = char_tb_sav;
 		glovar = glovar_sav;
