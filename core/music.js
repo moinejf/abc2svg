@@ -1747,6 +1747,8 @@ function cut_tune(lwidth, indent) {
 		s = s2
 		if (!s)
 			break
+		if (s.type == BLOCK)	// don't miss a page change
+			s = s.ts_prev;
 		xmin = s.shrink;
 		indent = 0
 	}
