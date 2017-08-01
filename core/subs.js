@@ -198,8 +198,11 @@ function trim_title(title, is_subtitle) {
 	return title
 }
 
+// return the width of the music line
 function get_lwidth() {
-	return (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin) / cfmt.scale
+	return (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin
+						- 2)	// for bar thickness at eol
+			/ cfmt.scale
 }
 
 // header generation functions
