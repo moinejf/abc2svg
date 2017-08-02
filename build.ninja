@@ -1,5 +1,8 @@
 # rules for ninja (ninja-build)
 
+# 'uglifyjs' may be disabled running
+#	NOMIN=1 ninja -v
+
 MAJOR=1
 
 rule cp
@@ -25,9 +28,11 @@ rule jsc
    fi;$
    cp core/license $out;$
    echo "var abc2svg={version:\"$$VERSION\",vdate:\"$$DATE\"}" >> $out;$
-   cat $in | uglifyjs >> $out
-# uglifyjs options
-#	-c 'evaluate,join_vars'
+   if [ "x$$NOMIN" = "x" ]; then$
+	cat $in | uglifyjs >> $out;$
+   else$
+	cat $in >> $out;$
+   fi
 
 rule jscu
   command = if [ -x /usr/bin/git -a -d .git ]; then$
@@ -40,7 +45,11 @@ rule jscu
    fi;$
    cp core/license $out;$
    echo "// $out for abc2svg-$$VERSION ($$DATE)" >> $out;$
-   uglifyjs $in >> $out
+   if [ "x$$NOMIN" = "x" ]; then$
+	uglifyjs $in >> $out;$
+   else$
+	cat $in >> $out;$
+   fi
 
 rule edit
   command = sed "$
@@ -53,9 +62,11 @@ s+@JS@+abcps2svg-$MAJOR.js+;$
 s+@MAJOR@+$MAJOR+;$
 s+@PS@+ with PostScript+$
 " editor/edit.xhtml > psedit-$MAJOR.xhtml;$
-   sed "$
-s+@MAJOR@+$MAJOR+$
-" editor/edit.js | uglifyjs > edit-$MAJOR.js
+   if [ "x$$NOMIN" = "x" ]; then$
+	sed "s+@MAJOR@+$MAJOR+" editor/edit.js | uglifyjs > edit-$MAJOR.js;$
+   else$
+	sed "s+@MAJOR@+$MAJOR+" editor/edit.js > edit-$MAJOR.js;$
+   fi
 
 build abc2svg.woff: font-gen | font/abc2svg.sfd
 build font.js: font | abc2svg.woff
