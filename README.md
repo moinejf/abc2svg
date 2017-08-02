@@ -93,14 +93,14 @@ but it writes to standard output:
 ### Build
 
 To build the **abc2svg** scripts in your machine, you must first get the files
-from [github](https://github.com/moinejf/abc2svg), either as a `.zip` file,
-or by cloning the repository:
+from [github](https://github.com/moinejf/abc2svg),
+either as a `tar.gz` or `.zip` file, or by cloning the repository:
 
     git clone http://github.com/moinejf/abc2svg
 
 (you may use `--depth=1` if you don't want the full `git` history)
 
-You need the tools `ninja`, `uglify` (nodejs), `base64` and
+You need the tools `ninja`, `uglifyjs` (nodejs), `base64` and
 `fontforge`. Then, building is simply done by
 
     ninja -v
