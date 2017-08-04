@@ -2684,7 +2684,8 @@ function parse_music_line() {
 	}
 	if (grace) {
 		syntax(1, "No end of grace note sequence");
-		curvoice.last_sym = grace.prev
+		curvoice.last_sym = grace.prev;
+		grace.prev.next = null
 	}
 	if (cfmt.breakoneoln && curvoice.last_note)
 		curvoice.last_note.beam_end = true
