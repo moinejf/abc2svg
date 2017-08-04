@@ -2607,6 +2607,10 @@ function parse_music_line() {
 			}
 			continue
 		case '|':
+			if (grace) {
+				syntax(1, "Cannot have a bar in grace notes")
+				break
+			}
 			c = line.buffer[line.index - 1];
 			new_bar()
 			if (c == '.')
