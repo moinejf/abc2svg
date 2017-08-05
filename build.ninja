@@ -105,8 +105,6 @@ rule version
 	tag=`grep '"version"' package.json|cut -d'"' -f4`;$
 	git commit -a -m "New release v$$tag";$
 	git tag -a v$$tag;$
-	git push;$
-	git push --tags;$
-	echo "*** Don't forget 'ninja build' and 'npm publish'"
+	echo "*** Don't forget: git push --follow-tags; ninja build; npm publish"
 build minor: version
 build patch: version
