@@ -128,7 +128,7 @@ var glyphs = {
 	<path class="fill" d="m0 -10a2 2 0 0 1 0 -4a2 2 0 0 1 0 4"/>\n\
 </g>',
   imsig: '<path id="imsig" class="stroke" stroke-width="0.8"\n\
-	d="m0 -7a5 5 0 1 1 0 -10"/>',
+	d="m3 -8a5 5 0 1 1 0 -8"/>',
   iMsig: '<g id="iMsig">\n\
 	<use xlink:href="#imsig"/>\n\
 	<path class="fill" d="m0 -10a2 2 0 0 1 0 -4a2 2 0 0 1 0 4"/>\n\
