@@ -38,7 +38,10 @@ var user = {
 		return file2 || file
 	},
 	errmsg: function(msg, l, c) {	// get the errors
-		errtxt += msg + '\n'
+		if (typeof printErr == 'function')
+			printErr(msg)
+		else
+			errtxt += msg + '\n'
 	},
 }
 
