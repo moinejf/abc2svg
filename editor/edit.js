@@ -49,7 +49,8 @@ var user = {
 	},
 	// insert the errors
 	errmsg: function(msg, l, c) {
-		var diverr = document.getElementById("diverr")
+		var diverr = document.getElementById("diverr");
+		msg = clean_txt(msg)
 		if (l)
 			diverr.innerHTML += '<b onclick="gotoabc(' +
 				l + ',' + c +
@@ -82,6 +83,19 @@ var user = {
     srcidx = 0
 
 // -- local functions
+
+// replace <>& by XML character references
+function clean_txt(txt) {
+	return txt.replace(/<|>|&.*?;|&/g, function(c) {
+		switch (c) {
+		case '<': return "&lt;"
+		case '>': return "&gt;"
+		}
+		if (c == '&')
+			return "&amp;"
+		return c
+	})
+}
 
 // load the language files ('edit-lang.js' and 'err-lang.js')
 function relay() { loadtxt() }

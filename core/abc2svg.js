@@ -142,7 +142,7 @@ function errbld(sev, txt, fn, idx) {
 	case 1: h += "Error: "; break
 	default: h += "Internal bug: "; break
 	}
-	user.errmsg(h + clean_txt(txt), l, c)
+	user.errmsg(h + txt, l, c)
 }
 
 function error(sev, s, msg, a1, a2, a3, a4) {
