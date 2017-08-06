@@ -4033,10 +4033,11 @@ function set_piece() {
 			sy.st_print = new Uint8Array(non_empty);
 			sy = sy.next;
 			nst = sy.nstaff
-			if (nst > nstaff)
+			if (nstaff < nst) {
+				for (st = nstaff + 1; st <= nst; st++)
+					reset_staff(st);
 				nstaff = nst
-			for (; st <= nst; st++)
-				reset_staff(st);
+			}
 			non_empty = []
 			continue
 		}
