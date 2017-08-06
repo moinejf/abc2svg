@@ -25,12 +25,25 @@ var	errtxt = '',
 // -- abc2svg init argument
 var user = {
 	errmsg: function(msg, l, c) {	// get the errors
-		errtxt += msg + '\n'
+		errtxt += clean_txt(msg) + '\n'
 	},
 	img_out: function(str) {	// image output
 		new_page += str
 	},
 	page_format: true		// define the non-page-breakable blocks
+}
+
+// replace <>& by XML character references
+function clean_txt(txt) {
+	return txt.replace(/<|>|&.*?;|&/g, function(c) {
+		switch (c) {
+		case '<': return "&lt;"
+		case '>': return "&gt;"
+		}
+		if (c == '&')
+			return "&amp;"
+		return c
+	})
 }
 
 // function called when the page is loaded

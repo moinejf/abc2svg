@@ -962,21 +962,6 @@ function vskip(h) {
 	posy += h
 }
 
-// replace <>& by XML character references
-function clean_txt(text) {
-	return text.replace(/<|>|&.*?;|&/g, function(c) {
-		switch (c) {
-		case '<': return "&lt;"
-		case '>': return "&gt;"
-//		case '&':
-		default:
-			if (c == '&')
-				return "&amp;"
-			return c
-		}
-	})
-}
-
 // create the SVG image of the block
 function svg_flush() {
 //	var img_title, head

@@ -17,22 +17,24 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-// -- local functions
+// replace <>& by XML character references
+function clean_txt(txt) {
+	return txt.replace(/<|>|&.*?;|&/g, function(c) {
+		switch (c) {
+		case '<': return "&lt;"
+		case '>': return "&gt;"
+		}
+		if (c == '&')
+			return "&amp;"
+		return c
+	})
+}
+
 function abort(e) {
 	abc.blk_out();
 	abc.blk_flush();
-	if (errtxt) {
-		errtxt = errtxt.replace(/<|>|&.*?;|&/g, function(c) {
-				switch (c) {
-				case '<': return "&lt;"
-				case '>': return "&gt;"
-				}
-				if (c == '&')
-					return "&amp;"
-				return c
-			});
-		print("<pre>" + errtxt + "</pre>")
-	}
+	if (errtxt)
+		print("<pre>" + clean_txt(errtxt) + "</pre>");
 	print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
 	print("</body> </html>");
 	quit()
@@ -75,7 +77,7 @@ function abc_init() {
 
 function abc_end() {
 	if (errtxt)
-		print("<pre>" + errtxt + "</pre>")
+		print("<pre>" + clean_txt(errtxt) + "</pre>")
 	print("</body>\n</html>")
 }
 
