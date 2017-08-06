@@ -428,9 +428,10 @@ function voice_adj() {
 
 /* -- duplicate the voices as required -- */
 function dupl_voice() {
-	var p_voice, p_voice2, s, s2, g, g2, v, i
+	var	p_voice, p_voice2, s, s2, g, g2, v, i,
+		nv = voice_tb.length
 
-	for (v in voice_tb) {
+	for (v = 0; v < nv; v++) {
 		p_voice = voice_tb[v];
 		p_voice2 = p_voice.clone
 		if (!p_voice2)
@@ -469,8 +470,8 @@ function dupl_voice() {
 			g2 = clone(g);
 			s2.extra = g2;
 			s2 = g2;
-			s2.v = v;
-			s2.p_v = p_voice;
+			s2.v = p_voice2.v;
+			s2.p_v = p_voice2;
 			s2.st = p_voice2.st
 			for (g = g.next; g; g = g.next) {
 				g2 = clone(g)
@@ -482,8 +483,8 @@ function dupl_voice() {
 				s2.next = g2;
 				g2.prev = s2;
 				s2 = g2;
-				s2.v = v;
-				s2.p_v = p_voice;
+				s2.v = p_voice2.v;
+				s2.p_v = p_voice2;
 				s2.st = p_voice2.st
 			}
 		}
