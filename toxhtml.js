@@ -38,10 +38,6 @@ function abort(e) {
 	quit()
 }
 
-// generation variables and functions
-user.img_out = function(str) { print(str) };
-user.page_format = true
-
 // entry point from cmdline
 function abc_init() {
 	function get_date() {
@@ -49,6 +45,9 @@ function abc_init() {
 
 		return now.toUTCString()
 	} // get_date()
+
+	user.page_format = true;
+	user.img_out = function(str) { print(str) };
 
 	print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">\n\
