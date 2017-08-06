@@ -27,6 +27,19 @@ global.printErr = printErr;
 global.readFile = readFile;
 global.quit = quit;
 
+function usage() {
+	printErr('ABC translator with Node.js\
+ and abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
+Usage:\n\
+  abc2svg [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
+Arguments:\n\
+  script.js  generation script to load - default: toxhtml.js (XHTML+SVG)\n\
+  g_options  global ABC options\n\
+  ABC_file   ABC file\n\
+  f_options  file options')
+		quit()
+}
+
 // load the abc2svg core
 var m = require("abc2svg/abc2svg-1");
 global.abc2svg = m.abc2svg;
@@ -39,26 +52,30 @@ global.errtxt = m.errtxt;
 global.user = m.user;
 global.abc_cmd = m.abc_cmd
 
-// if no rendering engine, load xhtml
-if (typeof abc_init != 'function') {
-	m = require("abc2svg/toxhtml");
-	global.abort = m.abort;
-	global.abc_init = m.abc_init;
-	global.abc_end = m.abc_end
-} else {
+// main
+var args = process.argv
+if (!args[2])
+	usage();
+args.shift();
+args.shift()
+
+// if the first argument is a script, load it
+if (args[0] && args[0].match(/\.js$/)) {
+	var fn = args[0][0] == '/' ? args[0] : (__dirname + '/' + args[0])
+	var f = readFile(fn);
+	eval(f);
+	args.shift()
 	global.abort = abort;
 	global.abc_init = abc_init;
 	global.abc_end = abc_end
 }
 
-// main
-var args = process.argv
-if (!args[2]) {
-	print("abc2svg-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
-		"	ABC to SVG translator\n" +
-		" Usage: abc2svg [options] ABC_files");
-	quit()
+// if no rendering engine, load xhtml
+if (typeof(abc_init) != 'function') {
+	m = require("abc2svg/toxhtml");
+	global.abort = m.abort;
+	global.abc_init = m.abc_init;
+	global.abc_end = m.abc_end
 }
-args.shift()
-args.shift()
+
 abc_cmd("nodeJS", args)
