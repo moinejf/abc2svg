@@ -22,9 +22,15 @@ function abort(e) {
 	abc.blk_out();
 	abc.blk_flush();
 	if (errtxt) {
-		errtxt = errtxt.replace(/</g, '&lt;');
-		errtxt = errtxt.replace(/>/g, '&gt;');
-		errtxt = errtxt.replace(/&/g, '&amp;');
+		errtxt = errtxt.replace(/<|>|&.*?;|&/g, function(c) {
+				switch (c) {
+				case '<': return "&lt;"
+				case '>': return "&gt;"
+				}
+				if (c == '&')
+					return "&amp;"
+				return c
+			});
 		print("<pre>" + errtxt + "</pre>")
 	}
 	print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
