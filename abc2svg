@@ -10,6 +10,10 @@ function print(str) {
 	process.stdout.write(str + '\n')
 }
 
+function printErr(str) {
+	process.stderr.write(str + '\n')
+}
+
 function readFile(fname) {
 	return fs.readFileSync(fname).toString()
 }
@@ -19,6 +23,7 @@ function quit() {
 }
 
 global.print = print;
+global.printErr = printErr;
 global.readFile = readFile;
 global.quit = quit;
 
