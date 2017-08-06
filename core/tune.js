@@ -150,7 +150,7 @@ var w_tb = new Uint8Array([
 
 function sort_all() {
 	var	s, s2, p_voice, v, time, w, wmin, ir, multi,
-		prev, new_sy, nb,
+		prev, nb,
 		nv = voice_tb.length,
 		vtb = [],
 		vn = [],			/* voice indexed by range */
@@ -162,11 +162,13 @@ function sort_all() {
 	/* initialize the voice order */
 	var	fl = 1,
 		sy = cur_sy,
-		set_sy = true
+		sy_w = 0,
+		sy_time = 0,
+		new_sy = 1
 
 	while (1) {
-		if (set_sy && fl) {
-			set_sy = false;
+		if (new_sy && fl) {
+			new_sy = false;
 			multi = -1;
 			vn = []
 			for (v = 0; v < nv; v++) {
@@ -245,6 +247,17 @@ function sort_all() {
 			}
 		}
 
+		// continue the time sequence after STAVES
+		if (sy_w) {
+			if (sy_w < 0) {		// init
+				sy_w = wmin
+			} else if (sy_time == time && sy_w == wmin) {
+				fl = 0
+			} else {
+				sy_w = 0
+			}
+		}
+
 		/* link the vertical sequence */
 		for (ir in vn) {
 			v = vn[ir]
@@ -256,7 +269,9 @@ function sort_all() {
 				continue
 			if (s.type == STAVES) {
 				sy = sy.next;
-				set_sy = true
+				new_sy = true;
+				sy_w = -1;
+				sy_time = s.time
 			}
 			if (fl) {
 				fl = 0;
