@@ -92,11 +92,11 @@ function AbcMIDI() {
 			var	p = s.notes[i].apit + 19,	// pitch from lowest C
 				a = s.notes[i].acc
 
-			if (a)
-				map[p] = a == 3 ? 0 : a	// (3 = '=')
-			if (transp[s.v])
-				p += transp[s.v]
-			return Math.floor(p / 7) * 12 + scale[p % 7] + map[p]
+		if (transp[s.v])
+			p += transp[s.v]
+		if (a)
+			map[p] = a == 3 ? 0 : a; // (3 = natural)
+		return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
 		} // pit2midi()
 
 		// handle the ties
