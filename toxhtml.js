@@ -48,8 +48,70 @@ function abc_init() {
 		return now.toUTCString()
 	} // get_date()
 
+	// output a header or footer
+	function gen_hf(type, str) {
+		var	a, i, page,
+			lcr = ["left", "center", "right"];
+
+		a = abc.header_footer(str)
+		for (i = 0; i < 3; i++) {
+			if (!a[i])
+				continue
+			str = a[i]
+			if (str.indexOf('\n') >= 0)
+				str = str.replace('\n', '<br/>')
+			if (str.indexOf('\x0c') >= 0) {
+				str = str.replace('\x0c', '');
+				page = " page"
+			} else {
+				page = ''
+			}
+			print('<div class="' + type + ' ' + lcr[i] + page + '">' +
+				str + '</div>')
+		}
+	}
+
 	user.page_format = true;
-	user.img_out = function(str) { print(str) };
+
+	// output the xhtml header
+	user.img_out = function(str) {
+		var	header = abc.get_fmt("header"),
+			footer = abc.get_fmt("footer"),
+			media_s = '	@media print {\n\
+		body {margin:0; padding:0; border:0}\n\
+		div.newpage {page-break-before: always}\n\
+		div.nobrk {page-break-inside: avoid}\n\
+	}',
+			media_f ='	@media screen {\n\
+		div.header {display: none}\n\
+		div.footer {display: none}\n\
+	}\n\
+	@media print {\n\
+		body {margin:0; padding:0; border:0;\n\
+			counter-reset: page;\n\
+			counter-increment: page; }\n\
+		div.newpage {page-break-before: always}\n\
+		div.nobrk {page-break-inside: avoid}\n\
+		div.header {\n\
+			position: fixed;\n\
+			top: 0pt;\n\
+			width: 100%;\n\
+			' + abc.style_font(abc.get_fmt("headerfont")) + '\n\
+		}\n\
+		div.footer {\n\
+			position: fixed;\n\
+			bottom: 0pt;\n\
+			width: 100%;\n\
+			' + abc.style_font(abc.get_fmt("footerfont")) + '\n\
+		}\n\
+		div.page:after {\n\
+			counter-increment: page;\n\
+			content: counter(page);\n\
+		}\n\
+		div.left {text-align: left}\n\
+		div.center {text-align: center}\n\
+		div.right {text-align: right}\n\
+	}';
 
 	print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">\n\
@@ -57,22 +119,27 @@ function abc_init() {
 <head>\n\
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>\n\
 <meta name="generator" content="abc2svg-' + abc2svg.version + '"/>\n\
-<!-- CreationDate: ' + get_date() + '-->');
-//fixme: pb with '--' and ','
-//		"<!-- CommandLine: " + args.toString() + " -->")
-	print('<style type="text/css">\n\
-	body {margin:0; padding:0; border:0}\n\
+<!-- CreationDate: ' + get_date() + '-->\n\
+<style type="text/css">\n\
 	@page {margin-top: 1cm}\n\
 	text, tspan {white-space:pre}\n\
-	svg {display:block}\n\
-	@media print {\n\
-		div.newpage {page-break-before: always}\n\
-		div.nobrk {page-break-inside: avoid}\n\
-	}\n\
+	svg {display:block}\n' +
+			((header || footer) ? media_f : media_s) + '\n\
 </style>\n\
 <title>abc2svg document</title>\n\
 </head>\n\
 <body>')
+		if (header)
+			gen_hf("header", header)
+		if (footer)
+			gen_hf("footer", footer);
+
+		// output the first generated string
+		print(str);
+
+		// change the output function
+		user.img_out = function(str) { print(str) }
+	}
 }
 
 function abc_end() {
