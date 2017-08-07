@@ -108,6 +108,11 @@ H "History: "',
 	wordsspace: 5
 }
 
+// exported function: return a parameter value
+this.get_fmt = function(k) {
+	return cfmt[k]
+}
+
 function get_bool(param) {
 	return !param || !param.match(/^(0|n|f)/i) // accept void as true !
 }
@@ -577,6 +582,10 @@ function set_format(cmd, param, lock) {
 		}
 		set_v_param("scale", v)
 		break
+	default:		// memorize all global commands
+		if (parse.state == 0)
+			cfmt[cmd] = param
+		break
 	}
 }
 
@@ -586,7 +595,9 @@ function set_format(cmd, param, lock) {
 function font_init() {
 	param_set_font("annotationfont", "sans-serif 12");
 	param_set_font("composerfont", "serifItalic 14");
+	param_set_font("footerfont", "serif 16");
 	param_set_font("gchordfont", "sans-serif 12");
+	param_set_font("headerfont", "serif 16");
 	param_set_font("historyfont", "serif 16");
 	param_set_font("infofont", "serifItalic 14");
 	param_set_font("measurefont", "serifItalic 14");
@@ -601,37 +612,46 @@ function font_init() {
 	param_set_font("wordsfont", "serif 16")
 }
 
-// output a font style
-function style_add_font(font) {
-	var	name = font.name,
-		i = name.indexOf("Italic"),
+// build a font style
+function style_font(fn) {		// 'font_name'.'size'
+	var	r = fn.split('.'),
+		sz = r[1],
+		i = fn.indexOf("Italic"),
 		j = 100,
-		o = name.indexOf("Oblique"),
-		b = name.indexOf("Bold")
+		o = fn.indexOf("Oblique"),
+		b = fn.indexOf("Bold");
 
-	font_style += "\n.f" + font.fid + cfmt.fullsvg + " {font:"
+	fn = r[0];
+	r = "font:"
 	if (b > 0) {
-		font_style += "bold ";
+		r += "bold ";
 		j = b
 	}
 	if (i > 0 || o > 0) {
 		if (i > 0) {
-			font_style += "italic "
+			r += "italic "
 			if (i < j)
 				j = i
 		}
 		if (o > 0) {
-			font_style += "oblique "
+			r += "oblique "
 			if (o < j)
 				j = o
 		}
 	}
 	if (j != 100) {
-		if (name[j - 1] == '-')
+		if (fn[j - 1] == '-')
 			j--;
-		name = name.slice(0, j)
+		fn = fn.slice(0, j)
 	}
-	font_style += font.size + "px " + name + "}"
+	return r + sz + "px " + fn
+}
+Abc.prototype.style_font = style_font
+
+// output a font style
+function style_add_font(font) {
+	font_style += "\n.f" + font.fid + cfmt.fullsvg +
+			" {" + style_font(font.name + '.' + font.size) + "}"
 }
 
 // use the font
