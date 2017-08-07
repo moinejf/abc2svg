@@ -698,9 +698,10 @@ function deco_build(nm, text) {
 
 /* -- convert the decorations -- */
 function deco_cnv(a_dcn, s, prev) {
-	var	i, j, dd, dcn, note
+	var	i, j, dd, dcn, note,
+		nd = a_dcn.length
 
-	for (i in a_dcn) {
+	for (i = 0; i < nd; i++) {
 		dcn = a_dcn[i];
 		dd = dd_tb[dcn]
 		if (!dd) {
@@ -875,9 +876,10 @@ function deco_def(nm) {
 /* -- update the x position of a decoration -- */
 // used to center the rests
 function deco_update(s, dx) {
-	var	i, de
+	var	i, de,
+		nd = a_de.length
 
-	for (i in a_de) {
+	for (i = 0; i < nd; i++) {
 		de = a_de[i]
 		if (de.s == s)
 			de.x += dx
@@ -888,9 +890,10 @@ function deco_update(s, dx) {
 function deco_width(s) {
 	var	dd, i,
 		wl = 0,
-		a_dd = s.a_dd
+		a_dd = s.a_dd,
+		nd = a_dd.length
 
-	for (i in a_dd) {
+	for (i = 0; i < nd; i++) {
 		dd =  a_dd[i]
 		switch (dd.func) {
 		case 1:			/* slide */
@@ -1065,9 +1068,10 @@ function draw_deco_near() {
 	function ldeco_update(s) {
 		var	i, de,
 //			x = s.ts_prev.x + s.ts_prev.wr
-			x = s.x - s.wl
+			x = s.x - s.wl,
+			nd = a_de.length
 
-		for (i in a_de) {
+		for (i = 0; i < nd; i++) {
 			de = a_de[i];
 			de.ix = i;
 			de.s.x = de.x = x;
@@ -1077,10 +1081,11 @@ function draw_deco_near() {
 
 	/* -- create the deco elements, and treat the near ones -- */
 	function create_deco(s) {
-		var	dd, k, l, pos, de
+		var	dd, k, l, pos, de,
+			nd = s.a_dd.length
 
 /*fixme:pb with decorations above the staff*/
-		for (k in s.a_dd) {
+		for (k = 0; k < nd; k++) {
 			dd = s.a_dd[k]
 
 			/* check if hidden */
@@ -1132,9 +1137,10 @@ function draw_deco_near() {
 	// create the decorations of note heads
 	function create_dh(s, m) {
 		var	f, str, de, uf, k, dcn, dd,
-			note = s.notes[m]
+			note = s.notes[m],
+			nd = note.a_dcn.length
 
-		for (k in note.a_dcn) {
+		for (k = 0; k < nd; k++) {
 			dcn = note.a_dcn[k];
 			dd = dd_tb[dcn]
 			if (!dd) {
@@ -1189,7 +1195,7 @@ function draw_deco_near() {
 		if (s.a_dd)
 			create_deco(s)
 		if (s.notes) {
-			for (m in s.notes) {
+			for (m = 0; m < s.notes.length; m++) {
 				if (s.notes[m].a_dcn)
 					create_dh(s, m)
 			}
@@ -1311,9 +1317,10 @@ function draw_deco_near() {
 /* (the staves are not yet defined) */
 /* (delayed output) */
 function draw_deco_note() {
-	var	i, de, dd, f
+	var	i, de, dd, f,
+		nd = a_de.length
 
-	for (i in a_de) {
+	for (i = 0; i < nd; i++) {
 		de = a_de[i];
 		dd = de.dd;
 		f = dd.func
@@ -1332,7 +1339,8 @@ function draw_deco_note() {
 function draw_deco_staff() {
 	var	s, first_gchord, p_voice, x, y, w, i, v, de, dd,
 		gch, gch2, ix, top, bot,
-		minmax = new Array(nstaff)
+		minmax = new Array(nstaff),
+		nd = a_de.length
 
 	/* draw the repeat brackets */
 	function draw_repbra(p_voice) {
@@ -1460,7 +1468,7 @@ function draw_deco_staff() {
 		if (!first_gchord)
 			first_gchord = s;
 		gch2 = null
-		for (ix in s.a_gch) {
+		for (ix = 0; ix < s.a_gch.length; ix++) {
 			gch = s.a_gch[ix]
 			if (gch.type != 'g')
 				continue
@@ -1516,7 +1524,7 @@ function draw_deco_staff() {
 	}
 
 	/* draw the repeat brackets */
-	for (v in voice_tb) {
+	for (v = 0; v < voice_tb.length; v++) {
 		p_voice = voice_tb[v]
 		if (p_voice.second || !p_voice.sym)
 			continue
@@ -1529,7 +1537,7 @@ function draw_deco_staff() {
 			ymin: 0,
 			ymax: 0
 		}
-	for (i in a_de) {
+	for (i = 0; i < nd; i++) {
 		de = a_de[i];
 		dd = de.dd
 		if (!dd)		// if error
@@ -1552,7 +1560,7 @@ function draw_deco_staff() {
 	}
 
 	/* and, if wanted, set them at a same vertical offset */
-	for (i in a_de) {
+	for (i = 0; i < nd; i++) {
 		de = a_de[i];
 		dd = de.dd
 		if (!dd)		// if error
@@ -1804,7 +1812,7 @@ function write_tempo(s, x, y) {
 		x += strw(s.tempo_str1) + 3
 	}
 	if (s.tempo_notes) {
-		for (j in s.tempo_notes)
+		for (j = 0; j < s.tempo_notes.length; j++)
 			x += draw_notempo(s, x, y, s.tempo_notes[j], sc);
 		xy_str(x, y, "=");
 		x += strw("= ")

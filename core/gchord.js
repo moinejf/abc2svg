@@ -320,7 +320,7 @@ function gch_build(s) {
 	// change the accidentals in the chord symbols,
 	// convert the escape sequences in annotations, and
 	// set the offsets
-	for (ix in s.a_gch) {
+	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix]
 		if (gch.type == 'g') {
 			gch.text = gch.text.replace(/##|#|=|bb|b/g,
@@ -402,7 +402,7 @@ function gch_build(s) {
 	/* move upwards the top and middle texts */
 	y_left /= 2;
 	y_right /= 2
-	for (ix in s.a_gch) {
+	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix]
 		switch (gch.type) {
 		case '^':			/* above */
@@ -435,7 +435,7 @@ function draw_gchord(s, gchy_min, gchy_max) {
 		y_below = y_get(s.st, 0, s.x - 2, w),
 		yav = s.yav || 0
 
-	for (ix in s.a_gch) {
+	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix]
 		if (gch.type != 'g')
 			continue
@@ -454,7 +454,7 @@ function draw_gchord(s, gchy_min, gchy_max) {
 	}
 
 	set_dscale(s.st, true);
-	for (ix in s.a_gch) {
+	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix];
 		use_font(gch.font);
 		gene.curfont = gene.deffont = gch.font;

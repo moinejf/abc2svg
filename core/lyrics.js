@@ -158,7 +158,7 @@ function ly_width(s, wlw) {
 		a_ly = s.a_ly;
 
 	align = 0
-	for (i in a_ly) {
+	for (i = 0; i < a_ly.length; i++) {
 		ly = a_ly[i]
 		if (!ly)
 			continue
@@ -233,7 +233,7 @@ function ly_width(s, wlw) {
 			s.wr = xx
 	}
 	if (align > 0) {
-		for (i in a_ly) {
+		for (i = 0; i < a_ly.length; i++) {
 			ly = a_ly[i]
 			if (ly && ly.t[0] >= '0' && ly.t[0] <= '9')
 				ly.shift = align
@@ -428,7 +428,7 @@ function draw_all_lyrics() {
 /*fixme:should get the real width*/
 				x = s.x;
 				w = 10
-				for (i in a_ly) {
+				for (i = 0; i < a_ly.length; i++) {
 					if (a_ly[i].w != 0) {
 						x -= a_ly[i].shift;
 						w = a_ly[i].w
@@ -443,7 +443,7 @@ function draw_all_lyrics() {
 					bot = y
 				while (nly < a_ly.length)
 					h_tb[v][nly++] = 0
-				for (i in a_ly) {
+				for (i = 0; i < a_ly.length; i++) {
 					ly = a_ly[i]
 					if (!ly)
 						continue
@@ -484,7 +484,7 @@ function draw_all_lyrics() {
 
 	/* draw the lyrics under the staves */
 	i = 0
-	for (v in voice_tb) {
+	for (v = 0; v < nv; v++) {
 		p_voice = voice_tb[v]
 		if (!p_voice.sym)
 			continue
@@ -515,7 +515,7 @@ function draw_all_lyrics() {
 	}
 
 	/* set the max y offsets of all symbols */
-	for (v in voice_tb) {
+	for (v = 0; v < nv; v++) {
 		p_voice = voice_tb[v]
 		if (!p_voice.sym)
 			continue

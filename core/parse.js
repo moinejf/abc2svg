@@ -764,7 +764,7 @@ function new_meter(text) {
 				else
 					glovar.ulen = BASE_LEN / 16
 			}
-			for (v in voice_tb) {
+			for (v = 0; v < voice_tb.length; v++) {
 				voice_tb[v].meter = s;
 				voice_tb[v].wmeasure = wmeasure
 			}
@@ -1768,7 +1768,7 @@ function note_transp(s) {
 						a = -1	// flat
 				}
 			} else {
-				for (j in curvoice.okey.a_acc) {
+				for (j = 0; j < curvoice.okey.a_acc.length; j++) {
 					acc = curvoice.okey.a_acc[j]
 					if ((n + 16 * 7 - acc.pit) % 7 == 0) {
 						a = acc.acc
