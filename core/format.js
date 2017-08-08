@@ -549,7 +549,7 @@ function set_format(cmd, param, lock) {
 			break
 		}
 		v = cfmt.pagewidth - v - cfmt.leftmargin
-		if (v < 100)
+		if (v < 2)
 			syntax(1, "%%staffwidth too big")
 		else
 			cfmt.rightmargin = v
