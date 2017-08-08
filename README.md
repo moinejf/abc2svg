@@ -92,7 +92,8 @@ but it writes to standard output:
 
 ### Build
 
-To build the **abc2svg** scripts in your machine, you must first get the files
+If you want to build the **abc2svg** scripts in your machine,
+you must first get the files
 from [github](https://github.com/moinejf/abc2svg),
 either as a `tar.gz` or `.zip` file, or by cloning the repository:
 
@@ -100,10 +101,25 @@ either as a `tar.gz` or `.zip` file, or by cloning the repository:
 
 (you may use `--depth=1` if you don't want the full `git` history)
 
-You need the tools `ninja`, `uglifyjs` (nodejs), `base64` and
-`fontforge`. Then, building is simply done by
+Then, building in done using the tool [ninja](https://ninja-build.org/).  
+You may do it:
 
+- without minification  
+  This is interesting for debug purpose, the scripts being more human friendly.
+
+```
+    NOMIN=1 ninja -v
+```
+
+- in a standard way with minification  
+  In this case, you need the tool `uglifyjs` which comes with nodeJS.
+
+```
     ninja -v
+```
+
+If you also want to change or add music glyphs, you may edit the source
+file `font/abc2svg.sfd`. In this case, you will need both `base64` and `fontforge`.
 
 ### Batch
 
@@ -113,6 +129,6 @@ following shell scripts:
 
 - `abcjs24` with `js24` (Mozilla JavaScript shell - Spidermonkey)
 - `abcjsc` with `jsc-1` (webkitgtk2)
-- `abcnode` with `nodejs`
-- `abcps` = abcjs24 + PostScript support
-- `abcv8` with `d8` (libv8 Google)
+- `abcnode` with `node` (nodeJS)
+- `abcps` (abcjs24 + PostScript support)
+- `abcv8` with `d8` (Google libv8)
