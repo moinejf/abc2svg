@@ -9,13 +9,11 @@ rule cp
   command = cp $in $out
 
 rule font
-  command = echo "// abc2svg music font" > font.js;$
+  command = fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.woff")';$
+   echo "// abc2svg music font" > font.js;$
    echo -n "var musicfont = 'url(\"data:application/font-woff;base64," >> font.js;$
    base64 -w 0 abc2svg.woff >> font.js;$
    echo "\")'" >> font.js
-
-rule font-gen
-  command = fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.woff")'
 
 rule jsc
   command = if [ -x /usr/bin/git -a -d .git ]; then$
@@ -68,8 +66,7 @@ s+@PS@+ with PostScript+$
 	sed "s+@MAJOR@+$MAJOR+" editor/edit.js > edit-$MAJOR.js;$
    fi
 
-build abc2svg.woff: font-gen | font/abc2svg.sfd
-build font.js: font | abc2svg.woff
+build font.js: font | font/abc2svg.sfd
 
 build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
