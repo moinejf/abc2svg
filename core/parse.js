@@ -2491,7 +2491,6 @@ function parse_music_line() {
 				line.index = 0;
 				do_info(c_next, text);
 				line.index = i;
-				parse.istart = 0
 				continue
 			}
 			// fall thru ('[' is start of chord)
