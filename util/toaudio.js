@@ -61,7 +61,7 @@ var	BAR = 0,
 	function set_voices() {
 		var v, s
 
-		transp = Int8Array(voice_tb.length)
+		transp = new Int8Array(voice_tb.length)
 		for (v = 0; v < voice_tb.length; v++) {
 			s = voice_tb[v].clef;
 			transp[s.v] = (!s.clef_octave || s.clef_oct_transp) ?
