@@ -27,15 +27,19 @@ var	a_gch,		// array of parsed guitar chords
 			//	[2] color
 var	not_ascii = "Not an ASCII character"
 
+// set the source references of a symbol
+function set_ref(s) {
+	s.ctx = parse.ctx;
+	s.istart = parse.istart;
+	s.iend = parse.iend
+}
+
 // -- %% pseudo-comment
 
 // clef definition (%%clef, K: and V:)
 function new_clef(clef_def) {
 	var	s = {
 			type: CLEF,
-			ctx: parse.ctx,
-			istart: parse.istart,
-			iend: parse.iend,
 			clef_line: 2,
 			clef_type: "t",
 			v: curvoice.v,
@@ -44,6 +48,8 @@ function new_clef(clef_def) {
 			dur: 0
 		},
 		i = 1
+
+	set_ref(s)
 
 	switch (clef_def[0]) {
 	case '"':
@@ -487,12 +493,11 @@ function new_key(param) {
 		mode = 0,
 		s = {
 			type: KEY,
-			ctx: parse.ctx,
-			istart: parse.istart,
-			iend: parse.iend,
 			k_delta: 0,
 			dur:0
 		}
+
+	set_ref(s);
 
 	// tonic
 	i = 1
@@ -627,9 +632,6 @@ function new_key(param) {
 function new_meter(text) {
 	var	s = {
 			type: METER,
-			ctx: parse.ctx,
-			istart: parse.istart,
-			iend: parse.iend,
 			dur: 0,
 			a_meter: []
 		},
@@ -640,6 +642,8 @@ function new_meter(text) {
 		wmeasure,
 		p = text,
 		in_parenth
+
+	set_ref(s)
 
 	if (p.indexOf("none") == 0) {
 		i = 4;				/* no meter */
@@ -785,11 +789,10 @@ function new_tempo(text) {
 	var	i = 0, j, c, nd, tmp,
 		s = {
 			type: TEMPO,
-			ctx: parse.ctx,
-			istart: parse.istart,
-			iend: parse.iend,
 			dur: 0
 		}
+
+	set_ref(s)
 
 	if (cfmt.writefields.indexOf('Q') < 0)
 		s.del = true			// don't display
@@ -950,9 +953,6 @@ function do_info(info_type, text) {
 			break
 		s = {
 			type: PART,
-			ctx: parse.ctx,
-			istart: parse.istart,
-			iend: parse.iend,
 			text: text,
 			dur: 0
 		}
@@ -1006,9 +1006,6 @@ function do_info(info_type, text) {
 			break
 		s = {
 			type: REMARK,
-			ctx: parse.ctx,
-			istart: parse.istart,
-			iend: parse.iend,
 			text: text,
 			dur: 0
 		}

@@ -41,6 +41,8 @@ function voice_filter() {
 
 /* -- link a ABC symbol into the current voice -- */
 function sym_link(s) {
+	if (!s.ctx)
+		set_ref(s)
 	if (!curvoice.ignore) {
 		parse.last_sym = s;
 		s.prev = curvoice.last_sym
@@ -1394,9 +1396,6 @@ function do_pscom(text) {
 			switch (s.type) {
 			case NOTE:		// insert a key
 				s = clone(curvoice.okey);
-				s.ctx = parse.ctx;
-				s.istart = parse.istart;
-				s.iend = parse.iend;
 				sym_link(s)
 				break
 			case KEY:
