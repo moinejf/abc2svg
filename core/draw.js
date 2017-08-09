@@ -3203,9 +3203,6 @@ function draw_sym_near() {
 		}
 	}
 
-	if (cfmt.measurenb >= 0)
-		draw_measnb()
-
 	for (v = 0; v < voice_tb.length; v++) {
 		p_voice = voice_tb[v];
 		s = p_voice.sym
@@ -3261,6 +3258,9 @@ function draw_sym_near() {
 			break
 		}
 	}
+
+	if (cfmt.measurenb >= 0)
+		draw_measnb()
 }
 
 /* -- draw the name/subname of the voices -- */
