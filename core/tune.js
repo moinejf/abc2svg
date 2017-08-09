@@ -210,8 +210,13 @@ function sort_all() {
 			}
 		}
 
-		if (wmin > 127)
-			break					/* done */
+		if (wmin > 127) {
+			if (new_sy && !fl) {	// if %%score with no common voice
+				fl = 1
+				continue
+			}
+			break			// done
+		}
 
 		/* if some multi-rest and many voices, expand */
 		if (time == mrest_time) {
