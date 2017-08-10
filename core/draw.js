@@ -3613,7 +3613,7 @@ function draw_systems(indent) {
 				x = xstaff[st]
 				if (x < 0) {		// no staff yet
 					if (cur_sy.st_print[st])
-						xstaff[st] = s.type == BAR ?
+						xstaff[st] = s.ts_next.type == BAR ?
 							s.x : (s.x - s.wl - 2)
 					continue
 				}
