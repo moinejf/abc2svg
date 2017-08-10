@@ -2032,7 +2032,7 @@ function set_clefs() {
 
 		// handle %%staves
 		if (s.type == STAVES) {
-			sy = sy.next
+			sy = s.sy
 			for (st = 0; st <= nstaff; st++)
 				staff_clef[st].autoclef = true
 			for (v = 0; v < voice_tb.length; v++) {
@@ -2314,7 +2314,7 @@ function set_stem_dir() {
 			if (u.type == STAVES) {
 				if (u != s)
 					break
-				sy = sy.next
+				sy = s.sy
 				for (st = nst; st <= sy.nstaff; st++)
 					st_v_tb[st] = []
 				nst = sy.nstaff
@@ -2474,7 +2474,7 @@ function set_rest_offset() {
 		if (s.invis)
 			continue
 		if (s.type == STAVES)
-			sy = sy.next
+			sy = s.sy
 		if (!s.dur)
 			continue
 		v_s = v_s_tb[s.v]
@@ -4031,7 +4031,7 @@ function set_piece() {
 		if (s.type == STAVES) {
 			set_brace();
 			sy.st_print = new Uint8Array(non_empty);
-			sy = sy.next;
+			sy = s.sy;
 			nst = sy.nstaff
 			if (nstaff < nst) {
 				for (st = nstaff + 1; st <= nst; st++)
@@ -4376,7 +4376,7 @@ function gen_init(page_chg) {
 		default:
 			continue
 		case STAVES:
-			cur_sy = cur_sy.next
+			cur_sy = s.sy
 			break
 		case BLOCK:
 			switch (s.subtype) {

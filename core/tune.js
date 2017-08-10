@@ -275,7 +275,7 @@ function sort_all() {
 			 || w_tb[s.type] != wmin)
 				continue
 			if (s.type == STAVES) {
-				sy = sy.next;
+				sy = s.sy;
 				new_sy = true;
 				sy_w = -1;
 				sy_time = s.time
@@ -627,7 +627,7 @@ function do_clip() {
 				s2.p_v.meter = clone(s2.as.u.meter)
 				break
 			case STAVES:
-				sy = sy.next
+				sy = s.sy
 				break
 			}
 		}
@@ -1719,9 +1719,7 @@ function get_staves(cmd, parm) {
 	 || (maxtime == 0 && staves_found < 0)) {
 		for (v = 0; v < par_sy.voices.length; v++)
 			par_sy.voices[v].range = -1
-//	} else if (staves_found != maxtime) {	// if no 2 %%staves
 	} else {
-// fixme: problem if no common voice with previous %%staves
 
 		/*
 		 * create a new staff system and
@@ -1758,7 +1756,8 @@ function get_staves(cmd, parm) {
 			sym_link(s)	// link the staves in this voice
 		}
 		par_sy.nstaff = nstaff;
-		new_syst()
+		new_syst();
+		s.sy = par_sy
 	}
 
 //	staves_found = maxtime < 0 ? 0 : maxtime
@@ -2357,6 +2356,16 @@ function goto_tune(is_K) {
 		curvoice.default = true
 	} else if (!curvoice) {
 		curvoice = voice_tb[staves_found < 0 ? 0 : par_sy.top_voice]
+	}
+
+	// link the first %%score
+	if (staves_found >= 0) {
+		s = {
+			type: STAVES,
+			dur: 0,
+			sy: par_sy
+		}
+		sym_link(s)
 	}
 
 	if (!curvoice.init && !is_K) {

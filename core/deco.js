@@ -1657,7 +1657,7 @@ function draw_measnb() {
 	for ( ; s; s = s.ts_next) {
 		switch (s.type) {
 		case STAVES:
-			sy = sy.next
+			sy = s.sy
 			for (st = 0; st < nstaff; st++) {
 				if (sy.st_print[st])
 					break
