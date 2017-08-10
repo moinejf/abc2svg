@@ -429,9 +429,10 @@ function draw_all_lyrics() {
 				x = s.x;
 				w = 10
 				for (i = 0; i < a_ly.length; i++) {
-					if (a_ly[i].w != 0) {
-						x -= a_ly[i].shift;
-						w = a_ly[i].w
+					ly = a_ly[i]
+					if (ly && ly.w != 0) {
+						x -= ly.shift;
+						w = ly.w
 						break
 					}
 				}
