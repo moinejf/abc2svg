@@ -188,7 +188,7 @@ function render() {
 
 	diverr.innerHTML = '';
 //	document.body.style.cursor = "wait";
-	ref = []
+	ref = {}
 	try {
 		abc.tosvg(abc_fname[0], content)
 	} catch(e) {

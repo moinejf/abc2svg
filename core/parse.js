@@ -215,7 +215,7 @@ function set_linebreak(param) {
 		}
 	}
 	param = param.split(/\s+/)
-	for (i in param) {
+	for (i = 0; i < param.length; i++) {
 		item = param[i]
 		switch (item) {
 		case '!':
