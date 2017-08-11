@@ -2404,8 +2404,11 @@ function goto_tune(is_K) {
 		par_sy.nstaff = nstaff
 	}
 
-	// link the first %%score
+	// link the first %%score in the top voice
+	p_voice = curvoice;
+	curvoice = voice_tb[par_sy.top_voice];
 	sym_link(s)
 	if (staves_found < 0)
-		s.default = true
+		s.default = true;
+	curvoice = p_voice
 }
