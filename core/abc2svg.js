@@ -103,6 +103,7 @@ function clone(obj) {
 		return obj
 	var tmp = new obj.constructor()
 	for (var k in obj)
+	    if (obj.hasOwnProperty(k))
 		tmp[k] = obj[k]
 	return tmp
 }

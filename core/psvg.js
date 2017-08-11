@@ -253,6 +253,7 @@ function Svg() {
 //		return obj
 	var	k, tmp = new obj.constructor()
 	for (k in obj)
+	    if (obj.hasOwnProperty(k))
 		tmp[k] = obj[k]
 	return tmp
     }

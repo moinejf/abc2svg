@@ -82,6 +82,7 @@ function AbcJSON(nindent) {			// indentation level
 			} else {
 				h = '{\n'
 				for (i in val)
+				    if (val.hasOwnProperty(i))
 					attr_gen(indn, i, val[i]);
 				json += '\n' + ind + '}'
 			}
@@ -119,6 +120,7 @@ function AbcJSON(nindent) {			// indentation level
 		h += ind2 + '{\n' +
 			ind3 + '"voice_properties": {\n'
 		for (i in voice_tb[v])
+		    if (voice_tb[v].hasOwnProperty(i))
 			attr_gen(ind4, i, voice_tb[v][i]);
 
 		json += '\n' + ind3 + '},\n' +

@@ -654,6 +654,7 @@ function tosvg(in_fname,		// file name
 			if (info.V) {
 				info_sav.V = {}
 				for (i in info.V)
+				    if (info.V.hasOwnProperty(i))
 					info_sav.V[i] = clone(info.V[i])
 			}
 			char_tb_sav = clone(char_tb);

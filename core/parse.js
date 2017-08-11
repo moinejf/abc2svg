@@ -463,6 +463,7 @@ function set_kv_parm(a) {	// array of items
 	if (pos) {
 		curvoice.pos = clone(curvoice.pos)
 		for (item in pos)
+		    if (pos.hasOwnProperty(item))
 			curvoice.pos[item] = pos[item]
 	}
 
@@ -2282,6 +2283,7 @@ function parse_music_line() {
 
 	// play the macro game
 	for (k in mac) {
+	    if (mac.hasOwnProperty(k))
 		if (k.indexOf('.') >= 0)		// dynamic
 			line.buffer = expand(line.buffer, k)
 		else

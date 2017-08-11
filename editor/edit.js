@@ -20,7 +20,7 @@
 var	abc_images,			// image buffer
 	abc_fname = ["noname.abc", ""],	// file names
 	abc,				// Abc object
-	ref= [],			// source reference array
+	ref,				// source reference array
 	colcl = [],			// colorized classes
 	abcplay,			// play engine
 	a_pe,				// playing events
@@ -188,7 +188,7 @@ function render() {
 
 	diverr.innerHTML = '';
 //	document.body.style.cursor = "wait";
-	ref = {}
+	ref = []
 	try {
 		abc.tosvg(abc_fname[0], content)
 	} catch(e) {
@@ -362,7 +362,7 @@ var	i, j, elts, d,
 
 // source text selection callback
 function seltxt(elt) {
-	var	i, n, o, start, end, s, z
+	var	start, end, s, z, elts
 	if (colcl.length != 0) {
 		colorsel(false);
 		colcl = []
@@ -374,16 +374,16 @@ function seltxt(elt) {
 	if (start == 0
 	 && end == document.getElementById("source").value.length)
 		return				// select all
-	for (o in ref) {
-		if (o >= start && ref[o] <= end)
+	ref.forEach(function(e, o) {
+		if (o >= start && e <= end)
 			colcl.push('_' + o + '_')
-	}
+	})
 	if (colcl.length != 0) {
 		colorsel(true);
 		s = document.getElementById("dright");
 	  z = window.document.defaultView.getComputedStyle(s).getPropertyValue('z-index')
 		if (z != 10) {			// if select from textarea
-			var elts = document.getElementsByClassName(colcl[0]);
+			elts = document.getElementsByClassName(colcl[0]);
 			elts[0].scrollIntoView()	// move the element on the screen
 		}
 	}

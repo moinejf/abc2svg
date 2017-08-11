@@ -141,6 +141,8 @@ function get_font_scale(param) {
 	}
 	font_scale_tb[a[0]] = scale
 	for (var fn in font_tb) {
+		if (!font_tb.hasOwnProperty(fn))
+			continue
 		var font = font_tb[fn]
 		if (font.name == a[0])
 			font.swfac = font.size * scale

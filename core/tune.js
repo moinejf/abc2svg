@@ -30,10 +30,13 @@ function voice_filter() {
 	var opt, sel, tmp, i
 
 	for (opt in parse.voice_opts) {
+		if (!parse.voice_opts.hasOwnProperty(opt))
+			continue
 		sel = new RegExp(opt)
 		if (sel.test(curvoice.id)
 		 || sel.test(curvoice.nm)) {
 			for (i in parse.voice_opts[opt])
+			    if (parse.voice_opts[opt].hasOwnProperty(i))
 				do_pscom(parse.voice_opts[opt][i])
 		}
 	}
@@ -842,6 +845,8 @@ function get_break(param) {
 
 	glovar.break = []
 	for (k in a) {
+		if (!a.hasOwnProperty(k))
+			continue
 		b = a[k];
 		i = b.indexOf(':')
 		if (i < 0) {
@@ -2342,7 +2347,12 @@ function get_voice(parm) {
 // change state from 'tune header after K:' to 'in tune body'
 // curvoice is defined when called from get_voice()
 function goto_tune(is_K) {
-	var s, v, p_voice, transp;
+	var	v, p_voice, transp,
+		s = {
+			type: STAVES,
+			dur: 0,
+			sy: par_sy
+		}
 
 	parse.state = 3;			// in tune body
 
@@ -2359,14 +2369,9 @@ function goto_tune(is_K) {
 	}
 
 	// link the first %%score
-	if (staves_found >= 0) {
-		s = {
-			type: STAVES,
-			dur: 0,
-			sy: par_sy
-		}
-		sym_link(s)
-	}
+	sym_link(s)
+	if (staves_found < 0)
+		s.default = true
 
 	if (!curvoice.init && !is_K) {
 		set_kv_parm([]);
