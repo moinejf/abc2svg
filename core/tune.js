@@ -2368,11 +2368,6 @@ function goto_tune(is_K) {
 		curvoice = voice_tb[staves_found < 0 ? 0 : par_sy.top_voice]
 	}
 
-	// link the first %%score
-	sym_link(s)
-	if (staves_found < 0)
-		s.default = true
-
 	if (!curvoice.init && !is_K) {
 		set_kv_parm([]);
 		set_transp()
@@ -2408,4 +2403,9 @@ function goto_tune(is_K) {
 		}
 		par_sy.nstaff = nstaff
 	}
+
+	// link the first %%score
+	sym_link(s)
+	if (staves_found < 0)
+		s.default = true
 }
