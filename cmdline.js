@@ -18,7 +18,7 @@
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
 // global variables
-var abc, errtxt = ''
+var errtxt = ''
 
 // -- replace the exotic end of lines by standard ones
 function set_eoln(file) {
@@ -42,8 +42,10 @@ var user = {
 			printErr(msg)
 		else
 			errtxt += msg + '\n'
-	},
+	}
 }
+
+var	abc = new Abc(user)		// (global for 'toxxx.js')
 
 function do_file(fn) {
 	var	file = user.read_file(fn)
@@ -73,7 +75,6 @@ function do_file(fn) {
 function abc_cmd(cmd, args) {
 	var	arg, parm, fn;
 
-	abc = new Abc(user);		// (global for 'toxxx.js')
 	abc_init()
 	while (1) {
 		arg = args.shift()
