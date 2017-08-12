@@ -92,6 +92,8 @@ user.textrans = {
 	"Line underfull ($1pt of $2pt)": "Trop d'espacement ($1pt of $2pt)",
 	"Misplaced '$1' in %%staves": "'$1' mal placé dans %%staves",
 	"Misplaced dot": "Point mal placé",
+	"Mix of old and new transposition syntaxes":
+			"Mélange des syntaxes de transposition ancienne et nouvelle",
 	"No $1 after %%$2": "Pas de $1 après %%$2",
 	"No </defs> in %%beginsvg sequence":
 				"Pas de </defs> dans séquence %%beginsvg",

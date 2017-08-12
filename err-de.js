@@ -84,6 +84,8 @@ user.textrans = {
     "Line underfull ($1pt of $2pt)": "Zeile nicht voll genug ($1pt of $2pt)",
     "Misplaced '$1' in %%staves": "'$1' fehlerhaft platziert in %%staves",
     "Misplaced dot": "fehlerhaft platzierter Punkt",
+	"Mix of old and new transposition syntaxes":
+				"Mix of old and new transposition syntaxes",
     "No $1 after %%$2": "kein $1 nach %%$2",
     "No </defs> in %%beginsvg sequence": "kein </defs> in %%beginsvg squenz",
     "No </style> in %%beginsvg sequence": "kein </style> in %%beginsvg sequenz",

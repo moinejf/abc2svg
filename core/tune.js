@@ -997,6 +997,9 @@ function set_transp() {
 	if (curvoice.ckey.k_bagpipe || curvoice.ckey.k_drum)
 		return
 
+	if (cfmt.transp && (curvoice.transp || curvoice.shift))
+		syntax(0, "Mix of old and new transposition syntaxes");
+
 	transp = (cfmt.transp || 0) +		// %%transpose
 		(curvoice.transp || 0) +	// score= / sound=
 		(curvoice.shift || 0);		// shift=

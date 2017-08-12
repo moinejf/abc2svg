@@ -92,6 +92,8 @@ user.textrans = {
 	"Line underfull ($1pt of $2pt)": "Linha muito espaçada ($1pt de $2pt)",
 	"Misplaced '$1' in %%staves": "'$1' deslocado em %%staves",
 	"Misplaced dot": "Ponto fora de lugar",
+	"Mix of old and new transposition syntaxes":
+				"Mix of old and new transposition syntaxes",
 	"No $1 after %%$2": "Falta $1 após %%$2",
 	"No </defs> in %%beginsvg sequence":
 				"Falta </defs> em bloco %%beginsvg",
