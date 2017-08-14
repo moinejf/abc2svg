@@ -4240,13 +4240,17 @@ function set_sym_glue(width) {
 			if (s.wr > min)
 				min = s.wr
 		}
-		xmin += min + 3
+		xmin += min
 		if (tsnext && tsnext.space * .8 > s.wr + 4) {
 			x += tsnext.space * .8 * spafac;
 			xmax += tsnext.space * .8 * spafac * 1.8
+		} else if (s.dur) {
+			min += 4;
+			x += min + s.shrink;
+			xmax += min + s.space
 		} else {
-			x += min + 4;
-			xmax += min + 4
+			x += min;
+			xmax += min
 		}
 		break
 	}
