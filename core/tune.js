@@ -1404,6 +1404,7 @@ function do_pscom(text) {
 			switch (s.type) {
 			case NOTE:		// insert a key
 				s = clone(curvoice.okey);
+				s.k_old_sf = curvoice.ckey.k_sf;
 				sym_link(s)
 				break
 			case KEY:
