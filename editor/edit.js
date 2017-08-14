@@ -353,8 +353,9 @@ var	i, j, elts, d,
 	}
 	if (i1 < i2) {
 		var s = document.getElementById("source");
-		s.focus();
-		s.setSelectionRange(i1, i2)
+		s.setSelectionRange(i1, i2);
+		s.blur();
+		s.focus()
 	}
 	if (!on)
 		colcl = []
