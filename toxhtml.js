@@ -149,7 +149,7 @@ function abc_end() {
 }
 
 // nodejs
-if (typeof module == 'object') {
+if (typeof module == 'object' && typeof exports == 'object') {
 	exports.abort = abort;
 	exports.abc_init = abc_init;
 	exports.abc_end = abc_end;

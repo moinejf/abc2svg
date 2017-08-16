@@ -29,7 +29,7 @@
 }	// end of Abc()
 
 // nodejs
-if (typeof module == 'object') {
+if (typeof module == 'object' && typeof exports == 'object') {
 	exports.abc2svg = abc2svg;
 	exports.Abc = Abc
 }

@@ -101,7 +101,7 @@ function abc_cmd(cmd, args) {
 }
 
 // nodejs
-if (typeof module == 'object') {
+if (typeof module == 'object' && typeof exports == 'object') {
 	exports.abc = abc;
 	exports.errtxt = errtxt;
 	exports.user = user;
