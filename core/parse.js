@@ -1605,13 +1605,13 @@ function parse_acc_pit(line) {
 	}
 
 	/* look for microtone value */
-	if (acc && (c >= '1' && c <= '9')
+	if (acc && acc != 3 && (c >= '1' && c <= '9')
 	 || c == '/') {				// compatibility
 		nd = parse_dur(line);
 		micro_n = nd[0];
 		micro_d = nd[1]
 		if (micro_d == 1)
-			micro_d = curvoice.uscale
+			micro_d = curvoice ? curvoice.uscale : 1
 		else
 			micro_d *= 2;	// 1/2 tone fraction -> tone fraction
 		c = line.char()
