@@ -74,8 +74,8 @@ build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
 
 build abcps2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
- core/svg.js core/tune.js core/lyrics.js core/gchord.js $
- core/wps.js core/psvg.js core/pstail.js | package.json
+ core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js $
+ core/wps.js core/psvg.js | package.json
 
 build edit-$MAJOR.css: cp editor/edit.css
 

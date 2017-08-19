@@ -1,6 +1,6 @@
 // abc2svg - tail.js
 //
-// Copyright (C) 2014-2015 Jean-Francois Moine
+// Copyright (C) 2014-2017 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -17,15 +17,64 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-// end of the Abc object
-// empty ps functions
-	function psdeco(f, x, y, de) { return false }
-	function psxygl(x, y, gl) { return false }
+// ---- Abc functions called from the PS interpreter
+	function svgcall(f, x, y, v1, v2) {
+	    var	xy = psvg.getorig();
+		psvg.ps_flush();
+		f((x + xy[0]) * stv_g.scale, y - xy[1], v1, v2)
+	}
+
+	// output an arpeggio
+	this.arpps = function(val, x, y) {
+		svgcall(out_arp, x, y, val)
+	}
+
+	// output a long trill
+	this.ltrps = function(val, x, y) {
+		svgcall(out_ltr, x, y, val)
+	}
+
+	// output a deco with string
+	this.xyglsps = function(str, x, y, gl) {
+		svgcall(out_deco_str, x, y, gl, str)
+	}
+
+	// output a deco with value
+	this.xyglvps = function(val, x, y, gl) {
+		svgcall(out_deco_val, x, y, gl, val)
+	}
+
+	// output a glyph
+	this.xyglps = function(x, y, gl) {
+		svgcall(xygl, x, y, gl)
+	}
+
+	this.get_y = function(st, y) {
+		return y + staff_tb[st].y
+	}
+
+    var	psdeco = function(f, x, y, de) { return false },
+	psxygl = function(x, y, gl) { return false }
+
+	this.set_ps = function(deco, xygl) {
+		psdeco = deco;
+		psxygl = xygl
+	}
+	this.stv_g = stv_g
+	this.psget_x = function() {
+		return posx / stv_g.scale
+	}
+	this.psget_y = function() {
+		return stv_g.started ? stv_g.dy : posy
+	}
+
+	if (typeof Psvg == "function") {	// if Postscript support
+		psvg = new Psvg(this)
+	}
 
 // initialize
 	abc2svg_init()
 
-	return this
 }	// end of Abc()
 
 // nodejs

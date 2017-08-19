@@ -17,165 +17,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-var svgbuf = ''
-
-// PS functions
-var psvg_op = "\
-currentdict/systemdict currentdict put\n\
-systemdict/{/mark cvx put\n\
-systemdict/[/mark cvx put\n\
-systemdict/]\n\
-/counttomark cvx\n\
-/array cvx\n\
-/astore cvx\n\
-/exch cvx\n\
-/pop cvx\n\
-5 array astore cvx put\n\
-systemdict/}/] cvx/cvx cvx 2 array astore cvx put\n\
-systemdict/def{currentdict 2 index 2 index put pop pop}put\n\
-\n\
-/maxlength 1000 def % TODO\n\
-/.bdef{bind def}bind def\n\
-/.xdef{exch def}.bdef\n\
-/dup{0 index}.bdef\n\
-/load{dup where pop exch get}.bdef\n\
-/.ldef{load def}.bdef\n\
-/if{{}ifelse}.bdef\n\
-/cleartomark{array pop}.bdef\n\
-/known{exch begin where{currentdict eq}{false}if end}.bdef\n\
-/store{1 index where{3 1 roll put}{def}ifelse}.bdef\n\
-/not{{false}{true}ifelse}.bdef\n\
-%/.logand{{{true}{false}ifelse}{pop false}ifelse}.bdef\n\
-%/and/.logand .ldef % TODO numeric and\n\
-/.logor{{pop true}{{true}{false}ifelse}ifelse}.bdef\n\
-/or/.logor .ldef % TODO numeric or\n\
-/ne{eq not}.bdef\n\
-/ge{lt not}.bdef\n\
-/le{1 index 1 index eq 3 1 roll lt or}.bdef\n\
-/gt{le not}.bdef\n\
-/.repeat{1 1 4 2 roll for}.bdef\n\
-\n\
-%% math\n\
-\n\
-/floor{.math(floor)1 .call}.bdef\n\
-\n\
-/neg{0 exch sub}.bdef\n\
-/add{neg sub}.bdef\n\
-/idiv{div floor}.bdef\n\
-\n\
-%/.e{.math(E)get}.bdef\n\
-%/.ln2{.math(LN2)get}.bdef\n\
-%/.ln10{.math(LN10)get}.bdef\n\
-%/.log2e{.math(LOG2E)get}.bdef\n\
-%/.log10e{.math(LOG10E)get}.bdef\n\
-/.pi{.math(PI)get}.bdef\n\
-%/.sqrt1_2{.math(SQRT1_2)get}.bdef\n\
-%/.sqrt2{.math(SQRT2)get}.bdef\n\
-\n\
-/abs{.math(abs)1 .call}.bdef\n\
-%/.acos{.math(acos)1 .call}.bdef\n\
-%/.asin{.math(asin)1 .call}.bdef\n\
-/atan{.math(atan2)2 .call 180 mul .pi div}.bdef\n\
-%/.atan2{.math(atan2)2 .call}.bdef\n\
-%/ceiling{.math(ceil)1 .call}.bdef\n\
-/cos{.pi mul 180 div .math(cos)1 .call}.bdef\n\
-%/.exp{.math(exp)1 .call}.bdef\n\
-%/log{.math(log)1 .call}.bdef\n\
-%/.max{.math(max)2 .call}.bdef\n\
-%/.min{.math(min)2 .call}.bdef\n\
-%/.pow{.math(pow)2 .call}.bdef\n\
-%/.random{.math(random)0 .call}.bdef\n\
-%/rand{.random}.bdef % TODO follow spec\n\
-%/round{.math(round)1 .call}.bdef\n\
-%/sin{.math(sin)1 .call}.bdef\n\
-%/sqrt{.math(sqrt)1 .call}.bdef\n\
-%/.tan{.math(tan)1 .call}.bdef\n\
-%/truncate{.math(truncate)1 .call}.bdef % TODO Math.truncate does not exist!\n\
-\n\
-%% SVG\n\
-/arc{.svg(arc)5 .call0}.bdef\n\
-/arcn{.svg(arcn)5 .call0}.bdef\n\
-/closepath{.svg(closepath)0 .call}.bdef\n\
-/currentpoint{.svg(cx)0 .call .svg(cy)0 .call}.bdef\n\
-/curveto{.svg(curveto)6 .call0}.bdef\n\
-/eofill{.svg(eofill)0 .call0}.bdef\n\
-/fill{.svg(fill)0 .call0}.bdef\n\
-/grestore{.svg(grestore)0 .call0}.bdef\n\
-/gsave{.svg(gsave)0 .call0}.bdef\n\
-/lineto{.svg(lineto)2 .call0}.bdef\n\
-/moveto{.svg(moveto)2 .call0}.bdef\n\
-/newpath{.svg(newpath)0 .call0}.bdef\n\
-/rcurveto{.svg(rcurveto)6 .call0}.bdef\n\
-/rlineto{.svg(rlineto)2 .call0}.bdef\n\
-/rmoveto{.svg(rmoveto)2 .call0}.bdef\n\
-/rotate{.svg(rotate)1 .call0}.bdef\n\
-/scale{.svg(scale)2 .call0}.bdef\n\
-/selectfont{.svg(selectfont)2 .call0}.bdef\n\
-/setdash{.svg(setdash)2 .call0}.bdef\n\
-/setlinewidth{.svg(setlinewidth)1 .call0}.bdef\n\
-/setrgbcolor{.svg(setrgbcolor)3 .call0}.bdef\n\
-/show{.svg(show)1 .call0}.bdef\n\
-/stroke{.svg(stroke)0 .call0}.bdef\n\
-/stringwidth{.svg(strw)1 .call 1}.bdef		%fixme: height KO\n\
-/translate{.svg(translate)2 .call0}.bdef\n\
-\n\
-%% PostScript\n\
-\n\
-%/.deg2rad{.pi 180 div mul}.bdef\n\
-%/.rad2deg{180 .pi div mul}.bdef\n\
-\n\
-%/clip{.clip}.bdef\n\
-%/rectclip{.clearRect}.bdef\n\
-%/rectfill{.fillRect}.bdef\n\
-%/rectstroke{.strokeRect}.bdef\n\
-%/arcto{.arcTo}.bdef\n\
-\n\
-%/setlinecap{.setLineCap}.bdef % TODO\n\
-%/setlinejoin{.setLineJoin}.bdef % TODO\n\
-%/setmiterlimit{.setMiterLimit}.bdef\n\
-\n\
-%/currentlinewidth{.getLineWidth}.bdef\n\
-%/currentlinecap{&lt;&lt;/butt 0/round 1/square 2&gt;&gt; .getLineCap get}.bdef\n\
-%/currentlinejoin{&lt;&lt;/miter 0/round 1/bevel 2&gt;&gt; .getLineJoin get}.bdef\n\
-%/currentmiterlimit{.getMiterLimit}.bdef\n\
-\n\
-/setgray{255 mul dup dup setrgbcolor}.bdef\n\
-%/setcmykcolor{setrgbcolor pop}.bdef % TODO\n\
-%/sethsbcolor{setrgbcolor}.bdef % TODO\n\
-%/clippath{0 0 .gcanvas(width)get .gcanvas(height)get .rect}.bdef % TODO\n\
-\n\
-%/currentflat{42}.bdef % TODO\n\
-%/setflat{pop}.bdef % TODO\n\
-\n\
-%/showpage{}.bdef % TODO\n\
-%/grestoreall{}.bdef % TODO\n\
-%/readonly{}.bdef % TODO\n\
-%/currentfile{(url?)}.bdef % TODO\n\
-%/eexec{pop}.bdef % TODO\n\
-%/findfont{}.bdef % TODO\n\
-%/scalefont{pop}.bdef % TODO\n\
-%/setfont{pop}.bdef % TODO C.font = N + \"pt \" + F.V;\n\
-%/stopped{}.bdef % TODO\n\
-%/loop{}.bdef % TODO !!!\n\
-%/string{}.bdef % TODO\n\
-%/cvi{}.bdef % TODO\n\
-%/pathbbox{}.bdef % TODO\n\
-%/urx{}.bdef % TODO\n\
-%/ury{}.bdef % TODO\n\
-%/llx{}.bdef % TODO\n\
-%/lly{}.bdef % TODO\n\
-%/pagewidth{}.bdef % TODO\n\
-%/pageheight{}.bdef % TODO\n\
-%/inwidth{}.bdef % TODO\n\
-%/inheight{}.bdef % TODO\n\
-%/usertime{}.bdef % TODO\n\
-%/srand{}.bdef % TODO\n\
-"
-//false .strictBind\n\
+function Psvg(abcobj_r) {
+    var	svgbuf = '',
 
 // SVG functions - adapted from abcm2ps svg.c
-function Svg() {
-    var	g = 0,			// graphic state
+	abcobj = abcobj_r,
+	wps = new Wps(this),
+	g = 0,			// graphic state
 	gchg,			// graphic change
 	gcur = {		// current graphic context
 		cx:0,
@@ -196,13 +44,14 @@ function Svg() {
 	font_n = "",
 	font_n_old = "",
 	font_s = 0,
-	path
+	path;
 
-    function getorig() {
-//	setg(1);
+// function called from Abc
+    Psvg.prototype.getorig = function() {
 	setg(0);
 	return [gcur.xoffs - gcur.xorig, gcur.yoffs - gcur.yorig]
     }
+
     function defg1() {
 	gchg = false;
 	setg(0);
@@ -235,28 +84,21 @@ function Svg() {
 		}
 		svgbuf += '"'
 	}
-//	if (gcur.linewidth != 0.7)
-//		svgbuf += ' stroke-width="' + gcur.linewidth.toFixed(2) + '"';
 	output_font(false)
 	if (gcur.rgb)
 		svgbuf += ' style="color:' + gcur.rgb + '"';
 	svgbuf += ">\n";
 	g = 1
     }
-//    // update the graphic context before SVG output - called on glyph output
-//    function g_upd() {
-//	if (gchg || g == 2)
-//		defg1()
-//    }
+
     function objdup(obj) {
-//	if (!obj || typeof(obj) != 'object')
-//		return obj
 	var	k, tmp = new obj.constructor()
 	for (k in obj)
 	    if (obj.hasOwnProperty(k))
 		tmp[k] = obj[k]
 	return tmp
     }
+
     function output_font(back) {
 	var	name = gcur.font_n
 	if (!name)
@@ -304,20 +146,22 @@ function Svg() {
 	svgbuf += ' font-family="' + name + '"' +
 		prop + ' font-size="' + gcur.font_s + '"'
     }
+
     function path_def() {
-	if (!path) {
-		setg(1);
-		gcur.px = gcur.cx;
-		gcur.py = gcur.cy;
-		path = '<path d="m' + (gcur.xoffs + gcur.cx).toFixed(2) +
-			' ' + (gcur.yoffs - gcur.cy).toFixed(2) + '\n'
-	}
+	if (path)
+		return
+	setg(1);
+	gcur.px = gcur.cx;
+	gcur.py = gcur.cy;
+	path = '<path d="m' + (gcur.xoffs + gcur.cx).toFixed(2) +
+		' ' + (gcur.yoffs - gcur.cy).toFixed(2) + '\n'
     }
+
     function path_end() {
-//	setg(1);
 	svgbuf += path;
 	path = ''
-    }
+}
+
     function setg(newg) {
 	if (g == 2) {
 		svgbuf += "</text>\n";
@@ -337,12 +181,14 @@ function Svg() {
 	} else if (gchg) {
 		defg1()
 	}
-    }
+}
+
     function strw(s) {
 	return s.length * gcur.font_s * 0.5	// fixme: approximate value
     }
+    Psvg.prototype.strw = strw;
 
-// exported functions
+// graphic functions called from wps.js
     function arc(x, y, r, a1, a2, arcn) {
 	var x1, y1, x2, y2
 	if (a1 >= 360)
@@ -398,20 +244,26 @@ function Svg() {
 		gcur.cy = y2
 	}
     }
-    function arcn(x, y, r, a1, a2) {
+    Psvg.prototype.arc = arc
+
+    Psvg.prototype.arcn = function(x, y, r, a1, a2) {
 	arc(x, y, r, a1, a2, true)
     }
-    function closepath() {
+
+    Psvg.prototype.closepath = function() {
 	if (path && gcur.cx)
 		rlineto(gcur.px - gcur.cx, gcur.py - gcur.cy)
     }
-    function cx() {
+
+    Psvg.prototype.cx = function() {
 	return gcur.cx
     }
-    function cy() {
+
+    Psvg.prototype.cy = function() {
 	return gcur.cy
     }
-    function curveto(x1, y1, x2, y2, x, y) {
+
+    Psvg.prototype.curveto = function(x1, y1, x2, y2, x, y) {
 	path_def();
 	path += "\tC" + 
 		(gcur.xoffs + x1).toFixed(2) + " " + (gcur.yoffs - y1).toFixed(2) + " " +
@@ -420,24 +272,27 @@ function Svg() {
 	gcur.cx = x;
 	gcur.cy = y
     }
-    function eofill() {
+
+    Psvg.prototype.eofill = function() {
 	path_end();
 	svgbuf += '" fill-rule="evenodd" fill="currentColor"/>\n'
     }
-    function fill() {
+
+    Psvg.prototype.fill = function() {
 	path_end();
 	svgbuf += '" fill="currentColor"/>\n'
     }
-    function gsave() {
-//	setg(1);
+
+    Psvg.prototype.gsave = function() {
 	gc_stack.push(objdup(gcur))
     }
-    function grestore() {
-//	setg(1);
+
+    Psvg.prototype.grestore = function() {
 	gcur = gc_stack.pop();
 	gchg = true
     }
-    function lineto(x, y) {
+
+    Psvg.prototype.lineto = function(x, y) {
 	path_def()
 	if (x == gcur.cx)
 		path += "\tv" + (gcur.cy - y).toFixed(2) + "\n"
@@ -449,7 +304,8 @@ function Svg() {
 	gcur.cx = x;
 	gcur.cy = y
     }
-    function moveto(x, y) {
+
+    Psvg.prototype.moveto = function(x, y) {
 	gcur.cx = x;
 	gcur.cy = y
 	if (path) {
@@ -460,11 +316,12 @@ function Svg() {
 		g = 1
 	}
     }
-    function newpath() {
-//	path_def()
+
+    Psvg.prototype.newpath = function() {
 	gcur.cx = gcur.cy = undefined
     }
-    function rcurveto(x1, y1, x2, y2, x, y) {
+
+    Psvg.prototype.rcurveto = function(x1, y1, x2, y2, x, y) {
 	path_def();
 	path += "\tc" + 
 		x1.toFixed(2) + " " + (-y1).toFixed(2) + " " +
@@ -473,7 +330,8 @@ function Svg() {
 	gcur.cx += x;
 	gcur.cy += y
     }
-    function rlineto(x, y) {
+
+    Psvg.prototype.rlineto = function(x, y) {
 	path_def()
 	if (x == 0)
 		path += "\tv" + (-y).toFixed(2) + "\n"
@@ -485,7 +343,8 @@ function Svg() {
 	gcur.cx += x;
 	gcur.cy += y
     }
-    function rmoveto(x, y) {
+
+    Psvg.prototype.rmoveto = function(x, y) {
 	if (path) {
 		path += "\tm" + x.toFixed(2) + " " +
 				(-y).toFixed(2) + "\n"
@@ -496,7 +355,8 @@ function Svg() {
 	gcur.cx += x;
 	gcur.cy += y
     }
-    function rotate(a) {
+
+    Psvg.prototype.rotate = function(a) {
 	setg(0)
 
 	// convert orig and currentpoint coord to absolute coord
@@ -536,8 +396,8 @@ function Svg() {
 			gcur.yscale;
 	gchg = true
     }
-    function scale(sx, sy) {
-//	setg(0);
+
+    Psvg.prototype.scale = function(sx, sy) {
 	gcur.xoffs /= sx;
 	gcur.yoffs /= sy;
 	gcur.cx /= sx;
@@ -546,7 +406,8 @@ function Svg() {
 	gcur.yscale *= sy;
 	gchg = true
     }
-    function selectfont(s, h) {
+
+    Psvg.prototype.selectfont = function(s, h) {
 	s = s.nm;			// Symbol
 	if (font_s != h || s != font_n) {
 		gcur.font_n_old = gcur.font_n;
@@ -555,7 +416,8 @@ function Svg() {
 		gchg = true
 	}
     }
-    function setdash(a, o) {
+
+    Psvg.prototype.setdash = function(a, o) {
 	var n = a.length, i
 	if (n == 0) {
 		gcur.dash= ''
@@ -571,19 +433,12 @@ function Svg() {
 	}
 	gcur.dash += '"'
     }
-    function setlinewidth(w) {
-//	if (w != gcur.linewidth) {
-		gcur.linewidth = w
-//		gchg = true
-//	}
+
+    Psvg.prototype.setlinewidth = function(w) {
+	gcur.linewidth = w
     }
-    function setorig(x, y) {
-	gcur.xorig = gcur.xoffs = x;
-	gcur.yorig = gcur.yoffs = y;
-	gcur.cx = 0;
-	gcur.cy = 0
-    }
-    function setrgbcolor(r, g, b) {
+
+    Psvg.prototype.setrgbcolor = function(r, g, b) {
 	var rgb = 0x1000000 +
 		(Math.floor(r * 255) << 16) +
 		(Math.floor(g * 255) << 8) +
@@ -595,7 +450,8 @@ function Svg() {
 		gchg = true
 	}
     }
-    function show(s) {
+
+    Psvg.prototype.show = function(s) {
 	var span, x, y
 	if (gchg) {
 		if (g == 2)
@@ -619,56 +475,227 @@ function Svg() {
 		svgbuf += "</tspan>";
 	gcur.cx = x + strw(s)
     }
-    function stroke() {
+
+    Psvg.prototype.stroke = function() {
 	path_end()
 	if (gcur.linewidth != 0.7)
 		svgbuf += '" stroke-width="' + gcur.linewidth.toFixed(2);
 	svgbuf += '" stroke="currentColor" fill="none"' + gcur.dash + '/>\n'
     }
-    function translate(x, y) {
+
+    Psvg.prototype.translate = function(x, y) {
 	gcur.xoffs += x;
 	gcur.yoffs -= y;
 	gcur.cx -= x;
 	gcur.cy -= y
     }
-	Svg.prototype.arc = arc;
-	Svg.prototype.arcn = arcn;
-	Svg.prototype.closepath = closepath;
-	Svg.prototype.cx = cx;
-	Svg.prototype.cy = cy;
-	Svg.prototype.curveto = curveto;
-//	Svg.prototype.defg1 = defg1;
-	Svg.prototype.eofill = eofill;
-	Svg.prototype.fill = fill;
-//	Svg.prototype.g_upd = g_upd;
-	Svg.prototype.getorig = getorig;
-	Svg.prototype.grestore = grestore;
-	Svg.prototype.gsave = gsave;
-	Svg.prototype.moveto = moveto;
-	Svg.prototype.newpath = newpath;
-	Svg.prototype.lineto = lineto;
-	Svg.prototype.rcurveto = rcurveto;
-	Svg.prototype.rlineto = rlineto;
-	Svg.prototype.rmoveto = rmoveto;
-	Svg.prototype.rotate = rotate;
-	Svg.prototype.scale = scale;
-	Svg.prototype.selectfont = selectfont;
-	Svg.prototype.setdash = setdash;
-	Svg.prototype.setrgbcolor = setrgbcolor;
-	Svg.prototype.setg = setg;
-	Svg.prototype.setlinewidth = setlinewidth;
-	Svg.prototype.setorig = setorig;
-	Svg.prototype.show = show;
-	Svg.prototype.stroke = stroke;
-	Svg.prototype.strw = strw;
-	Svg.prototype.translate = translate;
 
-// abcm2ps functions - see pstail.js
-this.arp = function(val, x, y) { abcobj.arpps(val, x, y) }
-this.ltr = function(val, x, y) { abcobj.ltrps(val, x, y) }
-this.xygl = function(x, y, gl) { abcobj.xyglps(x, y, gl) }
-this.xygls = function(str, x, y, gl) { abcobj.xyglsps(str, x, y, gl) }
-this.xyglv = function(val, x, y, gl) { abcobj.xyglvps(val, x, y, gl) }
-this.y0 = function(y) { return abcobj.get_y(0, y) }
-this.y1 = function(y) { return abcobj.get_y(1, y) }
+// abcm2ps functions
+    Psvg.prototype.arp = function(val, x, y) { abcobj.arpps(val, x, y) }
+    Psvg.prototype.ltr = function(val, x, y) { abcobj.ltrps(val, x, y) }
+    Psvg.prototype.xygl = function(x, y, gl) { abcobj.xyglps(x, y, gl) }
+    Psvg.prototype.xygls = function(str, x, y, gl) { abcobj.xyglsps(str, x, y, gl) }
+    Psvg.prototype.xyglv = function(val, x, y, gl) { abcobj.xyglvps(val, x, y, gl) }
+    Psvg.prototype.y0 = function(y) { return abcobj.get_y(0, y) }
+    Psvg.prototype.y1 = function(y) { return abcobj.get_y(1, y) }
+
+// flush the PS buffer
+function ps_flush(g0) {
+	if (!svgbuf)
+		return
+	if (g0)
+		setg(0);
+	abcobj.out_svg(svgbuf);
+	svgbuf = ''
+}
+Psvg.prototype.ps_flush = ps_flush
+
+// evaluate a PS user sequence (%beginps .. %%endps)
+Psvg.prototype.ps_eval = function(txt) {
+	wps.parse(txt);
+	ps_flush()
+}
+
+// ------ output builtin decorations
+// common part
+function pscall(f, x, y, script) {
+	gcur.xorig = gcur.xoffs = abcobj.psget_x();
+	gcur.yorig = gcur.yoffs = abcobj.psget_y();
+	gcur.cx = 0;
+	gcur.cy = 0;
+	wps.parse(script +
+		(x / abcobj.stv_g.scale).toFixed(2) + ' ' + y.toFixed(2) + ' ' + f);
+	ps_flush(true)			// + setg(0)
+	return true
+}
+
+// try to generate a decoration by PS
+function psdeco(f, x, y, de) {
+	var	dd, de2, script, defl,
+		Os = wps.parse('/' + f + ' where'),
+		A = Os.pop()
+
+	if (!A)
+		return false;
+	defl = 0
+	if (de.defl.nost)
+		defl = 1
+	if (de.defl.noen)
+		defl |= 2
+	if (de.s.stem >= 0)
+		defl |= 4;
+
+	Os.pop();
+	script = '/defl ' + defl + ' def '
+	if (de.lden) {
+		script += x.toFixed(2) + ' ' + y.toFixed(2) + ' ';
+		de2 = de.start;
+		x = de2.x;
+		y = de2.y + staff_tb[de2.st].y
+		if (x > de.x - 20)
+			x = de.x - 20
+	}
+	dd = de.dd
+	if (de.has_val) {
+		script += de.val + ' '
+	} else if (dd.str) {
+		script += '(' + dd.str + ') ';
+		y += dd.h * 0.2
+	}
+	return pscall(f, x, y, script)
+}
+
+// try to generate a glyph by PS
+function psxygl(x, y, gl){
+	var	Os = wps.parse('/' + gl + ' where'),
+		A = Os.pop()
+	if (!A)
+		return false
+	Os.pop()
+	return pscall(gl, x, y, 'dlw ')
+}
+
+	abcobj.set_ps(psdeco, psxygl);		// set the pointers in the core
+
+//  initialize the PostScript functions
+	wps.parse("\
+currentdict/systemdict currentdict put\n\
+systemdict/{/mark cvx put\n\
+systemdict/[/mark cvx put\n\
+systemdict/]\n\
+/counttomark cvx\n\
+/array cvx\n\
+/astore cvx\n\
+/exch cvx\n\
+/pop cvx\n\
+5 array astore cvx put\n\
+systemdict/}/] cvx/cvx cvx 2 array astore cvx put\n\
+systemdict/def{currentdict 2 index 2 index put pop pop}put\n\
+\n\
+/maxlength 1000 def % TODO\n\
+/.bdef{bind def}bind def\n\
+/.xdef{exch def}.bdef\n\
+/dup{0 index}.bdef\n\
+/load{dup where pop exch get}.bdef\n\
+/.ldef{load def}.bdef\n\
+/if{{}ifelse}.bdef\n\
+/cleartomark{array pop}.bdef\n\
+/known{exch begin where{currentdict eq}{false}if end}.bdef\n\
+/store{1 index where{3 1 roll put}{def}ifelse}.bdef\n\
+/not{{false}{true}ifelse}.bdef\n\
+%/.logand{{{true}{false}ifelse}{pop false}ifelse}.bdef\n\
+%/and/.logand .ldef % TODO numeric and\n\
+/.logor{{pop true}{{true}{false}ifelse}ifelse}.bdef\n\
+/or/.logor .ldef % TODO numeric or\n\
+/ne{eq not}.bdef\n\
+/ge{lt not}.bdef\n\
+/le{1 index 1 index eq 3 1 roll lt or}.bdef\n\
+/gt{le not}.bdef\n\
+/.repeat{1 1 4 2 roll for}.bdef\n\
+\n\
+%% math\n\
+\n\
+/floor{.math(floor)1 .call}.bdef\n\
+\n\
+/neg{0 exch sub}.bdef\n\
+/add{neg sub}.bdef\n\
+/idiv{div floor}.bdef\n\
+\n\
+/.pi{.math(PI)get}.bdef\n\
+\n\
+/abs{.math(abs)1 .call}.bdef\n\
+%/.acos{.math(acos)1 .call}.bdef\n\
+%/.asin{.math(asin)1 .call}.bdef\n\
+/atan{.math(atan2)2 .call 180 mul .pi div}.bdef\n\
+%/.atan2{.math(atan2)2 .call}.bdef\n\
+%/ceiling{.math(ceil)1 .call}.bdef\n\
+/cos{.pi mul 180 div .math(cos)1 .call}.bdef\n\
+%/.exp{.math(exp)1 .call}.bdef\n\
+%/log{.math(log)1 .call}.bdef\n\
+%/.max{.math(max)2 .call}.bdef\n\
+%/.min{.math(min)2 .call}.bdef\n\
+%/.pow{.math(pow)2 .call}.bdef\n\
+%/.random{.math(random)0 .call}.bdef\n\
+%/rand{.random}.bdef % TODO follow spec\n\
+%/round{.math(round)1 .call}.bdef\n\
+%/sin{.math(sin)1 .call}.bdef\n\
+%/sqrt{.math(sqrt)1 .call}.bdef\n\
+%/.tan{.math(tan)1 .call}.bdef\n\
+%/truncate{.math(truncate)1 .call}.bdef % TODO Math.truncate does not exist!\n\
+\n\
+% graphic\n\
+/arc{.svg(arc)5 .call0}.bdef\n\
+/arcn{.svg(arcn)5 .call0}.bdef\n\
+/closepath{.svg(closepath)0 .call}.bdef\n\
+/currentpoint{.svg(cx)0 .call .svg(cy)0 .call}.bdef\n\
+/curveto{.svg(curveto)6 .call0}.bdef\n\
+/eofill{.svg(eofill)0 .call0}.bdef\n\
+/fill{.svg(fill)0 .call0}.bdef\n\
+/grestore{.svg(grestore)0 .call0}.bdef\n\
+/gsave{.svg(gsave)0 .call0}.bdef\n\
+/lineto{.svg(lineto)2 .call0}.bdef\n\
+/moveto{.svg(moveto)2 .call0}.bdef\n\
+/newpath{.svg(newpath)0 .call0}.bdef\n\
+/rcurveto{.svg(rcurveto)6 .call0}.bdef\n\
+/rlineto{.svg(rlineto)2 .call0}.bdef\n\
+/rmoveto{.svg(rmoveto)2 .call0}.bdef\n\
+/rotate{.svg(rotate)1 .call0}.bdef\n\
+/scale{.svg(scale)2 .call0}.bdef\n\
+/selectfont{.svg(selectfont)2 .call0}.bdef\n\
+/setdash{.svg(setdash)2 .call0}.bdef\n\
+/setlinewidth{.svg(setlinewidth)1 .call0}.bdef\n\
+/setrgbcolor{.svg(setrgbcolor)3 .call0}.bdef\n\
+/show{.svg(show)1 .call0}.bdef\n\
+/stroke{.svg(stroke)0 .call0}.bdef\n\
+/stringwidth{.svg(strw)1 .call 1}.bdef		%fixme: height KO\n\
+/translate{.svg(translate)2 .call0}.bdef\n\
+\n\
+/setgray{255 mul dup dup setrgbcolor}.bdef\n\
+% abcm2ps syms.c\n\
+/!{bind def}bind def\n\
+/T/translate load def\n\
+/M/moveto load def\n\
+/RM/rmoveto load def\n\
+/L/lineto load def\n\
+/RL/rlineto load def\n\
+/C/curveto load def\n\
+/RC/rcurveto load def\n\
+/SLW/setlinewidth load def\n\
+/defl 0 def\n\
+/dlw{0.7 SLW}!\n\
+/xymove{/x 2 index def/y 1 index def M}!\n\
+/showc{dup stringwidth pop .5 mul neg 0 RM show}!\n\
+%\n\
+% abcm2ps internal glyphs\n\
+/arp{.svg(arp)3 .call0}.bdef\n\
+/ltr{.svg(ltr)3 .call0}.bdef\n\
+/ft0{(acc-1).svg(xygl)3 .call0}.bdef\n\
+/nt0{(acc3).svg(xygl)3 .call0}.bdef\n\
+/sh0{(acc1).svg(xygl)3 .call0}.bdef\n\
+/dsh0{(acc2).svg(xygl)3 .call0}.bdef\n\
+/trl{(trl).svg(xygl)3 .call0}.bdef\n\
+/lmrd{(lmrd).svg(xygl)3 .call0}.bdef\n\
+/umrd{(umrd).svg(xygl)3 .call0}.bdef\n\
+/y0{.svg(y0)1 .call}.bdef\n\
+/y1{.svg(y1)1 .call}.bdef\n")
 }

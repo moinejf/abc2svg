@@ -1464,10 +1464,8 @@ function do_begin_end(type,
 	switch (type) {
 	default:
 //	case "ps":
-		if (typeof wpsobj == 'object') {
-			wpsobj.parse(text);
-			output.push(svgbuf)
-		}
+		if (psvg)
+			psvg.ps_eval(text)
 		break
 	case "js":
 		eval(text)

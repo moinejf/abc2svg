@@ -94,7 +94,8 @@ var	glovar = {
 		prefix: '%',
 		state: 0,
 		line: new scanBuf()
-	}
+	},
+	psvg			// PostScript
 
 // utilities
 function clone(obj) {

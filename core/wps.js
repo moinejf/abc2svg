@@ -1,3 +1,4 @@
+// wps.js
 // (c) 2009 Tomas Hlavaty
 
 function isQuoted(V) {
@@ -204,7 +205,8 @@ function Ps0(Os, Ds, Es) {
   return this;
 }
 
-function Wps() {
+function Wps(psvg_i) {
+	var psvg = psvg_i;
   var Os = [];
   var Sd = {};
   var Ds = [Sd];
@@ -467,7 +469,7 @@ function Wps() {
     if (!D[K]) throw new Error(".call0: " + K + " undef")
     D[K].apply(D, X);
   };
-  Sd[".svg"] = function() {Os.push(svgobj);};
+  Sd[".svg"] = function() {Os.push(psvg)};
 //jfm--
   Sd[".math"] = function() {Os.push(Math);};
   Sd[".date"] = function() {Os.push(new Date());}; // TODO split new and Date

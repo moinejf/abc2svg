@@ -1022,11 +1022,9 @@ function svg_flush() {
 		head += '<g class="music" stroke-width=".7" transform="scale(' +
 				cfmt.scale.toFixed(2) + ')">\n';
 
-	if (typeof svgobj == 'object') {	// if PostScript support
-		svgobj.setg(0);
-		output.push(svgbuf);
-		svgbuf = ''
-	}
+	if (psvg)			// if PostScript support
+		psvg.ps_flush(true);	// + setg(0)
+
 	user.img_out(head + output.join('') + "</g>\n</svg>");
 	output = []
 
