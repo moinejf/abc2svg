@@ -2231,7 +2231,7 @@ var char_tb = [
 ]
 
 function parse_music_line() {
-	var	s, grace, sappo, dcn, i, c, idx, type, n, text,
+	var	s, grace, sappo, dcn, i, c, idx, type, n, text, k,
 		last_note_sav, a_dcn_sav, no_eol,
 		tp_a = [], tp,
 		tpn = -1,
