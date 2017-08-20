@@ -73,7 +73,8 @@
 	}
 
 // initialize
-	abc2svg_init()
+	font_init();
+	init_tune()
 
 }	// end of Abc()
 

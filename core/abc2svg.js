@@ -193,34 +193,10 @@ function scanBuf() {
 }
 
 function syntax(sev, msg, a1, a2, a3, a4) {
-	var regex, tmp
-
-	if (user.textrans) {
-		tmp = user.textrans[msg]
-		if (tmp)
-			msg = tmp
+    var	s = {
+		ctx: parse.ctx,
+		istart: parse.istart + parse.line.index
 	}
-	if (arguments.length > 2)
-		msg = msg.replace(/\$./g, function(a) {
-			switch (a) {
-			case '$1': return a1
-			case '$2': return a2
-			case '$3': return a3
-			default  : return a4
-			}
-		})
-	errbld(sev, msg, parse.ctx.fname, parse.istart + parse.line.index)
-}
 
-function empty_function() {
-}
-
-// general abc2svg initialization
-function abc2svg_init() {
-	font_init()
-	if (!user.anno_start)
-		anno_start = empty_function
-	if (!user.anno_stop)
-		anno_stop = empty_function
-	init_tune()
+	error(sev, s, msg, a1, a2, a3, a4)
 }

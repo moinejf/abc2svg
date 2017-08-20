@@ -27,7 +27,7 @@ var	par_sy,		// current staff system for parse
 
 /* apply the %%voice options of the current voice */
 function voice_filter() {
-	var opt, sel, tmp, i
+	var opt, sel, i
 
 	for (opt in parse.voice_opts) {
 		if (!parse.voice_opts.hasOwnProperty(opt))
@@ -302,7 +302,7 @@ function sort_all() {
 
 // adjust some voice elements
 function voice_adj() {
-	var p_voice, s, s2, s3, v
+	var p_voice, s, s2, v
 
 	// set the duration of the notes under a feathered beam
 	function set_feathered_beam(s1) {
@@ -372,33 +372,6 @@ function voice_adj() {
 		}
 		for ( ; s; s = s.next) {
 			switch (s.type) {
-//			case CLEF:	// move the clefs before the measure bars
-//				for (s2 = s.prev; s2; s2 = s2.prev) {
-//					switch (s2.type) {
-//					case BAR:
-//						if (s2.time != s.time)
-//							break
-//
-//						/* move the clef */
-//						s.next.prev = s.prev;
-//						s.prev.next = s.next;
-//						s.next = s2;
-//						s.prev = s2.prev;
-//						s.prev.next = s;
-//						s2.prev = s
-//						break
-//					case MREST:
-//					case NOTE:
-//					case REST:
-//					case SPACE:
-//					case STBRK:
-//						break
-//					default:
-//						continue
-//					}
-//					break
-//				}
-//				continue
 			case GRACE:
 				// with w_tb[BAR] = 2,
 				// the grace notes go after the bar;
@@ -535,7 +508,6 @@ function go_global_time(s, symsel) {
 	var s2, bar_time, seq
 
 	if (symsel.bar <= 1) {		/* special case: there is no measure 0/1 */
-//	 && nbar == -1) {		/* see set_bar_num */
 		if (symsel.bar == 1) {
 			for (s2 = s; s2; s2 = s2.ts_next) {
 				if (s2.type == BAR
@@ -552,7 +524,7 @@ function go_global_time(s, symsel) {
 				break
 		}
 		if (!s)
-			return null
+			return // null
 		if (symsel.seq != 0) {
 			seq = symsel.seq
 			for (s = s.ts_next; s; s = s.ts_next) {
@@ -563,7 +535,7 @@ function go_global_time(s, symsel) {
 				}
 			}
 			if (!s)
-				return null
+				return // null
 		}
 	}
 
@@ -657,7 +629,7 @@ function do_clip() {
 
 /* -- set the bar numbers and treat %%clip / %%break -- */
 function set_bar_num() {
-	var	s, s2, s3, tim,
+	var	s, s2, tim,
 		v = cur_sy.top_voice,
 		wmeasure = voice_tb[v].meter.wmeasure,
 		bar_rep = gene.nbar
@@ -719,51 +691,11 @@ function set_bar_num() {
 	}
 
 	// set the measure number on the top bars
-//	// and move the clefs before the measure bars
 	var	bar_time = s.time + wmeasure, // for incomplete measure at start of tune
 		bar_num = gene.nbar
 
 	for ( ; s; s = s.ts_next) {
 		switch (s.type) {
-//		case CLEF:
-//			for (s2 = s.ts_prev; s2; s2 = s2.ts_prev) {
-//				switch (s2.type) {
-//				case BAR:
-//					if (s2.seqst)
-//						break
-//					continue
-//				case MREST:
-//				case NOTE:
-//				case REST:
-//				case SPACE:
-//				case STAVES:
-//				case STBRK:
-//					s2 = undefined
-//					break
-//				default:
-//					continue
-//				}
-//				break
-//			}
-//			if (!s2)
-//				break
-//
-//			/* move the clef */
-//			s.next.prev = s.prev;
-//			s.prev.next = s.next;
-//			s.ts_next.ts_prev = s.ts_prev;
-//			s.ts_prev.ts_next = s.ts_next;
-//			s.next = s2;
-//			s.prev = s2.prev;
-//			if s.prev)
-//				s.prev.next = s;
-//			s2.prev = s;
-//			s.ts_next = s2;
-//			s.ts_prev = s2.ts_prev;
-//			s.ts_prev.ts_next = s;
-//			s2.ts_prev = s
-//			s = s2
-//			break
 		case METER:
 			wmeasure = s.wmeasure
 			if (s.time < bar_time)
@@ -971,8 +903,6 @@ function get_midi(param) {
 function set_transp() {
 	var	s, transp, vtransp
 
-//	if (curvoice.clef.clef_type == "p")	// percussion
-//		return
 	if (curvoice.ckey.k_bagpipe || curvoice.ckey.k_drum)
 		return
 
@@ -1008,11 +938,6 @@ function set_transp() {
 		}
 		s = s.prev
 	}
-//	s.k_sf = curvoice.okey.k_sf
-//	if (curvoice.okey.k_none)
-//		s.k_none = curvoice.okey.k_none
-//	if (curvoice.okey.k_a_acc)
-//		s.k_a_acc = curvoice.okey.k_a_acc;
 	key_transp(s);
 	curvoice.ckey = clone(s)
 	if (curvoice.key.k_none)
@@ -1208,7 +1133,7 @@ function do_pscom(text) {
 		return
 	case "repeat":
 		if (parse.state != 3)
-				return
+			return
 		if (!curvoice.last_sym) {
 			syntax(1, "%%repeat cannot start a tune")
 			return
@@ -1629,14 +1554,6 @@ function acc_same_pitch(pitch) {
 	var	i, time,
 		s = curvoice.last_sym.prev
 
-	// the overlaid voices may have no measure bars
-//	if (curvoice.id[curvoice.id.length - 1] == 'o') {
-//		for (i = curvoice.v; --i > 0; )
-//			if (!voice_tb[i].second)
-//				break
-//		s = voice_tb[i].last_sym
-//	}
-
 	if (!s)
 		return //undefined;
 
@@ -1746,7 +1663,6 @@ function get_staves(cmd, parm) {
 		s.sy = par_sy
 	}
 
-//	staves_found = maxtime < 0 ? 0 : maxtime
 	staves_found = maxtime
 
 	/* initialize the (old) voices */
@@ -1755,7 +1671,6 @@ function get_staves(cmd, parm) {
 		delete p_voice.second
 		delete p_voice.ignore
 		delete p_voice.floating
-//		p_voice.time = maxtime
 	}
 	range = 0
 	for (i = 0; i < a_vf.length; i++) {
@@ -1882,18 +1797,13 @@ function get_staves(cmd, parm) {
 			continue
 		}
 		par_sy.voices[v].second = p_voice.second;
-//		par_sy.voices[v].clef = p_voice.clef;
 		st = p_voice.st
 		if (st > 0 && !p_voice.norepbra
 		 && !(par_sy.staves[st - 1].flags & STOP_BAR))
 			p_voice.norepbra = true
-//		par_sy.staves[st].clef = p_voice.clef
 	}
 
-	if (parse.state >= 2)
-		curvoice = voice_tb[par_sy.top_voice]
-	else
-		curvoice = null
+	curvoice = parse.state >= 2 ? voice_tb[par_sy.top_voice] : null
 }
 
 var err_no_strt_ov = "No note in voice overlay"
@@ -1917,11 +1827,12 @@ function get_vover(type) {
 		p_voice.id = id;
 		p_voice.sym = p_voice.last_sym = null;
 
-		p_voice.nm = null;
-		p_voice.snm = null;
-		p_voice.new_name = false;
-		p_voice.lyric_restart = p_voice.lyric_restart =
-			p_voice.lyric_cont = p_voice.ly_a_h = null;
+		delete p_voice.nm
+		delete p_voice.snm
+		delete p_voice.new_name
+		delete p_voice.lyric_restart
+		delete p_voice.lyric_cont
+		delete p_voice.ly_a_h;
 
 		voice_tb.push(p_voice)
 		return p_voice
@@ -1966,25 +1877,17 @@ function get_vover(type) {
 		syntax(1, err_no_strt_ov)
 		return
 	}
-//--fixme?
-//	curvoice.last_sym.beam_end = true
 	curvoice.last_note.beam_end = true;
 	p_voice2 = curvoice.voice_down
 	if (!p_voice2) {
 		p_voice2 = clone_voice(curvoice.id + 'o');
-//		p_voice2.voice_up = curvoice;
 		curvoice.voice_down = p_voice2;
 		p_voice2.time = 0;
 		p_voice2.second = true;
 		v2 = p_voice2.v;
 		par_sy.voices[v2] = {
 			st: curvoice.st,
-			second: true,
-			scale: curvoice.scale,
-			key: curvoice.key,
-			ckey: curvoice.ckey,
-			okey: curvoice.okey,
-			pos: p_voice2.pos
+			second: true
 		}
 		var f_clone = curvoice.clone != undefined ? 1 : 0;
 		range = par_sy.voices[curvoice.v].range
@@ -1999,29 +1902,15 @@ function get_vover(type) {
 			v3 = p_voice3.v;
 			par_sy.voices[v3] = {
 				second: true,
-				scale: curvoice.clone.scale,
 				range: range + 2
 			}
 			p_voice2.clone = p_voice3
 		}
 	}
-//--fixme: in abcparse.c curvoice ulen and microscale are forced here
 	p_voice2.ulen = curvoice.ulen
 	p_voice2.dur_fact = curvoice.dur_fact
 	if (curvoice.uscale)
 		p_voice2.uscale = curvoice.uscale
-//--fixme:, but not the scale, pos...
-	
-//	v = curvoice.v
-//	v2 = p_voice2.v
-//	p_voice2.cst = p_voice2.st = par_sy.voices[v2].st
-//			= par_sy.voices[v].st
-//	p_voice3 = p_voice2.clone
-//	if (p_voice3) {
-//		p_voice3.cst = p_voice3.st
-//				= par_sy.voices[p_voice3.v].st
-//				= par_sy.voices[curvoice.clone.v].st
-//	}
 
 	if (!vover) {				/* first '&' in a measure */
 		vover = {
@@ -2126,8 +2015,6 @@ function get_key(parm) {
 			p_voice.key = s_key;
 			p_voice.okey = clone(s_key);
 			p_voice.ckey = clone(s_key)
-//			if (s_key.k_none)
-//				p_voice.key.k_sf = 0
 		}
 		parse.okey = clone(s_key);
 		parse.ckey = s_key
@@ -2170,12 +2057,9 @@ function get_key(parm) {
 	curvoice.ckey = s_key
 
 	if (is_voice_sig()) {
-//		if (s_key.k_sf != undefined || s_key.k_a_acc) {
-//			curvoice.ckey = s_key;
-			curvoice.key = clone(s_key)
-			if (s_key.k_none)
-				curvoice.key.k_sf = 0
-//		}
+		curvoice.key = clone(s_key)
+		if (s_key.k_none)
+			curvoice.key.k_sf = 0
 		return
 	}
 
@@ -2289,6 +2173,10 @@ function get_voice(parm) {
 		return
 	}
 
+	if (vid == '*') {
+		syntax(1, "Cannot have V:* in tune body")
+		return
+	}
 	curvoice = new_voice(vid);
 	set_kv_parm(a)
 	if (parse.state == 2)			// if first voice
@@ -2328,7 +2216,7 @@ function get_voice(parm) {
 // change state from 'tune header after K:' to 'in tune body'
 // curvoice is defined when called from get_voice()
 function goto_tune(is_K) {
-	var	v, p_voice, transp,
+	var	v, p_voice,
 		s = {
 			type: STAVES,
 			dur: 0,
@@ -2363,8 +2251,6 @@ function goto_tune(is_K) {
 			p_voice.pos = clone(p_voice.pos);
 			p_voice.pos.stm = SL_BELOW
 		}
-//		if (p_voice.key.k_none)
-//			p_voice.key.k_sf = 0
 	}
 
 	// initialize the voices when no %%staves/score	
@@ -2373,7 +2259,7 @@ function goto_tune(is_K) {
 		for (v = 0; v <= nstaff; v++) {
 			p_voice = voice_tb[v];
 			p_voice.time = 0;		// old voice
-			p_voice.clef.time = 0
+			p_voice.clef.time = 0;
 			p_voice.st = p_voice.cst =
 				par_sy.voices[v].st =
 					par_sy.voices[v].range = v;

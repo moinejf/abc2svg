@@ -320,11 +320,8 @@ function set_sscale(st) {
 	var	new_scale, dy
 
 	if (st != stv_g.st && stv_g.scale != 1)
-		stv_g.scale = 0
-	if (st >= 0)
-		new_scale = staff_tb[st].staffscale
-	else
-		new_scale = 1
+		stv_g.scale = 0;
+	new_scale = st >= 0 ? staff_tb[st].staffscale : 1
 	if (st >= 0 && new_scale != 1)
 		dy = staff_tb[st].y
 	else
@@ -380,7 +377,7 @@ function delayed_update() {
 					(posy - staff_tb[st].y).toFixed(2) +
 					') scale(' +
 					 staff_tb[st].staffscale.toFixed(2) +
-					')">\n')
+					')">\n');
 			output.push(staff_tb[st].sc_out.join(''));
 			output.push('</g>\n');
 			staff_tb[st].sc_out = []
@@ -414,16 +411,9 @@ function anno_out(s, t, f) {
 	if (s.grace)
 		type = GRACE
 
-//fixme: removed for bad x,y with %%voicescale
-//	if (stv_g.started) {		// protection against end of container
-//		stv_g.started = false;
-//		output.push("</g>\n")
-//	}
-
 	f(t || anno_type[type], s.istart, s.iend,
 		s.x - wl - 2, staff_tb[s.st].y + s.ymn + h - 2,
 		wl + wr + 4, h, s);
-//	set_g()
 }
 
 function a_start(s, t) {
@@ -432,10 +422,10 @@ function a_start(s, t) {
 function a_stop(s, t) {
 	anno_out(s, t, user.anno_stop)
 }
-// These pointers are reset to empty functions at init time
-// if no user.anno_{start,stop} (see abc2svg_init)
-var	anno_start = a_start,
-	anno_stop = a_stop
+function empty_function() {
+}
+var	anno_start = user.anno_start ? a_start : empty_function,
+	anno_stop = user.anno_stop ? a_stop : empty_function
 
 // output a string with x, y, a and b
 // In the string,
@@ -444,7 +434,7 @@ var	anno_start = a_start,
 //	F and G are replaced by a and b as float
 function out_XYAB(str, x, y, a, b) {
 	x = sx(x);
-	y = sy(y)
+	y = sy(y);
 	output.push(str.replace(/X|Y|A|B|F|G/g, function(c) {
 		switch (c) {
 		case 'X': return x.toFixed(2)
@@ -944,7 +934,7 @@ function out_gliss(x2, y2, de) {
 
 	g_open(x1, y1, a);
 	x1 = de1.s.dots ? 13 + de1.s.xmx : 8;
-	len -= x1 + 8
+	len -= x1 + 8;
 	xypath(x1, 0);
 	output.push('l' + len.toFixed(2) + ' 0" stroke-width="1"/>\n');
 	g_close()
@@ -971,19 +961,10 @@ function vskip(h) {
 
 // create the SVG image of the block
 function svg_flush() {
-//	var img_title, head
 	var head
 
 	if (multicol || output.length == 0 || !user.img_out || posy == 0)
 		return
-//	if (info.X) {
-//		img_title = info.X + '.'
-//		if (info.T)
-//			img_title += ' ' + info.T.split('\n')[0]
-//		img_title = clean_txt(img_title)
-//	} else {
-//		img_title = 'noname'
-//	}
 	posy *= cfmt.scale
 
 	if (user.imagesize) {
@@ -993,14 +974,12 @@ function svg_flush() {
 			user.imagesize +
 			' viewBox="0 0 ' + cfmt.pagewidth.toFixed(0) + ' ' +
 			 posy.toFixed(0) + '">\n'
-//<title>abc2svg - ' + img_title + '</title>\n'
 	} else {
 		head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
 	color="black"\n\
 	width="' + cfmt.pagewidth.toFixed(0) +
 			'px" height="' + posy.toFixed(0) + 'px">\n'
-//<title>abc2svg - ' + img_title + '</title>\n'
 	}
 
 	if (style || font_style || musicfont) {

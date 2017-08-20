@@ -47,8 +47,6 @@ user.textrans = {
 	"Bad %%stafflines value": "Valor incorreto em %%stafflines",
 	"Bad %%staffscale value": "Valor incorreto em %%staffscale",
 	"Bad char '$1' in M:": "Caractere inválido '$1' em M:",
-	"Bad character '}'": "Caractere '}' fora de lugar",
-	"Bad character ')'": "Caractere ')' fora de lugar",
 	"Bad character '$1'": "Caractere inválido '$1'",
 	"Bad duration '$1' in M:": "Duração '$1' incorreta em M:",
 	"Bad integer value": "Número inteiro incorreto",
@@ -72,6 +70,7 @@ user.textrans = {
 				"'%%fullsvg' não pode estar dentro de uma música",
 	"Cannot have a bar in grace notes":
 			"Não pode haver barra de compasso em grupo de notinhas ornamentais",
+	"Cannot have V:* in tune body": "Cannot have V:* in tune body",
 	"Cannot read file '$1'": "Arquivo '$1' não pôde ser aberto ou não existe",
 	"Decoration ignored": "Decoração ignorada",
 	"Empty line in tune header - ignored":

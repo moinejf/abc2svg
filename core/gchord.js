@@ -237,7 +237,6 @@ function gch_transp(s) {
 			i3 = cde2fcg[n] + i2 + a * 7;
 			i4 = cgd2cde[(i3 + 16 * 7) % 7];	// note
 			i1 = ((((i3 + 22) / 7) | 0) + 159) % 5	// accidental
-//			   = ((((i3 + 1 + 21) / 7) | 0) + 2 - 3 + 32 * 5) % 5
 			if (latin == 0)
 				new_txt = note_names[i4] + acc_name[i1]
 			else
@@ -552,9 +551,6 @@ function draw_gchord(s, gchy_min, gchy_max) {
 				if (y2 < staff_tb[s.st].ann_bot)
 					staff_tb[s.st].ann_bot = y2
 			}
-//				y_set(s.st, 1, x, 1, y + h * .8 + 3)
-//			else
-//				y_set(s.st, 0, x, 1, y - h * .2)
 			break
 		}
 		y *= staff_tb[s.st].staffscale

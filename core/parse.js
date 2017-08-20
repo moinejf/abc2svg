@@ -121,7 +121,7 @@ function new_clef(clef_def) {
 }
 
 // get a transposition value
-var pit_st = [0, 2, 4, 5, 7, 9, 11]
+var pit_st = new Int8Array([0, 2, 4, 5, 7, 9, 11])
 
 function get_transp(param,
 			type) {		// undefined or "instr"
@@ -340,14 +340,6 @@ function new_block(subtype) {
 	return s
 }
 
-function next_word(parm, i) {
-	while (parm[i] && parm[i] != ' ')
-		i++
-	while (parm[i] == ' ')
-		i++
-	return i
-}
-
 // set the K: / V: parameters
 function set_kv_parm(a) {	// array of items
 	var	s, item, pos, val
@@ -505,9 +497,7 @@ function new_key(param) {
 	switch (param[0]) {
 	case 'A': s.k_sf = 3; break
 	case 'B': s.k_sf = 5; break
-	case 'C':
-		s.k_sf = 0
-		break
+	case 'C': s.k_sf = 0; break
 	case 'D': s.k_sf = 2; break
 	case 'E': s.k_sf = 4; break
 	case 'F': s.k_sf = -1; break
@@ -604,20 +594,13 @@ function new_key(param) {
 				var note = parse_acc_pit(tmp)
 				if (!note)
 					return [s, null]
-//				var acc = {
-//					pit: note.pit,
-//					acc: note.acc
-//				}
 				s.k_a_acc.push(note);
-//				c = tmp.char()
 				c = param[tmp.index]
 				while (c == ' ')
-//					c = tmp.next_char()
 					c = param[++tmp.index]
 			} while (c == '^' || c == '_' || c == '=');
 			param = param.slice(tmp.index)
 		} else if (s.k_exp && param.indexOf("none") == 0) {
-//			s.k_a_acc = [];
 			s.k_sf = 0;
 			param = param.replace(/\w+\s*/, '')
 		}
@@ -642,7 +625,7 @@ function new_meter(text) {
 		i = 0, j,
 		wmeasure,
 		p = text,
-		in_parenth
+		in_parenth;
 
 	set_ref(s)
 
@@ -835,31 +818,24 @@ function new_tempo(text) {
 
 	/* tempo value */
 	if (c == '=') {
-//		c = tmp.next_char()
 		c = text[++tmp.index]
 		while (c == ' ')
-//			c = tmp.next_char();
-		c = text[++tmp.index];
+			c = text[++tmp.index];
 		i = tmp.index
 		if (c == 'c' && text[i + 1] == 'a'
 		 && text[i + 2] == '.' && text[i + 3] == ' ') {
 			s.tempo_ca = 'ca. ';
 			tmp.index += 4;
-//			c = tmp.char()
-			c = text[tmp.index]
+//			c = text[tmp.index]
 		}
-//		if (c > '0' && c <= '9') {
-//fixme: if "n/d", 'n' may be > 9 - not treated
 		if (text[tmp.index + 1] != '/') {
 			s.tempo = tmp.get_int()
 		} else {
 			nd = parse_dur(tmp);
 			s.new_beat = BASE_LEN * nd[0] / nd[1]
 		}
-//		c = tmp.char()
 		c = text[tmp.index]
 		while (c == ' ')
-//			c = tmp.next_char()
 			c = text[++tmp.index]
 	}
 
@@ -1089,7 +1065,6 @@ function new_bar() {
 			type: BAR,
 			ctx: parse.ctx,
 			istart: parse.bol + line.index,
-//			iend: parse.iend,
 			dur: 0,
 			multi: 0		// needed for decorations
 		}
@@ -1121,8 +1096,6 @@ function new_bar() {
 			s.rbstop = 2		// right repeat with end
 		}
 	}
-
-/*	curvoice.last_note = null; */
 
 	// set the guitar chord and the decorations
 	if (a_gch)
@@ -1209,7 +1182,6 @@ function new_bar() {
 
 		/* remove the invisible repeat bars when no shift is needed */
 		if (bar_type == "["
-//		 && (curvoice.v == par_sy.top_voice
 		 && !s2.text && !s2.a_gch
 		 && (curvoice.st == 0
 		  || (par_sy.staves[curvoice.st - 1].flags & STOP_BAR)
@@ -1289,8 +1261,6 @@ function new_bar() {
 	 && !curvoice.norepbra
 	 && curvoice.st > 0
 	 && !(par_sy.staves[curvoice.st - 1].flags & STOP_BAR)) {
-// ko: always shift!
-//	if (s.text) {
 		s2 = {
 			type: BAR,
 			ctx: s.ctx,
@@ -1441,7 +1411,7 @@ function parse_staves(p) {
 		err = true
 	}
 	if (err || a_vf.length == 0)
-		return null
+		return //null
 	return a_vf
 }
 
@@ -1461,8 +1431,6 @@ function info_split(text) {
 				break
 			}
 			item += '=';
-//			if (a.length < start)
-//				break
 			a.push(item);
 			item = ""
 			break
@@ -1512,7 +1480,6 @@ function identify_note(s, dur) {
 	if (dur % 12 != 0)
 		syntax(1, "Invalid note duration $1", dur);
 	dur /= 12			/* see BASE_LEN for values */
-//	dur = Math.round(dur / 12)
 	if (dur == 0)
 		syntax(1, "Note too short")
 	for (flags = 5; dur != 0; dur >>= 1, flags--) {
@@ -1699,7 +1666,7 @@ function parse_basic_note(line, ulen) {
 		note = parse_acc_pit(line)
 
 	if (!note)
-		return null
+		return //null
 
 	// duration
 	if (line.char() == '0') {		// compatibility
@@ -1729,9 +1696,9 @@ function parse_vpos() {
 	return ti1 + SL_AUTO
 }
 
-var	cde2fcg = [0, 2, 4, -1, 1, 3, 5],
-	cgd2cde = [0, 4, 1, 5, 2, 6, 3],
-	acc2 = [-2, -1, 3, 1, 2]
+var	cde2fcg = new Int8Array([0, 2, 4, -1, 1, 3, 5]),
+	cgd2cde = new Int8Array([0, 4, 1, 5, 2, 6, 3]),
+	acc2 = new Int8Array([-2, -1, 3, 1, 2])
 
 /* transpose a note / chord */
 function note_transp(s) {
@@ -1779,7 +1746,6 @@ function note_transp(s) {
 		if (a && a != 3)				// ! natural
 			i3 += a * 7;
 
-//		i1 = (Math.floor((i3 + 1 + 21) / 7) + 2 - 3 + 32 * 5) % 5;
 		i1 = ((((i3 + 1 + 21) / 7) | 0) + 2 - 3 + 32 * 5) % 5;
 		a = acc2[i1]
 		if (note.acc) {
@@ -1802,8 +1768,8 @@ function note_transp(s) {
 		}
 		i1 = note.acc;
 		d = note.micro_d
-		if (d					/* microtone */
-		 && i1 != a) {				/* different accidental type */
+		if (d				/* microtone */
+		 && i1 != a) {			/* different accidental type */
 			n = note.micro_n
 //fixme: double sharps/flats ?*/
 //fixme: does not work in all cases (tied notes, previous accidental)
@@ -1847,11 +1813,9 @@ function note_transp(s) {
 
 /* sort the notes of the chord by pitch (lowest first) */
 function sort_pitch(s) {
-	function pitch_compare(n1, n2) {
-		return n1.pit - n2.pit
-	}
-
-	s.notes = s.notes.sort(pitch_compare)
+	s.notes = s.notes.sort(function(n1, n2) {
+			return n1.pit - n2.pit
+		})
 }
 function new_note(grace, tp_fact) {
 	var	note, s, in_chord, c, dcn, type,
@@ -1865,14 +1829,11 @@ function new_note(grace, tp_fact) {
 	s = {
 		type: NOTE,
 		ctx: parse.ctx,
-//temporary
-//		istart: parse.istart,
 		stem: 0,
 		multi: 0,
 		nhd: 0,
 		xmx: 0
 	}
-//temporary
 	s.istart = parse.bol + line.index
 
 	if (curvoice.color)
@@ -1896,10 +1857,7 @@ function new_note(grace, tp_fact) {
 	case 'Z':
 		s.type = MREST;
 		c = line.next_char()
-		if (c > '0' && c <= '9')
-			s.nmes = line.get_int()
-		else
-			s.nmes = 1;
+		s.nmes = (c > '0' && c <= '9') ? line.get_int() : 1;
 		s.dur = curvoice.wmeasure * s.nmes
 
 		// ignore if in second voice
@@ -1972,7 +1930,7 @@ function new_note(grace, tp_fact) {
 								c = line.next_char()
 								if (!c || c == '%') {
 									syntax(1, "No end of decoration")
-									return null
+									return //null
 								}
 								if (c == '!')
 									break
@@ -1990,7 +1948,7 @@ function new_note(grace, tp_fact) {
 					(s.grace || curvoice.ulen < 0) ?
 						BASE_LEN / 4 : curvoice.ulen)
 			if (!note)
-				return null
+				return //null
 
 			// transpose
 			if (curvoice.octave)
@@ -2063,7 +2021,7 @@ function new_note(grace, tp_fact) {
 	}
 	if (s.grace && s.type != NOTE) {
 		syntax(1, "Not a note in grace note sequence")
-		return null
+		return //null
 	}
 
 	if (s.notes) {				// if note or rest
@@ -2177,15 +2135,10 @@ function new_note(grace, tp_fact) {
 	if (!curvoice.lyric_restart && !s.grace)
 		curvoice.lyric_restart = s
 
-//	if (curvoice.clef.clef_type == 'p')
-//		s.perc = true
-
 	if (a_dcn_sav)
 		deco_cnv(a_dcn_sav, s, s.prev)
 	if (parse.stemless)
 		s.stemless = true
-//temporary
-//	s.iend = parse.iend
 	s.iend = parse.bol + line.index
 	return s
 }
@@ -2404,7 +2357,7 @@ function parse_music_line() {
 				}
 			}
 			if (!s) {
-				syntax(1, "Bad character ')'")
+				syntax(1, "Bad character '$1'", c)
 				break
 			}
 			if (s.slur_end)
@@ -2589,7 +2542,6 @@ function parse_music_line() {
 			grace = {
 				type: GRACE,
 				ctx: parse.ctx,
-//temporary
 				istart: parse.bol + line.index,
 				dur: 0,
 				multi: 0
@@ -2619,7 +2571,7 @@ function parse_music_line() {
 		case '}':
 			s = curvoice.last_note
 			if (!grace || !s) {
-				syntax(1, "Bad character '}'")
+				syntax(1, "Bad character '$1'", c)
 				break
 			}
 			if (a_dcn)

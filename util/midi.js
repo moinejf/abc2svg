@@ -89,14 +89,14 @@ function AbcMIDI() {
 
 		// convert ABC pitch to MIDI
 		function pit2midi(s, i) {
-			var	p = s.notes[i].apit + 19,	// pitch from lowest C
-				a = s.notes[i].acc
+		    var	p = s.notes[i].apit + 19,	// pitch from lowest C
+			a = s.notes[i].acc
 
-		if (transp[s.v])
-			p += transp[s.v]
-		if (a)
-			map[p] = a == 3 ? 0 : a; // (3 = natural)
-		return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
+			if (transp[s.v])
+				p += transp[s.v]
+			if (a)
+				map[p] = a == 3 ? 0 : a; // (3 = natural)
+			return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
 		} // pit2midi()
 
 		// handle the ties
@@ -104,7 +104,7 @@ function AbcMIDI() {
 			var	j, n, s2, note2, pit, str_tie,
 				note = s.notes[i],
 				tie = note.ti1,
-				end_time
+				end_time;
 
 			pit = note.apit;			// absolute pitch
 			end_time = s.time + s.dur
