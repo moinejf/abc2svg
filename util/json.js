@@ -28,7 +28,7 @@
 function AbcJSON(nindent) {			// indentation level
 	var inb = Array((nindent || 2) + 1).join(' ') // indentation base
 
-    this.gen_json = function (tsfirst, voice_tb, anno_type, info) {
+    AbcJSON.prototype.gen_json = function (tsfirst, voice_tb, anno_type, info) {
 	var	json, i, j, l, v, s, h,
 		ind2 = inb + inb,
 		ind3 = ind2 + inb,

@@ -175,13 +175,13 @@ function scanBuf() {
 //	this.buffer = buffer
 	this.index = 0;
 
-	this.char = function() {
+	scanBuf.prototype.char = function() {
 		return this.buffer[this.index]
 	}
-	this.next_char = function() {
+	scanBuf.prototype.next_char = function() {
 		return this.buffer[++this.index]
 	}
-	this.get_int = function() {
+	scanBuf.prototype.get_int = function() {
 		var	val = 0,
 			c = this.buffer[this.index]
 		while (c >= '0' && c <= '9') {

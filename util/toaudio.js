@@ -38,15 +38,15 @@ var	BAR = 0,
 	play_factor;			// play time factor
 
 // clear the playing events and return the old ones
-    this.clear = function() {
+    Audio.prototype.clear = function() {
 	var a_pe = a_e;
 	a_e = null
 	return a_pe
-    } // this.clear()
+    } // clear()
 
 // add playing events from the ABC model
-    this.add = function(s,			// starting symbol
-		    voice_tb) {		// voice table
+    Audio.prototype.add = function(s,			// starting symbol
+				 voice_tb) {		// voice table
 	var	bmap = new Int8Array(7), // measure base map
 		map = new Int8Array(70), // current map - 10 octaves
 		i, n, dt, d,

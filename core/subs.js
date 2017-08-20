@@ -793,7 +793,7 @@ function write_heading() {
 // generate a header/footer
 // (this function is not called from the core)
 // return an array of [left, center, right] texts
-this.header_footer = function(str) {
+Abc.prototype.header_footer = function(str) {
 	var	c, i,
 		j = 0,
 		r = ["", "", ""]

@@ -47,8 +47,8 @@ function AbcMIDI() {
 		NOTE = 8
 
 	// add MIDI pitches
-	this.add = function(s,		// starting symbol
-			    voice_tb) {	// voice table
+	AbcMIDI.prototype.add = function(s,		// starting symbol
+					voice_tb) {	// voice table
 
 		var	scale = [0, 2, 4, 5, 7, 9, 11],	// note to pitch
 			bmap = [],			// measure base map

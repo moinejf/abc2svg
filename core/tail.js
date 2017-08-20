@@ -25,46 +25,46 @@
 	}
 
 	// output an arpeggio
-	this.arpps = function(val, x, y) {
+	Abc.prototype.arpps = function(val, x, y) {
 		svgcall(out_arp, x, y, val)
 	}
 
 	// output a long trill
-	this.ltrps = function(val, x, y) {
+	Abc.prototype.ltrps = function(val, x, y) {
 		svgcall(out_ltr, x, y, val)
 	}
 
 	// output a deco with string
-	this.xyglsps = function(str, x, y, gl) {
+	Abc.prototype.xyglsps = function(str, x, y, gl) {
 		svgcall(out_deco_str, x, y, gl, str)
 	}
 
 	// output a deco with value
-	this.xyglvps = function(val, x, y, gl) {
+	Abc.prototype.xyglvps = function(val, x, y, gl) {
 		svgcall(out_deco_val, x, y, gl, val)
 	}
 
 	// output a glyph
-	this.xyglps = function(x, y, gl) {
+	Abc.prototype.xyglps = function(x, y, gl) {
 		svgcall(xygl, x, y, gl)
 	}
 
-	this.get_y = function(st, y) {
+	Abc.prototype.get_y = function(st, y) {
 		return y + staff_tb[st].y
 	}
 
     var	psdeco = function(f, x, y, de) { return false },
 	psxygl = function(x, y, gl) { return false }
 
-	this.set_ps = function(deco, xygl) {
+	Abc.prototype.set_ps = function(deco, xygl) {
 		psdeco = deco;
 		psxygl = xygl
 	}
-	this.stv_g = stv_g
-	this.psget_x = function() {
+	Abc.prototype.stv_g = stv_g
+	Abc.prototype.psget_x = function() {
 		return posx / stv_g.scale
 	}
-	this.psget_y = function() {
+	Abc.prototype.psget_y = function() {
 		return stv_g.started ? stv_g.dy : posy
 	}
 

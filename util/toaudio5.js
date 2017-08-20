@@ -374,7 +374,7 @@ function Audio5(i_onend, sf, i_onnote) {
 	}
 
 	// play the events
-	this.play = function(istart, i_iend, a_pe) {
+	Audio5.prototype.play = function(istart, i_iend, a_pe) {
 		if (a_pe)			// force old playing events
 			a_e = a_pe
 		if (!a_e || !a_e.length) {
@@ -396,39 +396,39 @@ function Audio5(i_onend, sf, i_onnote) {
 	} // play()
 
 	// stop playing
-	this.stop = function() {
+	Audio5.prototype.stop = function() {
 		iend = 0
 	} // stop()
 
 	// get soundfont type
-	this.get_sft = function() {
+	Audio5.prototype.get_sft = function() {
 		return sft
 	} // get_sft()
 
 	// get soundfont URL
-	this.get_sfu = function() {
+	Audio5.prototype.get_sfu = function() {
 		return sfu
 	} // get_sft()
 
 	// get volume
-	this.get_vol = function() {
+	Audio5.prototype.get_vol = function() {
 		if (gain)
 			return gain.gain.value
 		return gain_val
 	} // get_vol()
 
 	// set soundfont type
-	this.set_sft = function(v) {
+	Audio5.prototype.set_sft = function(v) {
 		sft = v
 	} // set_sft()
 
 	// set soundfont URL
-	this.set_sfu = function(v) {
+	Audio5.prototype.set_sfu = function(v) {
 		sfu = v
 	} // set_sft()
 
 	// set volume
-	this.set_vol = function(v) {
+	Audio5.prototype.set_vol = function(v) {
 		if (gain)
 			gain.gain.value = v
 		else
@@ -436,7 +436,7 @@ function Audio5(i_onend, sf, i_onnote) {
 	} // set_vol()
 
 	// set 'follow music'
-	this.set_follow = function(v) {
+	Audio5.prototype.set_follow = function(v) {
 		follow = v
 	} // set_follow()
 

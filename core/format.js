@@ -109,7 +109,7 @@ H "History: "',
 }
 
 // exported function: return a parameter value
-this.get_fmt = function(k) {
+Abc.prototype.get_fmt = function(k) {
 	return cfmt[k]
 }
 
