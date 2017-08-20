@@ -2283,11 +2283,13 @@ function parse_music_line() {
 
 	// play the macro game
 	for (k in mac) {
-	    if (mac.hasOwnProperty(k))
+		if (!mac.hasOwnProperty(k)
+		 || line.buffer.indexOf(k[0]) < 0)
+			continue
 		if (k.indexOf('.') >= 0)		// dynamic
 			line.buffer = expand(line.buffer, k)
-		else
-			line.buffer = line.buffer.replace(k, mac[k])
+		else if (line.buffer.indexOf(k) >= 0)
+			line.buffer = line.buffer.replace(new RegExp(k, 'g'), mac[k])
 	}
 
 	while (1) {
