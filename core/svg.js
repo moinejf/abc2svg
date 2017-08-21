@@ -762,6 +762,11 @@ sfz:
 		dx: 0,
 		dy: 5,
 		style: 'style="font:bold italic 14px serif"'
+	},
+'@':	{
+		dx: 0,
+		dy: 5,
+		style: 'style="font:12px sans-serif"'
 	}
 }
 
@@ -771,7 +776,7 @@ function out_deco_str(x, y, name, str) {
 
 	if (!a_deco) {
 		error(1, null, 'no definition of $1', name);
-		a_deco = deco_str_style.fng
+		a_deco = deco_str_style['@']
 	}
 	x += a_deco.dx;
 	y += a_deco.dy;
