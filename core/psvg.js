@@ -331,7 +331,7 @@ function Psvg(abcobj_r) {
 	gcur.cy += y
     }
 
-    Psvg.prototype.rlineto = function(x, y) {
+    function rlineto(x, y) {
 	path_def()
 	if (x == 0)
 		path += "\tv" + (-y).toFixed(2) + "\n"
@@ -343,6 +343,7 @@ function Psvg(abcobj_r) {
 	gcur.cx += x;
 	gcur.cy += y
     }
+    Psvg.prototype.rlineto = rlineto;
 
     Psvg.prototype.rmoveto = function(x, y) {
 	if (path) {
