@@ -64,9 +64,6 @@ function parse_gchord(type) {
 	if (curvoice.pos.gch == SL_HIDDEN)
 		return
 
-	if (!a_gch)
-		a_gch = []
-
 	i = 0;
 	type = 'g'
 	while (1) {
@@ -145,6 +142,8 @@ function parse_gchord(type) {
 			i++
 			break
 		}
+		if (!a_gch)
+			a_gch = []
 		a_gch.push(gch)
 	}
 }
