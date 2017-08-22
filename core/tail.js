@@ -17,6 +17,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
+    var	psdeco = function(f, x, y, de) { return false },
+	psxygl = function(x, y, gl) { return false }
+
+// try to install PostScript support
+function ps_def(abcobj) {
+	if (psvg || typeof Psvg != "function")
+		return		// already installed or no support
+
 // ---- Abc functions called from the PS interpreter
 	function svgcall(f, x, y, v1, v2) {
 	    var	xy = psvg.getorig();
@@ -53,9 +61,6 @@
 		return y + staff_tb[st].y
 	}
 
-    var	psdeco = function(f, x, y, de) { return false },
-	psxygl = function(x, y, gl) { return false }
-
 	Abc.prototype.set_ps = function(deco, xygl) {
 		psdeco = deco;
 		psxygl = xygl
@@ -68,11 +73,13 @@
 		return stv_g.started ? stv_g.dy : posy
 	}
 
-	if (typeof Psvg == "function") {	// if Postscript support
-		psvg = new Psvg(this)
-	}
+	psvg = new Psvg(abcobj)
+}
+
+	Abc.prototype.ps_def = ps_def;
 
 // initialize
+	ps_def(this);
 	font_init();
 	init_tune()
 

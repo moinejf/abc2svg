@@ -18,12 +18,18 @@ function readFile(fname) {
 	return fs.readFileSync(fname).toString()
 }
 
+function loadRelativeToScript(script) {
+	var geval = eval;
+	geval(readFile(__dirname + '/' + script))
+}
+
 function quit() {
 	process.exit(1)
 }
 
 global.print = print;
 global.printErr = printErr;
+global.loadRelativeToScript = loadRelativeToScript;
 global.readFile = readFile;
 global.quit = quit;
 
@@ -61,8 +67,8 @@ args.shift()
 
 // if the first argument is a script, load it
 if (args[0] && args[0].match(/\.js$/)) {
-	var fn = args[0][0] == '/' ? args[0] : (__dirname + '/' + args[0])
-	var f = readFile(fn);
+    var fn = args[0][0] == '/' ? args[0] : (__dirname + '/' + args[0]),
+	f = readFile(fn);
 	eval(f);
 	args.shift()
 	global.abort = abort;

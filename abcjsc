@@ -21,6 +21,10 @@ exec jsc-1 -e "var progdir='${progdir}/'
 //	return fout
 //}
 
+function loadRelativeToScript(script) {
+	load(progdir + script)
+}
+
 load(progdir + 'abc2svg-1.js')
 load(progdir + 'cmdline.js')
 

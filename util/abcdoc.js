@@ -52,8 +52,19 @@ function clean_txt(txt) {
 }
 
 // function called when the page is loaded
+var jsdir = document.currentScript.src.match(/.*\//) || ['']
 function dom_loaded() {
 	var page = document.body.innerHTML
+
+	// if some Postscript definition, load the interpreter
+	if (typeof Psvg != "function"
+	 && page.indexOf("\n%%beginps") > 0) {
+		var scr = document.createElement('script');
+		scr.src = jsdir[0] + "psvg-1.js";
+		scr.onload = dom_loaded;
+		document.head.appendChild(scr)
+		return
+	}
 
 	// search the ABC tunes and add their rendering as SVG images
 	var	i = 0, j, k, res,

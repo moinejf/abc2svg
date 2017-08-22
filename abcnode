@@ -1,4 +1,6 @@
 #!/bin/sh
+# abc2svg with raw nodeJS
+progdir=`dirname $0`
 
 cat abc2svg-1.js cmdline.js > /tmp/toto.js
 case $1 in
@@ -11,14 +13,24 @@ case $1 in
 		;;
 esac
 cat <<EOF >> /tmp/toto.js
-var fs = require("fs")
+var	fs = require("fs"),
+	progdir='${progdir}/'
 
 function print(str) {
-	console.log(str)
+	process.stdout.write(str + '\n')
+}
+
+function printErr(str) {
+	process.stderr.write(str + '\n')
 }
 
 function readFile(fname) {
 	return fs.readFileSync(fname).toString()
+}
+
+function loadRelativeToScript(script) {
+	var geval = eval;
+	geval(readFile(progdir + script))
 }
 
 function quit() {

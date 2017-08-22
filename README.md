@@ -20,11 +20,6 @@ These files are:
   It must be included in the (X)HTML header of the pages
   where ABC rendering is needed (in `<script src=` tags).
 
-- `abcps2svg-1.js`
-  This script contains the core and a small PostScript interpreter.  
-  It may be used in place of `abc2svg-1.js` to render some customized
-  decorations defined for `abcm2ps`.
-
 - `abcemb-1.js`
   This script is to be used in (X)HTML pages with the core.  
   It replaces the ABC sequences by SVG images of the music
@@ -48,8 +43,8 @@ These files are:
   See [this page](http://moinejf.free.fr/abcm2ps-doc/au_clair.xhtml)
   for an example.
 
-- `edit-1.xhtml` and `psedit-1.xhtml`
-  These are web ABC editors/players (resp. without and with PS support).
+- `edit-1.xhtml`
+  This is a simple web ABC editor/player.
 
 When looking at a ABC file in a web browser, you may also use this bookmarklet,
 <a href="javascript:(function(){return'<?xml version=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?>\n<!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;\n&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;>\n<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;>\n<head>\n<meta http-equiv=&quot;Content-Type&quot;content=&quot;text/html;charset=UTF-8&quot;/>\n<link href=&quot;http://moinejf.free.fr/js/edit-1.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/>\n<title>ABC</title>\n<script src=&quot;http://moinejf.free.fr/js/abc2svg-1.js&quot;type=&quot;text/javascript&quot;></script>\n<script src=&quot;http://moinejf.free.fr/js/abcemb-1.js&quot;type=&quot;text/javascript&quot;></script>\n</head>\n<body>\n%25abc2.2\n'+document.body.textContent+'</body>\n</html>'})();">ABC render</a>,
@@ -130,5 +125,4 @@ following shell scripts:
 - `abcjs24` with `js24` (Mozilla JavaScript shell - Spidermonkey)
 - `abcjsc` with `jsc-1` (webkitgtk2)
 - `abcnode` with `node` (nodeJS)
-- `abcps` (abcjs24 + PostScript support)
 - `abcv8` with `d8` (Google libv8)

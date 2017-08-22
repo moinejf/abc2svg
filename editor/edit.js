@@ -173,6 +173,18 @@ function render() {
 	if (!content)
 		return			// empty source
 
+	// if some Postscript definition, load the interpreter
+	if (typeof Psvg != "function") {
+		if (content.indexOf('%%beginps') >= 0
+		 || document.getElementById("src1").value.indexOf('%%beginps') >= 0) {
+			var script = document.createElement('script');
+			script.src = "psvg-@MAJOR@.js";
+			script.onload = render;
+			document.head.appendChild(script)
+			return
+		}
+	}
+
 	// if include file not loaded yet, ask it
 	i = content.indexOf('%%abc-include ')
 	if (i >= 0) {

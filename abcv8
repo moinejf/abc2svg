@@ -7,6 +7,10 @@ function readFile(fname) {
 	return read(fname)
 }
 
+function loadRelativeToScript(script) {
+	load(progdir + script)
+}
+
 load(progdir + 'abc2svg-1.js');
 load(progdir + 'cmdline.js')
 

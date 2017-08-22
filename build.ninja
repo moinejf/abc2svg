@@ -50,16 +50,7 @@ rule jscu
    fi
 
 rule edit
-  command = sed "$
-s+@JS@+abc2svg-$MAJOR.js+;$
-s+@MAJOR@+$MAJOR+;$
-s+@PS@++$
-" editor/edit.xhtml > edit-$MAJOR.xhtml;$
-   sed "$
-s+@JS@+abcps2svg-$MAJOR.js+;$
-s+@MAJOR@+$MAJOR+;$
-s+@PS@+ with PostScript+$
-" editor/edit.xhtml > psedit-$MAJOR.xhtml;$
+  command = sed "s+@MAJOR@+$MAJOR+" editor/edit.xhtml > edit-$MAJOR.xhtml;$
    if [ "x$$NOMIN" = "x" ]; then$
 	sed "s+@MAJOR@+$MAJOR+" editor/edit.js | uglifyjs > edit-$MAJOR.js;$
    else$
@@ -72,10 +63,7 @@ build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
  core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js | package.json
 
-build abcps2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
- font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
- core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js $
- core/wps.js core/psvg.js | package.json
+build psvg-$MAJOR.js: jscu core/wps.js core/psvg.js | package.json
 
 build edit-$MAJOR.css: cp editor/edit.css
 
@@ -86,12 +74,13 @@ build midi-$MAJOR.js: jscu util/midi.js | package.json
 build play-$MAJOR.js: jscu util/play.js util/toaudio.js util/toaudio5.js | package.json
 build toaudio-$MAJOR.js: jscu util/toaudio.js | package.json
 
-build edit-$MAJOR.xhtml psedit-$MAJOR.xhtml edit-$MAJOR.js: edit $
+build edit-$MAJOR.xhtml edit-$MAJOR.js: edit $
  editor/edit.xhtml editor/edit.js
 
-build all: phony abc2svg-$MAJOR.js abcps2svg-$MAJOR.js abcdoc-$MAJOR.js $
+build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
  abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js play-$MAJOR.js toaudio-$MAJOR.js $
- edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml psedit-$MAJOR.xhtml
+ psvg-$MAJOR.js $
+ edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml
 
 default all
 

@@ -64,6 +64,12 @@ function do_file(fn) {
 		abort(new Error("Cannot read file '" + fn + "'"))
 //	if (typeof(utf_convert) == "function")
 //		file = utf_convert(file)
+
+	// if some Postscript definition, load the interpreter
+	if (file.indexOf('%%beginps') >= 0 && typeof Psvg != "function") {
+		loadRelativeToScript('psvg-1.js');
+		abc.ps_def(abc)
+	}
 	try {
 		abc.tosvg(fn, file)
 	}
