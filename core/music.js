@@ -4508,11 +4508,12 @@ function output_music() {
 		if (!tsnext)
 			break
 
+		blk_out();
+
 		// next line
 		gen_init()
 		if (!tsfirst)
 			break
-		blk_out();
 		tsfirst.ts_prev = null;
 		set_sym_line();
 		lwidth = get_lwidth()	// the image size may have changed
