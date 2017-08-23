@@ -41,7 +41,7 @@ function get_sym(p, cont) {
 		if (!s)
 			s = curvoice.sym
 		if (!s) {
-			syntax(1, "w: without music")
+			syntax(1, "s: without music")
 			return
 		}
 	}
@@ -54,7 +54,7 @@ function get_sym(p, cont) {
 		c = p[i]
 		if (!c)
 			break
-		switch (c) { 
+		switch (c) {
 		case '|':
 			while (s && s.type != BAR)
 				s = s.next
