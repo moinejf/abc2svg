@@ -104,7 +104,7 @@ H "History: "',
 	vocalspace: 10,
 //	voicecombine: 0,
 //	voicescale: 1,
-	writefields: "CMOPQTWw",
+	writefields: "CMOPQsTWw",
 	wordsspace: 5
 }
 

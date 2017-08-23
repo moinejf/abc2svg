@@ -1240,6 +1240,8 @@ function new_bar() {
 	s.bar_type = bar_type
 	if (!curvoice.lyric_restart)
 		curvoice.lyric_restart = s
+	if (!curvoice.sym_restart)
+		curvoice.sym_restart = s
 
 	/* the bar must appear before a key signature */
 	if (s2 && s2.type == KEY
@@ -2132,8 +2134,12 @@ function new_note(grace, tp_fact) {
 
 	if (cfmt.shiftunison)
 		s.shiftunison = cfmt.shiftunison
-	if (!curvoice.lyric_restart && !s.grace)
-		curvoice.lyric_restart = s
+	if (!grace) {
+		if (!curvoice.lyric_restart)
+			curvoice.lyric_restart = s
+		if (!curvoice.sym_restart)
+			curvoice.sym_restart = s
+	}
 
 	if (a_dcn_sav)
 		deco_cnv(a_dcn_sav, s, s.prev)

@@ -718,9 +718,10 @@ function tosvg(in_fname,		// file name
 
 		// info fields in tune body only
 		case 's':
-			if (parse.state != 3)
+			if (parse.state != 3
+			 || cfmt.writefields.indexOf(line0) < 0)
 				break
-//--fixme: to do
+			get_sym(text, txt_add == ' ')
 			break
 		case 'w':
 			if (parse.state != 3

@@ -17,6 +17,113 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
+// parse a symbol line (s:)
+function get_sym(p, cont) {
+	var s, c, i, j, d
+
+	if (curvoice.ignore)
+		return
+
+	// get the starting symbol of the lyrics
+	if (cont) {					// +:
+		s = curvoice.sym_cont
+		if (!s) {
+			syntax(1, "+: symbol line without music")
+			return
+		}
+	} else {
+		if (curvoice.sym_restart) {		// new music
+			curvoice.sym_start = s = curvoice.sym_restart;
+			curvoice.sym_restart = null
+		} else {
+			s = curvoice.sym_start
+		}
+		if (!s)
+			s = curvoice.sym
+		if (!s) {
+			syntax(1, "w: without music")
+			return
+		}
+	}
+
+	/* scan the symbol line */
+	i = 0
+	while (1) {
+		while (p[i] == ' ' || p[i] == '\t')
+			i++;
+		c = p[i]
+		if (!c)
+			break
+		switch (c) { 
+		case '|':
+			while (s && s.type != BAR)
+				s = s.next
+			if (!s) {
+				syntax(1, "Not enough measure bars for symbol line")
+				return
+			}
+			s = s.next;
+			i++
+			continue
+		case '!':
+		case '"':
+			j = ++i
+			i = p.indexOf(c, j)
+			if (i < 0) {
+				parse.line.index = parse.istart + i;
+				syntax(1, c == '!' ?
+					"No end of decoration" :
+					"No end of guitar chord");
+				i = p.length
+				continue
+			}
+			d = p.slice(j - 1, i + 1)
+			break
+		case '*':
+			break
+		default:
+			d = c.charCodeAt(0)
+			if (d < 128) {
+				d = char_tb[d]
+				if (d.length > 1
+				 && (d[0] == '!' || d[0] == '"')) {
+					c = d[0]
+					break
+				}
+			}
+			parse.line.index = parse.istart + i;
+			syntax(1, "Bad character '$1'", c)
+			break
+		}
+
+		/* store the element in the next note */
+		while (s && (s.type != NOTE || s.grace))
+			s = s.next
+		if (!s) {
+			syntax(1, "Too many elements in symbol line")
+			return
+		}
+		switch (c) {
+		default:
+//		case '*':
+			break
+		case '!':
+			deco_cnv([d.slice(1, -1)], s, s.prev)
+			break
+		case '"':
+			parse.line.index = parse.istart + i;
+			a_gch = s.a_gch;
+			parse_gchord(d)
+			if (a_gch)
+				gch_build(s)
+			break
+		}
+		s = s.next;
+		i++
+	}
+	curvoice.lyric_cont = s
+}
+
 /* -- parse a lyric (vocal) line (w:) -- */
 function get_lyrics(text, cont) {
 	var s, word, p, i, j, ly

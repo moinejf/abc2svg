@@ -1833,6 +1833,8 @@ function get_vover(type) {
 		delete p_voice.lyric_restart
 		delete p_voice.lyric_cont
 		delete p_voice.ly_a_h;
+		delete p_voice.sym_restart
+		delete p_voice.sym_cont
 
 		voice_tb.push(p_voice)
 		return p_voice
