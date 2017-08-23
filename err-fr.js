@@ -6,6 +6,8 @@
 
 user.textrans = {
 	"+: lyric without music": "+: paroles sans musique",
+	"+: symbol line without music":
+			"+: plus de musique pour s:",
 	"+: without previous info field": "Pas de ligne info avant +:",
 	"'{' in grace note": "'{' dans notes d'agrément",
 	"'}', ')' or ']' missing in %%staves":
@@ -118,6 +120,8 @@ user.textrans = {
 	"Not an ASCII character": "Ce n'est pas un caractère ASCII",
 	"Not enough measure bars for lyric line":
 				"Pas assez de barres pour la ligne de paroles",
+	"Not enough measure bars for symbol line":
+				"Pas assez de barres pour ligne s:",
 	"Not enough measures for %%repeat":
 				"Pas assez de mesures pour %%repeat",
 	"Not enough parameters in %%map":
@@ -126,6 +130,8 @@ user.textrans = {
 				 "Pas assez de notes/silences pour %%repeat",
 	"Note too long": "Durée de note trop longue",
 	"Note too short": "Durée de note trop courte",
+	"s: without music": "s: sans musique",
+	"Too many elements in symbol line": "Trop d'éléments dans ligne s:",
 	"Too many include levels": "Trop de niveaux d'inclusion de fichier",
 	"Too many ties": "Trop de liaisons de prolongation",
 	"Too many words in lyric line": "Trop de mots dans la ligne de paroles",
