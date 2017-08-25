@@ -1298,9 +1298,6 @@ function draw_basic_note(x, s, m, y_tb) {
 		x_note = x + shhd,
 		y_note = y + staffb
 
-	if (s.invis)
-		return
-
 //	/* special case for voice unison */
 //	if (s.nohdi1 != undefined
 //	 && m >= s.nohdi1 && m < s.nohdi2)
@@ -1437,30 +1434,28 @@ function draw_note(s,
 	staffb = staff_tb[s.st].y
 
 	/* output the ledger lines */
-	if (!s.invis) {
-		if (s.grace) {
-			hltype = "ghl"
-		} else {
-			switch (s.head) {
-			default:
-				hltype = "hl"
-				break
-			case OVAL:
-			case OVALBARS:
-				hltype = "hl1"
-				break
-			case SQUARE:
-				hltype = "hl2"
-				break
-			}
+	if (s.grace) {
+		hltype = "ghl"
+	} else {
+		switch (s.head) {
+		default:
+			hltype = "hl"
+			break
+		case OVAL:
+		case OVALBARS:
+			hltype = "hl1"
+			break
+		case SQUARE:
+			hltype = "hl2"
+			break
 		}
-		draw_hl(x, 3 * (s.notes[0].pit - 18), 3 * (s.notes[s.nhd].pit - 18),
-			s.st, hltype)
 	}
+	draw_hl(x, 3 * (s.notes[0].pit - 18), 3 * (s.notes[s.nhd].pit - 18),
+		s.st, hltype)
 
 	/* draw the stem and flags */
 	y = y_head(s, note)
-	if (!s.invis && !s.stemless) {
+	if (!s.stemless) {
 		slen = s.ys - s.y;
 		nflags = s.nflags
 		if (s.ntrem)
@@ -1487,9 +1482,7 @@ function draw_note(s,
 	}
 
 	/* draw the tremolo bars */
-	if (!s.invis
-	 && fl
-	 && s.trem1) {
+	if (fl && s.trem1) {
 		var	ntrem = s.ntrem || 0,
 			x1 = x;
 		slen = 3 * (s.notes[s.stem > 0 ? s.nhd : 0].pit - 18)
@@ -3619,9 +3612,7 @@ function draw_symbols(p_voice) {
 //	bm.s2 = undefined
 	first_note = true
 	for (s = p_voice.sym; s; s = s.next) {
-		if (s.invis
-		 && s.type != NOTE && s.type != REST
-		 && s.type != GRACE)
+		if (s.invis)
 			continue
 		x = s.x;
 		set_color(s.color)
@@ -3656,8 +3647,7 @@ function draw_symbols(p_voice) {
 			if (s.second)
 /*			 || p_voice.st != st)	*/
 				break		/* only one clef per staff */
-			if (s.invis
-			 || staff_tb[st].empty)
+			if (staff_tb[st].empty)
 				break
 			set_color(undefined);
 			set_sscale(st);
