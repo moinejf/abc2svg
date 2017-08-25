@@ -1057,7 +1057,7 @@ function set_space(s) {
 	while (!s.dur) {
 		switch (s.type) {
 		case BAR:
-			return space * .6
+			return space * .9 - 7
 		case CLEF:
 			return space - s.wl
 		case BLOCK:			// no space
