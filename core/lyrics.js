@@ -70,7 +70,6 @@ function get_sym(p, cont) {
 			j = ++i
 			i = p.indexOf(c, j)
 			if (i < 0) {
-				parse.line.index = parse.istart + i;
 				syntax(1, c == '!' ?
 					"No end of decoration" :
 					"No end of guitar chord");
@@ -91,7 +90,6 @@ function get_sym(p, cont) {
 					break
 				}
 			}
-			parse.line.index = parse.istart + i;
 			syntax(1, "Bad character '$1'", c)
 			break
 		}
@@ -111,7 +109,6 @@ function get_sym(p, cont) {
 			deco_cnv([d.slice(1, -1)], s, s.prev)
 			break
 		case '"':
-			parse.line.index = parse.istart + i;
 			a_gch = s.a_gch;
 			parse_gchord(d)
 			if (a_gch)
