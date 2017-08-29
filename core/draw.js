@@ -3607,12 +3607,12 @@ function draw_systems(indent) {
 /* -- draw remaining symbols when the staves are defined -- */
 function draw_symbols(p_voice) {
 	var	bm = {},
-		s, g, x, y, st, first_note;
+		s, g, x, y, st;
 
 //	bm.s2 = undefined
-	first_note = true
 	for (s = p_voice.sym; s; s = s.next) {
-		if (s.invis)
+		if (s.invis
+		 && s.type != NOTE)	// (beams may start on invisible notes)
 			continue
 		x = s.x;
 		set_color(s.color)
@@ -3620,15 +3620,15 @@ function draw_symbols(p_voice) {
 		case NOTE:
 //--fixme: recall set_scale if different staff
 			set_scale(s)
-			if ((s.beam_st && !s.beam_end)
-			 || (first_note && !s.beam_st)) {
-				first_note = false
+			if (s.beam_st && !s.beam_end) {
 				if (calculate_beam(bm, s))
 					draw_beams(bm)
 			}
-			anno_start(s);
-			draw_note(s, !bm.s2);
-			anno_stop(s)
+			if (!s.invis) {
+				anno_start(s);
+				draw_note(s, !bm.s2);
+				anno_stop(s)
+			}
 			if (s == bm.s2)
 				bm.s2 = null
 			break
