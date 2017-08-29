@@ -1647,11 +1647,6 @@ function set_lines(	s,		/* first symbol */
 				s2 = s3
 			if (s2)
 				s = s2
-			while (!s.x || s.x + s.shrink * 2 >= xmax) {
-				if (!s.ts_prev || s.ts_prev.nl) // don't go backwards
-					break
-				s = s.ts_prev
-			}
 		}
 
 		if (s.nl) {		/* already set here - advance */
