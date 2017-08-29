@@ -696,6 +696,7 @@ systemdict/def{currentdict 2 index 2 index put pop pop}put\n\
 /dsh0{(acc2).svg(xygl)3 .call0}.bdef\n\
 /trl{(trl).svg(xygl)3 .call0}.bdef\n\
 /lmrd{(lmrd).svg(xygl)3 .call0}.bdef\n\
+/turn{(turn).svg(xygl)3 .call0}.bdef\n\
 /umrd{(umrd).svg(xygl)3 .call0}.bdef\n\
 /y0{.svg(y0)1 .call}.bdef\n\
 /y1{.svg(y1)1 .call}.bdef\n")
