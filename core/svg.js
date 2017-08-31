@@ -40,59 +40,59 @@ var	output = [],		// output buffer
 
 // glyphs in music font
 var tgls = {
-  sgno: {x: -6, y:4, c:"&#xe047;"},
-  coda: {x:-12, y:6, c:"&#xe048;"},
-  tclef: {x:-8, y:0, c:"&#xe050;"},
-  cclef: {x:-8, y:0, c:"&#xe05c;"},
-  bclef: {x:-8, y:0, c:"&#xe062;"},
-  pclef: {x:-6, y:0, c:"&#xe069;"},
-  stclef: {x:-8, y:0, c:"&#xe07a;"},
-  scclef: {x:-8, y:0, c:"&#xe07b;"},
-  sbclef: {x:-7, y:0, c:"&#xe07c;"},
-  csig: {x:0, y:0, c:"&#xe08a;"},
-  ctsig: {x:0, y:0, c:"&#xe08b;"},
-  HDD: {x:-7, y:0, c:"&#xe0a0;"},
-  breve: {x:-6, y:0, c:"&#xe0a1;"},
-  HD: {x:-5.2, y:0, c:"&#xe0a2;"},
-  Hd: {x:-3.8, y:0, c:"&#xe0a3;"},
-  hd: {x:-3.7, y:0, c:"&#xe0a4;"},
-  srep: {x:-5, y:0, c:"&#xe101;"},
-  dot: {x:-2, y:0, c:"&#xe1e7;"},
- "acc-1": {x:-3, y:0, c:"&#xe260;"},
-  acc3: {x:-2, y:0, c:"&#xe261;"},
-  acc1: {x:-3, y:0, c:"&#xe262;"},
-  acc2: {x:-3, y:0, c:"&#xe263;"},
-  pshhd: {x:-3, y:0, c:"&#xe263;"},
- "acc-2": {x:-3, y:0, c:"&#xe264;"},
-  accent: {x:-3, y:0, c:"&#xe4a0;"},
-  marcato: {x:-3, y:0, c:"&#xe4ac;"},
-  hld: {x:-7, y:0, c:"&#xe4c0;"},
-  r00: {x:-1.5, y:0, c:"&#xe4e1;"},
-  r0: {x:-1.5, y:0, c:"&#xe4e2;"},
-  r1: {x:-3.5, y:6, c:"&#xe4e3;"},
-  r2: {x:-3.2, y:0, c:"&#xe4e4;"},
-  r4: {x:-3, y:0, c:"&#xe4e5;"},
-  r8: {x:-3, y:0, c:"&#xe4e6;"},
-  r16: {x:-4, y:0, c:"&#xe4e7;"},
-  r32: {x:-4, y:0, c:"&#xe4e8;"},
-  r64: {x:-4, y:0, c:"&#xe4e9;"},
-  r128: {x:-4, y:0, c:"&#xe4ea;"},
-  mrest: {x:-10, y:0, c:"&#xe4ee;"},
-  mrep: {x:-6, y:0, c:"&#xe500;"},
-  mrep2: {x:-9, y:0, c:"&#xe501;"},
-  turn: {x:-5, y:4, c:"&#xe567;"},
-  umrd: {x:-7, y:2, c:"&#xe56c;"},
-  lmrd: {x:-7, y:2, c:"&#xe56d;"},
-  ped: {x:-10, y:0, c:"&#xe650;"},
-  pedoff: {x:-5, y:0, c:"&#xe655;"},
-  longa: {x:-6, y:0, c:"&#xe95c;"}
+  sgno: {x: -6, y:4, c:"\ue047"},
+  coda: {x:-12, y:6, c:"\ue048"},
+  tclef: {x:-8, y:0, c:"\ue050"},
+  cclef: {x:-8, y:0, c:"\ue05c"},
+  bclef: {x:-8, y:0, c:"\ue062"},
+  pclef: {x:-6, y:0, c:"\ue069"},
+  stclef: {x:-8, y:0, c:"\ue07a"},
+  scclef: {x:-8, y:0, c:"\ue07b"},
+  sbclef: {x:-7, y:0, c:"\ue07c"},
+  csig: {x:0, y:0, c:"\ue08a"},
+  ctsig: {x:0, y:0, c:"\ue08b"},
+  HDD: {x:-7, y:0, c:"\ue0a0"},
+  breve: {x:-6, y:0, c:"\ue0a1"},
+  HD: {x:-5.2, y:0, c:"\ue0a2"},
+  Hd: {x:-3.8, y:0, c:"\ue0a3"},
+  hd: {x:-3.7, y:0, c:"\ue0a4"},
+  srep: {x:-5, y:0, c:"\ue101"},
+  dot: {x:-2, y:0, c:"\ue1e7"},
+ "acc-1": {x:-3, y:0, c:"\ue260"},
+  acc3: {x:-2, y:0, c:"\ue261"},
+  acc1: {x:-3, y:0, c:"\ue262"},
+  acc2: {x:-3, y:0, c:"\ue263"},
+  pshhd: {x:-3, y:0, c:"\ue263"},
+ "acc-2": {x:-3, y:0, c:"\ue264"},
+  accent: {x:-3, y:0, c:"\ue4a0"},
+  marcato: {x:-3, y:0, c:"\ue4ac"},
+  hld: {x:-7, y:0, c:"\ue4c0"},
+  r00: {x:-1.5, y:0, c:"\ue4e1"},
+  r0: {x:-1.5, y:0, c:"\ue4e2"},
+  r1: {x:-3.5, y:6, c:"\ue4e3"},
+  r2: {x:-3.2, y:0, c:"\ue4e4"},
+  r4: {x:-3, y:0, c:"\ue4e5"},
+  r8: {x:-3, y:0, c:"\ue4e6"},
+  r16: {x:-4, y:0, c:"\ue4e7"},
+  r32: {x:-4, y:0, c:"\ue4e8"},
+  r64: {x:-4, y:0, c:"\ue4e9"},
+  r128: {x:-4, y:0, c:"\ue4ea"},
+  mrest: {x:-10, y:0, c:"\ue4ee"},
+  mrep: {x:-6, y:0, c:"\ue500"},
+  mrep2: {x:-9, y:0, c:"\ue501"},
+  turn: {x:-5, y:4, c:"\ue567"},
+  umrd: {x:-7, y:2, c:"\ue56c"},
+  lmrd: {x:-7, y:2, c:"\ue56d"},
+  ped: {x:-10, y:0, c:"\ue650"},
+  pedoff: {x:-5, y:0, c:"\ue655"},
+  longa: {x:-6, y:0, c:"\ue95c"}
 }
 
 // glyphs to put in <defs>
 var glyphs = {
-  brace: '<text id="brace">&#xe000;</text>',
+  brace: '<text id="brace">\ue000</text>',
   ghd: '<g id="ghd" transform="translate(4.5,0) scale(0.66)">\n\
-	<text x="-3.7">&#xe0a4;</text>\n\
+	<text x="-3.7">\ue0a4</text>\n\
 </g>',
   acc1_1_4: '<g id="acc1_1_4">\n\
 	<path d="m0 7.8v-15.4" class="stroke"/>\n\
@@ -105,7 +105,7 @@ var glyphs = {
 		M-3.7 -3.2l7.4 -2.2v2.2l-7.4 2.2v-2.2"/>\n\
 </g>',
  "acc-1_1_4": '<g id="acc-1_1_4" transform="scale(-1,1)">\n\
-	<text x="-3">&#xe260;</text>\n\
+	<text x="-3">\ue260</text>\n\
 </g>',
  "acc-1_3_4": '<g id="acc-1_3_4">\n\
     <path class="fill" d="m0.6 -2.7\n\
@@ -114,11 +114,11 @@ var glyphs = {
     <path d="m1.6 3.5v-13M0 3.5v-13" class="stroke" stroke-width=".6"/>\n\
 </g>',
   turnx: '<g id="turnx">\n\
-	<text x="-5" y="-4">&#xe567;</text>\n\
+	<text x="-5" y="-4">\ue567</text>\n\
 	<path class="stroke" d="m0 -1.5v-9"/>\n\
 </g>',
   pfthd: '<g id="pfthd">\n\
-	<text x="-3">&#xe263;</text>\n\
+	<text x="-3">\ue263</text>\n\
 	<circle r="4" class="stroke"/>\n\
 </g>',
   pmsig: '<path id="pmsig" class="stroke" stroke-width="0.8"\n\
