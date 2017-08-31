@@ -31,6 +31,7 @@ var	abc_images,			// image buffer
 	a_pe,				// playing events
 	playing,
 	selrec = {},
+	pop,				// current popup message
 	texts = {			// language specific texts
 		bad_nb: 'Bad line number',
 		fn: 'File name: ',
@@ -121,8 +122,11 @@ function loadlang(lang) {
 
 // show/hide a popup message
 function popshow(area, visible) {
-	document.getElementById(area).style.visibility =
-		visible ? 'visible' : 'hidden'
+	var e = document.getElementById(area)
+	if (pop)
+		pop.style.visibility = 'hidden';
+	e.style.visibility = visible ? 'visible' : 'hidden';
+	pop = visible ? e : null
 }
 
 // load the (ABC source or include) file in the textarea
