@@ -179,7 +179,7 @@ function Audio5(i_onend, sf, i_onnote) {
 
 	// instruments/notes
 		sfu =			// soundfont default URL
-    "https://raw.githubusercontent.com/gleitz/midi-js-soundfonts/gh-pages/FluidR3_GM",
+			"http://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/",
 		sft = "js",		// soundfont type:
 					// - "js" midi-js with encoded data structure
 					// - "mp3" midi-js mp3 samples
