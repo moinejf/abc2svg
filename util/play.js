@@ -17,10 +17,10 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-// This file is just a wrapper around Audio (toaudio.js) and Audio5 (toaudio5.js)
+// This file is just a wrapper around ToAudio (toaudio.js) and Audio5 (toaudio5.js)
 
 function AbcPlay(i_onend, sf, i_onnote) {
-var	audio = new Audio(),
+var	audio = new ToAudio(),
 	audio5 = new Audio5(i_onend, sf, i_onnote)
 
 	return {

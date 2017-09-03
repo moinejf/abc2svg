@@ -17,8 +17,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-// Audio creation
-function Audio() {
+// ToAudio creation
+function ToAudio() {
 
 // constants from Abc
 var	BAR = 0,
@@ -38,14 +38,14 @@ var	BAR = 0,
 	play_factor;			// play time factor
 
 // clear the playing events and return the old ones
-    Audio.prototype.clear = function() {
+    ToAudio.prototype.clear = function() {
 	var a_pe = a_e;
 	a_e = null
 	return a_pe
     } // clear()
 
 // add playing events from the ABC model
-    Audio.prototype.add = function(s,			// starting symbol
+    ToAudio.prototype.add = function(s,			// starting symbol
 				 voice_tb) {		// voice table
 	var	bmap = new Int8Array(7), // measure base map
 		map = new Int8Array(70), // current map - 10 octaves
@@ -296,8 +296,8 @@ var	BAR = 0,
 	}
     } // add()
 
-} // Audio
+} // ToAudio
 
 // nodejs
 if (typeof module == 'object' && typeof exports == 'object')
-	exports.Audio = Audio
+	exports.ToAudio = ToAudio
