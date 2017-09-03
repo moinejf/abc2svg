@@ -299,5 +299,5 @@ var	BAR = 0,
 } // Audio
 
 // nodejs
-if (typeof module == 'object')
+if (typeof module == 'object' && typeof exports == 'object')
 	exports.Audio = Audio
