@@ -176,6 +176,8 @@ function Audio5(i_onend, sf, i_onnote) {
 		a_e,			// event array
 		onnote = i_onnote,	// callback function on note start/stop
 		follow,			// follow the music
+		speed = 1,		// speed factor
+		new_speed,
 
 	// instruments/notes
 		sfu =			// soundfont default URL
@@ -313,27 +315,41 @@ function Audio5(i_onend, sf, i_onnote) {
 				onend()
 			return
 		}
+
+		// if speed change, shift the start time
+		if (new_speed) {
+			stime = ac.currentTime -
+					(ac.currentTime - stime) * speed / new_speed;
+			speed = new_speed;
+			new_speed = 0
+		}
+
 //fixme: better, count the number of events?
-		maxt = e[1] + 3			// max time = evt time + 3 seconds
-		do {
+		t = e[1] / speed		// start time
+		maxt = t + 3			// max time = evt time + 3 seconds
+		while (1) {
 			o = ac.createBufferSource();
 			o.buffer = sounds[e[2]][e[3]];
 			o.connect(gain);
 // if not a percussion instrument,
 //  o.loop = true
 //  o.loopStart = 3 // (for sample 4s)
-			o.start(e[1] + stime, 0, e[4])
+			o.start(t + stime, 0, e[4] / speed)
 
 			if (follow && onnote) {
-				var	st = (e[1] + stime - ac.currentTime) * 1000,
+				var	st = (t + stime - ac.currentTime) * 1000,
 					i = e[0];
 				setTimeout(onnote, st, i, true);
-				setTimeout(onnote, st + e[4] * 1000, i, false)
+				setTimeout(onnote, st + e[4] / speed * 1000, i, false)
 			}
 
-			t = e[1];		// event time
 			e = a_e[++evt_idx]
-		} while (e && e[1] <= maxt)
+			if (!e)
+				break
+			t = e[1] / speed
+			if (t > maxt)
+				break
+		}
 
 		setTimeout(play_next, (t + stime - ac.currentTime)
 				* 1000 - 300)	// wake before end of playing
@@ -426,6 +442,11 @@ function Audio5(i_onend, sf, i_onnote) {
 	Audio5.prototype.set_sfu = function(v) {
 		sfu = v
 	} // set_sft()
+
+	// set speed (< 1 slower, > 1 faster)
+	Audio5.prototype.set_speed = function(v) {
+		new_speed = v
+	} // set_speed()
 
 	// set volume
 	Audio5.prototype.set_vol = function(v) {

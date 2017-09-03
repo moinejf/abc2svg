@@ -33,6 +33,7 @@ var	audio = new ToAudio(),
 		get_vol: audio5.get_vol,
 		set_sft: audio5.set_sft,
 		set_sfu: audio5.set_sfu,
+		set_speed: audio5.set_speed,
 		set_vol: audio5.set_vol,
 		set_follow: audio5.set_follow
 	}
