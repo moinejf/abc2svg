@@ -458,6 +458,14 @@ function setfont() {
 }
 
 // playing
+// set_speed value = 1..20, 10 = no change
+function set_speed(iv) {
+    var	spv = document.getElementById("spv"),
+	v = Math.pow(3,			// max 3 times lower/faster
+			(iv - 10) * .1);
+	abcplay.set_speed(v);
+	spv.innerHTML = v
+}
 //fixme: do tune/start-stop selection of what to play
 function notehlight(i, on) {
 	var elts = document.getElementsByClassName('_' + i + '_');
@@ -536,6 +544,7 @@ function edit_init() {
 			document.getElementById("playdiv1").style.display =
 				document.getElementById("playdiv2").style.display =
 				document.getElementById("playdiv3").style.display =
+				document.getElementById("playdiv4").style.display =
 					"list-item";
 			document.getElementById("sfu").setAttribute("value",
 				abcplay.get_sfu());

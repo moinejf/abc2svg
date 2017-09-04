@@ -15,8 +15,7 @@
 <div id="dleft">
 
 <!-- menu bar -->
-<nav>
-    <ul class="navul">
+    <ul id="nav">
 	<li class="dropbutton"><label id="f">File</label>
 		<ul class="droplinks">
 		    <li><input type="file" id="abcfile" accept="text/*"
@@ -54,6 +53,12 @@
 				 <input id="gvol" type="range" min="1" max="10" value="7"
 					onchange="abcplay.set_vol(this.value / 10)"/>
 			</li>
+			<li id="playdiv4" style="display: none">
+				<label id="sp">Speed</label>
+				 <input type="range" min="1" max="20" value="10" step=".5"
+					onchange="set_speed(this.value)"/>
+				<label id="spv">1</label>
+			</li>
 		</ul>
 	</li>
 	<li class="dropbutton"><label id="lg">Language</label>
@@ -86,7 +91,6 @@
 		</ul>
 	</li>
     </ul>
-</nav>
 <br/>
 
 <!-- buttons -->

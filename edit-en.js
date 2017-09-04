@@ -1,6 +1,5 @@
 //JS - abc2svg edit - text in English
 function loadtxt() {
-	var e;
 	texts = {
 		bad_nb: 'Bad line number',
 		fn: 'File name: ',
@@ -26,6 +25,7 @@ function loadtxt() {
 	document.getElementById("saveas").innerHTML = 'Save file';
 	document.getElementById("sftl").innerHTML = 'type';
 	document.getElementById("sful").innerHTML = 'Soundfont URL';
+	document.getElementById("sp").innerHTML = 'Speed';
 
 	document.getElementById("hlp").outerHTML = '<ul id="hlp">\n\
 <li>You may either:\n\

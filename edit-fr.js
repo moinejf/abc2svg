@@ -1,6 +1,5 @@
 //JS - abc2svg edit - textes en français
 function loadtxt() {
-	var e;
 	texts = {
 		bad_nb: 'Mauvais numéro de ligne',
 		fn: 'Nom de fichier: ',
@@ -25,7 +24,8 @@ function loadtxt() {
 	document.getElementById("pr").innerHTML = 'Préférences';
 	document.getElementById("saveas").innerHTML = 'Sauver le fichier';
 	document.getElementById("sftl").innerHTML = 'type';
-	document.getElementById("sful").innerHTML = 'Police de sons URL';
+	document.getElementById("sful").innerHTML = 'URL police de sons';
+	document.getElementById("sp").innerHTML = 'Vitesse';
 
 	document.getElementById("hlp").outerHTML = '<ul  id="hlp">\n\
 <li>Vous pouvez, soit:\n\

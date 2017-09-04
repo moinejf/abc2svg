@@ -13,7 +13,7 @@ svg {display:block}
 		z-index: 2;
 		overflow: auto;
 	}
-	.navul {
+	#nav {
 		position:relative;
 		padding: 0;
 		margin: 2px 0 0 2px;
@@ -33,20 +33,20 @@ svg {display:block}
 	.droplinks {
 		list-style-type: none;
 		position: absolute;
-		min-width: 90px;
+		min-width: 80px;
 		background-color: #e0e0e0;
 		display: none;
 		z-index: 20;
 		text-align: left;
-		padding-left: 0;
+		padding: 0;
 		margin: 0;
 	}
 	.droplinks li:hover {
 		outline: solid; outline-width: 2px;
 	}
 	.droplinks li {
-		padding: 0;
-		margin: 0;
+		padding: 0 5px 0 5px;
+		margin: 2px;
 	}
 	#dright {
 		width: 80%;

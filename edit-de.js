@@ -1,6 +1,5 @@
 //JS - abc2svg edit - Text in Deutsch
 function loadtxt() {
-	var e;
 	texts = {
 		bad_nb: 'fehlerhafte Zeilennummer',
 		fn: 'Filename: ',
@@ -26,6 +25,7 @@ function loadtxt() {
 	document.getElementById("saveas").innerHTML = 'Speichere File';
 	document.getElementById("sftl").innerHTML = 'type';
 	document.getElementById("sful").innerHTML = 'Sound font URL';
+	document.getElementById("sp").innerHTML = 'Speed';
 
 	document.getElementById("hlp").outerHTML = '<ul id="hlp">\n\
 <li>Du kannst entweder:\n\

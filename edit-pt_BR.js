@@ -1,6 +1,5 @@
 //JS - abc2svg edit - texto em português do Brasil
 function loadtxt() {
-	var e;
 	texts = {
 		bad_nb: 'Número de linha incorreto',
 		fn: 'Nome do arquivo: ',
@@ -26,6 +25,7 @@ function loadtxt() {
 	document.getElementById("saveas").innerHTML = 'Salvar arquivo';
 	document.getElementById("sftl").innerHTML = 'type';
 	document.getElementById("sful").innerHTML = 'Sound font URL';
+	document.getElementById("sp").innerHTML = 'Speed';
 
 	document.getElementById("hlp").outerHTML = '<ul  id="hlp">\n\
 <li>Você pode:\n\
