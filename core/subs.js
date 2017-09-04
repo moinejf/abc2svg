@@ -249,7 +249,7 @@ function write_text(text, action) {
 	var	strlw = get_lwidth(),
 		lineskip = gene.curfont.size * cfmt.lineskipfac,
 		parskip = gene.curfont.size * cfmt.parskipfac,
-		i, j, x
+		i, j, x, words, w, k, ww
 	switch (action) {
 	default:
 //	case 'c':
@@ -287,7 +287,6 @@ function write_text(text, action) {
 		break
 	case 'f':
 	case 'j':
-		var words
 		j = 0
 		while (1) {
 			i = text.indexOf('\n\n', j)
@@ -295,17 +294,18 @@ function write_text(text, action) {
 				words = text.slice(j)
 			else
 				words = text.slice(j, i);
-			words = words.split(/\s+/)
-			var w = 0, k = 0
+			words = words.split(/\s+/);
+			w = k = 0
 			for (j = 0; j < words.length; j++) {
-				w += strw(words[j] + ' ')
+				ww = strw(words[j] + ' ');
+				w += ww
 				if (w >= strlw) {
 					vskip(lineskip);
 					xy_str(0, 0,
 						words.slice(k, j).join(' '),
 						action, strlw);
 					k = j;
-					w = 0
+					w = ww
 				}
 			}
 			if (w != 0) {
