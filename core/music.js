@@ -1109,6 +1109,24 @@ function set_space(s) {
 	return space
 }
 
+// create an invisible bar for end of music lines
+function add_end_bar(s) {
+	return {
+		type: BAR,
+		bar_type: "|",
+		ctx: s.ctx,
+		istart: s.istart,
+		iend: s.iend,
+		v: s.v,
+		p_v: s.p_v,
+		st: s.st,
+		dur: 0,
+		seqst: true,
+		invis: true
+//,wl:0,wr:0
+	}
+}
+
 /* -- set the width and space of all symbols -- */
 /* this function is called once for the whole tune
  * then, once per music line up to the first sequence */
@@ -1125,10 +1143,7 @@ function set_allsymwidth(last_s) {
 
 		do {
 			set_width(s)
-			if (xl[s.st])
-				new_val = xl[s.st] + s.wl
-			else
-				new_val = s.wl
+			new_val = (xl[s.st] || 0) + s.wl
 			if (new_val > maxx)
 				maxx = new_val;
 			s = s.ts_next
@@ -1145,7 +1160,7 @@ function set_allsymwidth(last_s) {
 			s2.time = s2.ts_prev.time
 		}
 		if (s == last_s)
-			return
+			break
 
 		// update the min left space per staff
 		xa = maxx;
@@ -1156,6 +1171,30 @@ function set_allsymwidth(last_s) {
 			s = s.ts_next
 		} while (!s.seqst)
 	}
+
+	// if the last symbol of the tune is not a bar, add some extra space
+	if (last_s)
+		return
+	xa = 0
+	for (s = s2; ; s = s.ts_next) {
+		if (s.type == BAR)
+			return
+		if (s.wr > xa)
+			xa = s.wr
+		if (!s.ts_next)
+			break
+	}
+	if (s.wr > xa)
+		xa = s.wr;
+	s2 = add_end_bar(s);
+	s2.prev = s;
+	s2.ts_prev = s;
+	s.ts_next = s2;
+	s.next = s2;
+	s2.time = s.time + s.dur;
+	s2.shrink = xa;
+	s.eoln = false;
+	s2.space = set_space(s2)
 }
 
 /* change a symbol into a rest */
@@ -4120,6 +4159,18 @@ function set_piece() {
 		p_voice.s_next = p_voice.sym;
 		p_voice.sym = null
 	}
+
+	// if the last symbol is not a bar, add an invisible bar
+	if (tsnext.ts_prev.type != BAR) {
+		s = add_end_bar(tsnext);
+		s.next = null;
+		tsnext.ts_prev.next = s
+		s.ts_next = null;
+		tsnext.ts_prev.ts_next = s;
+		s.time = tsnext.time;
+		s.shrink = tsnext.shrink;
+		s.space = tsnext.space
+	}
 }
 
 /* -- position the symbols along the staff -- */
@@ -4216,38 +4267,6 @@ function set_sym_glue(width) {
 		if (!s.ts_next)
 			break
 		s = s.ts_next
-	}
-
-	/* if the last symbol is not a bar, add some extra space */
-	switch (s.type) {
-	case BAR:
-	case SPACE:
-		break
-	case CUSTOS:
-		x += s.wr;
-		xmin += s.wr;
-		xmax += s.wr
-		break
-	default:
-		min = s.wr
-		while (!s.seqst) {
-			s = s.ts_prev
-			if (s.wr > min)
-				min = s.wr
-		}
-		xmin += min
-		if (tsnext && tsnext.space * .8 > s.wr + 4) {
-			x += tsnext.space * .8 * spafac;
-			xmax += tsnext.space * .8 * spafac * 1.8
-		} else if (s.dur) {
-			min += 10;
-			x += min + s.shrink;
-			xmax += min + s.space
-		} else {
-			x += min;
-			xmax += min
-		}
-		break
 	}
 
 	/* calculate the exact glue */
