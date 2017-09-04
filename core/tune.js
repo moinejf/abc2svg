@@ -352,14 +352,17 @@ function voice_adj() {
 	if (s && staves_found <= 0) {	// && !s.del) {		- play problem
 		v = par_sy.top_voice;
 		p_voice = voice_tb[v];
-		s.v = v;
-		s.p_v = p_voice;
-		s.st = p_voice.st;
-		s.time = 0;
-		s.next = p_voice.sym
-		if (s.next)
-			s.next.prev = s;
-		p_voice.sym = s
+		if (p_voice.sym && p_voice.sym.type != TEMPO) {
+			s = clone(s);
+			s.v = v;
+			s.p_v = p_voice;
+			s.st = p_voice.st;
+			s.time = 0;
+			s.next = p_voice.sym
+			if (s.next)
+				s.next.prev = s;
+			p_voice.sym = s
+		}
 	}
 
 	for (v = 0; v < voice_tb.length; v++) {
