@@ -4369,9 +4369,11 @@ function gen_init(page_chg) {
 			return
 		}
 		switch (s.type) {
-//		case CLEF:
-//		case KEY:
-//		case METER:
+		case NOTE:
+		case REST:
+		case MREST:
+			set_page()
+			return
 		default:
 			continue
 		case STAVES:
