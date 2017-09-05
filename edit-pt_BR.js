@@ -7,25 +7,30 @@ function loadtxt() {
 		play: 'Tocar',
 		stop: 'Parar',
 	}
-	document.getElementById("a").innerHTML = 'Sobre';
-	document.getElementById("b").innerHTML = 'Arquivos ABC:';
-//	document.getElementById("df").innerHTML = 'abc2svg features';
-//	document.getElementById("dp").innerHTML = 'abc2svg parameters';
-	document.getElementById("er").innerHTML = 'Erros';
-	document.getElementById("f").innerHTML = 'Arquivo';
-	document.getElementById("fl").innerHTML = 'Abrir arquivo ABC';
-	document.getElementById("fo").innerHTML = 'Follow music';
-	document.getElementById("fs").innerHTML = 'Tamanho da fonte';
-	document.getElementById("gv").innerHTML = 'Volume';
-	document.getElementById("h").innerHTML = 'Ajuda';
-	document.getElementById("ha").innerHTML = 'Ajuda';
-	document.getElementById("lg").innerHTML = 'Língua';
-    	document.getElementById("playbutton").innerHTML = 'Tocar';
-	document.getElementById("pr").innerHTML = 'Opções';
-	document.getElementById("saveas").innerHTML = 'Salvar arquivo';
-	document.getElementById("sftl").innerHTML = 'type';
-	document.getElementById("sful").innerHTML = 'Sound font URL';
-	document.getElementById("sp").innerHTML = 'Speed';
+	var text_kv = [
+		"a", 'Sobre',
+		"b", 'Arquivos ABC:',
+//		"df", 'abc2svg features',
+//		"dp", 'abc2svg parameters',
+		"er", 'Erros',
+		"f", 'Arquivo',
+		"fl", 'Abrir arquivo ABC',
+		"fo", 'Follow music',
+		"fs", 'Tamanho da fonte',
+		"gv", 'Volume',
+		"h", 'Ajuda',
+		"ha", 'Ajuda',
+		"lg", 'Língua',
+    		"playbutton", 'Tocar',
+		"pr", 'Opções',
+		"saveas", 'Salvar arquivo',
+		"sftl", 'type',
+		"sful", 'Sound font URL',
+		"sp", 'Speed'
+	]
+
+	for (var i = 0; i < text_kv.length; i += 2)
+		document.getElementById(text_kv[i]).innerHTML = text_kv[i + 1];
 
 	document.getElementById("hlp").outerHTML = '<ul  id="hlp">\n\
 <li>Você pode:\n\

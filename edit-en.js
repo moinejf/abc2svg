@@ -7,25 +7,30 @@ function loadtxt() {
 		play: 'Play',
 		stop: 'Stop',
 	}
-	document.getElementById("a").innerHTML = 'About';
-	document.getElementById("b").innerHTML = 'ABC files:';
-//	document.getElementById("df").innerHTML = 'abc2svg features';
-//	document.getElementById("dp").innerHTML = 'abc2svg parameters';
-	document.getElementById("er").innerHTML = 'Errors';
-	document.getElementById("f").innerHTML = 'File';
-	document.getElementById("fl").innerHTML = 'Load file';
-	document.getElementById("fo").innerHTML = 'Follow music';
-	document.getElementById("fs").innerHTML = 'Font size';
-	document.getElementById("gv").innerHTML = 'Volume';
-	document.getElementById("h").innerHTML = 'Help';
-	document.getElementById("ha").innerHTML = 'Help';
-	document.getElementById("lg").innerHTML = 'Language';
-    	document.getElementById("playbutton").innerHTML = 'Play';
-	document.getElementById("pr").innerHTML = 'Preferences';
-	document.getElementById("saveas").innerHTML = 'Save file';
-	document.getElementById("sftl").innerHTML = 'type';
-	document.getElementById("sful").innerHTML = 'Soundfont URL';
-	document.getElementById("sp").innerHTML = 'Speed';
+	var text_kv = [
+		"a", 'About',
+		"b", 'ABC files:',
+//		"df", 'abc2svg features',
+//		"dp", 'abc2svg parameters',
+		"er", 'Errors',
+		"f", 'File',
+		"fl", 'Load file',
+		"fo", 'Follow music',
+		"fs", 'Font size',
+		"gv", 'Volume',
+		"h", 'Help',
+		"ha", 'Help',
+		"lg", 'Language',
+		"playbutton", 'Play',
+		"pr", 'Preferences',
+		"saveas", 'Save file',
+		"sftl", 'type',
+		"sful", 'Soundfont URL',
+		"sp", 'Speed'
+	]
+
+	for (var i = 0; i < text_kv.length; i += 2)
+		document.getElementById(text_kv[i]).innerHTML = text_kv[i + 1];
 
 	document.getElementById("hlp").outerHTML = '<ul id="hlp">\n\
 <li>You may either:\n\
@@ -39,5 +44,5 @@ function loadtxt() {
 	<li>You may change at will the ABC code in the text area.<br/>\n\
 	Rendering is done 2 seconds later.</li>\n\
 	<li>The \'Print\' button of the browser outputs the rendering area.</li>\n\
-</ul>';
+</ul>'
 }
