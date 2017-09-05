@@ -536,7 +536,11 @@ function edit_init() {
 			if (test.canPlayType
 			 && test.canPlayType('audio/mp3') != '')
 				t = {type: "mp3"};
-			abcplay = new AbcPlay(endplay, t, notehlight)
+			abcplay = new AbcPlay({
+					onend: endplay,
+					onnote:notehlight,
+					sft: t
+					});
 //fixme: get soundfont URL/type from cookies (?)
 			e = document.getElementById("playbutton");
 			e.addEventListener("click", play_tune);

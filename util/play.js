@@ -19,9 +19,9 @@
 
 // This file is just a wrapper around ToAudio (toaudio.js) and Audio5 (toaudio5.js)
 
-function AbcPlay(i_onend, sf, i_onnote) {
+function AbcPlay(conf) {
 var	audio = new ToAudio(),
-	audio5 = new Audio5(i_onend, sf, i_onnote)
+	audio5 = new Audio5(conf)
 
 	return {
 		clear: audio.clear,

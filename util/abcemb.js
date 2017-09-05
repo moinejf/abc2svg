@@ -72,11 +72,13 @@ function playseq(seq) {
 	}
 	play = 2
 	if (!a_pe[seq]) {		// if no playing event
-		if (!abcplay)
-			abcplay = new AbcPlay(endplay,
-//fixme: switch comment for test
-			"https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/")
-//				"./")
+		if (!abcplay) {
+			abcplay = new AbcPlay({
+					endplay: endplay
+//uncomment for test
+//					,sfu: "./"
+				})
+		}
 		var abc = new Abc(user);
 
 		abcplay.clear();

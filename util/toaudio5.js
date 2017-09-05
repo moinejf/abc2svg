@@ -18,21 +18,23 @@
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
 // Audio5 creation
-//
-// @i_onend: callback function called at end of playing
+// one argument:
+// @conf: configuration object - all items are optional:
+//	ac: audio context
+// 	sft: soundfont type ("js" or "mp3")
+//	sfu: soundfont URL
+//		When the type is "js", the URL is the directory containing
+//			the  <instrument>-ogg.js files of midi-js
+//		When the type is "mp3" (I could not find "ogg" files)
+//			the URL is the directory containing
+//			the <instrument>-<type> directories
+//	onend: callback function called at end of playing
 //		(no arguments)
-// @sf: soundfont. Either an object {url, type}
-//		or a string (URL, the type is forced to "js")
-//	When the type is "js", the URL is the directory containing
-//		the  <instrument>-ogg.js files of midi-js
-//	When the type is "mp3" (I could not find "ogg" files)
-//		the URL is the directory containing
-//		the <instrument>-<type>. directories
-// @i_onnote: callback function called on note start/stop playing
-//	Arguments:
-//		i: start index of the note in the ABC source
-//		on: true on note start, false on note stop
-function Audio5(i_onend, sf, i_onnote) {
+//	onnote: callback function called on note start/stop playing
+//		Arguments:
+//			i: start index of the note in the ABC source
+//			on: true on note start, false on note stop
+function Audio5(i_conf) {
 	var	instr_tb = [
 			"acoustic_grand_piano",
 			"bright_acoustic_piano",
@@ -169,12 +171,13 @@ function Audio5(i_onend, sf, i_onnote) {
 		no = "012345678"
 
 	// -- global --
-	var	onend = i_onend,	// callback function on play end
+	var	conf = i_conf,		// configuration
+		onend = function() {},	// callback function on play end
+		onnote = function() {},	// callback function on note start/stop
 		ac,			// audio context
 		gain,			// global gain
 		gain_val = 0.7,
 		a_e,			// event array
-		onnote = i_onnote,	// callback function on note start/stop
 		follow,			// follow the music
 		speed = 1,		// speed factor
 		new_speed,
@@ -223,9 +226,8 @@ function Audio5(i_onend, sf, i_onnote) {
 					alert("Decode audio data error " +
 						(e ? e.err : "???"));
 					w_note--;
-					iend = 0
-					if (onend)
-						onend()
+					iend = 0;
+					onend()
 				})
 		} // audio_dcod()
 
@@ -260,9 +262,8 @@ function Audio5(i_onend, sf, i_onnote) {
 			req.onerror = function() {
 				alert('Error while loading\n' + url);
 				w_note--;
-				iend = 0
-				if (onend)
-					onend()
+				iend = 0;
+				onend()
 			}
 			req.send()
 		}
@@ -311,8 +312,7 @@ function Audio5(i_onend, sf, i_onnote) {
 		e = a_e[evt_idx]
 		if (!e
 		 || e[0] > iend) {		// if source ref > source end
-			if (onend)		// play end
-				onend()
+			onend()
 			return
 		}
 
@@ -336,7 +336,7 @@ function Audio5(i_onend, sf, i_onnote) {
 //  o.loopStart = 3 // (for sample 4s)
 			o.start(t + stime, 0, e[4] / speed)
 
-			if (follow && onnote) {
+			if (follow) {
 				var	st = (t + stime - ac.currentTime) * 1000,
 					i = e[0];
 				setTimeout(onnote, st, i, true);
@@ -394,17 +394,15 @@ function Audio5(i_onend, sf, i_onnote) {
 		if (a_pe)			// force old playing events
 			a_e = a_pe
 		if (!a_e || !a_e.length) {
-			if (onend)		// nothing to play
-				onend()
+			onend()			// nothing to play
 			return
 		}
 		iend = i_iend;
 		evt_idx = 0
 		while (a_e[evt_idx] && a_e[evt_idx][0] < istart)
 			evt_idx++
-		if (!a_e[evt_idx]) {		// nothing to play
-			if (onend)
-				onend()
+		if (!a_e[evt_idx]) {
+			onend()			// nothing to play
 			return
 		}
 		load_res();
@@ -462,24 +460,22 @@ function Audio5(i_onend, sf, i_onnote) {
 	} // set_follow()
 
 	// Audio5 object creation
+	ac = conf.ac
 	if (!ac) {
-		ac = new (window.AudioContext || window.webkitAudioContext);
+		conf.ac = ac = new (window.AudioContext ||
+					window.webkitAudioContext);
 		gain = ac.createGain();
 		gain.gain.value = gain_val;
 		gain.connect(ac.destination)
 	}
-
-	if (sf) {			// if soundfont
-		if (typeof(sf) === 'object') {
-			if (sf.url)
-				sfu = sf.url
-			if (sf.type)
-				sft = sf.type
-		} else {
-			sfu = sf;
-			sft = "js"
-		}
-	}
+	if (conf.sft)
+		sft = conf.sft
+	if (conf.sfu)
+		sfu = conf.sfu
+	if (conf.onend)
+		onend = conf.onend
+	if (conf.onnote)
+		onnote = conf.onnote
 
 	if (typeof(MIDI) == "object")
 		sounds[0] = []		// default: acoustic grand piano
