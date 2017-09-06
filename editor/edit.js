@@ -396,10 +396,12 @@ function seltxt(elt) {
 	if (start == 0
 	 && end == document.getElementById("source").value.length)
 		return				// select all
-	ref.forEach(function(e, o) {
-		if (o >= start && e <= end)
-			colcl.push('_' + o + '_')
-	})
+	if (ref) {
+		ref.forEach(function(e, o) {
+			if (o >= start && e <= end)
+				colcl.push('_' + o + '_')
+		})
+	}
 	if (colcl.length != 0) {
 		colorsel(true);
 		s = document.getElementById("dright");
