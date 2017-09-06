@@ -168,7 +168,7 @@ function Audio5(i_conf) {
 		// note to name and note to octave
 		nn =	["C", "Db", "D",  "Eb", "E",  "F",
 			 "Gb", "G", "Ab", "A",  "Bb", "B"],
-		no = "012345678"
+		no = "0012345678"
 
 	// -- global --
 	var	conf = i_conf,		// configuration

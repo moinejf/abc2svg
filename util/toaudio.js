@@ -102,7 +102,7 @@ var	BAR = 0,
 	// convert ABC pitch to MIDI index
 	function pit2mid(s, i) {
 		var	n, oct,
-			p = s.notes[i].pit + 12, // pitch from C0
+			p = s.notes[i].pit + 19, // pitch from C-1
 			a = s.notes[i].acc
 
 		if (transp[s.v])
