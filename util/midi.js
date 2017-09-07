@@ -134,7 +134,8 @@ function AbcMIDI() {
 						}
 					}
 				}
-				bar_map()
+				if (!s.invis)
+					bar_map()
 				break
 			case CLEF:
 				if (!s.clef_octave
