@@ -50,12 +50,17 @@ function AbcMIDI() {
 	AbcMIDI.prototype.add = function(s,		// starting symbol
 					voice_tb) {	// voice table
 
-		var	scale = [0, 2, 4, 5, 7, 9, 11],	// note to pitch
-			bmap = [],			// measure base map
-			map = [],			// current map - 10 octaves
-			i, n, pit, lrep, g, v,
-			rep_en_map = [],
-			transp = []			// transposition per voice
+		var	scale = new Int8Array(		// note to pitch
+					[0, 2, 4, 5, 7, 9, 11]),
+			bmap = new Int8Array(7),	// measure base map
+			map = new Int8Array(70),	// current map - 10 octaves
+			i, n, g, v, p, a,
+			tie_map = [],			// index = MIDI pitch
+			tie_time= [],
+			rep_tie_map = [],
+			rep_tie_time = [],
+			transp = [],			// transposition per voice
+			note
 
 		// re-initialize the map on bar
 		function bar_map() {
@@ -88,44 +93,11 @@ function AbcMIDI() {
 		} // key_map()
 
 		// convert ABC pitch to MIDI
-		function pit2midi(s, i) {
-		    var	p = s.notes[i].apit + 19,	// pitch from lowest C
-			a = s.notes[i].acc
-
-			if (transp[s.v])
-				p += transp[s.v]
+		function pit2midi(p, a) {
 			if (a)
 				map[p] = a == 3 ? 0 : a; // (3 = natural)
 			return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
 		} // pit2midi()
-
-		// handle the ties
-		function do_tie(s, i) {
-			var	j, n, s2, note2, pit, str_tie,
-				note = s.notes[i],
-				tie = note.ti1,
-				end_time;
-
-			pit = note.apit;			// absolute pitch
-			end_time = s.time + s.dur
-			for (s2 = s.next; ; s2 = s2.next) {
-				if (!s2
-				 || s2.time != end_time)
-					return
-				if (s2.type == NOTE)
-					break
-			}
-			n = s2.notes.length
-			for (j = 0; j < n; j++) {
-				note2 = s2.notes[j]
-				if (note2.apit == pit) {
-					note2.midi = note.midi
-					if (note2.ti1)
-						do_tie(s2, j)
-					break
-				}
-			}
-		} // do_tie()
 
 		// initialize the clefs and keys
 		for (v = 0; v < voice_tb.length; v++) {
@@ -137,7 +109,6 @@ function AbcMIDI() {
 				transp[v] = n.clef_octave
 		}
 		key_map(voice_tb[0].key);	// init acc. map from key sig.
-		lrep = false
 
 		while (s) {
 			switch (s.type) {
@@ -145,27 +116,24 @@ function AbcMIDI() {
 //fixme: handle different keys per staff
 				if (s.st != 0)
 					break
-//fixme: handle the ties on repeat
-				// left repeat
-				if (s.bar_type[s.bar_type.length - 1] == ':') {
-					lrep = false
-
-				// 1st time repeat
-				} else if (s.text && s.text[0] == '1') {
-					lrep = true;
-					bar_map()
-					for (i = 0; i < 7; i++)
-						rep_en_map[i] = bmap[i]
-					break
-
-				// right repeat
-				} else if (s.bar_type[0] == ':') {
-					if (lrep) {
-						for (i = 0; i < 7; i++)
-							bmap[i] = rep_en_map[i]
+				// x times repeat
+				if (s.text) {
+					if (s.text[0] == '1') {	// 1st time
+						rep_tie_map = [];
+						rep_tie_time = []
+						for (i in tie_map) {
+							rep_tie_map[i] = tie_map[i];
+							rep_tie_time[i] = tie_time[i]
+						}
+					} else if (rep_tie_map.length != 0) {
+						tie_map = []
+						tie_time = []
+						for (i in rep_tie_map) {
+							tie_map[i] = rep_tie_map[i];
+							tie_time[i] = rep_tie_time[i]
+						}
 					}
 				}
-
 				bar_map()
 				break
 			case CLEF:
@@ -181,11 +149,11 @@ function AbcMIDI() {
 					if (!g.type != NOTE)
 						continue
 					for (i = 0; i <= g.nhd; i++) {
-						if (g.notes[i].midi != undefined)
-							continue
-						pit = g.notes[i].apit;
-						str_tie = '_' + g.st + pit;
-						g.notes[i].midi = pit2midi(g, i)
+						note = g.notes[i];
+						p = note.apit + 19
+						if (transp[s.v])
+							p += transp[s.v];
+						note.midi = pit2midi(p, note.acc)
 					}
 				}
 				break
@@ -197,13 +165,24 @@ function AbcMIDI() {
 				break
 			case NOTE:
 				for (i = 0; i <= s.nhd; i++) {
-					if (s.notes[i].midi != undefined)
-						continue
-					pit = s.notes[i].apit;
-					str_tie = '_' + s.st + pit;
-					s.notes[i].midi = pit2midi(s, i)
-					if (s.notes[i].ti1)
-						do_tie(s, i)
+					note = s.notes[i];
+					p = note.apit + 19	// pitch from C-1
+					if (transp[s.v])
+						p += transp[s.v]
+					if (tie_map[p]) {
+						if (s.time > tie_time[p]) {
+							delete tie_map[p]
+							delete tie_time[p]
+						} else {
+							map[p] = tie_map[p]
+						}
+					}
+					note.midi = pit2midi(p, note.acc)
+					if (note.ti1) {
+						if (note.acc)
+							tie_map[p] = map[p];
+						tie_time[p] = s.time + s.dur
+					}
 				}
 				break
 			}
