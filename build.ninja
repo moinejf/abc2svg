@@ -52,8 +52,10 @@ rule jscu
 rule edit
   command = sed "s+@MAJOR@+$MAJOR+" editor/edit.xhtml > edit-$MAJOR.xhtml;$
    if [ "x$$NOMIN" = "x" ]; then$
+	sed "s+@MAJOR@+$MAJOR+" editor/abckbd.js | uglifyjs > abckbd-$MAJOR.js;$
 	sed "s+@MAJOR@+$MAJOR+" editor/edit.js | uglifyjs > edit-$MAJOR.js;$
    else$
+	sed "s+@MAJOR@+$MAJOR+" editor/abckbd.js > abckbd-$MAJOR.js;$
 	sed "s+@MAJOR@+$MAJOR+" editor/edit.js > edit-$MAJOR.js;$
    fi
 
@@ -74,8 +76,8 @@ build midi-$MAJOR.js: jscu util/midi.js | package.json
 build play-$MAJOR.js: jscu util/play.js util/toaudio.js util/toaudio5.js | package.json
 build toaudio-$MAJOR.js: jscu util/toaudio.js | package.json
 
-build edit-$MAJOR.xhtml edit-$MAJOR.js: edit $
- editor/edit.xhtml editor/edit.js
+build abckbd-$MAJOR.js edit-$MAJOR.xhtml edit-$MAJOR.js: edit $
+ editor/abckbd.js editor/edit.xhtml editor/edit.js
 
 build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
  abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js play-$MAJOR.js toaudio-$MAJOR.js $

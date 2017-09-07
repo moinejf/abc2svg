@@ -73,6 +73,11 @@ svg {display:block}
 		font-weight: bold;
 		color: red;
 	}
+	#abckbd td {
+		border: 1px solid black;
+		padding: 0.5rem;
+		text-align: center;
+	}
 }
 @media print {
 	#dleft, .popup {

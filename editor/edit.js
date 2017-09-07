@@ -103,20 +103,28 @@ function clean_txt(txt) {
 	})
 }
 
-// load the language files ('edit-lang.js' and 'err-lang.js')
-function relay() { loadtxt() }
-function loadlang(lang) {
-	function loadjs(fn, with_relay) {
-		var s = document.createElement('script');
-		s.src = fn;
-		s.type = 'text/javascript'
-		if (with_relay) {
-			s.onload = relay;
-			s.onreadystatechange = relay
-		}
-		document.head.appendChild(s)
+function loadjs(fn, relay) {
+	var s = document.createElement('script');
+	s.src = fn;
+	s.type = 'text/javascript'
+	if (relay) {
+		s.onload = relay;
+//		s.onreadystatechange = relay
 	}
-	loadjs('edit-' + lang + '.js', true);
+	document.head.appendChild(s)
+}
+
+// keyboard load
+function kbd_show() {
+	if (typeof key != "object")
+		loadjs("abckbd-@MAJOR@.js", function() { kbd_show() })
+	else
+		popshow("abckbd", true)
+}
+
+// load the language files ('edit-lang.js' and 'err-lang.js')
+function loadlang(lang) {
+	loadjs('edit-' + lang + '.js', function() { loadtxt() });
 	loadjs('err-' + lang + '.js')
 }
 
