@@ -47,7 +47,7 @@ These files are:
   This is a simple web ABC editor/player.
 
 When looking at a ABC file in a web browser, you may also use this bookmarklet,
-<a href="javascript:(function(){return'<?xml version=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?>\n<!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;\n&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;>\n<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;>\n<head>\n<meta http-equiv=&quot;Content-Type&quot;content=&quot;text/html;charset=UTF-8&quot;/>\n<link href=&quot;http://moinejf.free.fr/js/edit-1.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/>\n<title>ABC</title>\n<script src=&quot;http://moinejf.free.fr/js/abc2svg-1.js&quot;type=&quot;text/javascript&quot;></script>\n<script src=&quot;http://moinejf.free.fr/js/abcemb-1.js&quot;type=&quot;text/javascript&quot;></script>\n</head>\n<body>\n%25abc2.2\n'+document.body.textContent+'</body>\n</html>'})();">ABC render</a>,
+[ABC render]("javascript:(function(){return'<?xml version=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?>\n<!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;\n&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;>\n<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;>\n<head>\n<meta http-equiv=&quot;Content-Type&quot;content=&quot;text/html;charset=UTF-8&quot;/>\n<link href=&quot;http://moinejf.free.fr/js/edit-1.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/>\n<title>ABC</title>\n<script src=&quot;http://moinejf.free.fr/js/abc2svg-1.js&quot;type=&quot;text/javascript&quot;></script>\n<script src=&quot;http://moinejf.free.fr/js/abcemb-1.js&quot;type=&quot;text/javascript&quot;></script>\n</head>\n<body>\n%25abc2.2\n'+document.body.textContent+'</body>\n</html>'})();")
 and render the music.
 
 ##### Notes:
@@ -96,7 +96,7 @@ either as a `tar.gz` or `.zip` file, or by cloning the repository:
 
 (you may use `--depth=1` if you don't want the full `git` history)
 
-Then, building in done using the tool [ninja](https://ninja-build.org/).  
+Then, building is done using the tool [ninja](https://ninja-build.org/).  
 You may do it:
 
 - without minification  
