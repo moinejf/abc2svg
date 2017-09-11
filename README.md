@@ -46,9 +46,14 @@ These files are:
 - `edit-1.xhtml`
   This is a simple web ABC editor/player.
 
-When looking at a ABC file in a web browser, you may also use this bookmarklet,
-[ABC render]("javascript:(function(){return'<?xml version=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?>\n<!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;\n&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;>\n<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;>\n<head>\n<meta http-equiv=&quot;Content-Type&quot;content=&quot;text/html;charset=UTF-8&quot;/>\n<link href=&quot;http://moinejf.free.fr/js/edit-1.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/>\n<title>ABC</title>\n<script src=&quot;http://moinejf.free.fr/js/abc2svg-1.js&quot;type=&quot;text/javascript&quot;></script>\n<script src=&quot;http://moinejf.free.fr/js/abcemb-1.js&quot;type=&quot;text/javascript&quot;></script>\n</head>\n<body>\n%25abc2.2\n'+document.body.textContent+'</body>\n</html>'})();")
-and render the music.
+When looking at a ABC file in a web browser, you may also use
+the following bookmarklet and render the music
+(create a bookmark and paste the following javascript code
+into the address/location box).
+
+```
+javascript:(function(){d=document;b=d.body;b.innerHTML="\n%25abc2.2\n%25<!--[CDATA[\n"+b.textContent+"%25]]-->\n";function%20f(u){s=d.createElement('script');s.setAttribute('src',u);b.appendChild(s);};f('http://moinejf.free.fr/js/abc2svg-1.js');f('http://moinejf.free.fr/js/abcemb-1.js');f('http://moinejf.free.fr/js/play-1.js');function%20t(){if(typeof%20dom_loaded=="function"){dom_loaded()}else{setTimeout(t,200)}};setTimeout(t,200)})();void(0)
+```
 
 ##### Notes:
 - The music is rendered as SVG images. There is one image per
