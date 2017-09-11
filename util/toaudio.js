@@ -45,17 +45,19 @@ var	BAR = 0,
     } // clear()
 
 // add playing events from the ABC model
-    ToAudio.prototype.add = function(s,			// starting symbol
+    ToAudio.prototype.add = function(start,		// starting symbol
 				 voice_tb) {		// voice table
 	var	bmap = new Int8Array(7), // measure base map
 		map = new Int8Array(70), // current map - 10 octaves
 		i, n, dt, d,
-		rep_st_i,		// repeat start index
-		rep_st_t,		// and time
-		rep_en_i,		// repeat stop index
-		rep_en_t,		// and time
-		rep_en_map = new Int8Array(7), // and accidentals
-		transp			// clef transposition per voice
+		rep_st_s,		// start of sequence to be repeated
+		rep_en_s,		// end
+		rep_nx_s,		// restart at end of repeat
+		rep_st_transp,		// transposition at start of repeat sequence
+		rep_st_map = new Int8Array(70), // accidentals
+		rep_st_fac,		// and play factor
+		transp,			// clef transposition per voice
+		s = start
 
 	// set the transpositions
 	function set_voices() {
@@ -112,42 +114,44 @@ var	BAR = 0,
 		return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
 	} // pit2mid()
 
-	function play_dup(s) {
-		var i, n, en_t, dt, e;
-
-		dt = p_time - rep_st_t
-		for (i = rep_st_i; i < rep_en_i; i++) {
-			e = a_e[i];
-			a_e.push([e[0],		// source index
-				e[1] + dt,	// time
-				e[2],		// instrument
-				e[3],		// MIDI note
-				e[4]])		// duration
-		}
-	} // play_dup()
-
 	// handle the ties
-	function do_tie(s, i, d) {
-		var	j, n, s2, pit, end_time,
-			note = s.notes[i],
-			tie = note.ti1;
+	function do_tie(s, note, d) {
+		var	n,
+			end_time = s.time + s.dur,
+			pit = note.pit,
+			p = pit + 19,
+			a = note.acc
 
-		pit = note.pit;
-		end_time = s.time + s.dur
-		for (s2 = s.next; ; s2 = s2.next) {
-			if (!s2
-			 || s2.time != end_time)
+		if (transp[s.v])
+			p += transp[s.v]
+
+		// search the end of the tie
+		for (s = s.next; ; s = s.next) {
+			if (!s)
 				return d
-			if (s2.type == NOTE)
+
+			// skip if end of sequence to be repeated
+			if (s == rep_en_s) {
+				var v = s.v;
+				s = rep_nx_s.ts_next
+				while (s && s.v != v)
+					s = s.ts_next
+				if (!s)
+					return d
+				end_time = s.time
+			}
+			if (s.time != end_time)
+				return d
+			if (s.type == NOTE)
 				break
 		}
-		n = s2.notes.length
-		for (j = 0; j < n; j++) {
-			note = s2.notes[j]
+		n = s.notes.length
+		for (i = 0; i < n; i++) {
+			note = s.notes[i]
 			if (note.pit == pit) {
-				d += s2.dur / play_factor;
-				note.ti2 = true;
-				return note.ti1 ? do_tie(s2, j, d) : d
+				d += s.dur / play_factor;
+				note.ti2 = [p, a]
+				return note.ti1 ? do_tie(s, note, d) : d
 			}
 		}
 		return d
@@ -193,14 +197,19 @@ var	BAR = 0,
 	// generate the notes
 	function gen_notes(s, t, d) {
 		for (var i = 0; i <= s.nhd; i++) {
-			if (s.notes[i].ti2)
+			var	note = s.notes[i],
+				ti2 = note.ti2		// [p, a]
+			if (ti2) {
+				if (ti2[1])
+					map[ti2[0]] = ti2[1] == 3 ? 0 : ti2[1]
 				continue
+			}
 			a_e.push([
 				s.istart,
 				t,
 				s.p_v.instr,
 				pit2mid(s, i),
-				s.notes[i].ti1 ? do_tie(s, i, d) : d])
+				note.ti1 ? do_tie(s, note, d) : d])
 		}
 	} // gen_note()
 
@@ -211,9 +220,7 @@ var	BAR = 0,
 
 	if (!a_e) {			// if first call
 		a_e = []
-		abc_time = rep_st_t =
-			p_time =
-			rep_st_i = rep_en_i = 0;
+		abc_time = rep_st_t = p_time = 0;
 		play_factor = BASE_LEN / 4 * 120 / 60	// default: Q:1/4=120
 	} else if (s.time < abc_time) {
 		abc_time = rep_st_t = s.time
@@ -236,42 +243,55 @@ var	BAR = 0,
 			abc_time = s.time
 		}
 
+		if (s == rep_en_s) {			// repeat end
+			s = rep_nx_s.ts_next;
+			abc_time = s.time
+			continue
+		}
+
 		switch (s.type) {
 		case BAR:
 //fixme: handle different keys per staff
-//			if (s.st != 0)
 			if (s.v != 0)
 				break
-//fixme: handle the ties on repeat
+
 			// right repeat
 			if (s.bar_type[0] == ':') {
-				if (rep_en_i == 0) {
-					rep_en_i = a_e.length;
-					rep_en_t = p_time
-				} else {
-					for (i = 0; i < 7; i++)
-						bmap[i] = rep_en_map[i]
+				rep_nx_s = s		// repeat next
+				if (!rep_en_s)		// if no "|1"
+					rep_en_s = s	// repeat end
+				if (rep_st_s) {		// if left repeat
+					s = rep_st_s.ts_next
+					for (i = 0; i < 70; i++)
+						map[i] = rep_st_map[i]
+					for (i = 0; i < rep_st_transp.length; i++)
+						transp[i] = rep_st_transp[i];
+					play_factor = rep_st_fac
+				} else {			// back to start
+					s = start;
+					key_map(voice_tb[0].key);
+					set_voices()
 				}
-				play_dup(s);
-				p_time += rep_en_t - rep_st_t
+				abc_time = s.time
+				break
 			}
 
 			// left repeat
 			if (s.bar_type[s.bar_type.length - 1] == ':') {
-				rep_st_i = a_e.length;
-				rep_st_t = p_time;
-				rep_en_i = 0;
-				rep_en_t = 0
+				rep_st_s = s
+				if (!s.invis)
+					bar_map()
+				for (i = 0; i < 70; i++)
+					rep_st_map[i] = map[i];
+				rep_st_transp = []
+				for (i = 0; i < transp.length; i++)
+					rep_st_transp[i] = transp[i];
+				rep_st_fac = play_factor
+				break
 
 			// 1st time repeat
 			} else if (s.text && s.text[0] == '1') {
-				rep_en_i = a_e.length;
-				rep_en_t = p_time;
-				if (!s.invis)
-					bar_map()
-				for (i = 0; i < 7; i++)
-					rep_en_map[i] = bmap[i]
-				break
+				rep_en_s = s
 			}
 
 			if (!s.invis)
@@ -286,7 +306,7 @@ var	BAR = 0,
 			break
 		case KEY:
 //fixme: handle different keys per staff
-			if (s.st != 0)
+			if (s.v != 0)
 				break
 			key_map(s)
 			break
