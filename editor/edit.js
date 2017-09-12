@@ -114,14 +114,6 @@ function loadjs(fn, relay) {
 	document.head.appendChild(s)
 }
 
-// keyboard load
-function kbd_show() {
-	if (typeof key != "object")
-		loadjs("abckbd-@MAJOR@.js", function() { kbd_show() })
-	else
-		popshow("abckbd", true)
-}
-
 // load the language files ('edit-lang.js' and 'err-lang.js')
 function loadlang(lang) {
 	loadjs('edit-' + lang + '.js', function() { loadtxt() });

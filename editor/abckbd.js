@@ -18,7 +18,9 @@
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
 // global variables
-    var	abc_kb = false
+    var	abc_kb = false,				// keyboard state
+	kbds					// button/state
+
 // constants
     var	oct = 4,
 	key = {					// US keyboard
@@ -207,6 +209,8 @@ function key_press(e) {
 	src_change()
 }
 
+function kbd_init() {
+
 // set the keyboard event in the ABC source
 document.getElementById("source").addEventListener("keypress", key_press);
 
@@ -246,8 +250,10 @@ document.getElementById("source").addEventListener("keypress", key_press);
 </table>';
 	document.body.appendChild(tmp);
 
-// add an indicator about the ABC keyboard state
-    var	kbds = document.createElement("li");
+// add a button to the right of 'help' that gives the keyboard state
+// and raises the keyboard layout
+	kbds = document.createElement("li");
+	kbds.addEventListener('click', function() {popshow('abckbd', true)});
 	kbds.className = "dropbutton";
 	kbds.setAttribute("style", "background-color: #ffd0d0");
 	kbds.innerHTML = 'ABC kbd';
@@ -261,8 +267,9 @@ document.getElementById("source").addEventListener("keypress", key_press);
 	tmp.innerHTML = 
 '<div class="close" onclick="popshow(\'kbdhelp\')">x</div>\
 <ul id="khlp">\
-<li>The ABC keyboard is enabled/disabled on pressing the key \'<code>`</code>\'.<br/>\
-The keyboard state is indicated by the color of the \'<code>ABC kbd</code>\' text.</li>\
+<li>The ABC keyboard is enabled/disabled by pressing the key \'<code>`</code>\'.<br/>\
+The layout of the keyboard is displayed by clicking on the keyboard state<br/>\
+(to the right of <code>help</code>).</li>\n\
 <li>When the keyboard is enabled:\
  <ul>\
  <li>non-shift/non-control characters are replaced by a ABC sequence,</li>\
@@ -277,5 +284,8 @@ The keyboard state is indicated by the color of the \'<code>ABC kbd</code>\' tex
 	tmp = document.createElement("li");
 	tmp.addEventListener('click', function() { popshow('kbdhelp', true)});
 	tmp.innerHTML = 'Keyboard help';
-    var list = document.getElementById("kbd").parentNode;
-	list.insertBefore(tmp, list.childNodes[2])
+    var help = document.getElementById("ha").parentNode;
+	help.insertBefore(tmp, help.childNodes[2])
+}
+
+kbd_init()

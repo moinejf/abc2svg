@@ -77,6 +77,13 @@ javascript:(function(){d=document;b=d.body;b.innerHTML="\n%25abc2.2\n%25<!--[CDA
   Rendering/playing is always done from the first ABC file.  
   There may be only one included file.
 
+- The editor comes with different ways to enter the music from the keyboard.  
+  If you have a US keyboard, you may try this bookmarklet:
+
+```
+javascript:(function(){if(typeof%20loadjs=='function'){loadjs('abckbd-1.js')}else{alert('use%20with%20abc2svg%20editor')}})();void(0)
+```
+
 - The .js and .xhtml file names have a suffix which is the version of
   the core interface (actually `-1`).
 
