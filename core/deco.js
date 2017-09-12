@@ -1908,7 +1908,7 @@ function draw_partempo(st, top) {
 						/* + cfmt.partsspace ?? */
 		}
 		w = strw(s.text);
-		y = y_get(st, true, s.x - 10, w + 15) + 5
+		y = y_get(st, true, s.x - 10, w + 3) + 5
 		if (ymin < y)
 			ymin = y
 	}
