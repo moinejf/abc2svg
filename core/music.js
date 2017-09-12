@@ -1057,6 +1057,7 @@ function set_space(s) {
 	while (!s.dur) {
 		switch (s.type) {
 		case BAR:
+			// (hack to have quite the same note widths between measures)
 			return space * .9 - 7
 		case CLEF:
 			return space - s.wl
@@ -1187,10 +1188,8 @@ function set_allsymwidth(last_s) {
 	if (s.wr > xa)
 		xa = s.wr;
 	s2 = add_end_bar(s);
-	s2.prev = s;
-	s2.ts_prev = s;
-	s.ts_next = s2;
-	s.next = s2;
+	s2.prev = s2.ts_prev = s;
+	s.ts_next = s.next = s2;
 	s2.time = s.time + s.dur;
 	s2.shrink = xa;
 	s.eoln = false;
@@ -4162,14 +4161,17 @@ function set_piece() {
 
 	// if the last symbol is not a bar, add an invisible bar
 	if (tsnext.ts_prev.type != BAR) {
-		s = add_end_bar(tsnext);
-		s.next = null;
-		tsnext.ts_prev.next = s
-		s.ts_next = null;
-		tsnext.ts_prev.ts_next = s;
-		s.time = tsnext.time;
-		s.shrink = tsnext.shrink;
-		s.space = tsnext.space
+	    var	s2 = tsnext.ts_prev;
+		while (!s2.seqst)
+			s2 = s2.ts_prev;
+		s = tsfirst;
+		tsfirst = s2;
+	    var sh = s2.shrink,
+		sp = s2.space;
+		set_allsymwidth();
+		s2.shrink = sh;
+		s2.space = sp;
+		tsfirst = s
 	}
 }
 
@@ -4184,8 +4186,8 @@ function set_sym_glue(width) {
 		x = 0
 
 	while (1) {
-		if (s.type == GRACE)
-			some_grace = true
+		if (s.type == GRACE && !some_grace)
+			some_grace = s
 		if (s.seqst) {
 			space = s.space;
 			xmin += s.shrink
@@ -4330,18 +4332,16 @@ function set_sym_glue(width) {
 	}
 
 	/* set the x offsets of the grace notes */
-	if (some_grace) {
-		for (s = tsfirst; s; s = s.ts_next) {
-			if (s.type != GRACE)
-				continue
-			if (s.gr_shift)
-				x = s.prev.x + s.prev.wr
-					+ Number(cfmt.gracespace[0])
-			else
-				x = s.x - s.wl + Number(cfmt.gracespace[0])
-			for (g = s.extra; g; g = g.next)
-				g.x += x
-		}
+	for (s = some_grace; s; s = s.ts_next) {
+		if (s.type != GRACE)
+			continue
+		if (s.gr_shift)
+			x = s.prev.x + s.prev.wr
+				+ Number(cfmt.gracespace[0])
+		else
+			x = s.x - s.wl + Number(cfmt.gracespace[0])
+		for (g = s.extra; g; g = g.next)
+			g.x += x
 	}
 }
 

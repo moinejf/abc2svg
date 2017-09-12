@@ -34,6 +34,47 @@
 //		Arguments:
 //			i: start index of the note in the ABC source
 //			on: true on note start, false on note stop
+
+// Audio5 methods
+
+// play() - start playing
+// @start_index -
+// @stop_index: play the notes found in ABC source between
+//		the start and stop indexes
+// @play_event: optional (default: previous generated events)
+//	array of array
+//		[0]: index of the note in the ABC source
+//		[1]: time in seconds
+//		[2]: MIDI instrument
+//		[3]: MIDI note pitch
+//		[4]: duration
+//
+// stop() - stop playing
+//
+// get_sft() - get the soundfont type
+// Returns the soundfont type ("js" or "mp3")
+//
+// get_sfu() - get the soundfont URL
+// Returns the URL of the soundfont
+//
+// get_vol() - get the current sound volume
+// Return the volume (range [0..1])
+//
+// set_sft() - set the soundfont type
+// @type: either "js" or "mp3"
+//
+// get_sfu() - set the soundfont URL
+// @url: URL
+//
+// set_speed() - set the play speed
+// @speed: < 1 slower, > 1 faster
+//
+// set_vol() - set the current sound volume
+// @volume: range [0..1]
+//
+// set_follow() - set the flag to call or not the 'onnote' callback
+// @follow: boolean
+
 function Audio5(i_conf) {
 	var	instr_tb = [
 			"acoustic_grand_piano",

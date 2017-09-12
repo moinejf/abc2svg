@@ -3051,16 +3051,14 @@ function draw_sym_near() {
 					if (g.beam_st && !g.beam_end)
 						calculate_beam(bm, g)
 				}
-				continue
-			default:
-				continue
-			case NOTE:
 				break
-			}
-			if ((s.beam_st && !s.beam_end)
-			 || (first_note && !s.beam_st)) {
-				first_note = false;
-				calculate_beam(bm, s)
+			case NOTE:
+				if ((s.beam_st && !s.beam_end)
+				 || (first_note && !s.beam_st)) {
+					first_note = false;
+					calculate_beam(bm, s)
+				}
+				break
 			}
 		}
 	}

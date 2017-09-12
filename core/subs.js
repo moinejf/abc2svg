@@ -21,7 +21,7 @@
 /* these are the widths for Times-Roman, extracted from the 'a2ps' package */
 /*fixme-hack: set 500 to control characters for utf-8*/
 
-var cw_tb = [
+var cw_tb = new Float32Array([
 	.500,.500,.500,.500,.500,.500,.500,.500,	// 00
 	.500,.500,.500,.500,.500,.500,.500,.500,
 	.500,.500,.500,.500,.500,.500,.500,.500,	// 10
@@ -38,7 +38,7 @@ var cw_tb = [
 	.500,.278,.278,.500,.278,.778,.500,.500,
 	.500,.500,.333,.389,.278,.500,.500,.722,	// 70
 	.500,.500,.444,.480,.200,.480,.541,.500
-]
+])
 
 /* -- return the character width -- */
 function cwid(c) {
