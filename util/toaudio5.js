@@ -286,24 +286,14 @@ function Audio5(i_conf) {
 				req = new XMLHttpRequest();
 
 			req.open('GET', url);
-//// does not work with some browsers
-//			req.responseType = 'arraybuffer';
-//			req.onload = function() {
-//				audio_dcod(this.response)
-//			}
-			req.overrideMimeType(
-				"application/octet-stream; charset=x-user-defined");
+			req.responseType = 'arraybuffer';
 			req.onload = function() {
-				var	l = this.responseText.length,
-					a = new ArrayBuffer(l),
-					b = new Uint8Array(a)
-
-				for (var i = 0; i < l; i++)
-					b[i] = this.responseText.charCodeAt(i) & 0xff;
-				audio_dcod(a)
+				audio_dcod(instr, mi, this.response)
 			}
-			req.onerror = function() {
-				alert('Error while loading\n' + url);
+			req.onerror = function(msg) {
+				if (typeof msg == 'object')
+					msg = msg.type
+				alert("Error '" + msg + "' while loading\n" + url);
 				w_note--;
 				iend = 0;
 				onend()
