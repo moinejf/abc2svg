@@ -77,11 +77,11 @@
 
 function Audio5(i_conf) {
 	// constants
-	var	instr_tb = [
+	var	instr_tb = [			// index = GM1 instrument - 1
 			"acoustic_grand_piano",
 			"bright_acoustic_piano",
 			"electric_grand_piano",
-			"honky-tonk_piano",
+			"honkytonk_piano",
 			"electric_piano_1",
 			"electric_piano_2",
 			"harpsichord",
@@ -181,7 +181,7 @@ function Audio5(i_conf) {
 			"fx_5_brightness",
 			"fx_6_goblins",
 			"fx_7_echoes",
-			"fx_8_sci-fi",
+			"fx_8_scifi",
 			"sitar",
 			"banjo",
 			"shamisen",
