@@ -47,14 +47,14 @@ var	BAR = 0,
 // add playing events from the ABC model
     ToAudio.prototype.add = function(start,		// starting symbol
 				 voice_tb) {		// voice table
-	var	bmap = new Int8Array(7), // measure base map
-		map = new Int8Array(70), // current map - 10 octaves
+	var	bmap = new Float32Array(7), // measure base map
+		map = new Float32Array(70), // current map - 10 octaves
 		i, n, dt, d,
 		rep_st_s,		// start of sequence to be repeated
 		rep_en_s,		// end
 		rep_nx_s,		// restart at end of repeat
 		rep_st_transp,		// transposition at start of repeat sequence
-		rep_st_map = new Int8Array(70), // accidentals
+		rep_st_map = new Float32Array(70), // accidentals
 		rep_st_fac,		// and play factor
 		transp,			// clef transposition per voice
 		s = start
@@ -104,13 +104,20 @@ var	BAR = 0,
 	// convert ABC pitch to MIDI index
 	function pit2mid(s, i) {
 		var	n, oct,
-			p = s.notes[i].pit + 19, // pitch from C-1
-			a = s.notes[i].acc
+			note = s.notes[i];
+			p = note.pit + 19, // pitch from C-1
+			a = note.acc
 
 		if (transp[s.v])
 			p += transp[s.v]
-		if (a)
-			map[p] = a == 3 ? 0 : a; // (3 = natural)
+		if (a) {
+			if (a == 3)		// (3 = natural)
+				a = 0
+			else if (note.micro_n)
+				a = (a < 0 ? -note.micro_n : note.micro_n) /
+						note.micro_d * 2;
+			map[p] = a
+		}
 		return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
 	} // pit2mid()
 

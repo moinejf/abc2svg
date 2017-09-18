@@ -46,7 +46,7 @@
 //		[0]: index of the note in the ABC source
 //		[1]: time in seconds
 //		[2]: MIDI instrument
-//		[3]: MIDI note pitch
+//		[3]: MIDI note pitch (with cents)
 //		[4]: duration
 //
 // stop() - stop playing
@@ -76,6 +76,7 @@
 // @follow: boolean
 
 function Audio5(i_conf) {
+	// constants
 	var	instr_tb = [
 			"acoustic_grand_piano",
 			"bright_acoustic_piano",
@@ -257,7 +258,7 @@ function Audio5(i_conf) {
 			return ab
 		} // data2bin()
 
-		function audio_dcod(snd) {
+		function audio_dcod(instr, mi, snd) {
 			ac.decodeAudioData(snd,
 				function(b) {
 					sounds[instr][mi] = b;
@@ -277,7 +278,8 @@ function Audio5(i_conf) {
 		var p = nn[mi % 12] + no[(mi / 12) | 0]
 
 		if (sft == 'js') {
-			audio_dcod(data2bin(MIDI.Soundfont[instr_tb[instr]][p]))
+			audio_dcod(instr, mi,
+				data2bin(MIDI.Soundfont[instr_tb[instr]][p]))
 		} else {
 			var	url = sfu + '/' + instr_tb[instr] + '-' +
 					sft + '/' + p + '.' + sft,
@@ -337,7 +339,7 @@ function Audio5(i_conf) {
 				sounds[instr] = [];
 				load_instr(instr)
 			}
-			mi = e[3]
+			mi = e[3] | 0
 			if (!sounds[instr][mi]) {	// if no note yet
 				sounds[instr][mi] = true;
 				note_q.push([instr, mi])
@@ -347,7 +349,7 @@ function Audio5(i_conf) {
 
 	// play the next time sequence
 	function play_next() {
-		var	t, e, e2, maxt, o
+		var	t, e, e2, maxt, o, st, d;
 
 		// play the next events
 		e = a_e[evt_idx]
@@ -366,22 +368,30 @@ function Audio5(i_conf) {
 		}
 
 //fixme: better, count the number of events?
-		t = e[1] / speed		// start time
+		t = e[1] / speed;		// start time
 		maxt = t + 3			// max time = evt time + 3 seconds
 		while (1) {
 			o = ac.createBufferSource();
-			o.buffer = sounds[e[2]][e[3]];
+			o.buffer = sounds[e[2]][e[3] | 0];
 			o.connect(gain);
+			if (o.detune) {
+				d = (e[3] * 100) % 100
+				if (d)			// if micro-tone
+					 o.detune.value = d
+			}
+			d = e[4] / speed
 // if not a percussion instrument,
 //  o.loop = true
 //  o.loopStart = 3 // (for sample 4s)
-			o.start(t + stime, 0, e[4] / speed)
+			st = t + stime;			// absolute start time
+			o.start(st);
+			o.stop(st + d)
 
 			if (follow) {
-				var	st = (t + stime - ac.currentTime) * 1000,
-					i = e[0];
+			    var	i = e[0];
+				st = (st - ac.currentTime) * 1000;
 				setTimeout(onnote, st, i, true);
-				setTimeout(onnote, st + e[4] / speed * 1000, i, false)
+				setTimeout(onnote, st + d * 1000, i, false)
 			}
 
 			e = a_e[++evt_idx]
