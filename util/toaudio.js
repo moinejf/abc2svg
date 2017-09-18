@@ -80,6 +80,13 @@ var	BAR = 0,
 
 	// define the note map
 	function key_map(s) {
+	    if (s.k_bagpipe) {
+		// detune for just intonation in A (C is C#, F is F# and G is Gnat)
+		bmap = [100-13.7, -2, 2, 100-15.6, -31.2, 0, 3.9]
+		for (var i = 0; i < 7; i++)
+			bmap[i] = (bmap[i] + 150.6) / 100 // 'A' bagpipe = 480Hz
+				// 150.6 = (Math.log2(480/440) - 1)*1200
+	    } else {
 		for (var i = 0; i < 7; i++)
 			bmap[i] = 0
 		switch (s.k_sf) {
@@ -98,6 +105,7 @@ var	BAR = 0,
 		case -2: bmap[2] = -1
 		case -1: bmap[6] = -1; break
 		}
+	    }
 		bar_map()
 	} // key_map()
 
