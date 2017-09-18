@@ -150,7 +150,7 @@ var	BAR = 0,
 			note = s.notes[i]
 			if (note.pit == pit) {
 				d += s.dur / play_factor;
-				note.ti2 = [p, a]
+				note.ti2 = true
 				return note.ti1 ? do_tie(s, note, d) : d
 			}
 		}
@@ -197,13 +197,9 @@ var	BAR = 0,
 	// generate the notes
 	function gen_notes(s, t, d) {
 		for (var i = 0; i <= s.nhd; i++) {
-			var	note = s.notes[i],
-				ti2 = note.ti2		// [p, a]
-			if (ti2) {
-				if (ti2[1])
-					map[ti2[0]] = ti2[1] == 3 ? 0 : ti2[1]
+		    var	note = s.notes[i]
+			if (note.ti2)
 				continue
-			}
 			a_e.push([
 				s.istart,
 				t,
@@ -245,6 +241,8 @@ var	BAR = 0,
 
 		if (s == rep_en_s) {			// repeat end
 			s = rep_nx_s.ts_next;
+			if (!s.invis)
+				bar_map();
 			abc_time = s.time
 			continue
 		}
@@ -266,21 +264,23 @@ var	BAR = 0,
 						map[i] = rep_st_map[i]
 					for (i = 0; i < rep_st_transp.length; i++)
 						transp[i] = rep_st_transp[i];
-					play_factor = rep_st_fac
+					play_factor = rep_st_fac;
+					abc_time = s.time
 				} else {			// back to start
 					s = start;
 					key_map(voice_tb[0].key);
-					set_voices()
+					set_voices();
+					abc_time = s.time
+					break
 				}
-				abc_time = s.time
-				break
 			}
+
+			if (!s.invis)
+				bar_map()
 
 			// left repeat
 			if (s.bar_type[s.bar_type.length - 1] == ':') {
 				rep_st_s = s
-				if (!s.invis)
-					bar_map()
 				for (i = 0; i < 70; i++)
 					rep_st_map[i] = map[i];
 				rep_st_transp = []
@@ -293,9 +293,6 @@ var	BAR = 0,
 			} else if (s.text && s.text[0] == '1') {
 				rep_en_s = s
 			}
-
-			if (!s.invis)
-				bar_map()
 			break
 		case CLEF:
 			transp[s.v] = (!s.clef_octave || s.clef_oct_transp) ?

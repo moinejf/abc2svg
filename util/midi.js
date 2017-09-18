@@ -58,7 +58,6 @@ function AbcMIDI() {
 			tie_map = [],			// index = MIDI pitch
 			tie_time= [],
 			rep_tie_map = [],
-			rep_tie_time = [],
 			transp = [],			// transposition per voice
 			note
 
@@ -96,7 +95,8 @@ function AbcMIDI() {
 		function pit2midi(p, a) {
 			if (a)
 				map[p] = a == 3 ? 0 : a; // (3 = natural)
-			return ((p / 7) | 0) * 12 + scale[p % 7] + map[p]
+			return ((p / 7) | 0) * 12 + scale[p % 7] +
+						(tie_map[p] ||  map[p])
 		} // pit2midi()
 
 		// initialize the clefs and keys
@@ -121,16 +121,14 @@ function AbcMIDI() {
 					if (s.text[0] == '1') {	// 1st time
 						rep_tie_map = [];
 						rep_tie_time = []
-						for (i in tie_map) {
-							rep_tie_map[i] = tie_map[i];
-							rep_tie_time[i] = tie_time[i]
-						}
+						for (i in tie_map)
+							rep_tie_map[i] = tie_map[i]
 					} else if (rep_tie_map.length != 0) {
 						tie_map = []
 						tie_time = []
 						for (i in rep_tie_map) {
 							tie_map[i] = rep_tie_map[i];
-							tie_time[i] = rep_tie_time[i]
+							tie_time[i] = s.time
 						}
 					}
 				}
@@ -174,8 +172,6 @@ function AbcMIDI() {
 						if (s.time > tie_time[p]) {
 							delete tie_map[p]
 							delete tie_time[p]
-						} else {
-							map[p] = tie_map[p]
 						}
 					}
 					note.midi = pit2midi(p, note.acc)
