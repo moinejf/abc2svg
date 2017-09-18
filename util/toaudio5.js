@@ -21,11 +21,11 @@
 // one argument:
 // @conf: configuration object - all items are optional:
 //	ac: audio context
-// 	sft: soundfont type ("js" or "mp3")
+// 	sft: soundfont type ("js", "mp3" or "ogg")
 //	sfu: soundfont URL
 //		When the type is "js", the URL is the directory containing
 //			the  <instrument>-ogg.js files of midi-js
-//		When the type is "mp3" (I could not find "ogg" files)
+//		When the type is "mp3" or "ogg",
 //			the URL is the directory containing
 //			the <instrument>-<type> directories
 //	onend: callback function called at end of playing
@@ -52,7 +52,7 @@
 // stop() - stop playing
 //
 // get_sft() - get the soundfont type
-// Returns the soundfont type ("js" or "mp3")
+// Returns the soundfont type ("js", "mp3" or "ogg")
 //
 // get_sfu() - get the soundfont URL
 // Returns the URL of the soundfont
@@ -61,7 +61,7 @@
 // Return the volume (range [0..1])
 //
 // set_sft() - set the soundfont type
-// @type: either "js" or "mp3"
+// @type: either "js", "mp3" or "ogg"
 //
 // get_sfu() - set the soundfont URL
 // @url: URL
@@ -246,10 +246,12 @@ function Audio5(i_conf) {
 
 	// instruments/notes
 		sfu =			// soundfont default URL
-			"https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM",
-		sft = "js",		// soundfont type:
+//			"https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM",
+			"http://moinejf.free.fr/js/FluidR3_GM",
+		sft = "ogg",		// soundfont type:
 					// - "js" midi-js with encoded data structure
 					// - "mp3" midi-js mp3 samples
+					// - "ogg" midi-js ogg samples
 		sounds = [],		// [instr][mi] decoded notes per instrument
 		w_instr = 0,		// number of instruments being loaded
 		note_q = [],		// [instr, note] to be decoded

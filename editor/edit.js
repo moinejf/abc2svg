@@ -471,7 +471,7 @@ function set_speed(iv) {
 //fixme: do tune/start-stop selection of what to play
 function notehlight(i, on) {
 	var elts = document.getElementsByClassName('_' + i + '_');
-	if (elts)
+	if (elts && elts[0])
 		elts[0].style.setProperty("fill-opacity", on ? 0.4 : 0)
 }
 function endplay() {
@@ -532,19 +532,12 @@ function edit_init() {
 		var script = document.createElement('script');
 		script.src = "play-@MAJOR@.js";
 		script.onload = function() {
-			var	e,
-				t = null,
-				test = document.createElement('audio')
-			if (test.canPlayType
-			 && test.canPlayType('audio/mp3') != '')
-				t = {type: "mp3"};
 			abcplay = new AbcPlay({
 					onend: endplay,
 					onnote:notehlight,
-					sft: t
 					});
 //fixme: get soundfont URL/type from cookies (?)
-			e = document.getElementById("playbutton");
+			var e = document.getElementById("playbutton");
 			e.addEventListener("click", play_tune);
 			e.style.display = "inline-block";
 			document.getElementById("playdiv1").style.display =
@@ -554,9 +547,10 @@ function edit_init() {
 					"list-item";
 			document.getElementById("sfu").setAttribute("value",
 				abcplay.get_sfu());
-//!! soundfont type is either 0:"js" or 1:"mp3" - see edit.xhtml
+//!! soundfont type is either 0:"js", 1:"mp3" or 2:"ogg" - see edit.xhtml
+			var t = { js:0, mp3:1, ogg:2 };
 			document.getElementById("sft").selectedIndex =
-				abcplay.get_sft() == "js" ? 0 : 1;
+				t[abcplay.get_sft()];
 			document.getElementById("gvol").setAttribute("value",
 				(abcplay.get_vol() * 10) | 0)
 		}

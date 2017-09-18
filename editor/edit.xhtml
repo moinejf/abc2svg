@@ -35,12 +35,13 @@
 				<label id="sful">Sound font URL</label>
 				 <input id="sfu" type="text" maxlength="120"
 					size="50"
-					onchange="abcplay.set_sfu(this.value)"/>
+					onblur="abcplay.set_sfu(this.value)"/>
 				<label id="sftl">type</label>
 				 <select id="sft"
-					onchange="abcplay.set_sft(['js', 'mp3'][this.selectedIndex])">
+					onchange="abcplay.set_sft(['js', 'mp3', 'ogg'][this.selectedIndex])">
 					<option>js</option>
 					<option>mp3</option>
+					<option>ogg</option>
 				 </select>
 			</li>
 			<li id="playdiv2" style="display: none">
