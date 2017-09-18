@@ -207,6 +207,26 @@ function Audio5(i_conf) {
 			"applause",
 			"gunshot"],
 
+		// instruments
+		loop = new Uint8Array([		// index = GM1 instrument - 1
+			0, 0, 0, 0, 0, 0, 0, 0,		// 0   Piano
+			0, 0, 0, 0, 0, 0, 0, 0,		// 8   Chromatic Percussion
+			1, 1, 1, 1, 1, 1, 1, 1,		// 16  Organ
+			0, 0, 0, 0, 0, 0, 0, 0,		// 24  Guitar
+			0, 0, 0, 0, 0, 0, 0, 0,		// 32  Bass
+			1, 1, 1, 1, 1, 1, 1, 1,		// 40  Strings
+			1, 1, 0, 0, 0, 0, 0, 0,		// 48  Ensemble
+			1, 1, 1, 1, 1, 1, 1, 1,		// 56  Brass
+			1, 1, 1, 1, 1, 1, 1, 1,		// 64  Reed
+			1, 1, 1, 1, 1, 1, 1, 1,		// 72  Pipe
+			1, 1, 1, 1, 1, 1, 1, 1,		// 80  Synth Lead
+			1, 1, 1, 1, 1, 1, 1, 1,		// 88  Synth Pad
+			1, 1, 1, 1, 1, 1, 1, 1,		// 96  Synth Effects
+			0, 0, 0, 0, 0, 1, 1, 0,		// 104 Ethnic
+			0, 0, 0, 0, 0, 0, 0, 0,		// 112 Percussive
+			0, 0, 0, 0, 0, 0, 0, 0,		// 120 Sound Effects
+		]),
+
 		// note to name and note to octave
 		nn =	["C", "Db", "D",  "Eb", "E",  "F",
 			 "Gb", "G", "Ab", "A",  "Bb", "B"],
@@ -370,9 +390,11 @@ function Audio5(i_conf) {
 					 o.detune.value = d
 			}
 			d = e[4] / speed
-// if not a percussion instrument,
-//  o.loop = true
-//  o.loopStart = 3 // (for sample 4s)
+			if (loop[e[2]]) {	// if not a percussion instrument
+				o.loop = true;
+				o.loopStart = 3; // (for sample 4s)
+				o.loopEnd = 10
+			}
 			st = t + stime;			// absolute start time
 			o.start(st);
 			o.stop(st + d)
