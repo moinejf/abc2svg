@@ -35,10 +35,10 @@
 				<label id="sful">Sound font URL</label>
 				 <input id="sfu" type="text" maxlength="120"
 					size="50"
-					onblur="abcplay.set_sfu(this.value)"/>
+					onblur="set_sfu(this.value)"/>
 				<label id="sftl">type</label>
 				 <select id="sft"
-					onchange="abcplay.set_sft(['js', 'mp3', 'ogg'][this.selectedIndex])">
+					onchange="set_sft(['js', 'mp3', 'ogg'][this.selectedIndex])">
 					<option>js</option>
 					<option>mp3</option>
 					<option>ogg</option>
@@ -46,19 +46,20 @@
 			</li>
 			<li id="playdiv2" style="display: none">
 				<label id="fo">Follow music</label>
-				 <input id="fol" type="checkbox" value="false"
-					onchange="abcplay.set_follow(this.value)"/>
+				 <input id="fol" type="checkbox" checked="false"
+					onclick="set_follow(this)"/>
 			</li>
 			<li id="playdiv3" style="display: none">
 				<label id="gv">Volume</label>
 				 <input id="gvol" type="range" min="1" max="10" value="7"
-					onchange="abcplay.set_vol(this.value / 10)"/>
+					onchange="set_vol(this.value / 10)"/>
 			</li>
 			<li id="playdiv4" style="display: none">
 				<label id="sp">Speed</label>
-				 <input type="range" min="1" max="20" value="10" step=".5"
+				 <input id="spv" type="range"
+					min="1" max="20" value="10" step=".5"
 					onchange="set_speed(this.value)"/>
-				<label id="spv">1</label>
+				<label id="spvl">1</label>
 			</li>
 		</ul>
 	</li>
