@@ -8,6 +8,9 @@ MAJOR=1
 rule cp
   command = cp $in $out
 
+rule cpm
+  command = sed "s+@MAJOR@+$MAJOR+"  $in > $out
+
 rule font
   command = fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.woff")';$
    echo "// abc2svg music font" > font.js;$
@@ -50,13 +53,10 @@ rule jscu
    fi
 
 rule edit
-  command = sed "s+@MAJOR@+$MAJOR+" editor/edit.xhtml > edit-$MAJOR.xhtml;$
-   if [ "x$$NOMIN" = "x" ]; then$
-	sed "s+@MAJOR@+$MAJOR+" editor/abckbd.js | uglifyjs > abckbd-$MAJOR.js;$
-	sed "s+@MAJOR@+$MAJOR+" editor/edit.js | uglifyjs > edit-$MAJOR.js;$
+  command = if [ "x$$NOMIN" = "x" ]; then$
+	sed "s+@MAJOR@+$MAJOR+" $in | uglifyjs > $out;$
    else$
-	sed "s+@MAJOR@+$MAJOR+" editor/abckbd.js > abckbd-$MAJOR.js;$
-	sed "s+@MAJOR@+$MAJOR+" editor/edit.js > edit-$MAJOR.js;$
+	sed "s+@MAJOR@+$MAJOR+" $in > $out;$
    fi
 
 build font.js: font | font/abc2svg.sfd
@@ -76,13 +76,16 @@ build midi-$MAJOR.js: jscu util/midi.js | package.json
 build play-$MAJOR.js: jscu util/play.js util/toaudio.js util/toaudio5.js | package.json
 build toaudio-$MAJOR.js: jscu util/toaudio.js | package.json
 
-build abckbd-$MAJOR.js edit-$MAJOR.xhtml edit-$MAJOR.js: edit $
- editor/abckbd.js editor/edit.xhtml editor/edit.js
+build edit-$MAJOR.xhtml: cpm editor/edit.xhtml
+build abckbd-$MAJOR.js: edit editor/abckbd.js | package.json
+build abckbd2-$MAJOR.js: edit editor/abckbd2.js | package.json
+build edit-$MAJOR.js: edit editor/edit.js | package.json
 
 build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
- abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js play-$MAJOR.js toaudio-$MAJOR.js $
- psvg-$MAJOR.js $
- edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml
+ abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js $
+ play-$MAJOR.js toaudio-$MAJOR.js psvg-$MAJOR.js $
+ edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml $
+ abckbd-$MAJOR.js abckbd2-$MAJOR.js
 
 default all
 
