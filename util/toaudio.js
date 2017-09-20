@@ -255,10 +255,11 @@ var	BAR = 0,
 		}
 
 		if (s == rep_en_s) {			// repeat end
-			s = rep_nx_s.ts_next;
+			s = rep_nx_s
 			if (!s.invis)
 				bar_map();
 			abc_time = s.time
+			s = s.ts_next
 			continue
 		}
 
@@ -274,7 +275,7 @@ var	BAR = 0,
 				if (!rep_en_s)		// if no "|1"
 					rep_en_s = s	// repeat end
 				if (rep_st_s) {		// if left repeat
-					s = rep_st_s.ts_next
+					s = rep_st_s
 					for (i = 0; i < 70; i++)
 						map[i] = rep_st_map[i]
 					for (i = 0; i < rep_st_transp.length; i++)
@@ -290,6 +291,8 @@ var	BAR = 0,
 				}
 			}
 
+			if (s.type != BAR)
+				break
 			if (!s.invis)
 				bar_map()
 
