@@ -115,9 +115,11 @@ function loadjs(fn, relay) {
 }
 
 // load the language files ('edit-lang.js' and 'err-lang.js')
-function loadlang(lang) {
+function loadlang(lang, no_memo) {
 	loadjs('edit-' + lang + '.js', function() { loadtxt() });
 	loadjs('err-' + lang + '.js')
+	if (!no_memo)
+		set_cookie("lang", lang)
 }
 
 // show/hide a popup message
@@ -452,12 +454,19 @@ function destroyClickedElement(evt) {
 	document.body.removeChild(evt.target)
 }
 
+// cookies stuff
+function set_cookie(n, v) {
+    var	d = new Date();
+	d.setTime(d.getTime() + 30 * 24 * 60 * 60 * 1000);	// one month
+	document.cookie = n + "=" + v + ";expires=" + d.toUTCString()
+}
+
 // set the size of the font of the textarea
 function setfont() {
     var	fs = document.getElementById("fontsize").value.toString();
 	document.getElementById("source").style.fontSize =
 		document.getElementById("src1").style.fontSize = fs + "px";
-	document.cookie = "abc2svg_font=" + fs
+	set_cookie("font", fs)
 }
 
 // playing
@@ -465,17 +474,17 @@ function setfont() {
 function set_follow(e) {
     var	v = e.checked;
 	abcplay.set_follow(v);
-	document.cookie = "abc2svg_follow=" + v
+	set_cookie("follow", v)
 }
 // set soundfont type
 function set_sft(v) {
 	abcplay.set_sft(v);
-	document.cookie = "abc2svg_sft=" + v
+	set_cookie("sft", v)
 }
 // set soundfont URL
 function set_sfu(v) {
 	abcplay.set_sfu(v);
-	document.cookie = "abc2svg_sfu=" + v
+	set_cookie("sfu", v)
 }
 // set_speed value = 1..20, 10 = no change
 function set_speed(iv) {
@@ -484,12 +493,12 @@ function set_speed(iv) {
 			(iv - 10) * .1);
 	abcplay.set_speed(v);
 	spvl.innerHTML = v;
-	document.cookie = "abc2svg_speed=" + iv
+	set_cookie("speed", iv)
 }
 // set volume
 function set_vol(v) {
 	abcplay.set_vol(v);
-	document.cookie = "abc2svg_volume=" + v.toFixed(2)
+	set_cookie("volume", v.toFixed(2))
 }
 //fixme: do tune/start-stop selection of what to play
 function notehlight(i, on) {
@@ -544,38 +553,41 @@ function edit_init() {
 		for (var i = 0; i < ac.length; i++) {
 			var c = ac[i].split('=')
 			switch (c[0].replace(/ */, '')) {
-			case "abc2svg_follow":
+			case "follow":
 				if (!abcplay) break
 				document.getElementById("fol").checked = c[1];
 				abcplay.set_follow(c[1])
 				break
-			case "abc2svg_font":
+			case "font":
 				document.getElementById("source").style.fontSize =
 					document.getElementById("src1").style.fontSize =
 						c[1] + "px";
 				document.getElementById("fontsize").value =
 						Number(c[1])
 				break
-			case "abc2svg_sft":
+			case "lang":
+				loadlang(c[1], true)
+				break
+			case "sft":
 				if (!abcplay) break
 			    var	t = { js:0, mp3:1, ogg:2 };
 				document.getElementById("sft").selectedIndex =
 						t[c[1]];
 				abcplay.set_sft(c[1])
 				break
-			case "abc2svg_sfu":
+			case "sfu":
 				if (!abcplay) break
 				document.getElementById("sfu").value = c[1];
 				abcplay.set_sfu(c[1])
 				break
-			case "abc2svg_speed":
+			case "speed":
 				if (!abcplay) break
 				document.getElementById("spv").innerHTML = Number(c[1])
 			    var	v = Math.pow(3, (c[1] - 10) * .1);
 				abcplay.set_speed(v);
 				document.getElementById("spvl").innerHTML = v
 				break
-			case "abc2svg_volume":
+			case "volume":
 				if (!abcplay) break
 				document.getElementById("gvol").innerHTML = c[1] * 10;
 				abcplay.set_vol(Number(c[1]))
@@ -613,7 +625,6 @@ function edit_init() {
 				document.getElementById("playdiv4").style.display =
 					"list-item";
 			document.getElementById("sfu").value = abcplay.get_sfu();
-//!! soundfont type is either 0:"js", 1:"mp3" or 2:"ogg" - see edit.xhtml
 			var t = { js:0, mp3:1, ogg:2 };
 			document.getElementById("sft").selectedIndex =
 				t[abcplay.get_sft()];
