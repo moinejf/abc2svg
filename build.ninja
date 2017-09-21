@@ -59,7 +59,7 @@ rule edit
 	sed "s+@MAJOR@+$MAJOR+" $in > $out;$
    fi
 
-build font.js: font | font/abc2svg.sfd
+build font: font | font/abc2svg.sfd
 
 build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
