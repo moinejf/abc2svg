@@ -2322,12 +2322,10 @@ function parse_music_line() {
 							continue
 						}
 					}
-				} else {
-					if (qplet == 0)
-						qplet = (curvoice.wmeasure
-								% 9) == 0 ?
-									3 : 2
 				}
+				if (qplet == 0 || qplet == undefined)
+					qplet = (curvoice.wmeasure % 9) == 0 ?
+								3 : 2;
 				tp = tp_a[++tpn]
 				if (!tp)
 					tp_a[tpn] = tp = {}
