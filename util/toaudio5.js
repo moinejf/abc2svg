@@ -245,10 +245,8 @@ function Audio5(i_conf) {
 		new_speed,
 
 	// instruments/notes
-		sfu =			// soundfont default URL
-//			"https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM",
-			"http://moinejf.free.fr/js/FluidR3_GM",
-		sft = "ogg",		// soundfont type:
+		sfu,			// soundfont URL
+		sft,			// soundfont type:
 					// - "js" midi-js with encoded data structure
 					// - "mp3" midi-js mp3 samples
 					// - "ogg" midi-js ogg samples
@@ -533,6 +531,15 @@ function Audio5(i_conf) {
 		gain.gain.value = gain_val;
 		gain.connect(ac.destination)
 	}
+
+	if (document.URL.match(/^http:\/\/moinejf.free.fr/)) {
+		sfu = "http://moinejf.free.fr/js/FluidR3_GM";
+		sft = "ogg"
+	} else {
+		sfu = "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM";
+		sft = "js"
+	}
+
 	if (conf.sft)
 		sft = conf.sft
 	if (conf.sfu)
