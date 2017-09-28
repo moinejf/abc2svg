@@ -103,14 +103,14 @@ function clean_txt(txt) {
 	})
 }
 
+// load a javascript file
+var jsdir = document.currentScript.src.match(/.*\//) || ['']
 function loadjs(fn, relay) {
 	var s = document.createElement('script');
-	s.src = fn;
+	s.src = jsdir[0] + fn;
 	s.type = 'text/javascript'
-	if (relay) {
+	if (relay)
 		s.onload = relay;
-//		s.onreadystatechange = relay
-	}
 	document.head.appendChild(s)
 }
 

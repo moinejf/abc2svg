@@ -96,17 +96,25 @@ function playseq(seq) {
 	abcplay.play(0, 100000, a_pe[seq])
 }
 
-// function called when the page is loaded
+// load a javascript file
 var jsdir = document.currentScript.src.match(/.*\//) || ['']
+function loadjs(fn, relay) {
+	var s = document.createElement('script');
+	s.src = jsdir[0] + fn;
+	s.type = 'text/javascript'
+	if (relay)
+		s.onload = relay;
+	document.head.appendChild(s)
+}
+
+// function called when the page is loaded
 function dom_loaded() {
 	var page = document.body.innerHTML;
 
 	// if some Postscript definition, load the interpreter
 	if (typeof Psvg != "function"
 	 && page.indexOf("\n%%beginps") > 0) {
-		var scr = document.createElement('script');
-		scr.src = jsdir[0] + "psvg-1.js";
-		scr.onload = dom_loaded;
+		loadjs("psvg-1.js", dom_loaded)
 		document.head.appendChild(scr)
 		return
 	}
