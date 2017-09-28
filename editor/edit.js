@@ -472,19 +472,15 @@ function setfont() {
 // playing
 // set 'follow music'
 function set_follow(e) {
-    var	v = e.checked;
-	abcplay.set_follow(v);
-	set_cookie("follow", v)
+	abcplay.set_follow(e.checked)
 }
 // set soundfont type
 function set_sft(v) {
-	abcplay.set_sft(v);
-	set_cookie("sft", v)
+	abcplay.set_sft(v)
 }
 // set soundfont URL
 function set_sfu(v) {
-	abcplay.set_sfu(v);
-	set_cookie("sfu", v)
+	abcplay.set_sfu(v)
 }
 // set_speed value = 1..20, 10 = no change
 function set_speed(iv) {
@@ -492,13 +488,11 @@ function set_speed(iv) {
 	v = Math.pow(3,			// max 3 times lower/faster
 			(iv - 10) * .1);
 	abcplay.set_speed(v);
-	spvl.innerHTML = v;
-	set_cookie("speed", iv)
+	spvl.innerHTML = v
 }
 // set volume
 function set_vol(v) {
-	abcplay.set_vol(v);
-	set_cookie("volume", v.toFixed(2))
+	abcplay.set_vol(v)
 }
 //fixme: do tune/start-stop selection of what to play
 function notehlight(i, on) {
@@ -553,11 +547,6 @@ function edit_init() {
 		for (var i = 0; i < ac.length; i++) {
 			var c = ac[i].split('=')
 			switch (c[0].replace(/ */, '')) {
-			case "follow":
-				if (!abcplay) break
-				document.getElementById("fol").checked = c[1];
-				abcplay.set_follow(c[1])
-				break
 			case "font":
 				document.getElementById("source").style.fontSize =
 					document.getElementById("src1").style.fontSize =
@@ -567,30 +556,6 @@ function edit_init() {
 				break
 			case "lang":
 				loadlang(c[1], true)
-				break
-			case "sft":
-				if (!abcplay) break
-			    var	t = { js:0, mp3:1, ogg:2 };
-				document.getElementById("sft").selectedIndex =
-						t[c[1]];
-				abcplay.set_sft(c[1])
-				break
-			case "sfu":
-				if (!abcplay) break
-				document.getElementById("sfu").value = c[1];
-				abcplay.set_sfu(c[1])
-				break
-			case "speed":
-				if (!abcplay) break
-				document.getElementById("spv").innerHTML = Number(c[1])
-			    var	v = Math.pow(3, (c[1] - 10) * .1);
-				abcplay.set_speed(v);
-				document.getElementById("spvl").innerHTML = v
-				break
-			case "volume":
-				if (!abcplay) break
-				document.getElementById("gvol").innerHTML = c[1] * 10;
-				abcplay.set_vol(Number(c[1]))
 				break
 			}
 		}
@@ -607,7 +572,7 @@ function edit_init() {
 	e = document.getElementById("s1");
 	e.addEventListener("click", function(){selsrc(1)})
 
-	// if playing is possible, load the playing scripts
+	// if playing is possible, load the playing script
 	if (window.AudioContext || window.webkitAudioContext) {
 		var script = document.createElement('script');
 		script.src = "play-@MAJOR@.js";
@@ -624,14 +589,16 @@ function edit_init() {
 				document.getElementById("playdiv3").style.display =
 				document.getElementById("playdiv4").style.display =
 					"list-item";
-			document.getElementById("sfu").value = abcplay.get_sfu();
+
+			document.getElementById("fol").checked = abcplay.set_follow();
+			document.getElementById("sfu").value = abcplay.set_sfu();
 			var t = { js:0, mp3:1, ogg:2 };
 			document.getElementById("sft").selectedIndex =
-				t[abcplay.get_sft()];
+				t[abcplay.set_sft()];
+//			document.getElementById("spv").innerHTML =
+//				Math.log(abcplay.set_speed()) / Math.log(3);
 			document.getElementById("gvol").setAttribute("value",
-				(abcplay.get_vol() * 10) | 0);
-
-			set_pref()	// set the preferences from the cookies
+				(abcplay.set_vol() * 10) | 0)
 		}
 		document.head.appendChild(script);
 

@@ -51,29 +51,20 @@
 //
 // stop() - stop playing
 //
-// get_sft() - get the soundfont type
-// Returns the soundfont type ("js", "mp3" or "ogg")
+// set_sft() - get/set the soundfont type
+// @type: either "js", "mp3" or "ogg" - undefined = return current value
 //
-// get_sfu() - get the soundfont URL
-// Returns the URL of the soundfont
+// set_sfu() - get/set the soundfont URL
+// @url: URL - undefined = return current value
 //
-// get_vol() - get the current sound volume
-// Return the volume (range [0..1])
+// set_speed() - get/set the play speed
+// @speed: < 1 slower, > 1 faster - undefined = return current value
 //
-// set_sft() - set the soundfont type
-// @type: either "js", "mp3" or "ogg"
+// set_vol() - get/set the current sound volume
+// @volume: range [0..1] - undefined = return current value
 //
-// get_sfu() - set the soundfont URL
-// @url: URL
-//
-// set_speed() - set the play speed
-// @speed: < 1 slower, > 1 faster
-//
-// set_vol() - set the current sound volume
-// @volume: range [0..1]
-//
-// set_follow() - set the flag to call or not the 'onnote' callback
-// @follow: boolean
+// set_follow() - get/set the flag to call or not the 'onnote' callback
+// @follow: boolean - undefined = return current value
 
 function Audio5(i_conf) {
 	// constants
@@ -260,6 +251,34 @@ function Audio5(i_conf) {
 		evt_idx,		// event index while playing
 		iend,			// source stop index
 		stime			// start playing time
+
+	// get the URL and the type of the soundfont from cookies
+	function get_cookies() {
+	    var	ac = document.cookie.split(';')
+		for (var i = 0; i < ac.length; i++) {
+			var c = ac[i].split('=')
+			switch (c[0].replace(/ */, '')) {
+			case "follow":
+				follow = c[1] == "true"
+				break
+			case "sft":
+				if (!sft)
+					sft = c[1]
+				break
+			case "sfu":
+				if (!sfu)
+					sfu = c[1]
+				break
+//			case "speed":
+//			    var	v = Math.pow(3, (c[1] - 10) * .1);
+//				speed = v
+//				break
+			case "volume":
+				vol = Number(c[1])
+				break
+			}
+		}
+	}
 
 	function decode_note(instr, mi) {
 
@@ -477,50 +496,60 @@ function Audio5(i_conf) {
 		iend = 0
 	} // stop()
 
-	// get soundfont type
-	Audio5.prototype.get_sft = function() {
-		return sft
-	} // get_sft()
+	function set_cookie(n, v) {
+	    var	d = new Date();
+		d.setTime(d.getTime() + 31536000000)	// one year
+//					365 * 24 * 60 * 60 * 1000
+		document.cookie = n + "=" + v + ";expires=" + d.toUTCString()
+	}
 
-	// get soundfont URL
-	Audio5.prototype.get_sfu = function() {
-		return sfu
-	} // get_sft()
-
-	// get volume
-	Audio5.prototype.get_vol = function() {
-		if (gain)
-			return gain.gain.value
-		return gain_val
-	} // get_vol()
+	// get/set 'follow music'
+	Audio5.prototype.set_follow = function(v) {
+		if (v == undefined)
+			return follow
+		follow = v;
+		set_cookie("follow", v)
+	} // set_follow()
 
 	// set soundfont type
 	Audio5.prototype.set_sft = function(v) {
-		sft = v
+		if (v == undefined)
+			return sft
+		sft = v;
+		set_cookie("sft", v)
 	} // set_sft()
+	Audio5.prototype.get_sft = Audio5.prototype.set_sft	// compatibility
 
 	// set soundfont URL
 	Audio5.prototype.set_sfu = function(v) {
-		sfu = v
+		if (v == undefined)
+			return sfu
+		sfu = v;
+		set_cookie("sfu", v)
 	} // set_sft()
+	Audio5.prototype.get_sfu = Audio5.prototype.set_sfu	// compatibility
 
 	// set speed (< 1 slower, > 1 faster)
 	Audio5.prototype.set_speed = function(v) {
+		if (v == undefined)
+			return speed
 		new_speed = v
 	} // set_speed()
 
 	// set volume
 	Audio5.prototype.set_vol = function(v) {
+		if (v == undefined) {
+			if (gain)
+				return gain.gain.value
+			return gain_val
+		}
 		if (gain)
 			gain.gain.value = v
 		else
-			gain_val = v
+			gain_val = v;
+		set_cookie("volume", v.toFixed(2))
 	} // set_vol()
-
-	// set 'follow music'
-	Audio5.prototype.set_follow = function(v) {
-		follow = v
-	} // set_follow()
+	Audio5.prototype.get_vol = Audio5.prototype.set_vol	// compatibility
 
 	// Audio5 object creation
 	ac = conf.ac
@@ -532,18 +561,31 @@ function Audio5(i_conf) {
 		gain.connect(ac.destination)
 	}
 
-	if (document.URL.match(/^http:\/\/moinejf.free.fr/)) {
-		sfu = "http://moinejf.free.fr/js/FluidR3_GM";
-		sft = "ogg"
-	} else {
-		sfu = "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM";
-		sft = "js"
-	}
-
+	// get the soundfont
+	// 1- from the object configuration
 	if (conf.sft)
 		sft = conf.sft
 	if (conf.sfu)
 		sfu = conf.sfu
+	// 2- from cookies
+	if (!sfu || !sft)
+		get_cookies()
+	// 3- from the site location
+	if (!sfu || !sft) {
+		if (document.URL.match(/^http:\/\/moinejf.free.fr/)) {
+			if (!sfu)
+				sfu = "http://moinejf.free.fr/js/FluidR3_GM"
+			if (!sft)
+				sft = "ogg"
+		} else {
+			if (!sfu)
+			    sfu =
+				"https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM"
+			if (!sft)
+				sft = "js"
+		}
+	}
+
 	if (conf.onend)
 		onend = conf.onend
 	if (conf.onnote)
