@@ -788,7 +788,7 @@ function out_deco_str(x, y, name, str) {
 	}
 	out_XYAB('<text x="X" y="Y" class="A"B>', x, y,
 		name, a_deco.anchor || "");
-//	set_font("annotation");
+	set_font("annotation");
 	out_str(str);
 	output.push('</text>\n')
 }
