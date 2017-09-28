@@ -43,6 +43,10 @@ These files are:
   See [this page](http://moinejf.free.fr/abcm2ps-doc/au_clair.xhtml)
   for an example.
 
+- `follow-1.js`
+  This script may be used after `play-1.js` for highlighting the notes
+  while playing.
+
 - `edit-1.xhtml`
   This is a simple web ABC editor/player.
 
@@ -61,9 +65,10 @@ javascript:(function(){d=document;b=d.body;b.innerHTML="\n%25abc2.2\n%25<!--[CDA
   If you want to move these images to some other files,
   each one must contain the full CSS and defs. For that, insert
 ```
-%%fullsvg true
+%%fullsvg x
 ```
-  in the ABC file before rendering.
+  in the ABC file before rendering (see
+  http://moinejf.free.fr/abcm2ps-doc/fullsvg.xhtml for more information).
 
 - Playing uses HTML5 audio.
 
@@ -130,13 +135,18 @@ You may do it:
 ```
 
 If you also want to change or add music glyphs, you may edit the source
-file `font/abc2svg.sfd`. In this case, you will need both `base64` and `fontforge`.
+file `font/abc2svg.sfd`. In this case, you will need both `base64` and `fontforge`,
+and run
+
+```
+    ninja -v font.js
+```
 
 ### Batch
 
 After building the **abc2svg** scripts, you will be able to generate music
 sheets from the command line as you did with `abcm2ps`, thanks to the
-following shell scripts:  
+following shell scripts (the result goes to stdout):  
 
 - `abcjs24` with `js24` (Mozilla JavaScript shell - Spidermonkey)
 - `abcjsc` with `jsc-1` (webkitgtk2)

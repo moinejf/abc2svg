@@ -71,6 +71,7 @@ build edit-$MAJOR.css: cp editor/edit.css
 
 build abcdoc-$MAJOR.js: jscu util/abcdoc.js | package.json
 build abcemb-$MAJOR.js: jscu util/abcemb.js | package.json
+build follow-$MAJOR.js: jscu util/follow.js | package.json
 build json-$MAJOR.js: jscu util/json.js | package.json
 build midi-$MAJOR.js: jscu util/midi.js | package.json
 build play-$MAJOR.js: jscu util/play.js util/toaudio.js util/toaudio5.js | package.json
@@ -85,7 +86,7 @@ build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
  abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js $
  play-$MAJOR.js toaudio-$MAJOR.js psvg-$MAJOR.js $
  edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml $
- abckbd-$MAJOR.js abckbd2-$MAJOR.js
+ abckbd-$MAJOR.js abckbd2-$MAJOR.js follow-$MAJOR.js
 
 default all
 
