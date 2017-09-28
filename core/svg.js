@@ -746,27 +746,29 @@ var deco_str_style = {
 crdc:	{
 		dx: 0,
 		dy: 5,
-		style: 'style="font:italic 14px serif"'
+		style: 'font:italic 14px serif'
 	},
 dacs:	{
 		dx: 0,
 		dy: 3,
-		style: 'style="font:16px serif" text-anchor="middle"'
+		style: 'font:16px serif',
+		anchor: ' text-anchor="middle"'
 	},
 fng:	{
 		dx: 0,
 		dy: 1,
-		style: 'style="font:8px Bookman" text-anchor="middle"'
+		style: 'font:8px Bookman',
+		anchor: ' text-anchor="middle"'
 	},
 pf:	{
 		dx: 0,
 		dy: 5,
-		style: 'style="font:bold italic 16px serif"'
+		style: 'font:bold italic 16px serif'
 	},
 '@':	{
 		dx: 0,
 		dy: 5,
-		style: 'style="font:12px sans-serif"'
+		style: 'font:12px sans-serif'
 	}
 }
 
@@ -780,8 +782,13 @@ function out_deco_str(x, y, name, str) {
 	}
 	x += a_deco.dx;
 	y += a_deco.dy;
-	out_XYAB('<text x="X" y="Y" A>', x, y, a_deco.style);
-	set_font("annotation");
+	if (!a_deco.def) {
+		style += "\n." + name + " {" + a_deco.style + "}";
+		a_deco.def = true
+	}
+	out_XYAB('<text x="X" y="Y" class="A"B>', x, y,
+		name, a_deco.anchor || "");
+//	set_font("annotation");
 	out_str(str);
 	output.push('</text>\n')
 }
