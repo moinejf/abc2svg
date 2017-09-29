@@ -1417,7 +1417,7 @@ function do_begin_end(type,
 					syntax(1, "No </style> in %%beginsvg sequence")
 					break
 				}
-				style += text.slice(i + 23, j)
+				style += text.slice(i + 23, j).replace(/\s+$/, '')
 				continue
 			}
 			i = text.indexOf('<defs>', j)

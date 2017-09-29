@@ -1537,7 +1537,7 @@ function set_nl(s) {
 		case STBRK:
 			if (!s.stbrk_forced)
 				unlksym(s)	/* remove */
-			else 
+			else
 				done = -1	// keep the next symbols on the next line
 			continue
 		case METER:
@@ -3644,7 +3644,7 @@ function set_overlap() {
 					break
 			}
 		}
-		
+
 		if (t < 0) {	/* unison and different accidentals */
 			unison_acc(s1, s2, i1, i2)
 			continue
@@ -4224,7 +4224,7 @@ function set_sym_glue(width) {
 			if (beta_last > beta0) {
 				if (cfmt.stretchstaff) {
 					if (cfmt.linewarn) {
-						error(0, s, 
+						error(0, s,
 							"Line underfull ($1pt of $2pt)",
 							(beta0 * xmax + (1 - beta0) * x).toFixed(2),
 							width.toFixed(2))
@@ -4478,7 +4478,7 @@ function output_music() {
 		set_overlap();		/* shift the notes on voice overlap */
 //		set_rp_bars()		// set repeat bars
 	}
-	set_acc_shft();			// set the horizontal offset of accidentals 
+	set_acc_shft();			// set the horizontal offset of accidentals
 
 	set_allsymwidth(null);		/* set the width of all symbols */
 
