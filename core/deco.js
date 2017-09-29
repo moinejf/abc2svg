@@ -1061,8 +1061,11 @@ function draw_all_deco() {
 /* (the staves are not yet defined) */
 /* (delayed output) */
 /* this function must be called first as it builds the deco element table */
+    var	ottava = {"8va(":1, "8va)":1, "15ma(":1, "15ma)":1,
+		"8vb(":1, "8vb)":1, "15mb(":1, "15mb)":1}
 function draw_deco_near() {
-	var s, g, dd, first, m
+    var	s, g,
+	o = {}
 
 	// update starting old decorations
 	function ldeco_update(s) {
@@ -1081,7 +1084,7 @@ function draw_deco_near() {
 
 	/* -- create the deco elements, and treat the near ones -- */
 	function create_deco(s) {
-		var	dd, k, l, pos, de,
+		var	dd, k, l, pos, de, x,
 			nd = s.a_dd.length
 
 /*fixme:pb with decorations above the staff*/
@@ -1097,6 +1100,13 @@ function draw_deco_near() {
 			case 4:
 //fixme:trill does not work yet
 			case 5:				/* trill */
+				if (ottava[dd.name]) {	// only one ottava per staff
+					x = dd.name + s.st.toString() +
+							s.time.toString()
+					if (o[x])
+						continue
+					o[x] = true
+				}
 				pos = s.pos.orn
 				break
 			case 6:				/* d_pf */
@@ -1295,12 +1305,9 @@ function draw_deco_near() {
 		switch (s.type) {
 		case BAR:
 		case MREST:
-			break
 		case NOTE:
 		case REST:
 		case SPACE:
-			if (!first)
-				first = s
 			break
 		case GRACE:
 			for (g = s.extra; g; g = g.next)

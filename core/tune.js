@@ -1106,11 +1106,9 @@ function do_pscom(text) {
 		case -14: b = "15ma)"; break
 		}
 		if (b) {
-			if (!curvoice.second) {
-				if (!a_dcn)
-					a_dcn = []
-				a_dcn.push(b)
-			}
+			if (!a_dcn)
+				a_dcn = []
+			a_dcn.push(b);
 			set_ottava(b)
 		}
 		switch (n) {
@@ -1120,11 +1118,9 @@ function do_pscom(text) {
 		case 1: b = "8va("; break
 		case 2: b = "15ma("; break
 		}
-		if (!curvoice.second) {
-			if (!a_dcn)
-				a_dcn = []
-			a_dcn.push(b)
-		}
+		if (!a_dcn)
+			a_dcn = []
+		a_dcn.push(b);
 		set_ottava(b)
 		return
 	case "repbra":
