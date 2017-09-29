@@ -255,12 +255,8 @@ var	BAR = 0,
 		}
 
 		if (s == rep_en_s) {			// repeat end
-			s = rep_nx_s
-			if (!s.invis)
-				bar_map();
+			s = rep_nx_s;
 			abc_time = s.time
-			s = s.ts_next
-			continue
 		}
 
 		switch (s.type) {
@@ -270,7 +266,8 @@ var	BAR = 0,
 				break
 
 			// right repeat
-			if (s.bar_type[0] == ':') {
+			if (s.bar_type[0] == ':'
+			 && s != rep_nx_s) {		// (already done)
 				rep_nx_s = s		// repeat next
 				if (!rep_en_s)		// if no "|1"
 					rep_en_s = s	// repeat end
@@ -281,24 +278,23 @@ var	BAR = 0,
 					for (i = 0; i < rep_st_transp.length; i++)
 						transp[i] = rep_st_transp[i];
 					play_factor = rep_st_fac;
-					abc_time = s.time
 				} else {			// back to start
 					s = start;
 					key_map(voice_tb[0].key);
 					set_voices();
-					abc_time = s.time
-					break
+					bar_map()
 				}
+				abc_time = s.time
+				break
 			}
 
-			if (s.type != BAR)
-				break
 			if (!s.invis)
 				bar_map()
 
 			// left repeat
 			if (s.bar_type[s.bar_type.length - 1] == ':') {
-				rep_st_s = s
+				rep_st_s = s;
+				rep_en_s = null
 				for (i = 0; i < 70; i++)
 					rep_st_map[i] = map[i];
 				rep_st_transp = []
