@@ -25,7 +25,8 @@ var	a_gch,		// array of parsed guitar chords
 			//	[0] array of heads
 			//	[1] print
 			//	[2] color
-var	not_ascii = "Not an ASCII character"
+var	not_ascii = "Not an ASCII character",
+	qplet_tb = new Int8Array([ 0, 1, 3, 2, 3, 0, 2, 0, 3, 0 ])
 
 // set the source references of a symbol
 function set_ref(s) {
@@ -2076,7 +2077,7 @@ function new_note(grace, tp_fact) {
 				else
 					delete s2.stemless
 
-				// adjust the time of the grace notes, bars... 
+				// adjust the time of the grace notes, bars...
 				for (s2 = s2.next; s2; s2 = s2.next)
 					s2.time = curvoice.time
 			}
@@ -2302,7 +2303,7 @@ function parse_music_line() {
 			c = line.next_char()
 			if (c > '0' && c <= '9') {	// tuplet
 				var	pplet = line.get_int(),
-					qplet = [0, 1, 3, 2, 3, 0, 2, 0, 3, 0][pplet],
+					qplet = qplet_tb[pplet],
 					rplet = pplet,
 					c = line.char()
 
@@ -2393,11 +2394,8 @@ function parse_music_line() {
 					break
 				}
 			}
-			if (dcn[0] == '8' || dcn[0] == '1') {	// !8va(! / !15ma(! ...
+			if (dcn[0] == '8' || dcn[0] == '1')	// !8va(! / !15ma(! ...
 				set_ottava(dcn)
-				if (curvoice.second)
-					break
-			}
 			a_dcn.push(dcn)
 			break
 		case '"':
@@ -2615,7 +2613,7 @@ function parse_music_line() {
 					break
 				}
 				break
-					
+
 			}
 			if (!c)
 				break
