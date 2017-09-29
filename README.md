@@ -46,6 +46,8 @@ These files are:
 - `follow-1.js`
   This script may be used after `play-1.js` for highlighting the notes
   while playing.
+  See [this page](http://moinejf.free.fr/abcm2ps-doc/tabac.xhtml)
+  for an example.
 
 - `edit-1.xhtml`
   This is a simple web ABC editor/player.
