@@ -65,7 +65,9 @@ user.textrans = {
     "Bar in repeat sequence": "Taktstrich in Wiederholungssequenz",
     "Cannot have !$1! on a head": "!$1! kann nicht im Kopfbereich stehen",
     "Cannot have %%fullsvg inside a tune": "'%%fullsvg' kann nicht innerhalb einer Stimme stehen",
-    "Cannot have a bar in grace notes": "Taktstrich in Vorschlagnote nicht erlaubIl ne peut pas y avoir de barre dans les notes d'agrément",
+    "Cannot have a bar in grace notes": "Taktstrich in Vorschlagnote nicht erlaub",
+	"Cannot have a broken rhythm in grace notes":
+			"Cannot have a broken rhythm in grace notes",
     "Cannot have V:* in tune body": "Cannot have V:* in tune body",
     "Cannot read file '$1'": "File '$1' kann nicht gelesen werden",
     "Decoration ignored": "Dekoration ignoriert",

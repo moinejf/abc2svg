@@ -72,6 +72,8 @@ user.textrans = {
 				"'%%fullsvg' ne peut pas être dans un morceau",
 	"Cannot have a bar in grace notes":
 			"Il ne peut pas y avoir de barre dans les notes d'agrément",
+	"Cannot have a broken rhythm in grace notes":
+			"Il ne peut pas y avoir '<' ou '>' dans les notes d'agrément",
 	"Cannot have V:* in tune body":
 			"Il ne peut pas y avoir V:* dans le corps du morceau",
 	"Cannot read file '$1'": "Fichier '$1' inexistant",

@@ -71,6 +71,8 @@ user.textrans = {
 				"'%%fullsvg' não pode estar dentro de uma música",
 	"Cannot have a bar in grace notes":
 			"Não pode haver barra de compasso em grupo de notinhas ornamentais",
+	"Cannot have a broken rhythm in grace notes":
+			"Cannot have a broken rhythm in grace notes",
 	"Cannot have V:* in tune body": "Cannot have V:* in tune body",
 	"Cannot read file '$1'": "Arquivo '$1' não pôde ser aberto ou não existe",
 	"Decoration ignored": "Decoração ignorada",

@@ -26,6 +26,7 @@ var	a_gch,		// array of parsed guitar chords
 			//	[1] print
 			//	[2] color
 var	not_ascii = "Not an ASCII character",
+	bar_grace = "Cannot have a bar in grace notes",
 	qplet_tb = new Int8Array([ 0, 1, 3, 2, 3, 0, 2, 0, 3, 0 ])
 
 // set the source references of a symbol
@@ -2427,7 +2428,7 @@ function parse_music_line() {
 			if ('|[]: "'.indexOf(c_next) >= 0
 			 || (c_next >= '1' && c_next <= '9')) {
 				if (grace) {
-					syntax(1, "Cannot have a bar in grace notes")
+					syntax(1, bar_grace)
 					break
 				}
 				new_bar()
@@ -2519,6 +2520,10 @@ function parse_music_line() {
 				syntax(1, "No note before '<'")
 				break
 			}
+			if (grace) {
+				syntax(1, "Cannot have a broken rhythm in grace notes")
+				break
+			}
 			n = c == '<' ? 1 : -1
 			while (c == '<' || c == '>') {
 				n *= 2;
@@ -2558,7 +2563,7 @@ function parse_music_line() {
 			continue
 		case '|':
 			if (grace) {
-				syntax(1, "Cannot have a bar in grace notes")
+				syntax(1, bar_grace)
 				break
 			}
 			c = line.buffer[line.index - 1];
@@ -2635,6 +2640,7 @@ function parse_music_line() {
 	if (grace) {
 		syntax(1, "No end of grace note sequence");
 		curvoice.last_sym = grace.prev;
+		curvoice.last_note = last_note_sav
 		if (grace.prev)
 			grace.prev.next = null
 	}
