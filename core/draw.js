@@ -1119,26 +1119,28 @@ function draw_gracenotes(s) {
 		draw_note(g, !bm.s2)
 		if (g == bm.s2)
 			bm.s2 = null			/* (draw flags again) */
-
-		if (g.sappo) {				/* (on 1st note only) */
-			if (!g.next) {			/* if one note */
-				x1 = 9;
-				y1 = g.stem > 0 ? 5 : -5
-			} else {			/* many notes */
-				x1 = (g.next.x - g.x) * .5 + 4;
-				y1 = (g.ys + g.next.ys) * .5 - g.y
-				if (g.stem > 0)
-					y1 -= 1
-				else
-					y1 += 1
-			}
-			note = g.notes[g.stem < 0 ? 0 : g.nhd];
-			out_acciac(x_head(g, note), y_head(g, note),
-					x1, y1, g.stem > 0)
-		}
 		anno_stop(g)
 		if (!g.next)
 			break			/* (keep the last note) */
+	}
+
+	// if an acciaccatura, draw a bar 
+	if (s.sappo) {
+		g = s.extra
+		if (!g.next) {			/* if one note */
+			x1 = 9;
+			y1 = g.stem > 0 ? 5 : -5
+		} else {			/* many notes */
+			x1 = (g.next.x - g.x) * .5 + 4;
+			y1 = (g.ys + g.next.ys) * .5 - g.y
+			if (g.stem > 0)
+				y1 -= 1
+			else
+				y1 += 1
+		}
+		note = g.notes[g.stem < 0 ? 0 : g.nhd];
+		out_acciac(x_head(g, note), y_head(g, note),
+				x1, y1, g.stem > 0)
 	}
 
 	/* slur */

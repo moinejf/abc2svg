@@ -2191,7 +2191,7 @@ var char_tb = [
 ]
 
 function parse_music_line() {
-	var	s, grace, sappo, dcn, i, c, idx, type, n, text, k,
+	var	s, grace, dcn, i, c, idx, type, n, text, k,
 		last_note_sav, a_dcn_sav, no_eol,
 		tp_a = [], tp,
 		tpn = -1,
@@ -2394,7 +2394,7 @@ function parse_music_line() {
 					break
 				}
 			}
-			if (dcn[0] == '8' || dcn[0] == '1')	// !8va(! / !15ma(! ...
+			if (ottava[dcn])
 				set_ottava(dcn)
 			a_dcn.push(dcn)
 			break
@@ -2458,10 +2458,6 @@ function parse_music_line() {
 				if (slur_start) {
 					s.slur_start = slur_start;
 					slur_start = 0
-				}
-				if (sappo) {
-					s.sappo = true;
-					sappo = false
 				}
 			}
 			if (grace) {
@@ -2556,7 +2552,7 @@ function parse_music_line() {
 			sym_link(grace);
 			c = line.next_char()
 			if (c == '/') {
-				sappo = true
+				grace.sappo = true	// acciaccatura
 				break
 			}
 			continue
