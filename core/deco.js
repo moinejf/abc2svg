@@ -434,9 +434,10 @@ function d_trill(de) {
 		s = de.start.s,
 		x = s.x
 
-	if (s.type == NOTE
-	 && s.a_dd && s.a_dd.length > 1)
-		x += 10;		// hack 'tr~~~~~'
+	if (de.prev) {			// hack 'tr~~~~~'
+		x = de.prev.x + 10;
+		y = de.prev.y
+	}
 	de.st = st
 
 	if (de.dd.func != 4) {		// if not below
@@ -466,7 +467,8 @@ function d_trill(de) {
 		}
 	}
 	dd = de.dd;
-	y = y_get(st, up, x, w)
+	if (!y)
+		y = y_get(st, up, x, w)
 	if (up) {
 		tmp = staff_tb[s.st].topbar + 2
 		if (y < tmp)
@@ -1262,6 +1264,11 @@ function draw_deco_near() {
 			}
 			de2.start = de;
 			de2.defl.nost = de.defl.nost
+
+			// handle 'tr~~~~~'
+			if (dd.name == "trill("
+			 && i > 0 && a_de[i - 1].dd.name == "trill")
+				de2.prev = a_de[i - 1]
 		}
 
 		// add starting decorations
