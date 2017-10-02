@@ -87,8 +87,9 @@ var	glovar = {
 			a_meter: []		// default: none
 		}
 	},
-	info = {},		// information fields
-	mac = {},		// macros (m:)
+	info = {},			// information fields
+	mac = {},			// macros (m:)
+	maci = new Int8Array(128),	// first letter of macros
 	parse = {
 		ctx: {},
 		prefix: '%',

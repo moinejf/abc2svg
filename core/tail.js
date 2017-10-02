@@ -82,6 +82,8 @@ function ps_def(abcobj) {
 	ps_def(this);
 	font_init();
 	init_tune()
+	for (var i = 0; i < 128; i++)
+		maci[i] = 0
 
 }	// end of Abc()
 

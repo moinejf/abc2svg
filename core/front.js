@@ -329,7 +329,8 @@ function tosvg(in_fname,		// file name
 		ext, select, skip,
 		line0, line1,
 		last_info, opt, text, a, b, s,
-		cfmt_sav, info_sav, char_tb_sav, glovar_sav, maps_sav, mac_sav,
+		cfmt_sav, info_sav, char_tb_sav, glovar_sav, maps_sav,
+		mac_sav, maci_sav,
 		pscom,
 		txt_add = '\n',		// for "+:"
 		eof = file.length
@@ -407,6 +408,7 @@ function tosvg(in_fname,		// file name
 		glovar = glovar_sav;
 		maps = maps_sav;
 		mac = mac_sav;
+		maci = maci_sav;
 		init_tune()
 	} // end_tune()
 
@@ -660,7 +662,10 @@ function tosvg(in_fname,		// file name
 			char_tb_sav = clone(char_tb);
 			glovar_sav = clone(glovar);
 			maps_sav = maps;
-			mac_sav = mac;
+			mac_sav = clone(mac);
+			maci_sav = new Int8Array(128)
+			for (i = 0; i < 128; i++)
+				maci_sav[i] = maci[i];
 			info.X = text;
 			parse.state = 1			// tune header
 			continue
@@ -711,9 +716,8 @@ function tosvg(in_fname,		// file name
 				syntax(1, err_bad_val_s, "m:")
 				continue
 			}
-			if (a[1].indexOf('n') >= 0)	// dynamic
-				a[1] = a[1].replace('n', ".[',]?");
-			mac[a[1]] = a[2]
+			mac[a[1]] = a[2];
+			maci[a[1].charCodeAt(0)] = 1	// first letter
 			break
 
 		// info fields in tune body only
