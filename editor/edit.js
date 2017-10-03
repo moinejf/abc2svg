@@ -271,6 +271,8 @@ function gotoabc(l, c) {
 function m_over(elt) {
 	if (selrec.rect)
 		return
+	if (colcl.length > 1)
+		return
 	colorsel(false)
 	var cl = elt.getAttribute('class');
 	colcl = [cl.split(' ')[1]];	// cl[0]:'abcr', cl[1]:elt ref
