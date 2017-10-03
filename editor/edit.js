@@ -355,7 +355,7 @@ var	pt, nr, i, elts, elt, x, y, cl,
 }
 
 // colorize the selection
-function colorsel(on) {
+function colorsel(on, nosel) {
 var	i, j, elts, d,
 	i1 = 1000000,	// (hope a ABC file is smaller than that!)
 	i2 = 0,
@@ -374,7 +374,7 @@ var	i, j, elts, d,
 				i2 = ref[d[1]]
 		}
 	}
-	if (i1 < i2) {
+	if (!nosel && i1 < i2) {
 		var s = document.getElementById("source");
 		s.setSelectionRange(i1, i2);
 		s.blur();
@@ -405,7 +405,7 @@ function seltxt(elt) {
 		})
 	}
 	if (colcl.length != 0) {
-		colorsel(true);
+		colorsel(true, true);
 		s = document.getElementById("dright");
 	  z = window.document.defaultView.getComputedStyle(s).getPropertyValue('z-index')
 		if (z != 10) {			// if select from textarea
