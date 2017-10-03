@@ -26,6 +26,7 @@ var	BAR = 0,
 	GRACE = 4,
 	KEY = 5,
 	NOTE = 8,
+	REST = 10,
 	TEMPO = 14,
 	BASE_LEN = 1536,
 
@@ -174,31 +175,32 @@ var	BAR = 0,
 
 	// generate the grace notes
 	function gen_grace(s) {
-		var	g, i, n, t,
-			d = BASE_LEN / 16,
+		var	g, i, n, t, d,
 			next = s.next
 
-		if (next.type != NOTE) {
-			// fixme: reduce the duration of the previous note
-			// fixme: to do later
-			for (g = s.extra; g; g = g.next) {
-				if (g.type != NOTE)
-					continue
-				for (i = 0; i <= g.nhd; i++)
-					pit2mid(g, i)
-			}
-			return
+		// before beat
+		if (s.sappo) {
+			d = BASE_LEN / 16
+		} else if ((!next || next.type != NOTE)
+			&& s.prev && s.prev.type == NOTE) {
+			d = s.prev.dur / 2
+		} else {
+
+			// after beat
+			after = true
+			if (!next.dots)
+				d = next.dur / 2
+			else if (next.dots == 1)
+				d = next.dur / 3
+			else
+				d = next.dur * 2 / 7;
+			next.time += d;
+			next.dur -= d
 		}
-		if (next.dur > BASE_LEN / 4)
-			d *= 2
-		else if (next.dur < BASE_LEN / 8)
-			d = next.dur / 2;
 		n = 0
 		for (g = s.extra; g; g = g.next)
 			if (g.type == NOTE)
 				n++;
-		next.time += d;
-		next.dur -= d;
 		d /= n * play_factor;
 		t = p_time
 		for (g = s.extra; g; g = g.next) {
@@ -313,6 +315,15 @@ var	BAR = 0,
 					0 : s.clef_octave
 			break
 		case GRACE:
+			if (s.time == 0		// if before beat at start time
+			 && abc_time == 0) {
+				dt = 0
+				if (s.sappo)
+					dt = BASE_LEN / 16
+				else if (!s.next || s.next.type != NOTE)
+					dt = d / 2;
+				abc_time -= dt
+			}
 			gen_grace(s)
 			break
 		case KEY:
@@ -321,8 +332,20 @@ var	BAR = 0,
 				break
 			key_map(s)
 			break
+		case REST:
 		case NOTE:
-			gen_notes(s, p_time, s.dur / play_factor)
+			d = s.dur
+			if (s.next && s.next.type == GRACE) {
+				dt = 0
+				if (s.next.sappo)
+					dt = BASE_LEN / 16
+				else if (!s.next.next || s.next.next.type != NOTE)
+					dt = d / 2;
+				s.next.time -= dt;
+				d -= dt
+			}
+			if (s.type == NOTE)
+				gen_notes(s, p_time, d / play_factor)
 			break
 		}
 		s = s.ts_next
