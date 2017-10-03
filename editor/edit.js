@@ -218,7 +218,7 @@ function render() {
 		alert(e.message + '\nabc2svg tosvg bug - stack:\n' + e.stack)
 		return
 	}
-//	document.body.style.cursor = "default";
+//	document.body.style.cursor = "auto";
 
 	try {
 		target.innerHTML = abc_images
@@ -244,7 +244,7 @@ function render() {
 		i = elts.length
 		while (--i >= 0) {
 			elt = elts[i];
-			elt.onmousedown = function(e) {svgsel(e, this)}
+			elt.onmousedown = svgsel
 		}
 	}, 300)
 }
@@ -278,9 +278,16 @@ function m_over(elt) {
 }
 
 // select elements in an image
-function svgsel(evt, svg) {
+function svgsel(evt) {
 var	pt, nr, i, elts, elt, x, y, cl,
-	xmlns = "http://www.w3.org/2000/svg"
+	svg = evt.target
+
+	while (svg.tagName != 'svg') {
+		svg = svg.parentNode
+		if (!svg)
+			return
+	}
+
 	switch (evt.type) {
 	case "mousedown":
 		if (selrec.rect) {
@@ -288,13 +295,14 @@ var	pt, nr, i, elts, elt, x, y, cl,
 			selrec.rect = null
 		}
 		colorsel(false);
-		svg.onmousemove = function(e) {svgsel(e, this)};
-		svg.onmouseup = function(e) {svgsel(e, this)};
+		svg.onmousemove = svgsel;
+		svg.onmouseup = svgsel;
 		pt = svg.getBoundingClientRect();
 		selrec.xs = evt.clientX - pt.left;
 		selrec.ys = evt.clientY - pt.top;
 		selrec.sel = true;
-		evt.stopPropagation()
+		evt.stopImmediatePropagation();
+		evt.preventDefault()
 		break
 	case "mousemove":
 		if (!selrec.sel)
@@ -304,7 +312,8 @@ var	pt, nr, i, elts, elt, x, y, cl,
 		selrec.y = evt.clientY - pt.top
 		if (!selrec.rect) {
 			nr = true;
-			selrec.rect = document.createElementNS(xmlns, 'rect');
+			selrec.rect = document.createElementNS("http://www.w3.org/2000/svg",
+								'rect');
 			selrec.rect.setAttribute("x", selrec.xs);
 			selrec.rect.setAttribute("y", selrec.ys);
 		}
@@ -317,7 +326,8 @@ var	pt, nr, i, elts, elt, x, y, cl,
 			selrec.rect.setAttribute("stroke", "blue");
 			svg.appendChild(selrec.rect)
 		}
-		evt.stopPropagation()
+		evt.stopImmediatePropagation();
+		evt.preventDefault()
 		break
 	case "mouseup":
 //	case "mouseout":
@@ -349,7 +359,8 @@ var	pt, nr, i, elts, elt, x, y, cl,
 		}
 		selrec.rect = null;
 		colorsel(true);
-		evt.stopPropagation()
+		evt.stopImmediatePropagation();
+		evt.preventDefault()
 		break
 	}
 }
@@ -614,11 +625,11 @@ function edit_init() {
 
 // drag and drop
 function drag_over(evt) {
-	evt.stopPropagation();
+	evt.stopImmediatePropagation();
 	evt.preventDefault()	// allow drop
 }
 function dropped(evt) {
-	evt.stopPropagation();
+	evt.stopImmediatePropagation();
 	evt.preventDefault()
 	// check if text
 	var data = evt.dataTransfer.getData("text")
