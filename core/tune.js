@@ -2158,6 +2158,7 @@ function init_tune() {
 	new_syst(true);
 	staves_found = -1;
 	gene = {}
+	a_de = []			// remove old decorations
 }
 
 // treat a 'V:' info
