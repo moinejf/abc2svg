@@ -321,13 +321,6 @@ function combine_notes(s, s2) {
 	s.ymn = 3 * (s.notes[0].pit - 18) - 4;
 	s.yav = (s.ymx + s.ymn) / 2
 
-	if (s.a_dd) {
-		if (s2.a_dd)
-			s.a_dd = s.a_dd.concat(s2.a_dd)
-	} else {
-		s.a_dd = s2.a_dd
-	}
-
 	/* force the tie directions */
 	type = s.notes[0].ti1
 	if ((type & 0x0f) == SL_AUTO)
@@ -362,6 +355,12 @@ function do_combine(s) {
 			s.text = s2.text
 		if (s2.a_gch)
 			s.a_gch = s2.a_gch;
+		if (s2.a_dd) {
+			if (!s.a_dd)
+				s.a_dd = s2.a_dd
+			else
+				s.a_dd = s.a_dd.concat(s2.a_dd)
+		}
 		unlksym(s2)			/* remove the next symbol */
 
 		/* there may be more voices */
