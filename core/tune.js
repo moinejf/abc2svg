@@ -2159,6 +2159,7 @@ function init_tune() {
 	staves_found = -1;
 	gene = {}
 	a_de = []			// remove old decorations
+	od = {}				// no ottava decorations anymore
 }
 
 // treat a 'V:' info

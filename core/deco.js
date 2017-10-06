@@ -18,7 +18,8 @@
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
 var	dd_tb = {},		// definition of the decorations
-	a_de			// array of the decoration elements
+	a_de,			// array of the decoration elements
+	od		// ottava: index = type + staff, value = counter + voice number
 
 // standard decorations
 var std_deco = {
@@ -1066,8 +1067,7 @@ function draw_all_deco() {
     var	ottava = {"8va(":1, "8va)":1, "15ma(":1, "15ma)":1,
 		"8vb(":1, "8vb)":1, "15mb(":1, "15mb)":1}
 function draw_deco_near() {
-    var	s, g,
-	o = {}	// ottava: index = type + staff, value = counter + voice number
+    var	s, g
 
 	// update starting old decorations
 	function ldeco_update(s) {
@@ -1104,19 +1104,19 @@ function draw_deco_near() {
 			case 5:				/* trill */
 				if (ottava[dd.name]) {	// only one ottava per staff
 					x = dd.name.slice(0, -1) + s.st.toString()
-					if (o[x]) {
+					if (od[x]) {
 						if (dd.name[dd.name.length - 1] == '(') {
-							o[x]++
+							od[x]++
 							continue
 						} else {
-							o[x]--
-							if (s.v == o[x] >> 8)
-								o[x] &= 0xff
+							od[x]--
+							if (s.v == od[x] >> 8)
+								od[x] &= 0xff
 							else
 								continue
 						}
 					} else if (dd.name[dd.name.length - 1] == '(') {
-						o[x] = 1 + (s.v << 8)
+						od[x] = 1 + (s.v << 8)
 					}
 				}
 				pos = s.pos.orn
