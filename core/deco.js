@@ -1110,15 +1110,14 @@ function draw_deco_near() {
 						if (dd.name[dd.name.length - 1] == '(') {
 							od[x]++
 							continue
-						} else {
-							od[x]--
-							if (s.v == od[x] >> 8)
-								od[x] &= 0xff
-							else
-								continue
 						}
+						od[x]--
+						if (s.v + 1 != od[x] >> 8
+						 || !od[x])
+							continue
+						od[x] &= 0xff
 					} else if (dd.name[dd.name.length - 1] == '(') {
-						od[x] = 1 + (s.v << 8)
+						od[x] = 1 + ((s.v + 1) << 8)
 					}
 				}
 				pos = s.pos.orn
