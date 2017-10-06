@@ -962,6 +962,8 @@ function draw_all_deco() {
 			set_scale(s);
 
 		st = de.st;
+		if (!staff_tb[st].topbar)
+			continue		// invisible staff
 		x = de.x;
 //		y = de.y + staff_tb[st].y / staff_tb[st].staffscale
 		y = de.y + staff_tb[st].y
