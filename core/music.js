@@ -62,6 +62,15 @@ var hw_tb = new Float32Array([
 	8		// SQUARE
 ])
 
+/* head width for voice overlap - index = note head type */
+var w_note = new Float32Array([
+	3.5,		// FULL
+	3.7,		// EMPTY
+	5,		// OVAL
+	6,		// OVALBARS
+	7		// SQUARE
+])
+
 function set_head_shift(s) {
 	var	i, i1, i2, d, ps, dx,
 		dx_head = dx_tb[s.head],
@@ -3307,15 +3316,6 @@ function same_head(s1, s2) {
 	}
 	return true
 }
-
-/* width of notes for voice overlap - index = note head type */
-var w_note = [
-	3.5,		// FULL
-	3.7,		// EMPTY
-	5,		// OVAL
-	6,		// OVALBARS
-	7		// SQUARE
-]
 
 /* handle unison with different accidentals */
 function unison_acc(s1, s2, i1, i2) {
