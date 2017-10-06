@@ -1015,7 +1015,7 @@ function draw_rest(s) {
 
 	/* don't display the rests of invisible staves */
 	/* (must do this here for voices out of their normal staff) */
-	if (p_staff.empty)
+	if (!p_staff.topbar)
 		return
 
 	/* if rest alone in the measure or measure repeat, center */
@@ -3647,7 +3647,7 @@ function draw_symbols(p_voice) {
 			if (s.second)
 /*			 || p_voice.st != st)	*/
 				break		/* only one clef per staff */
-			if (staff_tb[st].empty)
+			if (!staff_tb[s.st].topbar)
 				break
 			set_color(undefined);
 			set_sscale(st);
@@ -3677,7 +3677,7 @@ function draw_symbols(p_voice) {
 		case METER:
 			p_voice.meter = s
 			if (s.second
-			 || staff_tb[s.st].empty)
+			 || !staff_tb[s.st].topbar)
 				break
 			if (cfmt.alignbars && s.st != 0)
 				break
@@ -3690,7 +3690,7 @@ function draw_symbols(p_voice) {
 		case KEY:
 			p_voice.key = s
 			if (s.second
-			 || staff_tb[s.st].empty)
+			 || !staff_tb[s.st].topbar)
 				break
 			set_color(undefined);
 			set_sscale(s.st);
