@@ -2327,7 +2327,7 @@ function parse_music_line() {
 				if (s) {
 					s.beam_end = true
 					if (grace)
-						s.gr_shift = true
+						grace.gr_shift = true
 				}
 				break
 			case '\n':			// line break
