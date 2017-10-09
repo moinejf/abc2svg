@@ -27,6 +27,7 @@ var	BAR = 0,
 	KEY = 5,
 	NOTE = 8,
 	REST = 10,
+	STAVES = 12,
 	TEMPO = 14,
 	BASE_LEN = 1536,
 
@@ -49,13 +50,15 @@ var	BAR = 0,
     ToAudio.prototype.add = function(start,		// starting symbol
 				 voice_tb) {		// voice table
 	var	bmap = new Float32Array(7), // measure base map
-		map = new Float32Array(70), // current map - 10 octaves
-		i, n, dt, d,
+		map,			// map of the current voice - 10 octaves
+		vmap = [],		// map of all voices
+		i, n, dt, d, v,
+		top_v,			// top voice
 		rep_st_s,		// start of sequence to be repeated
 		rep_en_s,		// end
 		rep_nx_s,		// restart at end of repeat
 		rep_st_transp,		// transposition at start of repeat sequence
-		rep_st_map = new Float32Array(70), // accidentals
+		rep_st_map,		// and map
 		rep_st_fac,		// and play factor
 		transp,			// clef transposition per voice
 		s = start
@@ -67,16 +70,21 @@ var	BAR = 0,
 		transp = new Int8Array(voice_tb.length)
 		for (v = 0; v < voice_tb.length; v++) {
 			s = voice_tb[v].clef;
-			transp[s.v] = (!s.clef_octave || s.clef_oct_transp) ?
+			transp[v] = (!s.clef_octave || s.clef_oct_transp) ?
 					0 : s.clef_octave
+			if (!vmap[v])
+				vmap[v] = new Float32Array(70);
+			map = vmap[v];
+			voice_tb[v].key.v = v;
+			key_map(voice_tb[v].key)
 		}
 	} // set_voices()
 
 	// re-initialize the map on bar
-	function bar_map() {
+	function bar_map(v) {
 		for (var j = 0; j < 10; j++)
 			for (var i = 0; i < 7; i++)
-				map[j * 7 + i] = bmap[i]
+				vmap[v][j * 7 + i] = bmap[i]
 	} // bar_map()
 
 	// define the note map
@@ -107,7 +115,7 @@ var	BAR = 0,
 		case -1: bmap[6] = -1; break
 		}
 	    }
-		bar_map()
+		bar_map(s.v)
 	} // key_map()
 
 	// convert ABC pitch to MIDI index
@@ -229,7 +237,6 @@ var	BAR = 0,
 	// add() main
 
 	set_voices();			// initialize the voice parameters
-	key_map(voice_tb[0].key)	// init accidental map from key sig.
 
 	if (!a_e) {			// if first call
 		a_e = []
@@ -261,10 +268,11 @@ var	BAR = 0,
 			abc_time = s.time
 		}
 
+		map = vmap[s.v]
 		switch (s.type) {
 		case BAR:
-//fixme: handle different keys per staff
-			if (s.v != 0)
+//fixme: does not work if different measures per voice
+			if (s.v != top_v)
 				break
 
 			// right repeat
@@ -275,33 +283,43 @@ var	BAR = 0,
 					rep_en_s = s	// repeat end
 				if (rep_st_s) {		// if left repeat
 					s = rep_st_s
-					for (i = 0; i < 70; i++)
-						map[i] = rep_st_map[i]
-					for (i = 0; i < rep_st_transp.length; i++)
-						transp[i] = rep_st_transp[i];
+					for (v = 0; v < voice_tb.length; v++) {
+						for (i = 0; i < 70; i++)
+							vmap[v][i] = rep_st_map[v][i];
+						transp[v] = rep_st_transp[v]
+					}
 					play_factor = rep_st_fac;
 				} else {			// back to start
 					s = start;
-					key_map(voice_tb[0].key);
 					set_voices();
-					bar_map()
+					for (v = 0; v < voice_tb.length; v++)
+						bar_map(v)
 				}
 				abc_time = s.time
 				break
 			}
 
-			if (!s.invis)
-				bar_map()
+			if (!s.invis) {
+				for (v = 0; v < voice_tb.length; v++)
+					bar_map(v)
+			}
 
 			// left repeat
 			if (s.bar_type[s.bar_type.length - 1] == ':') {
 				rep_st_s = s;
 				rep_en_s = null
-				for (i = 0; i < 70; i++)
-					rep_st_map[i] = map[i];
-				rep_st_transp = []
-				for (i = 0; i < transp.length; i++)
-					rep_st_transp[i] = transp[i];
+				for (v = 0; v < voice_tb.length; v++) {
+					if (!rep_st_map)
+						rep_st_map = []
+					if (!rep_st_map[v])
+						rep_st_map[v] =
+							new Float32Array(70)
+					for (i = 0; i < 70; i++)
+						rep_st_map[v][i] = vmap[v][i];
+					if (!rep_st_transp)
+						rep_st_transp = []
+					rep_st_transp[v] = transp[v]
+				}
 				rep_st_fac = play_factor
 				break
 
@@ -327,9 +345,6 @@ var	BAR = 0,
 			gen_grace(s)
 			break
 		case KEY:
-//fixme: handle different keys per staff
-			if (s.v != 0)
-				break
 			key_map(s)
 			break
 		case REST:
@@ -346,6 +361,9 @@ var	BAR = 0,
 			}
 			if (s.type == NOTE)
 				gen_notes(s, p_time, d / play_factor)
+			break
+		case STAVES:
+			top_v = s.sy.top_voice
 			break
 		}
 		s = s.ts_next

@@ -54,12 +54,9 @@ function AbcMIDI() {
 					[0, 2, 4, 5, 7, 9, 11]),
 			bmap = new Int8Array(7),	// measure base map
 			map = new Int8Array(70),	// current map - 10 octaves
-			i, n, g, v, p, a,
-			tie_map = [],			// index = MIDI pitch
-			tie_time= [],
-			rep_tie_map = [],
-			transp = [],			// transposition per voice
-			note
+			tie_map,			// index = MIDI pitch
+			v,
+			transp				// clef transpose
 
 		// re-initialize the map on bar
 		function bar_map() {
@@ -101,21 +98,36 @@ function AbcMIDI() {
 
 		// initialize the clefs and keys
 		for (v = 0; v < voice_tb.length; v++) {
-			n = voice_tb[v].clef
-			if (!n.clef_octave
-			 || n.clef_oct_transp)
-				transp[v] = 0
+			s = voice_tb[v].clef
+			if (!s.clef_octave
+			 || s.clef_oct_transp)
+				transp = 0
 			else
-				transp[v] = n.clef_octave
-		}
-		key_map(voice_tb[0].key);	// init acc. map from key sig.
+				transp = s.clef_octave
 
+			key_map(voice_tb[v].key);	// init acc. map from key sig.
+
+			// and loop on the symbols of the voice
+			vloop(v)
+		}
+	    function vloop(v) {
+		var	i, g, p, note,
+			s = voice_tb[v].sym,
+			vtime = s.time,		// next time
+			tie_time = [],
+			rep_tie_map = []
+
+		tie_map = []
 		while (s) {
+			if (s.time > vtime) {	// if time skip
+				bar_map()	// force a measure bar
+				vtime = s.time
+			}
+			if (s.dur)
+				vtime = s.time + s.dur
 			switch (s.type) {
 			case BAR:
-//fixme: handle different keys per staff
-				if (s.st != 0)
-					break
+//fixme: pb when lack of measure bar (voice overlay, new voice)
 				// x times repeat
 				if (s.text) {
 					if (s.text[0] == '1') {	// 1st time
@@ -137,11 +149,10 @@ function AbcMIDI() {
 				break
 			case CLEF:
 				if (!s.clef_octave
-				 || s.clef_oct_transp) {
-					transp[s.v] = 0
-					break
-				}
-				transp[s.v] = s.clef_octave
+				 || s.clef_oct_transp)
+					transp = 0
+				else
+					transp = s.clef_octave
 				break
 			case GRACE:
 				for (g = s.extra; g; g = g.next) {
@@ -149,15 +160,12 @@ function AbcMIDI() {
 						continue
 					for (i = 0; i <= g.nhd; i++) {
 						note = g.notes[i];
-						p = note.apit + 19
-						if (transp[s.v])
-							p += transp[s.v];
+						p = note.apit + 19 + transp;
 						note.midi = pit2midi(p, note.acc)
 					}
 				}
 				break
 			case KEY:
-//fixme: handle different keys per staff
 				if (s.st != 0)
 					break
 				key_map(s)
@@ -165,9 +173,8 @@ function AbcMIDI() {
 			case NOTE:
 				for (i = 0; i <= s.nhd; i++) {
 					note = s.notes[i];
-					p = note.apit + 19	// pitch from C-1
-					if (transp[s.v])
-						p += transp[s.v]
+					p = note.apit + 19 +	// pitch from C-1
+							transp
 					if (tie_map[p]) {
 						if (s.time > tie_time[p]) {
 							delete tie_map[p]
@@ -183,7 +190,8 @@ function AbcMIDI() {
 				}
 				break
 			}
-			s = s.ts_next
+			s = s.next
 		}
-	}
+	    } // vloop()
+	} // add()
 } // end AbcMidi
