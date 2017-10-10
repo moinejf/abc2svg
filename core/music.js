@@ -983,6 +983,9 @@ function set_width(s) {
 			s.wr = 8
 		}
 		return
+	case CUSTOS:
+		s.wl = s.wr = 4
+		return
 	case BLOCK:				// no width
 	case PART:
 	case REMARK:
@@ -1440,8 +1443,6 @@ function custos_add(s) {
 	s.ts_prev = new_s;
 
 	new_s.seqst = true;
-	new_s.wl = 8;
-	new_s.wr = 4;
 	new_s.shrink = s.shrink
 	if (new_s.shrink < 8 + 4)
 		new_s.shrink = 8 + 4;
@@ -4158,7 +4159,7 @@ function set_piece() {
 		p_voice.sym = null
 	}
 
-	// if the last symbol is not a bar, add an invisible bar
+	// if the last symbol is not a bar, add some space
 	if (tsnext.ts_prev.type != BAR) {
 	    var	s2 = tsnext.ts_prev;
 		while (!s2.seqst)
