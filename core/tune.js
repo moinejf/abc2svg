@@ -992,8 +992,9 @@ function do_pscom(text) {
 		return
 	case "center":
 		if (parse.state >= 2) {
-			s = new_block(cmd);
-			s.text = cnv_escape(param)
+			s = new_block("text");
+			s.text = cnv_escape(param);
+			s.opt = 'c'
 			return
 		}
 		write_text(cnv_escape(param), 'c')

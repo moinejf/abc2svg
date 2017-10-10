@@ -4399,10 +4399,6 @@ function gen_init(page_chg) {
 			break
 		case BLOCK:
 			switch (s.subtype) {
-			case "center":
-				set_page();
-				write_text(s.text, 'c')
-				break
 			case "leftmargin":
 			case "rightmargin":
 			case "pagescale":
