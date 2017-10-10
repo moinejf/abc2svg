@@ -57,7 +57,7 @@ function new_clef(clef_def) {
 
 	switch (clef_def[0]) {
 	case '"':
-		i = clef_def.indexOf('"');
+		i = clef_def.indexOf('"', 1);
 		s.clef_name = clef_def.slice(1, i);
 		i++
 		break
@@ -386,7 +386,9 @@ function set_kv_parm(a) {	// array of items
 			break
 		case "name=":
 		case "nm=":
-			curvoice.nm = a.shift();
+			curvoice.nm = a.shift()
+			if (curvoice.nm[0] == '"')
+				curvoice.nm = curvoice.nm.slice(1, -1);
 			curvoice.new_name = true
 			break
 		case "stem=":
@@ -429,6 +431,8 @@ function set_kv_parm(a) {	// array of items
 		case "sname=":
 		case "snm=":
 			curvoice.snm = a.shift()
+			if (curvoice.snm[0] == '"')
+				curvoice.snm = curvoice.snm.slice(1, -1);
 			break
 		case "stafflines=":
 			item = get_st_lines(a.shift())
@@ -1452,7 +1456,7 @@ function info_split(text) {
 				a.push(item);
 				item = ""
 			}
-			j = ++i
+			j = i++
 			while (i < n) {
 				if (text[i] == '"')
 					break
@@ -1464,7 +1468,7 @@ function info_split(text) {
 				syntax(1, "Unterminated string")
 				break
 			}
-			a.push(text.slice(j, i))
+			a.push(text.slice(j, i + 1))	// keep the '"'s
 			break
 		case '\\':
 			item += text[i++]
