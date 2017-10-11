@@ -371,18 +371,23 @@ function set_kv_parm(a) {	// array of items
 			s = a.shift()		// keep last clef
 			break
 		case "combine=":		// %%voicecombine
-		case "map=":			// %%voicemap
 		case "octave=":
-		case "scale=":			// %%voicescale
 		case "uscale=":			// %%microscale
-			item = item.slice(0, -1);
-			curvoice[item] = a.shift()
+			val = parseInt(a.shift())
+			if (isNaN(val))
+				syntax(1, err_bad_val_s, item)
+			else
+				curvoice[item.slice(0, -1)] = val
 			break
 		case "cue=":
 			curvoice.scale = a.shift() == 'on' ? .7 : 1
 			break
 		case "instrument=":
 			curvoice.transp = get_transp(a.shift(), 'instr')
+			break
+		case "map=":			// %%voicemap
+			item = item.slice(0, -1);
+			curvoice[item] = a.shift()
 			break
 		case "name=":
 		case "nm=":
@@ -410,6 +415,13 @@ function set_kv_parm(a) {	// array of items
 				pos = {}
 			pos[item] = val
 			break
+		case "scale=":			// %%voicescale
+			val = parseFloat(a.shift())
+			if (isNaN(val))
+				syntax(1, err_bad_val_s, item)
+			else
+				curvoice[item.slice(0, -1)] = val
+			break
 		case "score=":
 			if (cfmt.sound)
 				break
@@ -435,11 +447,11 @@ function set_kv_parm(a) {	// array of items
 				curvoice.snm = curvoice.snm.slice(1, -1);
 			break
 		case "stafflines=":
-			item = get_st_lines(a.shift())
-			if (item == undefined)
-				syntax(1, "Bad stafflines= value")
+			val = get_st_lines(a.shift())
+			if (val == undefined)
+				syntax(1, err_bad_val_s, item)
 			else
-				curvoice.stafflines = item
+				curvoice.stafflines = val
 			break
 		default:
 			switch (item.slice(0, 4)) {
