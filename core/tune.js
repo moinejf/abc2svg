@@ -1949,6 +1949,9 @@ function is_voice_sig() {
 		return false
 	for (s = curvoice.sym; s; s = s.next) {
 		switch (s.type) {
+		case BLOCK:
+		case REMARK:
+		case STAVES:
 		case TEMPO:
 		case PART:
 			break
