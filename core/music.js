@@ -1052,6 +1052,8 @@ function set_space(s) {
 			len /= 4
 		else
 			len /= 2
+	} else if (!s.next && len >= BASE_LEN) {
+		len /= 2
 	}
 	if (len >= BASE_LEN / 4) {
 		if (len < BASE_LEN / 2)
@@ -4180,19 +4182,16 @@ function set_piece() {
 	}
 
 	// if the last symbol is not a bar, add an invisible bar
-	// (done in set_allsymwidth)
 	if (tsnext.ts_prev.type != BAR) {
 	    var	s2 = tsnext.ts_prev;
 		while (!s2.seqst)
 			s2 = s2.ts_prev;
-		s = tsfirst;
-		tsfirst = s2;
-	    var sh = s2.shrink,
-		sp = s2.space;
-		set_allsymwidth();
-		s2.shrink = sh;
-		s2.space = sp;
-		tsfirst = s
+		s = add_end_bar(s2)
+		s.prev = s.ts_prev = s2;
+		s2.ts_next = s2.next = s;
+		s2.time = tsnext.time;
+		s.shrink = tsnext.shrink;
+		s.space = tsnext.space * .9 - 7
 	}
 }
 
