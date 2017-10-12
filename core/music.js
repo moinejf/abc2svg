@@ -29,7 +29,7 @@ var	gene,
 	space_tb = new Float32Array([
 		7, 10, 14.15, 20, 28.3,
 		40,			/* crotchet (whole note / 4) */
-		56.6, 80, 113, 150
+		56.6, 80, 100, 120
 	]),
 	smallest_duration
 
