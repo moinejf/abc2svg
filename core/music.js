@@ -712,7 +712,17 @@ function set_width(s) {
 		/* room for shifted heads and accidental signs */
 		if (s.xmx > 0)
 			s.wr += s.xmx + 4;
-		s2 = s.prev
+		for (s2 = s.prev; s2; s2 = s2.prev) {
+			switch (s2.type) {
+			case BLOCK:
+			case PART:
+			case REMARK:
+			case STAVES:
+			case TEMPO:
+				continue
+			}
+			break
+		}
 		if (s2) {
 			switch (s2.type) {
 			case BAR:
@@ -884,8 +894,20 @@ function set_width(s) {
 //			s.notes[0].shhd = (w - 5) * -.5
 
 			/* if preceeded by a grace note sequence, adjust */
-			if (s.prev && s.prev.type == GRACE)
-				s.wl -= 8
+			for (s2 = s.prev; s2; s2 = s2.prev) {
+				switch (s2.type) {
+				case BLOCK:
+				case PART:
+				case REMARK:
+				case STAVES:
+				case TEMPO:
+					continue
+				case GRACE:
+					s.wl -= 8
+					break
+				}
+				break
+			}
 		} else {
 			s.wl = s.wr = 0
 		}
