@@ -307,8 +307,8 @@ function get_st_lines(param) {
 
 	if (!param)
 		return
-	if (param.match(/^[|.]+$/))
-		return param
+	if (param.match(/^[\]\[|.]+$/))
+		return param.replace(/\]/g, '[')
 
 	n = parseInt(param)
 	switch (n) {

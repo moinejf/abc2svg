@@ -37,6 +37,8 @@ var	STEM_MIN	= 16,	/* min stem height under beams */
 	GSTEM		= 15,	/* grace note stem length */
 	GSTEM_XOFF	= 2.3	/* x offset for grace note stem */
 
+    var cache
+
 /* -- compute the best vertical offset for the beams -- */
 function b_pos(grace, stem, nflags, b) {
 	var	top, bot, d1, d2,
@@ -1077,8 +1079,14 @@ function draw_rest(s) {
 		j = y / 6
 		switch (i) {
 		default:
-			if (p_staff.stafflines[j + 1] != '|')
+			switch (p_staff.stafflines[j + 1]) {
+			case '|':
+			case '[':
+				break
+			default:
 				xygl(x, y + 6 + staffb, "hl1")
+				break
+			}
 			if (i == 9) {			/* longa */
 				y -= 6;
 				j--
@@ -1090,8 +1098,14 @@ function draw_rest(s) {
 		case 6:					/* minim */
 			break
 		}
-		if (p_staff.stafflines[j] != '|')
+		switch (p_staff.stafflines[j]) {
+		case '|':
+		case '[':
+			break
+		default:
 			xygl(x, y + staffb, "hl1")
+			break
+		}
 	}
 	x += 8;
 	y += staffb + 3
@@ -3457,32 +3471,63 @@ function draw_systems(indent) {
 
 	/* -- draw a staff -- */
 	function draw_staff(st, x1, x2) {
-		var	w, i, dx,
-			y = staff_tb[st].y,
+		var	w, ws, i, dy, ty,
+			y = 0,
+			ln = "",
 			stafflines = staff_tb[st].stafflines,
 			l = stafflines.length
 
-		for (i = 0; i < l; i++) {
-			if (stafflines[i] != '.') {
-				set_sscale(st);
-				w = (x2 - x1) / stv_g.scale;
-				xypath(x1, y);
-				output.push('h' + w.toFixed(2));
-				y = 0
-				for (i++; i < l; i++) {
-					y -= 6
-					if (stafflines[i] != '.') {
-						output.push('m-' + w.toFixed(2) +
-								' ' + y +
-								'h' + w.toFixed(2));
-						y = 0
-					}
-				}
-				output.push('"/>\n')
-				break
-			}
-			y += 6
+		if (!stafflines.match(/[\[|]/))
+			return				// no line
+		w = x2 - x1;
+		set_sscale(st)
+
+		// check if default staff
+		if (cache && cache.st_l == stafflines && cache.st_w == w) {
+			xygl(x1, staff_tb[st].y, "stdef")
+			return
 		}
+		ws = w / stv_g.scale
+		for (i = 0; i < l; i++, y -= 6) {
+			if (stafflines[i] == '.')
+				continue
+			dy = 0
+			for (; i < l; i++, y -= 6, dy -= 6) {
+				switch (stafflines[i]) {
+				case '.':
+					continue
+				case ty:
+					ln += 'm-' + ws.toFixed(2) +
+						' ' + dy +
+						'h' + ws.toFixed(2);
+					dy = 0
+					continue
+				}
+				if (ty != undefined)
+					ln += '"/>\n';
+				ty = stafflines[i]
+				ln += '<path class="stroke"'
+				if (ty == '[')
+					ln += ' stroke-width="1.5"';
+				ln += ' d="m0 ' + y + 'h' + ws.toFixed(2);
+				dy = 0
+			}
+			ln += '"/>\n'
+		}
+		y = staff_tb[st].y
+		if (!cache) {
+			ws = get_lwidth()
+			if (w == ws) {
+				cache = {
+					st_l: stafflines,
+					st_w: w
+				}
+				glyphs.stdef = '<g id="stdef">\n' + ln + '</g>';
+				xygl(x1, y, "stdef")
+				return
+			}
+		}
+		out_XYAB('<g transform="translate(X, Y)">\n' + ln + '</g>\n', x1, y)
 	} // draw_staff()
 
 	draw_vname(indent)
