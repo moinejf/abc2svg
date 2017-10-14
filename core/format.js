@@ -208,7 +208,6 @@ function param_set_font(xxxfont, param) {
 
 /* -- get a value with a unit in 72 PPI -- */
 function get_unit(param) {
-//-fixme: check the value
 	var v = parseFloat(param)
 
 	switch (param.slice(-2)) {
@@ -226,7 +225,6 @@ function get_unit(param) {
 
 /* -- get a page value with a unit -- */
 function get_unitp(param) {
-//-fixme: check the value
 	var v = parseFloat(param)
 
 	switch (param.slice(-2)) {
@@ -462,7 +460,11 @@ function set_format(cmd, param, lock) {
 	case "topspace":
 	case "vocalspace":
 	case "wordsspace":
-		cfmt[cmd] = get_unit(param)
+		f = get_unit(param)	// normally, unit in points - 72 DPI accepted
+		if (isNaN(f))
+			syntax(1, "Bad value in $1", '%%' + cmd)
+		else
+			cfmt[cmd] = f
 		break
 //	case "botmargin":
 	case "leftmargin":
@@ -471,7 +473,11 @@ function set_format(cmd, param, lock) {
 	case "rightmargin":
 //	case "topmargin":
 	case "print-leftmargin":
-		cfmt[cmd] = get_unitp(param)
+		f = get_unitp(param)	// normally unit in cm or in - 96 DPI
+		if (isNaN(f))
+			syntax(1, "Bad value in $1", '%%' + cmd)
+		else
+			cfmt[cmd] = f
 		break
 	case "concert-score":
 		cfmt.sound = "concert"
