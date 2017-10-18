@@ -27,6 +27,7 @@ var	abc_images,			// image buffer
 	abc,				// Abc object
 	ref,				// source reference array
 	colcl = [],			// colorized classes
+	colcl_sav,			// (saved while playing)
 	abcplay,			// play engine
 	a_pe,				// playing events
 	playing,
@@ -515,9 +516,31 @@ function notehlight(i, on) {
 }
 function endplay() {
 	document.getElementById("playbutton").innerHTML = texts.play;
-	playing = false
+	setTimeout(function() {
+		playing = false;
+		colcl = colcl_sav;
+		colorsel(true)
+	}, 2000)
 }
 function play_tune() {
+    var	pe
+
+	function build_pe() {
+	    var	i, e,
+		set = {}
+
+		pe = []
+		for (i = 0; i < colcl.length; i++) {
+			e = colcl[i].slice(1, -1)
+			set[e] = true
+		}
+		for (i = 0; i < a_pe.length; i++) {
+			e = a_pe[i]
+			if (set[e[0]])
+				pe.push(e)
+		}
+	} // build_pe()
+
 	if (playing) {
 		abcplay.stop();
 		endplay()
@@ -542,7 +565,14 @@ function play_tune() {
 		a_pe = abcplay.clear()	// keep the playing events
 	}
 	document.getElementById("playbutton").innerHTML = texts.stop;
-	abcplay.play(0, 1000000, a_pe)	// play all events
+
+	if (colcl.length <= 1)
+		pe = a_pe
+	else
+		build_pe();
+	colcl_sav = colcl;
+	colorsel(false);
+	abcplay.play(0, 1000000, pe)
 }
 
 // set the version and initialize the playing engine
