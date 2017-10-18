@@ -467,7 +467,8 @@ function Audio5(i_conf) {
 		}
 
 		// all resources are there
-		stime = ac.currentTime + .2;		// start time + 0.2s
+		stime = ac.currentTime + .2		// start time + 0.2s
+			- a_e[evt_idx][1] * speed;
 		play_next()
 	}
 
