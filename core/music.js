@@ -1158,7 +1158,8 @@ function add_end_bar(s) {
 		st: s.st,
 		dur: 0,
 		seqst: true,
-		invis: true
+		invis: true,
+		time: s.time + s.dur
 //,wl:0,wr:0
 	}
 }
@@ -1223,7 +1224,6 @@ function set_allsymwidth(last_s) {
 	s2 = add_end_bar(s);
 	s2.prev = s2.ts_prev = s;
 	s.ts_next = s.next = s2;
-	s2.time = s.time + s.dur;
 	s2.shrink = xa + 8;
 	s.eoln = false;
 	s2.space = set_space(s2)
@@ -4189,7 +4189,6 @@ function set_piece() {
 		s = add_end_bar(s2)
 		s.prev = s.ts_prev = s2;
 		s2.ts_next = s2.next = s;
-		s2.time = tsnext.time;
 		s.shrink = tsnext.shrink;
 		s.space = tsnext.space * .9 - 7
 	}
