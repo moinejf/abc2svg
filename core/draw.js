@@ -3430,13 +3430,9 @@ function set_staff() {
 	maxsep = cfmt.maxstaffsep * .5
 	if (dy > maxsep)
 		dy = maxsep;
-	y += dy
-//fixme: what is that???
-	if (y > cfmt.maxstaffsep)
-		y = cfmt.maxstaffsep
 
 	// return the height of the whole staff system
-	return y
+	return y + dy
 }
 
 /* -- draw the staff systems and the measure bars -- */
