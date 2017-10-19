@@ -1509,7 +1509,9 @@ function key_transp(s_key) {
 function set_k_acc(s) {
 	var i, j, n, nacc, p_acc,
 		accs = [],
-		pits = []
+		pits = [],
+		m_n = [],
+		m_d = []
 
 	if (s.k_sf > 0) {
 		for (nacc = 0; nacc < s.k_sf; nacc++) {
@@ -1528,13 +1530,21 @@ function set_k_acc(s) {
 		for (j = 0; j < nacc; j++) {
 			if (pits[j] == p_acc.pit) {
 				accs[j] = p_acc.acc
+				if (p_acc.micro_n) {
+					m_n[j] = p_acc.micro_n;
+					m_d[j] = p_acc.micro_d
+				}
 				break
 			}
 		}
 		if (j == nacc) {
 			accs[j] = p_acc.acc;
 			pits[j] = p_acc.pit
-			nacc++		/* cannot overflow */
+			if (p_acc.micro_n) {
+				m_n[j] = p_acc.micro_n;
+				m_d[j] = p_acc.micro_d
+			}
+			nacc++
 		}
 	}
 	for (i = 0; i < nacc; i++) {
@@ -1543,6 +1553,13 @@ function set_k_acc(s) {
 			p_acc = s.k_a_acc[i] = {}
 		p_acc.acc = accs[i];
 		p_acc.pit = pits[i]
+		if (m_n[i]) {
+			p_acc.micro_n = m_n[i];
+			p_acc.micro_d = m_d[i]
+		} else {
+			delete p_acc.micro_n
+			delete p_acc.micro_d
+		}
 	}
 }
 
