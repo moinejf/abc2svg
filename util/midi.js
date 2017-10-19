@@ -98,6 +98,8 @@ function AbcMIDI() {
 
 		// initialize the clefs and keys
 		for (v = 0; v < voice_tb.length; v++) {
+			if (!voice_tb[v].sym)
+				continue
 			s = voice_tb[v].clef
 			if (!s.clef_octave
 			 || s.clef_oct_transp)
