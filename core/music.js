@@ -1225,7 +1225,6 @@ function set_allsymwidth(last_s) {
 	s2.prev = s2.ts_prev = s;
 	s.ts_next = s.next = s2;
 	s2.shrink = xa + 8;
-	s.eoln = false;
 	s2.space = set_space(s2)
 }
 
@@ -1491,7 +1490,8 @@ function set_nl(s) {
 	function set_eol(s) {
 		if (cfmt.custos && voice_tb.length == 1)
 			custos_add(s)
-		s.nl = true
+		if (s.ts_next)
+			s.nl = true
 	} // set_eol()
 
 	// set the eol on the next symbol
