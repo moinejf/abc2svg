@@ -2040,7 +2040,8 @@ function set_auto_clef(st, s_start, clef_type_start) {
 function set_clefs() {
 	var	s, s2, st, v, p_voice, g, new_type, new_line, p_staff, pit,
 		staff_clef = new Array(nstaff),	// st -> { clef, autoclef }
-		sy = cur_sy
+		sy = cur_sy,
+		mid = []
 
 	// create the staff table
 	staff_tb = new Array(nstaff)
@@ -2089,13 +2090,15 @@ function set_clefs() {
 		}
 		staff_clef[st].clef = staff_tb[st].clef = s
 	}
+	for (st = 0; st <= sy.nstaff; st++)
+		mid[st] = (sy.staves[st].stafflines.length - 1) * 3
 
 	for (s = tsfirst; s; s = s.ts_next) {
 		if (s.repeat_n)
 			set_repeat(s)
 
-		// handle %%staves
-		if (s.type == STAVES) {
+		switch (s.type) {
+		case STAVES:
 			sy = s.sy
 			for (st = 0; st <= nstaff; st++)
 				staff_clef[st].autoclef = true
@@ -2118,6 +2121,8 @@ function set_clefs() {
 				if (!s2.clef_auto)
 					staff_clef[st].autoclef = false
 			}
+			for (st = 0; st <= sy.nstaff; st++)
+				mid[st] = (sy.staves[st].stafflines.length - 1) * 3
 			for (v = 0; v < voice_tb.length; v++) {
 				if (sy.voices[v].range < 0
 				 || sy.voices[v].second)	// main voices
@@ -2165,9 +2170,12 @@ function set_clefs() {
 				staff_clef[st].clef = p_voice.clef = g
 			}
 			continue
-		}
-		if (s.type != CLEF)
+		default:
+			s.mid = mid[s.st]
 			continue
+		case CLEF:
+			break
+		}
 
 		if (s.clef_type == 'a') {
 			s.clef_type = set_auto_clef(s.st,
@@ -3782,7 +3790,7 @@ function set_stems() {
 		if (s.type != NOTE) {
 			if (s.type != GRACE)
 				continue
-			ymin = ymax = 12
+			ymin = ymax = s.mid
 			for (g = s.extra; g; g = g.next) {
 				slen = GSTEM
 				if (g.nflags > 1)
@@ -3890,8 +3898,8 @@ function set_stems() {
 				ymn -= 3;
 			s.ymn = ymn - 4;
 			s.ys = ymx + slen
-			if (s.ys < 12)
-				s.ys = 12;
+			if (s.ys < s.mid)
+				s.ys = s.mid;
 			s.ymx = (s.ys + 2.5) | 0
 		} else {			/* stem down */
 			if (s.notes[0].pit < 18
@@ -3902,8 +3910,8 @@ function set_stems() {
 					slen -= 2
 			}
 			s.ys = ymn - slen
-			if (s.ys > 12)
-				s.ys = 12;
+			if (s.ys > s.mid)
+				s.ys = s.mid;
 			s.ymn = (s.ys - 2.5) | 0;
 			s.y = ymx
 /*fixme:the tie may be lower*/
