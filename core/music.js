@@ -3138,9 +3138,8 @@ function set_indent() {
 /* -- decide on beams and on stem directions -- */
 /* this routine is called only once per tune */
 function set_beams(sym) {
-	var	s, t, g, beam, s_opp, dy, avg, n,
-		laststem = -1,
-		lasty = 0
+	var	s, t, g, beam, s_opp, dy, avg, n, m, mid_p, pu, pd,
+		laststem = -1
 
 	for (s = sym; s; s = s.next) {
 		if (s.type != NOTE) {
@@ -3163,50 +3162,59 @@ function set_beams(sym) {
 
 		if (!s.stem			/* if not explicitly set */
 		 && (s.stem = s.multi) == 0) { /* and alone on the staff */
+			mid_p = s.mid / 3 + 18
 
 			/* notes in a beam have the same stem direction */
 			if (beam) {
 				s.stem = laststem
-			} else if (s.beam_st && !s.beam_end) {
-				avg = s.yav;		/* start of beam */
-				n = 12
-				for (t = s.next; t; t = t.next) {
-					if (t.type == NOTE) {
-						if (t.multi) {
-							avg = n - t.multi
-							break
-						}
-						avg += t.yav;
-						n += 12
+			} else if (s.beam_st && !s.beam_end) {	// beam start
+				beam = true;
+				pu = s.notes[s.nhd].pit;
+				pd = s.notes[0].pit
+				for (g = s.next; g; g = g.next) {
+					if (g.type != NOTE)
+						continue
+					if (g.stem || g.multi) {
+						s.stem = g.stem || g.multi
+						break
 					}
-					if (t.beam_end)
+					if (g.notes[g.nhd].pit > pu)
+						pu = g.notes[g.nhd].pit
+					if (g.notes[0].pit < pd)
+						pd = g.notes[0].pit
+					if (g.beam_end)
 						break
 				}
-				if (avg < n)
-					laststem = 1
-				else if (avg > n || cfmt.bstemdown)
-					laststem = -1;
-				beam = true;
-				s.stem = laststem
-			} else {
-				s.stem = s.yav >= 12 ? -1 : 1
-				if (s.yav == 12		/* note on middle line */
-				 && !cfmt.bstemdown) {
-					if (!s.prev || s.prev.type == BAR) {
-						for (t = s.next; t; t = t.next) {
-							if (t.type == NOTE
-							 || t.type == BAR)
-								break
-						}
-						if (t && t.type == NOTE
-						 && t.yav < 12)
-							s.stem = 1
+				if (g.beam_end) {
+					if ((pu + pd) / 2 < mid_p) {
+						s.stem = 1
+					} else if ((pu + pd) / 2 > mid_p) {
+						s.stem = -1
 					} else {
-						dy = s.yav - lasty
-						if (dy > -7 && dy < 7)
-							s.stem = laststem
+//--fixme: equal: check all notes of the beam
+						if (cfmt.bstemdown)
+							s.stem = -1
 					}
 				}
+				if (!s.stem)
+					s.stem = laststem
+			} else {				// no beam
+				n = (s.notes[s.nhd].pit + s.notes[0].pit) / 2
+				if (n == mid_p) {
+					n = 0
+					for (m = 0; m <= s.nhd; m++)
+						n += s.notes[m].pit;
+					n /= (s.nhd + 1)
+				}
+//				s.stem = n < mid_p ? 1 : -1
+				if (n < mid_p)
+					s.stem = 1
+				else if (n > mid_p)
+					s.stem = -1
+				else if (cfmt.bstemdown)
+					s.stem = -1
+				else
+					s.stem = laststem
 			}
 		} else {			/* stem set by set_stem_dir */
 			if (s.beam_st && !s.beam_end)
@@ -3215,7 +3223,6 @@ function set_beams(sym) {
 		if (s.beam_end)
 			beam = false;
 		laststem = s.stem;
-		lasty = s.yav
 
 		if (s_opp) {			/* opposite gstem direction */
 			for (g = s_opp.extra; g; g = g.next)
