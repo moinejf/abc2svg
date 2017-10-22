@@ -2158,9 +2158,11 @@ function set_clefs() {
 				if (new_type == staff_clef[st].clef.clef_type
 				 && new_line == staff_clef[st].clef.clef_line)
 					continue
-				g = s
-				while (g.v != v)
-					g = g.ts_next;
+				g = s.ts_next
+				while (g && (g.v != v || g.st != st))
+					g = g.ts_next
+				if (!g)				// ??
+					continue
 				if (g.type != CLEF) {
 					g = insert_clef(g, new_type, new_line)
 					if (s2.clef_auto)
