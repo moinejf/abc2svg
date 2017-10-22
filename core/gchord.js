@@ -431,7 +431,7 @@ function draw_gchord(s, gchy_min, gchy_max) {
 	var	w = s.a_gch[0].w,
 		y_above = y_get(s.st, 1, s.x - 2, w),
 		y_below = y_get(s.st, 0, s.x - 2, w),
-		yav = s.yav || 0
+		yav = (s.ymx + s.ymn) >> 1
 
 	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix]

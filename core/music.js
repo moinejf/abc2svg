@@ -328,7 +328,6 @@ function combine_notes(s, s2) {
 
 	s.ymx = 3 * (s.notes[nhd].pit - 18) + 4;
 	s.ymn = 3 * (s.notes[0].pit - 18) - 4;
-	s.yav = (s.ymx + s.ymn) / 2
 
 	/* force the tie directions */
 	type = s.notes[0].ti1
@@ -2347,7 +2346,6 @@ function set_pitch(last_s) {
 			if (s.type == NOTE) {
 				s.ymx = 3 * (s.notes[s.nhd].pit - 18) + 4;
 				s.ymn = 3 * (s.notes[0].pit - 18) - 4;
-				s.yav = (s.ymx + s.ymn) / 2
 			} else {
 				s.y = (((s.notes[0].pit - 18) / 2) | 0) * 6;
 				s.ymx = s.y + rest_sp[5 - s.nflags][0];
