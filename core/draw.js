@@ -2927,8 +2927,14 @@ function draw_all_ties(p_voice) {
 				error(1, s1, "Bad tie")
 				continue
 			}
-			if (s2.time != time)
-				s2 = tie_comb(s1)
+			if (s2.time != time) {
+				s3 = tie_comb(s1)
+				if (s3 == s1) {
+					error(1, s1, "Bad tie")
+					continue
+				}
+				s2 = s3
+			}
 		}
 		for (s3 = s1.ts_next; s3; s3 = s3.ts_next) {
 			if (s3.st != s1.st)
