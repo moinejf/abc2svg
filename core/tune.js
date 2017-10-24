@@ -1408,26 +1408,26 @@ function do_begin_end(type,
 		j = 0
 		while (1) {
 			i = text.indexOf('<style type="text/css">\n', j)
-			if (i >= 0) {
-				j = text.indexOf('</style>', i)
-				if (j < 0) {
-					syntax(1, "No </style> in %%beginsvg sequence")
-					break
-				}
-				style += text.slice(i + 23, j).replace(/\s+$/, '')
-				continue
+			if (i < 0)
+				break
+			j = text.indexOf('</style>', i)
+			if (j < 0) {
+				syntax(1, "No </style> in %%beginsvg sequence")
+				break
 			}
-			i = text.indexOf('<defs>', j)
-			if (i >= 0) {
-				j = text.indexOf('</defs>', i)
-				if (j < 0) {
-					syntax(1, "No </defs> in %%beginsvg sequence")
-					break
-				}
-				defs_add(text.slice(i + 6, j))
-				continue
+			style += text.slice(i + 23, j).replace(/\s+$/, '')
+		}
+		j = 0
+		while (1) {
+			i = text.indexOf('<defs>\n', j)
+			if (i < 0)
+				break
+			j = text.indexOf('</defs>', i)
+			if (j < 0) {
+				syntax(1, "No </defs> in %%beginsvg sequence")
+				break
 			}
-			break
+			defs_add(text.slice(i + 6, j))
 		}
 		break
 	case "text":
