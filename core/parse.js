@@ -1643,7 +1643,6 @@ function parse_acc_pit(line) {
 /* set the mapping of a note */
 function set_map(note) {
 	var	bn, an, nn, i,
-		nmap,
 		map = maps[curvoice.map]	// never null
 
 	bn = 'abcdefg'[(note.pit + 77) % 7]
@@ -1658,27 +1657,24 @@ function set_map(note) {
 	for (i = note.pit; i < 21; i += 7)
 		nn += ",";
 
-	// direct mapping
-	nmap = map[nn]
-	if (nmap) {
-		if (nmap[1]) {
-			note.apit = note.pit = nmap[1].pit;	// print
-			note.acc = nmap[1].acc
-		}
-	} else {
+	if (!map[nn]) {
 		nn = 'octave,' + an + bn		// octave
 		if (!map[nn]) {
 			nn = 'key,' +			// 'key,'
 				'abcdefg'[(note.pit + 77 -
 						curvoice.ckey.k_delta) % 7]
 			if (!map[nn]) {
-				nn = 'all'		// 'all,'
+				nn = 'all'		// 'all'
 				if (!map[nn])
 					return
 			}
 		}
 	}
 	note.map = map[nn]
+	if (note.map[1]) {
+		note.apit = note.pit = note.map[1].pit;	// print
+		note.acc = note.map[1].acc
+	}
 }
 
 /* -- parse note or rest with pitch and length -- */
