@@ -3482,14 +3482,14 @@ function draw_systems(indent) {
 		if (!stafflines.match(/[\[|]/))
 			return				// no line
 		w = x2 - x1;
-		set_sscale(st)
+		set_sscale(st);
+		ws = w / stv_g.scale
 
 		// check if default staff
-		if (cache && cache.st_l == stafflines && cache.st_w == w) {
+		if (cache && cache.st_l == stafflines && cache.st_ws == ws) {
 			xygl(x1, staff_tb[st].y, "stdef")
 			return
 		}
-		ws = w / stv_g.scale
 		for (i = 0; i < l; i++, y -= 6) {
 			if (stafflines[i] == '.')
 				continue
@@ -3517,17 +3517,15 @@ function draw_systems(indent) {
 			ln += '"/>\n'
 		}
 		y = staff_tb[st].y
-		if (!cache) {
-			ws = get_lwidth()
-			if (w == ws) {
-				cache = {
-					st_l: stafflines,
-					st_w: w
-				}
-				glyphs.stdef = '<g id="stdef">\n' + ln + '</g>';
-				xygl(x1, y, "stdef")
-				return
+		if (!cache
+		 && w == get_lwidth()) {
+			cache = {
+				st_l: stafflines,
+				st_ws: ws
 			}
+			glyphs.stdef = '<g id="stdef">\n' + ln + '</g>';
+			xygl(x1, y, "stdef")
+			return
 		}
 		out_XYAB('<g transform="translate(X, Y)">\n' + ln + '</g>\n', x1, y)
 	} // draw_staff()
