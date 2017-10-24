@@ -381,7 +381,7 @@ function do_combine(s) {
 function combine_voices() {
 	var s, s2, g, i, r
 
-	for (s = tsfirst; s.ts_next; s = s.ts_next) {
+	for (s = tsfirst; s; s = s.ts_next) {
 		switch (s.type) {
 		case REST:
 			if (s.combine < 0)
