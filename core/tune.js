@@ -1389,7 +1389,7 @@ function do_begin_end(type,
 	switch (type) {
 	default:
 //	case "ps":
-		if (psvg)
+		if (opt != 'nosvg' && psvg)
 			psvg.ps_eval(text)
 		break
 	case "js":
