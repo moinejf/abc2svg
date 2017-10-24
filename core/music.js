@@ -4199,8 +4199,6 @@ function set_piece() {
 	// if the last symbol is not a bar, add an invisible bar
 	if (tsnext.ts_prev.type != BAR) {
 	    var	s2 = tsnext.ts_prev;
-		while (!s2.seqst)
-			s2 = s2.ts_prev;
 		s = add_end_bar(s2)
 		s.prev = s.ts_prev = s2;
 		s2.ts_next = s2.next = s;
