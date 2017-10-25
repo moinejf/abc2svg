@@ -1102,7 +1102,7 @@ function set_space(s) {
 		case TEMPO:
 			s = s.ts_next
 			if (!s)
-				return 0
+				return space
 			continue
 		}
 		break
