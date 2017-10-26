@@ -1502,7 +1502,8 @@ function key_transp(s_key) {
 		sf = (sf + 5 + 12 * 4) % 12 - 5	/* Db, F# or B */
 		break
 	}
-	s_key.k_sf = sf
+	s_key.k_sf = sf;
+	s_key.k_delta = (cgd2cde[(sf + 7) % 7] + 14) % 7
 }
 
 /* -- set the accidentals when K: with modified accidentals -- */
