@@ -115,7 +115,6 @@ function dom_loaded() {
 	if (typeof Psvg != "function"
 	 && page.indexOf("\n%%beginps") > 0) {
 		loadjs("psvg-1.js", dom_loaded)
-		document.head.appendChild(scr)
 		return
 	}
 
