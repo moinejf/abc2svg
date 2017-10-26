@@ -2117,11 +2117,6 @@ function new_note(grace, tp_fact) {
 				s.nflags = 0
 			if (s.nflags <= -2)
 				s.stemless = true
-			if (curvoice.map
-			 && maps[curvoice.map]) {
-				for (i = 0; i <= s.nhd; i++)
-					set_map(s.notes[i])
-			}
 		} else {					// rest
 
 			/* change the figure of whole measure rests */
@@ -2145,8 +2140,15 @@ function new_note(grace, tp_fact) {
 
 	sym_link(s)
 
-	if (s.type == NOTE && curvoice.vtransp)
-		note_transp(s)
+	if (s.type == NOTE) {
+		if (curvoice.vtransp)
+			note_transp(s)
+		if (curvoice.map
+		 && maps[curvoice.map]) {
+			for (i = 0; i <= s.nhd; i++)
+				set_map(s.notes[i])
+		}
+	}
 
 	if (cfmt.shiftunison)
 		s.shiftunison = cfmt.shiftunison
