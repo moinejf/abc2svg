@@ -954,7 +954,8 @@ function set_width(s) {
 			}
 		} else {
 			n1 = n2 = s.k_a_acc.length
-			var last_acc = s.k_a_acc[0].acc
+			if (n2)
+			    var	last_acc = s.k_a_acc[0].acc
 			for (i = 1; i < n2; i++) {
 				acc = s.k_a_acc[i]
 				if (acc.pit > s.k_a_acc[i - 1].pit + 6

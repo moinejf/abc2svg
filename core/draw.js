@@ -897,7 +897,7 @@ function draw_keysig(p_voice, x, s) {
 				}
 			}
 		}
-	} else {
+	} else if (s.k_a_acc.length) {
 
 		/* explicit accidentals */
 		var	acc,
