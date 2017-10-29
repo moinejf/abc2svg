@@ -19,185 +19,29 @@
 
 /* translation table from the ABC draft version 2 */
 var abc_utf = {
-	"`A": "À",
-	"`E": "È",
-	"`I": "Ì",
-	"`O": "Ò",
-	"`U": "Ù",
-	"`a": "à",
-	"`e": "è",
-	"`i": "ì",
-	"`o": "ò",
-	"`u": "ù",
-	"'A": "Á",
-	"'E": "É",
-	"'I": "Í",
-	"'O": "Ó",
-	"'U": "Ú",
-	"'Y": "Ý",
-	"'a": "á",
-	"'e": "é",
-	"'i": "í",
-	"'o": "ó",
-	"'u": "ú",
-	"'y": "ý",
-	"'S": "Ś",
-	"'Z": "Ź",
-	"'s": "ś",
-	"'z": "ź",
-	"'R": "Ŕ",
-	"'L": "Ĺ",
-	"'C": "Ć",
-	"'N": "Ń",
-	"'r": "ŕ",
-	"'l": "ĺ",
-	"'c": "ć",
-	"'n": "ń",
-	"^A": "Â",
-	"^E": "Ê",
-	"^I": "Î",
-	"^O": "Ô",
-	"^U": "Û",
-	"^a": "â",
-	"^e": "ê",
-	"^i": "î",
-	"^o": "ô",
-	"^u": "û",
-	"^H": "Ĥ",
-	"^J": "Ĵ",
-	"^h": "ĥ",
-	"^j": "ĵ",
-	"^C": "Ĉ",
-	"^G": "Ĝ",
-	"^S": "Ŝ",
-	"^c": "ĉ",
-	"^g": "ĝ",
-	"^s": "ŝ",
-	",C": "Ç",
-	",c": "ç",
-	",S": "Ş",
-	",s": "ş",
-	",T": "Ţ",
-	",t": "ţ",
-	",R": "Ŗ",
-	",L": "Ļ",
-	",G": "Ģ",
-	",r": "ŗ",
-	",l": "ļ",
-	",g": "ģ",
-	",N": "Ņ",
-	",K": "Ķ",
-	",n": "ņ",
-	",k": "ķ",
-	'"A': "Ä",
-	'"E': "Ë",
-	'"I': "Ï",
-	'"O': "Ö",
-	'"U': "Ü",
-	'"Y': "Ÿ",
-	'"a': "ä",
-	'"e': "ë",
-	'"i': "ï",
-	'"o': "ö",
-	'"u': "ü",
-	'"y': "ÿ",
-	"~A": "Ã",
-	"~N": "Ñ",
-	"~O": "Õ",
-	"~a": "ã",
-	"~n": "ñ",
-	"~o": "õ",
-	"~I": "Ĩ",
-	"~i": "ĩ",
-	"~U": "Ũ",
-	"~u": "ũ",
-	"oA": "Å",
-	"oa": "å",
-	"oU": "Ů",
-	"ou": "ů",
-	"=A": "Ā",
 	"=D": "Đ",
-	"=E": "Ē",
 	"=H": "Ħ",
-	"=I": "Ī",
-	"=O": "Ō",
 	"=T": "Ŧ",
-	"=U": "Ū",
-	"=a": "ā",
 	"=d": "đ",
-	"=e": "ē",
 	"=h": "ħ",
-	"=i": "ī",
-	"=o": "ō",
 	"=t": "ŧ",
-	"=u": "ū",
 	"/O": "Ø",
 	"/o": "ø",
-	"/D": "Đ",
-	"/d": "đ",
+//	"/D": "Đ",
+//	"/d": "đ",
 	"/L": "Ł",
 	"/l": "ł",
-	";A": "Ą",
-	";E": "Ę",
-	";I": "Į",
-	";U": "Ų",
-	";a": "ą",
-	";e": "ę",
-	";i": "į",
-	";u": "ų",
 	"vL": "Ľ",
-	"vS": "Š",
-	"vT": "Ť",
-	"vZ": "Ž",
 	"vl": "ľ",
-	"vs": "š",
-	"vt": "ť",
-	"vz": "ž",
-	"vC": "Č",
-	"vE": "Ě",
-	"vD": "Ď",
-	"vN": "Ň",
-	"vR": "Ř",
-	"vc": "č",
-	"ve": "ě",
 	"vd": "ď",
-	"vn": "ň",
-	"vr": "ř",
-	"uA": "Ă",
-	"ua": "ă",
-	"uE": "Ĕ",
-	"ue": "ĕ",
-	"uG": "Ğ",
-	"ug": "ğ",
-	"uI": "Ĭ",
-	"ui": "ĭ",
-	"uO": "Ŏ",
-	"uo": "ŏ",
-	"uU": "Ŭ",
-	"uu": "ŭ",
-	":O": "Ő",
-	":U": "Ű",
-	":o": "ő",
-	":u": "ű",
-	".Z": "Ż",
-	".z": "ż",
-	".I": "İ",
 	".i": "ı",
-	".C": "Ċ",
-	".c": "ċ",
-	".G": "Ġ",
-	".g": "ġ",
-	".E": "Ė",
-	".e": "ė",
 	"AA": "Å",
 	"aa": "å",
 	"AE": "Æ",
 	"ae": "æ",
-	"cc": "ç",
-	"cC": "Ç",
 	"DH": "Ð",
 	"dh": "ð",
-	"ng": "ŋ",
+//	"ng": "ŋ",
 	"OE": "Œ",
 	"oe": "œ",
 	"ss": "ß",
@@ -258,11 +102,17 @@ function cnv_escape(src) {
 			}
 			break
 		case 'u':
-			codeUnits = []
-			j = parseInt(src.slice(i + 1, i + 5), 16);
-			codeUnits.push(j)
+			j = Number("0x" + src.slice(i + 1, i + 5));
+			if (isNaN(j)) {
+				dst += src[++i] + "\u0306"	// breve
+				j = i + 1
+				continue
+			}
+			codeUnits = [j]
 			if (j >= 0xd800 && j <= 0xdfff) {	// surrogates
-				j = parseInt(src.slice(i + 7, i + 11), 16);
+				j = Number("0x" + src.slice(i + 7, i + 11));
+				if (isNaN(j))
+					break		// bad surrogate
 				codeUnits.push(j);
 				j = i + 11
 			} else {
@@ -279,6 +129,66 @@ function cnv_escape(src) {
 			if (c2) {
 				dst += c2;
 				j = i + 2
+				continue
+			}
+
+			// try unicode combine characters
+			switch (c) {
+			case '`':
+				dst += src[++i] + "\u0300"	// grave
+				j = i + 1
+				continue
+			case "'":
+				dst += src[++i] + "\u0301"	// acute
+				j = i + 1
+				continue
+			case '^':
+				dst += src[++i] + "\u0302"	// circumflex
+				j = i + 1
+				continue
+			case '~':
+				dst += src[++i] + "\u0303"	// tilde
+				j = i + 1
+				continue
+			case '=':
+				dst += src[++i] + "\u0304"	// macron
+				j = i + 1
+				continue
+			case '_':
+				dst += src[++i] + "\u0305"	// overline
+				j = i + 1
+				continue
+			case '.':
+				dst += src[++i] + "\u0307"	// dot
+				j = i + 1
+				continue
+			case '"':
+				dst += src[++i] + "\u0308"	// dieresis
+				j = i + 1
+				continue
+			case 'o':
+				dst += src[++i] + "\u030a"	// ring
+				j = i + 1
+				continue
+			case ':':
+				dst += src[++i] + "\u030b"	// double acute
+				j = i + 1
+				continue
+			case 'v':
+				dst += src[++i] + "\u030c"	// caron
+				j = i + 1
+				continue
+//			case ',':
+//				dst += src[++i] + "\u0326"	// comma below
+//				j = i + 1
+//				continue
+			case 'c':
+				dst += src[++i] + "\u0327"	// cedilla
+				j = i + 1
+				continue
+			case ';':
+				dst += src[++i] + "\u0328"	// ogonek
+				j = i + 1
 				continue
 			}
 			break

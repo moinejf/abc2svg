@@ -44,8 +44,11 @@ var cw_tb = new Float32Array([
 function cwid(c) {
 	var i = c.charCodeAt(0)		// utf-16
 
-	if (i >= 0x80)
+	if (i >= 0x80) {		// if not ASCII
+		if (i >= 0x300 && i < 0x370)
+			return 0;	// combining diacritical mark
 		i = 0x61		// 'a'
+	}
 	return cw_tb[i]
 }
 
