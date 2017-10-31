@@ -1818,9 +1818,9 @@ function cut_tune(lwidth, indent) {
 	}
 
 	// restore the page parameters at start of line
-	cfmt.leftmargin = pg_sav.leftmargin,
-	cfmt.rightmargin = pg_sav.rightmargin,
-	cfmt.pagewidth = pg_sav.pagewidth,
+	cfmt.leftmargin = pg_sav.leftmargin;
+	cfmt.rightmargin = pg_sav.rightmargin;
+	cfmt.pagewidth = pg_sav.pagewidth;
 	cfmt.scale = pg_sav.scale
 }
 
@@ -4395,25 +4395,14 @@ function set_sym_line() {
 
 // set the left offset the images
 function set_posx() {
-	posx = (cfmt.leftmargin - cfmt["print-leftmargin"]) / cfmt.scale
+	posx = img.lm / cfmt.scale
 }
 
 // initialize the start of generation / new music line
 // and output the inter-staff blocks if any
-function gen_init(page_chg) {
+function gen_init() {
 	var	s = tsfirst,
 		tim = s.time
-
-	function set_page() {
-		if (!page_chg)
-			return
-		page_chg = false
-		if (cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin < 100) {
-			error(0, undefined, "Bad staff width");
-			cfmt.pagewidth = cfmt.leftmargin + cfmt.rightmargin + 200
-		}
-		set_posx()
-	} // set_page()
 
 	for ( ; s; s = s.ts_next) {
 		if (s.time != tim) {
@@ -4440,7 +4429,6 @@ function gen_init(page_chg) {
 			case "scale":
 			case "staffwidth":
 				set_format(s.subtype, s.param);
-				page_chg = true
 				break
 			case "ml":
 				svg_flush();
@@ -4461,11 +4449,9 @@ function gen_init(page_chg) {
 				blk_out()
 				break
 			case "text":
-				set_page();
 				write_text(s.text, s.opt)
 				break
 			case "title":
-				set_page();
 				write_title(s.text, true)
 				break
 			case "vskip":
@@ -4489,7 +4475,7 @@ function gen_init(page_chg) {
 function output_music() {
 	var output_sav, v, lwidth, indent, line_height
 
-	gen_init(true)
+	gen_init()
 	if (!tsfirst)
 		return
 	set_global()
@@ -4517,8 +4503,7 @@ function output_music() {
 	if (cfmt.singleline) {
 		lwidth = get_ck_width() +
 				get_width(tsfirst, null) + indent;
-		cfmt.pagewidth = lwidth * cfmt.scale +
-				cfmt.leftmargin + cfmt.rightmargin + 2
+		cfmt.pagewidth = lwidth * cfmt.scale + img.lm + img.rm + 2
 	} else {
 
 	/* else, split the tune into music lines */

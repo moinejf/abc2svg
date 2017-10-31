@@ -26,6 +26,12 @@ var	output = [],		// output buffer
 	font_style = '',
 	posx = cfmt.leftmargin / cfmt.scale,	// default x offset of the images
 	posy = 0,		// y offset in the block
+	img = {			// image
+		width: cfmt.pagewidth,	// width
+		lm: cfmt.leftmargin,	// left and right margins
+		rm: cfmt.rightmargin
+//		chg: false
+	},
 	defined_glyph = {},
 	defs = '',
 	stv_g = {		/* staff/voice graphic parameters */
@@ -981,13 +987,13 @@ function svg_flush() {
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
 	color="black"\n' +
 			user.imagesize +
-			' viewBox="0 0 ' + cfmt.pagewidth.toFixed(0) + ' ' +
+			' viewBox="0 0 ' + img.width.toFixed(0) + ' ' +
 			 posy.toFixed(0) + '">\n'
 	} else {
 		head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
 	color="black"\n\
-	width="' + cfmt.pagewidth.toFixed(0) +
+	width="' + img.width.toFixed(0) +
 			'px" height="' + posy.toFixed(0) + 'px">\n'
 	}
 

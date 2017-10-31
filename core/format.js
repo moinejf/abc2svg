@@ -78,7 +78,7 @@ H "History: "',
 //		voc: 0,
 //		vol: 0
 //	},
-	"print-leftmargin": 0,
+	"printmargin": 0,
 	rightmargin: 1.4 * CM,
 	rbdbstop: true,
 	rbmax: 4,
@@ -340,6 +340,26 @@ function set_v_param(k, v, sub) {
 		info.V[vid] = k
 }
 
+function set_page() {
+	if (!img.chg)
+		return
+	img.chg = false;
+	img.lm = cfmt.leftmargin - cfmt.printmargin
+	if (img.lm < 0)
+		img.lm = 0;
+	img.rm = cfmt.rightmargin - cfmt.printmargin
+	if (img.rm < 0)
+		img.rm = 0;
+	img.width = cfmt.pagewidth - 2 * cfmt.printmargin
+
+	// must have 100pt at least as the staff width
+	if (img.width - img.lm - img.rm < 100) {
+		error(0, undefined, "Bad staff width");
+		img.width = img.lm + img.rm + 150
+	}
+	set_posx()
+} // set_page()
+
 // set a format parameter
 function set_format(cmd, param, lock) {
 	var f, f2, v, box, i
@@ -466,18 +486,24 @@ function set_format(cmd, param, lock) {
 		else
 			cfmt[cmd] = f
 		break
+	case "print-leftmargin":	// to remove
+		syntax(0, "$1 is deprecated - use %%printmargin instead", '%%' + cmd)
+		cmd = "printmargin"
+		// fall thru
+	case "printmargin":
 //	case "botmargin":
 	case "leftmargin":
 //	case "pageheight":
 	case "pagewidth":
 	case "rightmargin":
 //	case "topmargin":
-	case "print-leftmargin":
 		f = get_unitp(param)	// normally unit in cm or in - 96 DPI
-		if (isNaN(f))
+		if (isNaN(f)) {
 			syntax(1, "Bad value in $1", '%%' + cmd)
-		else
-			cfmt[cmd] = f
+			break
+		}
+		cfmt[cmd] = f;
+		img.chg = true
 		break
 	case "concert-score":
 		cfmt.sound = "concert"
@@ -557,10 +583,12 @@ function set_format(cmd, param, lock) {
 			break
 		}
 		v = cfmt.pagewidth - v - cfmt.leftmargin
-		if (v < 2)
+		if (v < 2) {
 			syntax(1, "%%staffwidth too big")
-		else
-			cfmt.rightmargin = v
+			break
+		}
+		cfmt.rightmargin = v;
+		img.chg = true
 		break
 	case "textoption":
 		cfmt[cmd] = get_textopt(param)

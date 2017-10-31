@@ -1049,16 +1049,10 @@ function do_pscom(text) {
 			}
 			if (posy > multicol.maxy)
 				multicol.maxy = posy;
-			if (parse.state == 3) {		// tune body
-				s = new_block("leftmargin");
-				s.param = multicol.lmarg.toFixed(2);
-				s = new_block("rightmargin");
-				s.param = multicol.rmarg.toFixed(2)
-			} else {
-				cfmt.leftmargin = multicol.lmarg;
-				set_posx();
-				cfmt.rightmargin = multicol.rmarg
-			}
+			cfmt.leftmargin = multicol.lmarg;
+			cfmt.rightmargin = multicol.rmarg;
+			img.chg = true;
+			set_page();
 			posy = multicol.posy
 			break
 		case "end":
@@ -1068,18 +1062,12 @@ function do_pscom(text) {
 			}
 			if (posy < multicol.maxy)
 				posy = multicol.maxy;
-			if (parse.state == 3) {		// tune body
-				s = new_block("leftmargin");
-				s.param = multicol.lmarg.toFixed(2);
-				s = new_block("rightmargin");
-				s.param = multicol.rmarg.toFixed(2)
-			} else {
-				cfmt.leftmargin = multicol.lmarg;
-				set_posx();
-				cfmt.rightmargin = multicol.rmarg
-			}
+			cfmt.leftmargin = multicol.lmarg;
+			cfmt.rightmargin = multicol.rmarg;
 			multicol = undefined;
-			blk_out()
+			blk_out();
+			img.chg = true;
+			set_page()
 			break
 		default:
 			syntax(1, "Unknown keyword '$1' in %%multicol", param)
@@ -1165,9 +1153,10 @@ function do_pscom(text) {
 		parse.repeat_k = k
 		return
 	case "sep":
-		var	h2, len, values,
-			lwidth = cfmt.pagewidth - cfmt.leftmargin - cfmt.rightmargin;
+		var	h2, len, values, lwidth;
 
+		set_page();
+		lwidth = img.width - img.lm - img.rm;
 		h1 = h2 = len = 0
 		if (param) {
 			values = param.split(/\s+/);
@@ -1353,7 +1342,7 @@ function do_pscom(text) {
 	case "rightmargin":
 	case "pagescale":
 	case "pagewidth":
-	case "print-leftmargin":
+	case "printmargin":
 	case "scale":
 	case "staffwidth":
 		if (parse.state == 3) {			// tune body
@@ -1366,16 +1355,7 @@ function do_pscom(text) {
 			block.newpage = true
 			return
 		}
-		set_format(cmd, param, lock)
-		switch (cmd) {
-		case "leftmargin":
-		case "pagescale":
-		case "print-leftmargin":
-		case "scale":
-			set_posx()
-			break
-		}
-		return
+		break
 	}
 	set_format(cmd, param, lock)
 }
@@ -2047,6 +2027,7 @@ function get_key(parm) {
 			glovar.ulen = BASE_LEN / 8;
 		parse.state = 2;		// in tune header after K:
 
+		set_page();
 		write_heading();
 		reset_gen();
 		gene.nbar = cfmt.measurefirst	// measure numbering
