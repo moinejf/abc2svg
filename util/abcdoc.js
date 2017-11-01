@@ -72,7 +72,7 @@ function dom_loaded() {
 		re_stop = /\n<|\n%.begin/g;	// stop on "<" and skip "%%begin"
 
 	abc = new Abc(user);
-	abc.tosvg('abcexample', '%abc-2.1\n\
+	abc.tosvg('abcexample', '%abc2.2\n\
 %%bgcolor white\n\
 %%rightmargin 0.8cm\n\
 %%leftmargin 0.8cm\n\
@@ -105,7 +105,7 @@ function dom_loaded() {
 			k = re_stop.lastIndex - 2;
 		tune = page.slice(j + 1, k);
 		new_page += '<pre style="display:inline-block; vertical-align: top">' +
-				tune +
+				clean_txt(tune) +
 				'</pre>\n\
 <div style="display:inline-block; vertical-align: top">\n'
 // not "float:right"
