@@ -4503,7 +4503,7 @@ function output_music() {
 	if (cfmt.singleline) {
 		lwidth = get_ck_width() +
 				get_width(tsfirst, null) + indent;
-		cfmt.pagewidth = lwidth * cfmt.scale + img.lm + img.rm + 2
+		img.width = lwidth * cfmt.scale + img.lm + img.rm + 2
 	} else {
 
 	/* else, split the tune into music lines */
