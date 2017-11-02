@@ -516,11 +516,9 @@ function notehlight(i, on) {
 }
 function endplay() {
 	document.getElementById("playbutton").innerHTML = texts.play;
-	setTimeout(function() {
-		playing = false;
-		colcl = colcl_sav;
-		colorsel(true)
-	}, 2000)
+	playing = false;
+	colcl = colcl_sav;
+	colorsel(true)
 }
 function play_tune() {
     var	pe
