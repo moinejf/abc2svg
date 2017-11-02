@@ -428,8 +428,11 @@ function Audio5(i_conf) {
 			}
 
 			e = a_e[++evt_idx]
-			if (!e)
-				break
+			if (!e) {
+				setTimeout(onend,
+					(t + stime - ac.currentTime + d) * 1000)
+				return
+			}
 			t = e[1] / speed
 			if (t > maxt)
 				break
