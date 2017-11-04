@@ -168,8 +168,6 @@ function AbcMIDI() {
 				}
 				break
 			case KEY:
-				if (s.st != 0)
-					break
 				key_map(s)
 				break
 			case NOTE:
