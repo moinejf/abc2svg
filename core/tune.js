@@ -2015,7 +2015,7 @@ function get_key(parm) {
 		}
 		for (v = 0; v < voice_tb.length; v++) {
 			p_voice = voice_tb[v];
-			p_voice.key = s_key;
+			p_voice.key = clone(s_key);
 			p_voice.okey = clone(s_key);
 			p_voice.ckey = clone(s_key)
 		}
