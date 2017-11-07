@@ -91,8 +91,7 @@ function parse_gchord(type) {
 					i--
 			}
 			gch.x = x_abs;
-			gch.y = y_abs;
-			y_abs -= h_ann
+			gch.y = y_abs - h_ann / 2
 			break
 		case '^':
 		case '_':
@@ -381,12 +380,12 @@ function gch_build(s) {
 		case '<':			/* left */
 			gch.x = -(w + 6);
 			y_left -= h_ann;
-			gch.y = y_left
+			gch.y = y_left + h_ann / 2
 			break
 		case '>':			/* right */
 			gch.x = 6;
 			y_right -= h_ann;
-			gch.y = y_right
+			gch.y = y_right + h_ann / 2
 			break
 		default:			// chord symbol
 			gch.box = box
@@ -436,7 +435,7 @@ function gch_build(s) {
 	}
 }
 
-/* -- draw the chord indications and annotations -- */
+// -- draw the chord symbols and annotations
 // (the staves are not yet defined)
 // (unscaled delayed output)
 function draw_gchord(s, gchy_min, gchy_max) {
@@ -467,7 +466,7 @@ function draw_gchord(s, gchy_min, gchy_max) {
 		}
 	}
 
-	set_dscale(s.st, true);
+	set_dscale(s.st);
 	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix];
 		use_font(gch.font);
@@ -489,15 +488,15 @@ function draw_gchord(s, gchy_min, gchy_max) {
 /*fixme: what symbol space?*/
 			if (s.notes[0].acc)
 				x -= s.notes[0].shac;
-			y = gch.y + yav
+			y = gch.y + yav - h / 2
 			break
 		case '>':			/* right */
 			x += s.xmx
 			if (s.dots > 0)
 				x += 1.5 + 3.5 * s.dots;
-			y = gch.y + yav
+			y = gch.y + yav - h / 2
 			break
-		default:			// chord indication
+		default:			// chord symbol
 			hbox = gch.box ? 3 : 2
 			if (gch.y >= 0) {
 				y = gch.y + y_above;
@@ -533,7 +532,7 @@ function draw_gchord(s, gchy_min, gchy_max) {
 				var expdx = (x - s.x) / j;
 
 				x = s.x;
-				y /= staff_tb[s.st].staffscale
+				y *= staff_tb[s.st].staffscale
 				if (user.anno_start)
 					user.anno_start("gchord", gch.istart, gch.iend,
 						x - 2, y + h + 2, w + 4, h + 4, s)
@@ -558,17 +557,15 @@ function draw_gchord(s, gchy_min, gchy_max) {
 		case '@':			/* absolute */
 			y = gch.y + yav
 			if (y > 0) {
-				y2 = y + h * .8 + 3
+				y2 = y + h
 				if (y2 > staff_tb[s.st].ann_top)
 					staff_tb[s.st].ann_top = y2
 			} else {
-				y2 = y - h * .2
-				if (y2 < staff_tb[s.st].ann_bot)
-					staff_tb[s.st].ann_bot = y2
+				if (y < staff_tb[s.st].ann_bot)
+					staff_tb[s.st].ann_bot = y
 			}
 			break
 		}
-		y *= staff_tb[s.st].staffscale
 		if (user.anno_start)
 			user.anno_start("annot", gch.istart, gch.iend,
 				x - 2, y + h + 2, w + 4, h + 4, s)
