@@ -90,6 +90,9 @@ function parse_gchord(type) {
 				if (c != ' ')
 					i--
 			}
+			gch.x = x_abs;
+			gch.y = y_abs;
+			y_abs -= h_ann
 			break
 		case '^':
 		case '_':
@@ -100,11 +103,6 @@ function parse_gchord(type) {
 			break
 		}
 		gch.type = type
-		if (type == '@') {
-			gch.x = x_abs;
-			gch.y = y_abs;
-			y_abs -= h_ann
-		}
 		while (1) {
 			c = text[i]
 			if (!c)
@@ -174,7 +172,10 @@ function gch_capo(s) {
 // transpose a chord symbol
 var	note_names = "CDEFGAB",
 	latin_names = [ "Do", "Ré", "Mi", "Fa", "Sol", "La", "Si" ],
-	acc_name = ["bb", "b", "", "#", "##"]
+	acc_name = ["bb", "b", "", "#", "##"],
+	note_pit = new Int8Array([0, 2, 4, 5, 7, 9, 11]),
+	pit_note = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
+	pit_acc = new Int8Array([2, 3, 2, 1, 2, 2, 3, 2, 1, 2, 1, 2])
 
 	function gch_tr1(p, i2) {
 		var	new_txt, l,
@@ -244,9 +245,9 @@ var	note_names = "CDEFGAB",
 			}
 //			if (p[ip] == '=')
 //				ip++
-			i3 = ([0, 2, 4, 5, 7, 9, 11][n] + a + i2 + 12) % 12;
-			i4 = [0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6][i3];
-			i1 = [2, 3, 2, 1, 2, 2, 3, 2, 1, 2, 1, 2][i3];
+			i3 = (note_pit[n] + a + i2 + 12) % 12;
+			i4 = pit_note[i3];
+			i1 = pit_acc[i3];
 			new_txt = (latin ? latin_names[i4] : note_names[i4]) +
 					acc_name[i1]
 		} else {
@@ -277,9 +278,9 @@ var	note_names = "CDEFGAB",
 				ip2++
 			}
 		}
-		i3 = ([0, 2, 4, 5, 7, 9, 11][n] + a + i2 + 12) % 12;
-		i4 = [0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6][i3];
-		i1 = [2, 3, 2, 1, 2, 2, 3, 2, 1, 2, 1, 2][i3]
+		i3 = (note_pit[n] + a + i2 + 12) % 12;
+		i4 = pit_note[i3];
+		i1 = pit_acc[i3]
 		return new_txt + note_names[i4] + acc_name[i1] + p.slice(ip2)
 	} // get_tr1
 

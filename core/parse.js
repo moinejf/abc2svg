@@ -125,8 +125,6 @@ function new_clef(clef_def) {
 }
 
 // get a transposition value
-var pit_st = new Int8Array([0, 2, 4, 5, 7, 9, 11])
-
 function get_transp(param,
 			type) {		// undefined or "instr"
 	var	i, val, tmp, note,
@@ -180,7 +178,7 @@ function get_transp(param,
 			return
 		}
 		note.pit += 124;	// 126 - 2 for value > 0 and 'C' % 7 == 0
-		val = ((note.pit / 7) | 0) * 12 + pit_st[note.pit % 7]
+		val = ((note.pit / 7) | 0) * 12 + note_pit[note.pit % 7]
 		if (note.acc && note.acc != 3)		// if not natural
 			val += note.acc;
 		pit[i] = val
