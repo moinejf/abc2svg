@@ -1898,7 +1898,8 @@ function new_note(grace, tp_fact) {
 		s.type = REST;
 		line.index++;
 		nd = parse_dur(line);
-		s.dur_orig = ((curvoice.ulen < 0) ? BASE_LEN / 4 :
+		s.dur_orig = ((curvoice.ulen < 0) ?
+					15120 :	// 2*2*2*2*3*3*3*5*7
 					curvoice.ulen) * nd[0] / nd[1];
 		s.dur = s.dur_orig * curvoice.dur_fact;
 		s.notes = [{
@@ -1961,8 +1962,10 @@ function new_note(grace, tp_fact) {
 				}
 			}
 			note = parse_basic_note(line,
-					(s.grace || curvoice.ulen < 0) ?
-						BASE_LEN / 4 : curvoice.ulen)
+					s.grace ? BASE_LEN / 4 :
+					curvoice.ulen < 0 ?
+						15120 :	// 2*2*2*2*3*3*3*5*7
+						curvoice.ulen)
 			if (!note)
 				return //null
 
