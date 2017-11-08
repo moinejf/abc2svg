@@ -77,9 +77,10 @@ function abc_init() {
 	user.img_out = function(str) {
 		var	header = abc.get_fmt("header"),
 			footer = abc.get_fmt("footer"),
-			topmargin = abc.get_fmt("topmargin"),
+			topmargin = abc.get_fmt("topmargin") || "1cm",
+			botmargin = abc.get_fmt("botmargin") || "1cm",
 			media_s = '	@media print {\n\
-		body {margin:0; padding:0; border:0}\n\
+		body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0}\n\
 		div.newpage {page-break-before: always}\n\
 		div.nobrk {page-break-inside: avoid}\n\
 	}',
@@ -88,7 +89,7 @@ function abc_init() {
 		div.footer {display: none}\n\
 	}\n\
 	@media print {\n\
-		body {margin:0; padding:0; border:0;\n\
+		body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0;\n\
 			counter-reset: page;\n\
 			counter-increment: page; }\n\
 		div.newpage {page-break-before: always}\n\
@@ -114,9 +115,6 @@ function abc_init() {
 		div.right {text-align: right}\n\
 	}';
 
-	if (!topmargin)
-		topmargin = "1cm";
-
 	print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">\n\
 <html xmlns="http://www.w3.org/1999/xhtml">\n\
@@ -125,7 +123,6 @@ function abc_init() {
 <meta name="generator" content="abc2svg-' + abc2svg.version + '"/>\n\
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
-	@page {margin-top: ' + topmargin + '}\n\
 	text, tspan {white-space:pre}\n\
 	svg {display:block}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
