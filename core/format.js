@@ -284,6 +284,7 @@ var posval = {
 	down: SL_BELOW,
 	hidden: SL_HIDDEN,
 	opposite: SL_HIDDEN,
+	under: SL_BELOW,
 	up: SL_ABOVE
 }
 
