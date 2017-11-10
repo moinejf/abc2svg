@@ -242,10 +242,25 @@ function set_acc_shft() {
 	}
 }
 
+// link a symbol before an other one
+function lkvsym(s, next) {	// voice linkage
+	s.next = next;
+	s.prev = next.prev
+	if (s.prev)
+		s.prev.next = s
+	else
+		s.p_v.sym = s;
+	next.prev = s
+}
+function lktsym(s, next) {	// time linkage
+	s.ts_next = next;
+	s.ts_prev = next.ts_prev;
+	s.ts_prev.ts_next = s;
+	next.ts_prev = s
+}
+
 /* -- unlink a symbol -- */
 function unlksym(s) {
-	var g
-
 	if (s.next)
 		s.next.prev = s.prev
 	if (s.prev)
@@ -465,17 +480,10 @@ function insert_clef(s, clef_type, clef_line) {
 
 	/* link in time */
 	while (!s.seqst)
-		s = s.ts_prev
-//	if (!s.ts_prev || s.ts_prev.type != CLEF)
+		s = s.ts_prev;
+	lktsym(new_s, s)
 	if (s.ts_prev.type != CLEF)
-		new_s.seqst = true;
-	new_s.ts_prev = s.ts_prev;
-//	if (new_s.ts_prev)
-		new_s.ts_prev.ts_next = new_s;
-//	else
-//		tsfirst = new_s
-	new_s.ts_next = s;
-	s.ts_prev = new_s
+		new_s.seqst = true
 	return new_s
 }
 
@@ -1458,10 +1466,7 @@ function custos_add(s) {
 	new_s = sym_add(p_voice, CUSTOS);
 	new_s.next = s;
 	s.prev = new_s;
-	new_s.ts_prev = s.ts_prev;
-	new_s.ts_prev.ts_next = new_s;
-	new_s.ts_next = s;
-	s.ts_prev = new_s;
+	lktsym(new_s, s);
 
 	new_s.seqst = true;
 	new_s.shrink = s.shrink
@@ -2704,12 +2709,9 @@ function new_sym(type, p_voice,
 	s.prev = p_voice.last_sym;
 	p_voice.last_sym = s;
 
-	s.ts_next = last_s;
-	s.ts_prev = last_s.ts_prev;
-	s.ts_prev.ts_next = s
+	lktsym(s, last_s)
 	if (s.ts_prev.type != type)
-		s.seqst = true;
-	last_s.ts_prev = s
+		s.seqst = true
 	if (last_s.type == type && s.v != last_s.v) {
 		delete last_s.seqst;
 		last_s.shrink = 0

@@ -103,17 +103,8 @@ function calculate_beam(bm, s1) {
 
 	if (!s1.beam_st) {	/* beam from previous music line */
 		s = sym_dup(s1);
-		s.prev = s1.prev
-		if (s.prev)
-			s.prev.next = s
-		else
-			s.p_v.sym = s;
-		s1.prev = s;
-		s.next = s1;
-		s1.ts_prev.ts_next = s;
-		s.ts_prev = s1.ts_prev;
-		s1.ts_prev = s;
-		s.ts_next = s1;
+		lkvsym(s, s1);
+		lktsym(s, s1);
 		s.x -= 12
 		if (s.x > s1.prev.x + 12)
 			s.x = s1.prev.x + 12;
