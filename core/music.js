@@ -482,7 +482,7 @@ function insert_clef(s, clef_type, clef_line) {
 	while (!s.seqst)
 		s = s.ts_prev;
 	lktsym(new_s, s)
-	if (s.ts_prev.type != CLEF)
+	if (new_s.ts_prev.type != CLEF)
 		new_s.seqst = true
 	return new_s
 }
@@ -1167,7 +1167,11 @@ function add_end_bar(s) {
 		dur: 0,
 		seqst: true,
 		invis: true,
-		time: s.time + s.dur
+		time: s.time + s.dur,
+		nhd: 0,
+		notes: [{
+			pit: s.notes[0].pit
+		}]
 //,wl:0,wr:0
 	}
 }
@@ -2864,18 +2868,20 @@ function init_music_line() {
 			continue
 		}
 
-		s = new_sym(BAR, p_voice, last_s);
-		s.istart = s2.istart;
-		s.iend = s2.iend;
-		s.bar_type = s2.bar_type
-		if (s2.invis)
-			s.invis = true
-		if (s2.norepbra)
-			s.norepbra = true;
-		s.text = s2.text;
-		s.a_gch = s2.a_gch
-		if (s2.rbstart)
-			s.rbstart = s2.rbstart
+		s2.next = p_voice.last_sym.next
+		if (s2.next)
+			s2.next.prev = s2;
+		p_voice.last_sym.next = s2;
+		s2.prev = p_voice.last_sym;
+		p_voice.last_sym = s2;
+		lktsym(s2, last_s);
+		s2.time = last_s.time
+		if (s2.ts_prev.type != s2.type)
+			s2.seqst = true;
+		if (last_s.type == s2.type && s2.v != last_s.v) {
+			delete last_s.seqst;
+			last_s.shrink = 0
+		}
 	}
 
 	/* if initialization of a new music line, compute the spacing,

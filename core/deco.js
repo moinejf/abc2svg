@@ -1458,6 +1458,7 @@ function draw_deco_staff() {
 			 && !s.rbstop
 			 && !p_voice.bar_start) { // continue on next line
 				p_voice.bar_start = clone(s);
+				p_voice.bar_start.type = BAR;
 				p_voice.bar_start.bar_type = "["
 				delete p_voice.bar_start.text;
 				p_voice.bar_start.rbstart = 1
