@@ -312,7 +312,6 @@ function tosvg(in_fname,		// file name
 		blk_flush();
 		parse.state = 0;		// file header
 		cfmt = cfmt_sav;
-		set_posx();
 		info = info_sav;
 		char_tb = char_tb_sav;
 		glovar = glovar_sav;
@@ -320,6 +319,8 @@ function tosvg(in_fname,		// file name
 		mac = mac_sav;
 		maci = maci_sav;
 		init_tune()
+		img.chg = true;
+		set_page();
 	} // end_tune()
 
 	// initialize
