@@ -29,9 +29,7 @@ var	STEM_MIN	= 16,	/* min stem height under beams */
 	BEAM_DEPTH	= 3.2,	/* width of a beam stroke */
 	BEAM_OFFSET	= .25,	/* pos of flat beam relative to staff line */
 	BEAM_SHIFT	= 5,	/* shift of second and third beams */
-	BEAM_FLATFAC	= .6,	/* factor to decrease slope of long beams */
-	BEAM_THRESH	= .06,	/* flat beam if slope below this threshold */
-	BEAM_SLOPE	= .8,	/* max slope of a beam */
+	BEAM_SLOPE	= .4,	/* max slope of a beam */
 	BEAM_STUB	= 8,	/* length of stub for flag under beam */ 
 	SLUR_SLOPE	= .5,	/* max slope of a slur */
 	GSTEM		= 15,	/* grace note stem length */
@@ -96,9 +94,10 @@ var min_tb = [
 ]
 
 function calculate_beam(bm, s1) {
-	var	s, s2, notes, nflags, st, v, two_staves, two_dir, hh,
+	var	s, s2, notes, nflags, st, v, two_staves, two_dir,
 		x, y, ys, a, b, stem_err, max_stem_err,
-		sx, sy, sxx, sxy, syy, a0, stem_xoff, scale,
+		p_min, p_max, s_closest,
+		stem_xoff, scale,
 		visible, dy
 
 	if (!s1.beam_st) {	/* beam from previous music line */
@@ -187,57 +186,54 @@ function calculate_beam(bm, s1) {
 		}
 	}
 
-	sx = sy = sxx = sxy = syy = 0	/* linear fit through stem ends */
+	s_closest = s1;
+	p_min = 24;
+	p_max = 0
 	for (s = s1; ; s = s.next) {
 		if (s.type != NOTE)
 			continue
 		if ((scale = s.p_v.scale) == 1)
 			scale = staff_tb[s.st].staffscale
-		if (s.stem >= 0)
+		if (s.stem >= 0) {
 			x = stem_xoff + s.notes[0].shhd
-		else
-			x = -stem_xoff + s.notes[s.nhd].shhd;
-		x *= scale;
-		x += s.x;
-		s.xs = x;
-		y = s.ys + staff_tb[s.st].y;
-		sx += x; sy += y;
-		sxx += x * x; sxy += x * y; syy += y * y
+			if (s.notes[s.nhd].pit > p_max) {
+				p_max = s.notes[s.nhd].pit;
+				s_closest = s
+			}
+		} else {
+			x = -stem_xoff + s.notes[s.nhd].shhd
+			if (s.notes[0].pit < p_min) {
+				p_min = s.notes[0].pit;
+				s_closest = s
+			}
+		}
+		s.xs = s.x + x * scale;
 		if (s == s2)
 			break
 	}
 
-	/* beam fct: y=ax+b */
-	a = (sxy * notes - sx * sy) / (sxx * notes - sx * sx);
-	b = (sy - a * sx) / notes
-
-	/* the next few lines modify the slope of the beam */
-	if (notes >= 3) {
-		hh = syy - a * sxy - b * sy /* flatten if notes not in line */
-		if (hh > 0
-		 && hh / (notes - 2) > .5)
-			a *= BEAM_FLATFAC
-	}
-	if (a >= 0)
-		a = BEAM_SLOPE * a / (BEAM_SLOPE + a) // max steepness for beam
-	else
-		a = BEAM_SLOPE * a / (BEAM_SLOPE - a);
-
-	/* to decide if to draw flat etc. use normalized slope a0 */
-	a0 = a * (s2.xs - s1.xs) / (20 * (notes - 1))
-
-	if (a0 * a0 < BEAM_THRESH * BEAM_THRESH)
-		a = 0;			/* flat below threshhold */
-
-	b = (sy - a * sx) / notes	/* recalculate b for new slope */
-
-/*  if (nflags>1) b=b+2*stem*/	/* leave a bit more room if several beams */
-
-	/* have flat beams when asked */
-	if (cfmt.flatbeams) {
-		b = (s1.grace ? 35 : -11) + staff_tb[st].y;
+	// have flat beams when asked
+	if (cfmt.flatbeams)
 		a = 0
+
+	// if a note inside the beam is the closest to the beam, the beam is flat
+	else if (!two_dir
+	      && notes >= 3
+	      && s_closest != s1 && s_closest != s2)
+		a = 0
+
+	y = s1.ys + staff_tb[st].y
+	if (a == undefined)
+		a = (s2.ys + staff_tb[s2.st].y - y) / (s2.xs - s1.xs)
+
+	if (a != 0) {
+		if (a > 0)
+			a = BEAM_SLOPE * a / (BEAM_SLOPE + a) // max steepness for beam
+		else
+			a = BEAM_SLOPE * a / (BEAM_SLOPE - a);
 	}
+
+	b = y - a * s1.xs;
 
 /*fixme: have a look again*/
 	/* have room for the symbols in the staff */
