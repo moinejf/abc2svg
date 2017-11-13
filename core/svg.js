@@ -200,20 +200,7 @@ var glyphs = {
 		-2 -2.5 -2 2.5 -2 -2.5 -2 2.5"/>\n\
 	<path class="stroke" d="m3.5 0l5 -7"/>\n\
 </g>',
-  oct: '<text id="oct" style="font:12px serif">8</text>',
-//  pltr: '<pattern id="pltr" width="6" height="10" y="5"\n\
-//	patternUnits="userSpaceOnUse" viewBox="0 -5 6 5">\n\
-//	<path fill="currentColor" stroke="none"\n\
-//		d="m0 -.4c2 -1.5 3.4 -1.9 3.9 .4\n\
-//		0.2 .8 .7 .7 2.1 -.4\n\
-//		v0.8c-2 1.5 -3.4 1.9 -3.9 -.4\n\
-//		-.2 -.8 -.7 -.7 -2.1 .4z"/>\n\
-//</pattern>',
-  clearbg: '<filter id="clearbg">\n\
-	<feComposite in="SourceGraphic" result="comp"/>\n\
-	<feFlood flood-color="white" result="flood"/>\n\
-	<feMerge><feMergeNode in="flood"/><feMergeNode in="comp"/></feMerge>\n\
-</filter>'
+  oct: '<text id="oct" style="font:12px serif">8</text>'
 }
 
 // mark a glyph as used and add it in <defs>
@@ -554,17 +541,10 @@ function out_bar(x, y, h, dotted) {
 		'"/>\n')
 }
 // tuplet value - the staves are not defined
-function out_bnum(x, y, str,
-		  erase) {	// erase under the value
-	if (erase) {
-		def_use('clearbg');
-		erase = ' filter="url(#clearbg)"'
-	} else {
-		erase = ''
-	}
+function out_bnum(x, y, str) {
 	out_XYAB('<text style="font:italic 12px serif"\n\
-	x="X" y="Y" text-anchor="middle"B>A</text>\n',
-		x, y, str.toString(), erase)
+	x="X" y="Y" text-anchor="middle">A</text>\n',
+		x, y, str.toString())
 }
 // staff system brace
 function out_brace(x, y, h) {
@@ -740,6 +720,30 @@ function out_tubr(x, y, dx, dy, up) {
 	output.push('v' + h.toFixed(2) +
 		'l' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) +
 		'v' + (-h).toFixed(2) + '"/>\n')
+}
+// tuplet bracket with number - the staves are not defined
+function out_tubrn(x, y, dx, dy, up, str) {
+    var	sw = str.length * 10,
+	h = up ? -3 : 3;
+
+	dx /= stv_g.scale;
+	out_XYAB('<text style="font:italic 12px serif"\n\
+	x="X" y="Y" text-anchor="middle">A</text>\n',
+		x + dx / 2, y + dy / 2, str);
+
+	if (!up)
+		y += 6;
+	output.push('<path class="stroke" d="m');
+	out_sxsy(x, ' ', y);
+	output.push('v' + h.toFixed(2) +
+		'm' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) +
+		'v' + (-h).toFixed(2) + '"/>\n')
+	output.push('<path class="stroke" stroke-dasharray="' +
+		((dx - sw) / 2).toFixed(2) + ' ' + sw.toFixed(2) +
+		'" d="m');
+	out_sxsy(x, ' ', y - h);
+	output.push('l' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) + '"/>\n')
+
 }
 // underscore line
 function out_wln(x, y, w) {

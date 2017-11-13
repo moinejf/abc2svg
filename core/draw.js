@@ -2362,12 +2362,8 @@ function draw_tuplet(s1,
 	x1 = s1.x - 4;
 	y1 = 24
 	if (s1.st == upstaff) {
-		s3 = s1
-		if (s3.type != NOTE) {
-			for (s3 = s3.next; s3 != s2; s3 = s3.next)
-				if (s3.type == NOTE)
-					break
-		}
+		for (s3 = s1; s3.type != NOTE; s3 = s3.next)
+			;
 		ym = y_get(upstaff, 1, s3.x - 4, 8)
 		if (ym > y1)
 			y1 = ym
@@ -2376,12 +2372,8 @@ function draw_tuplet(s1,
 	}
 	y2 = 24
 	if (s2.st == upstaff) {
-		s3 = s2
-		if (s3.type != NOTE) {
-			for (s3 = s3.prev; s3 != s1; s3 = s3.prev)
-				if (s3.type == NOTE)
-					break
-		}
+		for (s3 = s2; s3.type != NOTE; s3 = s3.prev)
+			;
 		ym = y_get(upstaff, 1, s3.x - 4, 8)
 		if (ym > y2)
 			y2 = ym
@@ -2442,7 +2434,6 @@ function draw_tuplet(s1,
 	ym += dy + 2;
 	y1 = ym + a * (x1 - xm);
 	y2 = ym + a * (x2 - xm);
-	out_tubr(x1, y1 + 4, x2 - x1, y2 - y1, true);
 
 	/* shift the slurs / decorations */
 	ym += 8
@@ -2478,23 +2469,15 @@ function draw_tuplet(s1,
 	}
 
 	if (s1.st == upstaff) {
-		s3 = s1
-		if (s3.type != NOTE) {
-			for (s3 = s3.next; s3 != s2; s3 = s3.next)
-				if (s3.type == NOTE)
-					break
-		}
+		for (s3 = s1; s3.type != NOTE; s3 = s3.next)
+			;
 		y1 = y_get(upstaff, 0, s3.x - 4, 8)
 	} else {
 		y1 = 0
 	}
 	if (s2.st == upstaff) {
-		s3 = s2
-		if (s3.type != NOTE) {
-			for (s3 = s3.prev; s3 != s1; s3 = s3.prev)
-				if (s3.type == NOTE)
-					break
-		}
+		for (s3 = s2; s3.type != NOTE; s3 = s3.prev)
+			;
 		y2 = y_get(upstaff, 0, s3.x - 4, 8)
 	} else {
 		y2 = 0
@@ -2539,7 +2522,6 @@ function draw_tuplet(s1,
 	ym += dy - 10;
 	y1 = ym + a * (x1 - xm);
 	y2 = ym + a * (x2 - xm);
-	out_tubr(x1, y1 + 4, x2 - x1, y2 - y1);
 
 	/* shift the slurs / decorations */
 	ym -= 2
@@ -2557,24 +2539,18 @@ function draw_tuplet(s1,
 	}
     } /* lower voice */
 
-	if (s1.tf[2] == 1)			/* if 'which' == none */
+	if (s1.tf[2] == 1) {			/* if 'which' == none */
+		out_tubr(x1, y1 + 4, x2 - x1, y2 - y1, dir == SL_ABOVE);
 		return
-	yy = .5 * (y1 + y2)
-	if (s1.tf[2] == 0)			/* if 'which' == number */
-		out_bnum(xm, yy, p, true)
-	else
-		out_bnum(xm, yy, p + ':' +  q, true)
-	if (dir == SL_ABOVE) {
-//		yy += 8
-		yy += 9;
-//		if (s3.ymx < yy)
-//			s3.ymx = yy
-		y_set(upstaff, true, xm - 3, 6, yy)
-	} else {
-//		if (s3.ymn > yy)
-//			s3.ymn = yy
-		y_set(upstaff, false, xm - 3, 6, yy)
 	}
+	out_tubrn(x1, y1, x2 - x1, y2 - y1, dir == SL_ABOVE,
+		s1.tf[2] == 0 ? p.toString() : p + ':' +  q);
+
+	yy = .5 * (y1 + y2)
+	if (dir == SL_ABOVE)
+		y_set(upstaff, true, xm - 3, 6, yy + 9)
+	else
+		y_set(upstaff, false, xm - 3, 6, yy)
 }
 
 /* -- draw the ties between two notes/chords -- */
