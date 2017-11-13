@@ -2209,7 +2209,7 @@ var char_tb = [
 ]
 
 function parse_music_line() {
-	var	grace, last_note_sav, a_dcn_sav, no_eol,
+	var	grace, last_note_sav, a_dcn_sav, no_eol, s,
 		tp_a = [], tp,
 		tpn = -1,
 		tp_fact = 1,
