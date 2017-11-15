@@ -435,10 +435,14 @@ function set_format(cmd, param, lock) {
 			syntax(1, err_bad_val_s, '%%' + cmd)
 			break
 		}
-		if (cmd == "scale")	// old scale
+		switch (cmd) {
+		case "scale":			// old scale
 			f /= .75
-		else if (cmd == "pagescale")
+		case "pagescale":
 			cmd = "scale";
+			img.chg = true
+			break
+		}
 		cfmt[cmd] = f
 		break
 	case "bstemdown":
