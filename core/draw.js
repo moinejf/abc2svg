@@ -2362,7 +2362,7 @@ function draw_tuplet(s1,
 	x1 = s1.x - 4;
 	y1 = 24
 	if (s1.st == upstaff) {
-		for (s3 = s1; s3.type != NOTE; s3 = s3.next)
+		for (s3 = s1; !s3.dur; s3 = s3.next)
 			;
 		ym = y_get(upstaff, 1, s3.x - 4, 8)
 		if (ym > y1)
@@ -2372,7 +2372,7 @@ function draw_tuplet(s1,
 	}
 	y2 = 24
 	if (s2.st == upstaff) {
-		for (s3 = s2; s3.type != NOTE; s3 = s3.prev)
+		for (s3 = s2; !s3.dur; s3 = s3.prev)
 			;
 		ym = y_get(upstaff, 1, s3.x - 4, 8)
 		if (ym > y2)
@@ -2469,14 +2469,14 @@ function draw_tuplet(s1,
 	}
 
 	if (s1.st == upstaff) {
-		for (s3 = s1; s3.type != NOTE; s3 = s3.next)
+		for (s3 = s1; !s3.dur; s3 = s3.next)
 			;
 		y1 = y_get(upstaff, 0, s3.x - 4, 8)
 	} else {
 		y1 = 0
 	}
 	if (s2.st == upstaff) {
-		for (s3 = s2; s3.type != NOTE; s3 = s3.prev)
+		for (s3 = s2; !s3.dur; s3 = s3.prev)
 			;
 		y2 = y_get(upstaff, 0, s3.x - 4, 8)
 	} else {
