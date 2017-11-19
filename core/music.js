@@ -1171,8 +1171,9 @@ function add_end_bar(s) {
 		nhd: 0,
 		notes: [{
 			pit: s.notes[0].pit
-		}]
-//,wl:0,wr:0
+		}],
+		wl:0,
+		wr:0
 	}
 }
 
