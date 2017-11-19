@@ -187,7 +187,7 @@ function calculate_beam(bm, s1) {
 	}
 
 	s_closest = s1;
-	p_min = 24;
+	p_min = 100;
 	p_max = 0
 	for (s = s1; ; s = s.next) {
 		if (s.type != NOTE)
