@@ -4319,7 +4319,7 @@ function set_sym_glue(width) {
 		} else {
 			alfa = (x - width) / (x - xmin)		/* shrink */
 			if (alfa > 1) {
-				error(0, s, "Line too much shrunk $1 $2 $3",
+				error(1, s, "Line too much shrunk $1 $2 $3",
 					xmin.toFixed(2),
 					x.toFixed(2),
 					width.toFixed(2))
