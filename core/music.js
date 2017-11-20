@@ -1506,7 +1506,7 @@ function set_nl(s) {
 
 	// set the eol on the next symbol
 	function set_eol_next(s) {
-		for (s = s.ts_next; s; s = s.ts_next) {
+		for (s = s.next; s; s = s.ts_prev) {
 			if (s.seqst) {
 				set_eol(s)
 				break
