@@ -1818,12 +1818,10 @@ function cut_tune(lwidth, indent) {
 			continue
 		s2 = set_nl(s)
 		delete s.eoln;
-		s = s2
-		if (!s)
+		if (!s2)
 			break
-		if (s.type == BLOCK)	// don't miss a page change
-			s = s.ts_prev;
-		xmin = s.shrink;
+		xmin = s2.shrink;
+		s = s2.ts_prev;			// for loop
 		indent = 0
 	}
 
