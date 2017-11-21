@@ -43,7 +43,7 @@ var	BAR = 0,
 	BLOCK = 16,
 	REMARK = 17,
 
-// accidentals
+// note heads
 	FULL = 0,
 	EMPTY = 1,
 	OVAL = 2,
@@ -73,9 +73,6 @@ var	BAR = 0,
 	MASTER_VOICE = 0x1000,
 
 	BASE_LEN = 1536,
-//	CM = 28.346,		// 1 inch = 2.54 centimeter
-//	IN = 72,
-// factor / 0.75
 	IN = 96,		// resolution 96 PPI
 	CM = 37.8,		// 1 inch = 2.54 centimeter
 	YSTEP = 128		/* number of steps for y offsets */
@@ -100,7 +97,6 @@ var	glovar = {
 
 // utilities
 function clone(obj) {
-//	if (!obj || typeof(obj) != 'object')
 	if (!obj)
 		return obj
 	var tmp = new obj.constructor()
