@@ -624,7 +624,7 @@ function new_key(param) {
 		}
 	}
 
-	s.k_delta = (cgd2cde[(s.k_sf + 7) % 7] + 14) % 7;
+	s.k_delta = cgd2cde[(s.k_sf + 7) % 7];
 	s.k_mode = mode
 
 	return [s, info_split(param, 0)]

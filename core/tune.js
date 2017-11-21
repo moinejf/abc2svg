@@ -165,11 +165,11 @@ function sort_all() {
 		vtb.push(voice_tb[v].sym)
 
 	/* initialize the voice order */
-	var	fl = 1,
+	var	fl = 1,				// start a new time sequence
 		sy = cur_sy,
 		sy_w = 0,
 		sy_time = 0,
-		new_sy = 1
+		new_sy = true
 
 	while (1) {
 		if (new_sy && fl) {
@@ -1483,7 +1483,7 @@ function key_transp(s_key) {
 		break
 	}
 	s_key.k_sf = sf;
-	s_key.k_delta = (cgd2cde[(sf + 7) % 7] + 14) % 7
+	s_key.k_delta = cgd2cde[(sf + 7) % 7]
 }
 
 /* -- set the accidentals when K: with modified accidentals -- */
