@@ -720,15 +720,8 @@ function set_width(s) {
 		if (s.xmx > 0)
 			s.wr += s.xmx + 4;
 		for (s2 = s.prev; s2; s2 = s2.prev) {
-			switch (s2.type) {
-			case BLOCK:
-			case PART:
-			case REMARK:
-			case STAVES:
-			case TEMPO:
-				continue
-			}
-			break
+			if (w_tb[s2.type] != 0)
+				break
 		}
 		if (s2) {
 			switch (s2.type) {
@@ -902,18 +895,11 @@ function set_width(s) {
 
 			/* if preceeded by a grace note sequence, adjust */
 			for (s2 = s.prev; s2; s2 = s2.prev) {
-				switch (s2.type) {
-				case BLOCK:
-				case PART:
-				case REMARK:
-				case STAVES:
-				case TEMPO:
-					continue
-				case GRACE:
-					s.wl -= 8
+				if (w_tb[s2.type] != 0) {
+					if (s2.type == GRACE)
+						s.wl -= 8
 					break
 				}
-				break
 			}
 		} else {
 			s.wl = s.wr = 0
@@ -4182,7 +4168,7 @@ function set_piece() {
 		return
 
 	s = tsnext;
-	s.nl = false;
+	delete s.nl;
 	s = s.ts_prev;
 	s.ts_next = null;
 
