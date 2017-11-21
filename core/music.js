@@ -1626,21 +1626,24 @@ function get_ck_width() {
 }
 
 // get the width of the symbols up to the next eoln or eof
-function get_width(first, last) {
-	var	s, shrink, space,
+function get_width(s, last) {
+	var	shrink, space,
 		w = 0,
 		sp_fac = (1 - cfmt.maxshrink)
 
-	for (s = first; s != last; s = s.ts_next) {
-		if (!s.seqst)
-			continue
-		s.x = w;
-		shrink = s.shrink
-		if ((space = s.space) < shrink)
-			w += shrink
-		else
-			w += shrink * cfmt.maxshrink
-				+ space * sp_fac
+	while (1) {
+		if (s.seqst) {
+			s.x = w;
+			shrink = s.shrink
+			if ((space = s.space) < shrink)
+				w += shrink
+			else
+				w += shrink * cfmt.maxshrink
+					+ space * sp_fac
+		}
+		if (s == last)
+			break
+		s = s.ts_next
 	}
 	return w;
 }
