@@ -1631,7 +1631,7 @@ function get_width(s, last) {
 		w = 0,
 		sp_fac = (1 - cfmt.maxshrink)
 
-	while (1) {
+	do {
 		if (s.seqst) {
 			s.x = w;
 			shrink = s.shrink
@@ -1644,7 +1644,7 @@ function get_width(s, last) {
 		if (s == last)
 			break
 		s = s.ts_next
-	}
+	} while (s)
 	return w;
 }
 
