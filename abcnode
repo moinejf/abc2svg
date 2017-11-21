@@ -2,14 +2,14 @@
 # abc2svg with raw nodeJS
 progdir=`dirname $0`
 
-cat abc2svg-1.js cmdline.js > /tmp/toto.js
+cat ${progdir}/abc2svg-1.js ${progdir}/cmdline.js > /tmp/toto.js
 case $1 in
 	*.js)
 		cat $1 >> /tmp/toto.js
 		shift
 		;;
 	*)
-		cat toxhtml.js >> /tmp/toto.js
+		cat ${progdir}/toxhtml.js >> /tmp/toto.js
 		;;
 esac
 cat <<EOF >> /tmp/toto.js
