@@ -211,10 +211,8 @@ function set_linebreak(param) {
 	var i, item
 
 	for (i = 0; i < 128; i++) {
-		if (char_tb[i] == "\n") {
+		if (char_tb[i] == "\n")
 			char_tb[i] = nil	// remove old definition
-			break
-		}
 	}
 	param = param.split(/\s+/)
 	for (i = 0; i < param.length; i++) {
@@ -229,7 +227,6 @@ function set_linebreak(param) {
 			break
 		case "<none>":
 			continue
-			break
 		case "<EOL>":
 			item = '\n'
 			break
