@@ -1945,19 +1945,7 @@ function is_voice_sig() {
 		return true	// new voice (may appear in the middle of a tune)
 	if (curvoice.time != 0)
 		return false
-	for (s = curvoice.sym; s; s = s.next) {
-		switch (s.type) {
-		case BLOCK:
-		case REMARK:
-		case STAVES:
-		case TEMPO:
-		case PART:
-			break
-		default:
-			return false
-		}
-	}
-	return true
+	return w_tb[curvoice.sym.type] == 0
 }
 
 // treat a clef found in the tune body

@@ -1793,20 +1793,13 @@ function cut_tune(lwidth, indent) {
 			continue
 		xmin += s.shrink
 		if (xmin > lwidth) {
-//			if (cfmt.linewarn)
-//				error(0, s, "Line overfull (%.0fpt of %.0fpt)",
-//					xmin, lwidth)
-			s = s2 = set_lines(s2, s, lwidth, indent)
-			if (!s)
-				break
-			xmin = s.shrink;
-			indent = 0
-			continue
+			s2 = set_lines(s2, s, lwidth, indent)
+		} else {
+			if (!s.eoln)
+				continue
+			s2 = set_nl(s)
+			delete s.eoln
 		}
-		if (!s.eoln)
-			continue
-		s2 = set_nl(s)
-		delete s.eoln;
 		if (!s2)
 			break
 		xmin = s2.shrink;
