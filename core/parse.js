@@ -361,6 +361,11 @@ function set_kv_parm(a) {	// array of items
 		item = a.shift()
 		if (!item)
 			break
+		if (item[item.length - 1] == '='
+		 && !a[0]) {
+			syntax(1, err_bad_val_s, item)
+			break
+		}
 		switch (item) {
 		case "clef=":
 			s = a.shift()		// keep last clef
