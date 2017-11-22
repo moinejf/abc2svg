@@ -1802,8 +1802,15 @@ function cut_tune(lwidth, indent) {
 		}
 		if (!s2)
 			break
+
+		// (s2 may be tsfirst - no ts_prev - when only one
+		//  embedded info in the first line after the first K:)
+		if (!s2.ts_prev) {
+			delete s2.nl
+			continue
+		}
 		xmin = s2.shrink;
-		s = s2.ts_prev;			// for loop
+		s = s2.ts_prev;		// don't miss an eoln
 		indent = 0
 	}
 
