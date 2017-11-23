@@ -1756,6 +1756,11 @@ function cut_tune(lwidth, indent) {
 	if (cfmt.custos && voice_tb.length == 1)
 		lwidth -= 12
 
+	// take care of the voice subnames
+	i = set_indent()
+	lwidth -= i;
+	indent -= i;
+
 	/* if asked, count the measures and set the EOLNs */
 	if (cfmt.barsperstaff) {
 		i = cfmt.barsperstaff;
@@ -3079,7 +3084,7 @@ function set_global() {
 }
 
 /* -- return the left indentation of the staves -- */
-function set_indent() {
+function set_indent(first) {
 	var	st, v, w, p_voice, p, i, j, font,
 		nv = voice_tb.length,
 		maxw = 0
@@ -3091,7 +3096,7 @@ function set_indent() {
 		st = cur_sy.voices[v].st
 //		if (!cur_sy.st_print[st])
 //			continue
-		p = p_voice.new_name ? p_voice.nm : p_voice.snm
+		p = (first && p_voice.new_name) ? p_voice.nm : p_voice.snm
 		if (!p)
 			continue
 		if (!font) {
@@ -3127,7 +3132,7 @@ function set_indent() {
 	}
 	maxw += w
 
-	if (insert_meter & 2)			/* if indent */
+	if (first)			// if %%indent
 		maxw += cfmt.indent
 	return maxw
 }
@@ -4493,7 +4498,7 @@ function output_music() {
 
 	set_allsymwidth(null);		/* set the width of all symbols */
 
-	indent = set_indent()
+	indent = set_indent(true)
 
 	/* if single line, adjust the page width */
 	if (cfmt.singleline) {
@@ -4510,7 +4515,6 @@ function output_music() {
 	beta_last = 0
 	while (1) {				/* loop per music line */
 		set_piece();
-		indent = set_indent();
 		set_sym_glue(lwidth - indent)
 		if (realwidth != 0) {
 			if (indent != 0)
@@ -4543,6 +4547,7 @@ function output_music() {
 		tsfirst.ts_prev = null;
 		set_sym_line();
 		lwidth = get_lwidth()	// the image size may have changed
+		indent = set_indent()
 	}
 }
 
