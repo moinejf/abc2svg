@@ -3511,7 +3511,7 @@ function draw_systems(indent) {
 		}
 		switch (s.type) {
 		case STAVES:
-			staves_bar = false
+			staves_bar = 0
 			for (s2 = s.ts_next; s2; s2 = s2.ts_next) {
 				if (s2.time != s.time)
 					break
@@ -3551,8 +3551,24 @@ function draw_systems(indent) {
 			continue
 		case BAR:
 			st = s.st
-			if (s.second || s.invis || xstaff[st] < 0)
+			if (s.second || s.invis)
 				break
+
+			// if the bar is not in the current staff system
+			// it may be in the next one
+			if (xstaff[st] < 0) {
+				for (s2 = s.ts_next;
+				     s2 && s2.time == s.time;
+				     s2 = s2.ts_next) {
+					if (s2.type == STAVES)
+						break
+				}
+				if (!s2 || s2.type != STAVES)
+					break
+				xstaff[st] = s.x;
+				bar_set()
+			}
+
 			anno_start(s);
 			draw_bar(s, bar_bot[st], bar_height[st]);
 			anno_stop(s)

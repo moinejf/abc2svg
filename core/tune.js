@@ -155,7 +155,7 @@ var w_tb = new Uint8Array([
 
 function sort_all() {
 	var	s, s2, p_voice, v, time, w, wmin, ir, multi,
-		prev, nb,
+		prev, nb, ir2, v2, sy,
 		nv = voice_tb.length,
 		vtb = [],
 		vn = [],			/* voice indexed by range */
@@ -166,14 +166,12 @@ function sort_all() {
 
 	/* initialize the voice order */
 	var	fl = 1,				// start a new time sequence
-		sy = cur_sy,
-		sy_w = 0,
-		sy_time = 0,
-		new_sy = true
+		new_sy = cur_sy
 
 	while (1) {
 		if (new_sy && fl) {
-			new_sy = false;
+			sy = new_sy;
+			new_sy = null;
 			multi = -1;
 			vn = []
 			for (v = 0; v < nv; v++) {
@@ -215,13 +213,8 @@ function sort_all() {
 			}
 		}
 
-		if (wmin > 127) {
-			if (new_sy && !fl) {	// if %%score with no common voice
-				fl = 1
-				continue
-			}
+		if (wmin > 127)
 			break			// done
-		}
 
 		/* if some multi-rest and many voices, expand */
 		if (time == mrest_time) {
@@ -257,17 +250,6 @@ function sort_all() {
 			}
 		}
 
-		// continue the time sequence after STAVES
-		if (sy_w) {
-			if (sy_w < 0) {		// init
-				sy_w = wmin
-			} else if (sy_time == time && sy_w == wmin) {
-				fl = 0
-			} else {
-				sy_w = 0
-			}
-		}
-
 		/* link the vertical sequence */
 		for (ir = 0; ir < nv; ir++) {
 			v = vn[ir]
@@ -278,10 +260,23 @@ function sort_all() {
 			 || w_tb[s.type] != wmin)
 				continue
 			if (s.type == STAVES) {
-				sy = s.sy;
-				new_sy = true;
-				sy_w = -1;
-				sy_time = s.time
+				new_sy = s.sy;
+
+				// set all voices of previous and next staff systems
+				// as reachable
+				for (ir2 = 0; ir2 < nv; ir2++) {
+					if (vn[ir2] == undefined)
+						break
+				}
+				for (v2 = 0; v2 < nv; v2++) {
+					if (!new_sy.voices[v2])
+						continue
+					ir = new_sy.voices[v2].range
+					if (ir < 0
+					 || sy.voices[v2].range >= 0)
+						continue
+					vn[ir2++] = v2
+				}
 			}
 			if (fl) {
 				fl = 0;
@@ -1639,23 +1634,7 @@ function get_staves(cmd, parm) {
 			dur: 0
 		}
 
-		// put the staves before a measure bar (see draw_bar())
-		var s2 = curvoice.last_sym
-		if (s2 && s2.type == BAR && s2.time == maxtime) {
-			curvoice.last_sym = s2.prev
-			if (!s2.prev)
-				curvoice.sym = s2.prev;	// null
-			sym_link(s);
-			s.next = s2;
-			s2.prev = s;
-			curvoice.last_sym = s2
-			if (s2.eoln) {
-				s.eoln = true;
-				delete s2.eoln
-			}
-		} else {
-			sym_link(s)	// link the staves in this voice
-		}
+		sym_link(s);		// link the staves in this voice
 		par_sy.nstaff = nstaff;
 		new_syst();
 		s.sy = par_sy
@@ -1962,7 +1941,12 @@ function get_clef(s) {
 
 	// clef change
 	/* the clef must appear before a key signature or a bar */
-	s2 = curvoice.last_sym
+	for (s2 = curvoice.last_sym;
+	     s2 && s2.prev && s2.time == curvoice.time;
+	     s2 = s2.prev) {
+		if (w_tb[s2.type] != 0)
+			break
+	}
 	if (s2 && s2.prev
 	 && s2.time == curvoice.time		// if no time skip
 	 && ((s2.type == KEY && !s2.k_none) || s2.type == BAR)) {
@@ -1974,6 +1958,7 @@ function get_clef(s) {
 			}
 			break
 		}
+		s2 = curvoice.last_sym;
 		curvoice.last_sym = s3.prev;
 		sym_link(s);
 		s.next = s3;
