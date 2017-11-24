@@ -21,7 +21,6 @@ var	output = [],		// output buffer
 	style = '\n.fill {fill: currentColor}\
 \n.stroke {stroke: currentColor; fill: none}\
 \ntext {white-space: pre}\
-\n.music {font-family: music; font-size: 24px; fill: currentColor}\
 \n.music text, .music tspan {fill:currentColor}',
 	font_style = '',
 	posx = cfmt.leftmargin / cfmt.scale,	// default x offset of the images
@@ -1002,12 +1001,20 @@ function svg_flush() {
 	}
 
 	if (style || font_style || musicfont) {
-		head += '<style type="text/css">' + style + font_style + '\n'
-		if (musicfont)
-			head += '@font-face {\n\
+		head += '<style type="text/css">' + style + font_style
+		if (musicfont) {
+			if (musicfont.indexOf('(') > 0) {
+				head += '\n\
+.music {font-family: music; font-size: 24px; fill: currentColor}\n\
+@font-face {\n\
   font-family: "music";\n\
-  src: ' + musicfont + '}\n';
-		head += '</style>\n'
+  src: ' + musicfont + '}';
+			} else {
+				head += '\n\
+.music {font-family: '+ musicfont +'; font-size: 24px; fill: currentColor}'
+			}
+		}
+		head += '\n</style>\n'
 	}
 	if (defs)
 		head += '<defs>' + defs + '\n</defs>\n'
