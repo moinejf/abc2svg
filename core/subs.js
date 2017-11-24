@@ -69,7 +69,7 @@ function strw(str) {
 			} else if (c >= '1' && c <= '9') {
 				gene.curfont = get_font("u" + c)
 			} else {
-				w += cwid('$') * swfac
+				c = '$'
 				break
 			}
 			i++
