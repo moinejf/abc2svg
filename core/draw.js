@@ -714,7 +714,7 @@ function draw_meter(x, s) {
 		if (meter.bot) {
 			if (meter.bot.length > meter.top.length)
 				dx = 13 * meter.bot.length;
-			out_XYAB('<g style="font:bold 16px serif"\n\
+			out_XYAB('<g style="font-family:serif; font-weight:bold; font-size: 16px"\n\
 	transform="translate(X,Y) scale(1.2,1)">\n\
 	<text y="-12" text-anchor="middle">A</text>\n\
 	<text text-anchor="middle">B</text>\n\
@@ -733,7 +733,7 @@ function draw_meter(x, s) {
 				f = meter.top[1] != '.' ? "pmsig" : "pMsig"
 				break
 			default:
-				out_XYAB('<g style="font:bold 18px serif"\n\
+				out_XYAB('<g style="font-family:serif; font-weight:bold; font-size: 18px"\n\
 	transform="translate(X,Y) scale(1.2,1)">\n\
 	<text y="-6" text-anchor="middle">A</text>\n\
 </g>\n', x + dx * .5, y, meter.top)
@@ -3727,7 +3727,7 @@ function draw_symbols(p_voice) {
 			x += 32;
 			anno_start(s);
 			xygl(x, staff_tb[s.st].y + 12, "mrest");
-			out_XYAB('<text style="font:bold 15px serif"\n\
+			out_XYAB('<text style="font-family:serif; font-weight:bold; font-size: 15px"\n\
 	x ="X" y="Y" text-anchor="middle">A</text>\n',
 				x, staff_tb[s.st].y + 28, s.nmes);
 			anno_stop(s)

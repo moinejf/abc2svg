@@ -664,19 +664,19 @@ function style_font(fn) {		// 'font_name'.'size'
 		b = fn.indexOf("Bold");
 
 	fn = r[0];
-	r = "font:"
+	r = ''
 	if (b > 0) {
-		r += "bold ";
+		r += "font-weight:bold; ";
 		j = b
 	}
 	if (i > 0 || o > 0) {
 		if (i > 0) {
-			r += "italic "
+			r += "font-style:italic; "
 			if (i < j)
 				j = i
 		}
 		if (o > 0) {
-			r += "oblique "
+			r += "font-style:oblique; "
 			if (o < j)
 				j = o
 		}
@@ -686,7 +686,7 @@ function style_font(fn) {		// 'font_name'.'size'
 			j--;
 		fn = fn.slice(0, j)
 	}
-	return r + sz + "px " + fn
+	return 'font-family:' + fn + '; ' + r + 'font-size:' + sz + 'px'
 }
 Abc.prototype.style_font = style_font
 

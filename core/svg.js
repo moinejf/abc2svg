@@ -155,7 +155,8 @@ var glyphs = {
 	-2.1 5 -5.4 6.8 -7.6 6"/>',
   emb: '<path id="emb" class="stroke" stroke-width="1.2" stroke-linecap="round"\n\
 	d="m-2.5 -3h5"/>',
-  brth: '<text id="brth" y="-6" style="font:bold italic 30px serif">,</text>',
+  brth: '<text id="brth" y="-6" \
+style="font-family:serif; font-weight:bold; font-style:italic; font-size:30px">,</text>',
   roll: '<path id="roll" class="fill" d="m-6 0\n\
 	c0.4 -7.3 11.3 -7.3 11.7 0\n\
 	-1.3 -6 -10.4 -6 -11.7 0"/>',
@@ -174,10 +175,12 @@ var glyphs = {
 	d="m0 0v12"/>',
   sphr: '<path id="sphr" class="stroke" stroke-width="1.2"\n\
 	d="m0 0v6"/>',
-  sfz: '<text id="sfz" x="-5" y="-7" style="font:italic 14px serif">\n\
+  sfz: '<text id="sfz" x="-5" y="-7" \
+style="font-family:serif; font-style:italic; font-size:14px">\n\
 	s<tspan font-size="16" font-weight="bold">f</tspan>z</text>',
   trl: '<text id="trl" x="-2" y="-4"\n\
-	style="font:bold italic 16px serif">tr</text>',
+	style="font-family:serif; font-weight:bold; \
+font-style:italic; font-size:16px">tr</text>',
   opend: '<circle id="opend" class="stroke"\n\
 	cx="0" cy="-3" r="2.5"/>',
   snap: '<path id="snap" class="stroke" d="m-3 -6\n\
@@ -199,7 +202,7 @@ var glyphs = {
 		-2 -2.5 -2 2.5 -2 -2.5 -2 2.5"/>\n\
 	<path class="stroke" d="m3.5 0l5 -7"/>\n\
 </g>',
-  oct: '<text id="oct" style="font:12px serif">8</text>'
+  oct: '<text id="oct" style="font-family:serif; font-size:12px">8</text>'
 }
 
 // mark a glyph as used and add it in <defs>
@@ -541,7 +544,7 @@ function out_bar(x, y, h, dotted) {
 }
 // tuplet value - the staves are not defined
 function out_bnum(x, y, str) {
-	out_XYAB('<text style="font:italic 12px serif"\n\
+	out_XYAB('<text style="font-family:serif; font-style:italic; font-size:12px"\n\
 	x="X" y="Y" text-anchor="middle">A</text>\n',
 		x, y, str.toString())
 }
@@ -726,7 +729,7 @@ function out_tubrn(x, y, dx, dy, up, str) {
 	h = up ? -3 : 3;
 
 	dx /= stv_g.scale;
-	out_XYAB('<text style="font:italic 12px serif"\n\
+	out_XYAB('<text style="font-family:serif; font-style:italic; font-size:12px"\n\
 	x="X" y="Y" text-anchor="middle">A</text>\n',
 		x + dx / 2, y + dy / 2, str);
 
@@ -755,29 +758,29 @@ var deco_str_style = {
 crdc:	{
 		dx: 0,
 		dy: 5,
-		style: 'font:italic 14px serif'
+		style: 'font-family:serif; font-style:italic; font-size:14px'
 	},
 dacs:	{
 		dx: 0,
 		dy: 3,
-		style: 'font:16px serif',
+		style: 'font-family:serif; font-size:16px',
 		anchor: ' text-anchor="middle"'
 	},
 fng:	{
 		dx: 0,
 		dy: 1,
-		style: 'font:8px Bookman',
+		style: 'font-family:Bookman; font-size:8px',
 		anchor: ' text-anchor="middle"'
 	},
 pf:	{
 		dx: 0,
 		dy: 5,
-		style: 'font:bold italic 16px serif'
+		style: 'font-family:serif; font-weight:bold; font-style:italic; font-size:16px'
 	},
 '@':	{
 		dx: 0,
 		dy: 5,
-		style: 'font:12px sans-serif'
+		style: 'font-family:sans-serif; font-size:12px'
 	}
 }
 
@@ -842,7 +845,8 @@ function out_ltr(x, y, val) {
 }
 function out_8va(x, y, val, defl) {
 	if (!defl.nost) {
-		out_XYAB('<text x="X" y="Y" style="font:italic bold 12px serif">8\
+		out_XYAB('<text x="X" y="Y" \
+style="font-family:serif; font-weight:bold; font-style:italic; font-size:12px">8\
 <tspan dy="-4" style="font-size:10px">va</tspan></text>\n',
 			x - 8, y);
 		x += 12;
@@ -858,7 +862,8 @@ function out_8va(x, y, val, defl) {
 }
 function out_8vb(x, y, val, defl) {
 	if (!defl.nost) {
-		out_XYAB('<text x="X" y="Y" style="font:italic bold 12px serif">8\
+		out_XYAB('<text x="X" y="Y" \
+style="font-family:serif; font-weight:bold; font-style:italic; font-size:12px">8\
 <tspan dy="-4" style="font-size:10px">vb</tspan></text>\n',
 			x - 8, y);
 		x += 4;
@@ -874,7 +879,8 @@ function out_8vb(x, y, val, defl) {
 }
 function out_15ma(x, y, val, defl) {
 	if (!defl.nost) {
-		out_XYAB('<text x="X" y="Y" style="font:italic bold 12px serif">15\
+		out_XYAB('<text x="X" y="Y" \
+style="font-family:serif; font-weight:bold; font-style:italic; font-size:12px">15\
 <tspan dy="-4" style="font-size:10px">ma</tspan></text>\n',
 			x - 10, y);
 		x += 20;
@@ -890,7 +896,8 @@ function out_15ma(x, y, val, defl) {
 }
 function out_15mb(x, y, val, defl) {
 	if (!defl.nost) {
-		out_XYAB('<text x="X" y="Y" style="font:italic bold 12px serif">15\
+		out_XYAB('<text x="X" y="Y" \
+style="font-family:serif; font-weight:bold; font-style:italic; font-size:12px">15\
 <tspan dy="-4" style="font-size:10px">mb</tspan></text>\n',
 			x - 10, y);
 		x += 7;
