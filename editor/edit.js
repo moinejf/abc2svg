@@ -253,7 +253,8 @@ function render() {
 // select a source ABC element
 function gotoabc(l, c) {
 	var	s = document.getElementById("source"),
-		idx = 0
+		idx = 0;
+	selsrc(0)
 	while (--l >= 0) {
 		idx = s.value.indexOf('\n', idx) + 1
 		if (idx <= 0) {
@@ -390,6 +391,7 @@ var	i, j, elts, d,
 	}
 	if (!nosel && i1 < i2) {
 		var s = document.getElementById("source");
+		selsrc(0);
 		s.setSelectionRange(i1, i2);
 		s.blur();
 		s.focus()
