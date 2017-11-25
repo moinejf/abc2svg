@@ -1925,7 +1925,7 @@ function is_voice_sig() {
 	if (curvoice.time != 0)
 		return false
 	for (s = curvoice.last_sym; s; s = s.prev)
-		if (w_tb[s] != 0)
+		if (w_tb[s.type] != 0)
 			return false
 	return true
 }
