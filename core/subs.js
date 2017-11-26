@@ -108,9 +108,10 @@ function out_str(str) {
 					 return "&amp;"
 				return c
 			case '$':
-				if (c[1] == '0')
-					n_font = gene.deffont
-				else if (c[1] >= '1' && c[1] <= '9')
+				if (c[1] == '0') {
+					n_font = gene.deffont;
+					use_font(n_font)
+				} else if (c[1] >= '1' && c[1] <= '9')
 					n_font = get_font("u" + c[1])
 				else
 					return c
@@ -275,6 +276,7 @@ function write_text(text, action) {
 			if (i == j) {			// new paragraph
 				vskip(parskip);
 				blk_out()
+				use_font(gene.curfont)
 				while (text[i + 1] == '\n') {
 					vskip(lineskip);
 					i++
@@ -327,6 +329,7 @@ function write_text(text, action) {
 			}
 			if (i == text.length)
 				break
+			use_font(gene.curfont);
 			j = i + 2
 		}
 		break
@@ -417,8 +420,10 @@ function put_words(words) {
 	for (i = 0; i < i_end || i2 < nw; i++) {
 		var desc = gene.curfont.size * .2
 //fixme:should also permit page break on stanza start
-		if (i < i_end && words[i].length == 0)
+		if (i < i_end && words[i].length == 0) {
 			blk_out();
+			use_font(gene.curfont)
+		}
 		vskip(cfmt.lineskipfac * gene.curfont.size - desc)
 		if (i < i_end)
 			put_wline(words[i], 45., 0)
@@ -473,7 +478,8 @@ function put_history() {
 			xy_str(w, 0, str[j])
 		}
 		vskip(h * .3);
-		blk_out()
+		blk_out();
+		use_font(gene.curfont)
 	}
 }
 
