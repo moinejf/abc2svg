@@ -1597,24 +1597,19 @@ function set_nl(s) {
 }
 
 /* get the width of the starting clef and key signature */
+// return
+//	r[0] = width of clef and key signature
+//	r[1] = width of the meter
 function get_ck_width() {
-	var	v, p_voice,
-		nv = voice_tb.length
+    var	r0, r1,
+	p_voice = voice_tb[0]
 
-	for (v = 0; v < nv; v++) {
-		p_voice = voice_tb[v]
-		if (p_voice.clef)
-			break
-	}
 	set_width(p_voice.clef);
-	set_width(p_voice.key)
-	if (!cfmt.singleline)
-		return p_voice.clef.wl + p_voice.clef.wr +
-			p_voice.key.wl + p_voice.key.wr;
+	set_width(p_voice.key);
 	set_width(p_voice.meter)
-	return p_voice.clef.wl + p_voice.clef.wr +
-		p_voice.key.wl + p_voice.key.wr +
-		p_voice.meter.wl + p_voice.meter.wr;
+	return [p_voice.clef.wl + p_voice.clef.wr +
+			p_voice.key.wl + p_voice.key.wr,
+		p_voice.meter.wl + p_voice.meter.wr]
 }
 
 // get the width of the symbols up to the next eoln or eof
@@ -1755,18 +1750,22 @@ function cut_tune(lwidth, indent) {
 //		},
 		s = tsfirst
 
+	// take care of the voice subnames
+	if (indent != 0) {
+		i = set_indent()
+		lwidth -= i;
+		indent -= i;
+	}
+
 	/* adjust the line width according to the starting clef
 	 * and key signature */
 /*fixme: may change in the tune*/
-	lwidth -= get_ck_width()
+	i = get_ck_width();
+	lwidth -= i[0];
+	indent += i[1]
 
 	if (cfmt.custos && voice_tb.length == 1)
 		lwidth -= 12
-
-	// take care of the voice subnames
-	i = set_indent()
-	lwidth -= i;
-	indent -= i;
 
 	/* if asked, count the measures and set the EOLNs */
 	if (cfmt.barsperstaff) {
@@ -4511,8 +4510,8 @@ function output_music() {
 
 	/* if single line, adjust the page width */
 	if (cfmt.singleline) {
-		lwidth = get_ck_width() +
-				get_width(tsfirst, null) + indent;
+		v = get_ck_width();
+		lwidth = indent + v[0] + v[1] + get_width(tsfirst, null);
 		img.width = lwidth * cfmt.scale + img.lm + img.rm + 2
 	} else {
 
