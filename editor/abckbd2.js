@@ -273,7 +273,7 @@ document.getElementById("source").addEventListener("keypress", key_press);
 	tmp = document.createElement("div");
 	tmp.id = "kbdhelp";
 	tmp.className = "popup";
-	tmp.style.width = "600px");
+	tmp.style.width = "600px";
 	tmp.innerHTML = 
 '<div class="close" onclick="popshow(\'kbdhelp\')">x</div>\
 <ul id="khlp">\
