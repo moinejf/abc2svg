@@ -380,7 +380,7 @@ var	i, j, elts, d,
 		elts = document.getElementsByClassName(colcl[i]);
 		j = elts.length
 		while (--j >= 0)
-			elts[j].style["fill-opacity"] = on ? 0.4 : 0
+			elts[j].style.fillOpacity = on ? 0.4 : 0
 		if (on) {
 			d = colcl[i].split('_')
 			if (d[1] < i1)
@@ -514,7 +514,7 @@ function set_vol(v) {
 function notehlight(i, on) {
 	var elts = document.getElementsByClassName('_' + i + '_');
 	if (elts && elts[0])
-		elts[0].style["fill-opacity"] = on ? 0.4 : 0
+		elts[0].style.fillOpacity = on ? 0.4 : 0
 }
 function endplay() {
 	document.getElementById("playbutton").innerHTML = texts.play;

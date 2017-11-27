@@ -116,7 +116,7 @@ function key_press(e) {
 		return
 	case '`':			// keyboard switch
 		abc_kb = !abc_kb;
-		kbds.style["background-color"] = abc_kb ? "#80ff80" : "#ffd0d0";
+		kbds.style.backgroundColor = abc_kb ? "#80ff80" : "#ffd0d0";
 		stop_key(e)
 		return
 	}
@@ -265,7 +265,7 @@ document.getElementById("source").addEventListener("keypress", key_press);
 	kbds = document.createElement("li");
 	kbds.addEventListener('click', function() {popshow('abckbd', true)});
 	kbds.className = "dropbutton";
-	kbds.style["background-color"] = "#ffd0d0";
+	kbds.style.backgroundColor = "#ffd0d0";
 	kbds.innerHTML = 'kbd c2';
 	document.getElementById("er").parentNode.appendChild(kbds);
 

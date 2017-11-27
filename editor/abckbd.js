@@ -77,7 +77,7 @@ function key_press(e) {
 		abc_kb = !abc_kb;
 		e.stopImmediatePropagation();
 		e.preventDefault();
-		kbds.style["background-color"] = abc_kb ? "#80ff80" : "#ffd0d0"
+		kbds.style.backgroundColor = abc_kb ? "#80ff80" : "#ffd0d0"
 		return
 	}
 	if (!abc_kb)
@@ -254,7 +254,7 @@ document.getElementById("source").addEventListener("keypress", key_press);
 	kbds = document.createElement("li");
 	kbds.addEventListener('click', function() {popshow('abckbd', true)});
 	kbds.className = "dropbutton";
-	kbds.style["background-color"] ="#ffd0d0";
+	kbds.style.backgroundColor ="#ffd0d0";
 	kbds.innerHTML = 'ABC kbd';
 	document.getElementById("nav").appendChild(kbds);
 

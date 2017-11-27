@@ -41,7 +41,7 @@ user.anno_stop = function(type, start, stop, x, y, w, h) {
 function notehlight(i, on) {
 	var elts = document.getElementsByClassName('_' + i + '_')
 	if (elts && elts[0])
-		elts[0].style["fill-opacity"] = on ? 0.4 : 0
+		elts[0].style.fillOpacity = on ? 0.4 : 0
 }
 
 // init
