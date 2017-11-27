@@ -55,7 +55,7 @@ var	BAR = 0,
 		i, n, dt, d, v,
 		top_v,			// top voice
 		rep_st_s,		// start of sequence to be repeated
-		rep_en_s,		// end
+		rep_en_s,		// end ("|1")
 		rep_nx_s,		// restart at end of repeat
 		rep_st_transp,		// transposition at start of repeat sequence
 		rep_st_map,		// and map
@@ -276,8 +276,8 @@ var	BAR = 0,
 				break
 
 			// right repeat
-			if (s.bar_type[0] == ':'
-			 && s != rep_nx_s) {		// (already done)
+			if (s.bar_type[0] == ':') {
+				s.bar_type = '|';	// don't repeat again
 				rep_nx_s = s		// repeat next
 				if (!rep_en_s)		// if no "|1"
 					rep_en_s = s	// repeat end
