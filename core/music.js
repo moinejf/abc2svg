@@ -1620,13 +1620,13 @@ function get_width(s, last) {
 
 	do {
 		if (s.seqst) {
-			s.x = w;
 			shrink = s.shrink
 			if ((space = s.space) < shrink)
 				w += shrink
 			else
 				w += shrink * cfmt.maxshrink
 					+ space * sp_fac
+			s.x = w
 		}
 		if (s == last)
 			break
@@ -1662,8 +1662,9 @@ function set_lines(	s,		/* first symbol */
 
 		/* try to cut on a measure bar */
 		s2 = first = s;
-		xmin = s.x + wwidth / nlines * cfmt.breaklimit;
-		xmax = s.x + lwidth;
+		xmin = s.x - s.shrink - indent;
+		xmax = xmin + lwidth;
+		xmin += wwidth / nlines * cfmt.breaklimit;
 		cut_here = false
 		for ( ; s != last; s = s.ts_next) {
 			x = s.x
@@ -1695,7 +1696,6 @@ function set_lines(	s,		/* first symbol */
 
 			s = s2;			// restart from start or last bar
 			s2 = s3 = null;
-			xmax -= 6
 			for ( ; s != last; s = s.ts_next) {
 				if (s.beam_st)
 					beam = true
@@ -1733,14 +1733,15 @@ function set_lines(	s,		/* first symbol */
 		if (!s
 		 || (last && s.time >= last.time))
 			break
-		wwidth -= s.x - first.x
+		wwidth -= s.x - first.x;
+		indent = 0
 	}
 	return s
 }
 
 /* -- cut the tune into music lines -- */
 function cut_tune(lwidth, indent) {
-	var	s, s2, i, xmin,
+	var	s, s2, s3, i, xmin,
 //fixme: not usable yet
 //		pg_sav = {
 //			leftmargin: cfmt.leftmargin,
@@ -1804,11 +1805,29 @@ function cut_tune(lwidth, indent) {
 		if (!s.seqst && !s.eoln)
 			continue
 		xmin += s.shrink
-		if (xmin > lwidth) {
+		if (xmin > lwidth) {		// overflow
 			s2 = set_lines(s2, s, lwidth, indent)
 		} else {
 			if (!s.eoln)
 				continue
+
+			// if eoln on a note or a rest,
+			// check for a smaller duration in an other voice
+			if (s.dur) {
+				for (s3 = s.ts_next; s3; s3 = s3.ts_next) {
+					if (s3.seqst
+					 || s3.dur < s.dur)
+						break
+				}
+				if (s3 && s3.dur < s.dur) {
+					while (s3 && !s3.seqst)
+						s3 = s3.ts_next
+					if (!s3)
+						break
+					s2 = s3
+					continue
+				}
+			}
 			s2 = set_nl(s)
 			delete s.eoln
 		}
