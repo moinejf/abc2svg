@@ -241,17 +241,17 @@ function set_linebreak(param) {
 
 // set a new user character (U: or %%user)
 function set_user(parm) {
-	var	k,
-		a = parm.match(/(.*?)[= ]+(.*)/),
-		c = a[1],
-		v = a[2]
+    var	k, c, v,
+	a = parm.match(/(.*?)[= ]*([!"].*[!"])/)
 
-	if (!v || (v[0] != '!' && v[0] != '"')) {
+	if (!a) {
 		syntax(1, 'Lack of starting ! or " in U: / %%user')
 		return
 	}
+	c = a[1];
+	v = a[2]
 	if (v.slice(-1) != v[0]) {
-		syntax(1, "Lack of ending $1 in U:/%%user", c2)
+		syntax(1, "Lack of ending $1 in U:/%%user", v[0])
 		return
 	}
 	if (c[0] == '\\') {
