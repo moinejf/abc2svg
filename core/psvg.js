@@ -552,7 +552,7 @@ function psdeco(f, x, y, de) {
 		script += x.toFixed(2) + ' ' + y.toFixed(2) + ' ';
 		de2 = de.start;
 		x = de2.x;
-		y = de2.y + staff_tb[de2.st].y
+		y = abcobj.get_y(de2.st, de2.y)
 		if (x > de.x - 20)
 			x = de.x - 20
 	}
