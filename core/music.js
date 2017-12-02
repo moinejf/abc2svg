@@ -1492,7 +1492,7 @@ function set_nl(s) {
 
 	// set the eol on the next symbol
 	function set_eol_next(s) {
-		for (s = s.next; s; s = s.ts_prev) {
+		for (s = s.ts_next; s; s = s.ts_next) {
 			if (s.seqst) {
 				set_eol(s)
 				break
@@ -1640,7 +1640,7 @@ function set_lines(	s,		/* first symbol */
 			last,		/* last symbol / null */
 			lwidth,		/* w - (clef & key sig) */
 			indent) {	/* for start of tune */
-	var	first, s2, s3, x, xmin, xmax, wwidth, shrink, space,
+	var	first, s2, s3, x, xmin, xmid, xmax, wwidth, shrink, space,
 		nlines, cut_here;
 
 	for ( ; last; last = last.ts_next) {
@@ -1660,12 +1660,29 @@ function set_lines(	s,		/* first symbol */
 			return last
 		}
 
-		/* try to cut on a measure bar */
 		s2 = first = s;
 		xmin = s.x - s.shrink - indent;
 		xmax = xmin + lwidth;
+		xmid = xmin + wwidth / nlines;
 		xmin += wwidth / nlines * cfmt.breaklimit;
-		cut_here = false
+		for (s = s.ts_next; s != last ; s = s.ts_next) {
+			if (!s.x)
+				continue
+			if (s.type == BAR)
+				s2 = s
+			if (s.x >= xmin)
+				break
+		}
+//fixme: can this occur?
+		if (s == last) {
+			if (last)
+				last = set_nl(last)
+			return last
+		}
+
+		/* try to cut on a measure bar */
+		cut_here = false;
+		s3 = null
 		for ( ; s != last; s = s.ts_next) {
 			x = s.x
 			if (!x)
@@ -1674,48 +1691,74 @@ function set_lines(	s,		/* first symbol */
 				break
 			if (s.type != BAR)
 				continue
-			if (x > xmin) {
-				cut_here = true
-				break
+			if (x < xmid) {
+				s3 = s		// keep the last bar
+				continue
 			}
-			s2 = s				// keep the last bar
-//fixme: might go further ?
+
+			// cut on the bar closest to the middle
+			if (!s3 || xmid - s3.x > s.x - xmid)
+				s3 = s
+			break
 		}
-		if (!s)
-			return	// undefined
 
 		/* if a bar, cut here */
-		if (s.type == BAR)
+		if (s3) {
+			s = s3;
 			cut_here = true
+		}
 
 		/* try to avoid to cut a beam or a tuplet */
 		if (!cut_here) {
-			var	beam = s2.dur &&
-					!s2.beam_st && !s2.beam_end,
+			var	beam = 0,
 				bar_time = s2.time;
 
+			xmax -= 8; // (left width of the inserted bar in set_allsymwidth)
 			s = s2;			// restart from start or last bar
-			s2 = s3 = null;
+			s3 = null
 			for ( ; s != last; s = s.ts_next) {
 				if (s.beam_st)
-					beam = true
-				if (s.beam_end)
-					beam = false;
+					beam++
+				if (s.beam_end && beam > 0)
+					beam--
 				x = s.x
-				if (!x || x < xmin)
+				if (!x)
 					continue
-				if (x + s.shrink >= xmax)
+				if (x + s.wr >= xmax)
 					break
 				if (beam || s.in_tuplet)
 					continue
-				s2 = s
-				if ((s.time - bar_time) % (BASE_LEN / 8) == 0)
+//fixme: this depends on the meter
+				if ((s.time - bar_time) % (BASE_LEN / 4) == 0) {
 					s3 = s
+					continue
+				}
+				if (!s3 || xmid - s3.x > s.x - xmid)
+					s3 = s
+				break
 			}
-			if (s3)
-				s2 = s3
-			if (s2)
-				s = s2
+			if (s3) {
+				s = s3;
+				cut_here = true
+			}
+		}
+
+		// cut anyhere
+		if (!cut_here) {
+			s3 = s = s2
+			for ( ; s != last; s = s.ts_next) {
+				x = s.x
+				if (!x)
+					continue
+				if (x < xmid) {
+					s3 = s
+					continue
+				}
+				if (xmid - s3.x > s.x - xmid)
+					s3 = s
+				break
+			}
+			s = s3
 		}
 
 		if (s.nl) {		/* already set here - advance */
@@ -1810,6 +1853,7 @@ function cut_tune(lwidth, indent) {
 		} else {
 			if (!s.eoln)
 				continue
+			delete s.eoln
 
 			// if eoln on a note or a rest,
 			// check for a smaller duration in an other voice
@@ -1819,17 +1863,13 @@ function cut_tune(lwidth, indent) {
 					 || s3.dur < s.dur)
 						break
 				}
-				if (s3 && s3.dur < s.dur) {
-					while (s3 && !s3.seqst)
-						s3 = s3.ts_next
-					if (!s3)
-						break
-					s2 = s3
-					continue
-				}
+				if (s3 && s3.dur < s.dur)
+					s2 = set_lines(s2, s, lwidth, indent)
+				else
+					s2 = set_nl(s)
+			} else {
+				s2 = set_nl(s)
 			}
-			s2 = set_nl(s)
-			delete s.eoln
 		}
 		if (!s2)
 			break
@@ -4231,7 +4271,7 @@ function set_piece() {
 		s = add_end_bar(s2)
 		s.prev = s.ts_prev = s2;
 		s2.ts_next = s2.next = s;
-		s.shrink = tsnext.shrink;
+		s.shrink = s2.wr + 8;
 		s.space = tsnext.space * .9 - 7
 	}
 }
