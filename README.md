@@ -119,21 +119,22 @@ either as a `tar.gz` or `.zip` file, or by cloning the repository:
 
 (you may use `--depth=1` if you don't want the full `git` history)
 
-Then, building is done using the tool [ninja](https://ninja-build.org/).  
+Then, building is done using the tool [ninja](https://ninja-build.org/)
+or [samurai](https://github.com/michaelforney/samurai).  
 You may do it:
 
 - without minification  
   This is interesting for debug purpose, the scripts being more human friendly.
 
 ```
-    NOMIN=1 ninja -v
+    NOMIN=1 samu -v
 ```
 
 - in a standard way with minification  
   In this case, you need the tool `uglifyjs` which comes with nodeJS.
 
 ```
-    ninja -v
+    samu -v
 ```
 
 If you also want to change or add music glyphs, you may edit the source
@@ -141,7 +142,7 @@ file `font/abc2svg.sfd`. In this case, you will need both `base64` and `fontforg
 and run
 
 ```
-    ninja -v font.js
+    samu -v font.js
 ```
 
 ### Batch
