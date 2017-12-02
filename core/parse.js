@@ -332,8 +332,6 @@ function new_block(subtype) {
 		goto_tune()
 	var voice_s = curvoice;
 	curvoice = voice_tb[par_sy.top_voice]
-	if (curvoice.last_sym)
-		curvoice.last_sym.eoln = true;
 	sym_link(s);
 	curvoice = voice_s
 	return s
