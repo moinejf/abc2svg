@@ -1863,7 +1863,7 @@ function cut_tune(lwidth, indent) {
 					 || s3.dur < s.dur)
 						break
 				}
-				if (s3 && s3.dur < s.dur)
+				if (s3 && !s3.seqst)
 					s2 = set_lines(s2, s, lwidth, indent)
 				else
 					s2 = set_nl(s)
