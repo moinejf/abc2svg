@@ -1814,17 +1814,14 @@ function cut_tune(lwidth, indent) {
 	/* if asked, count the measures and set the EOLNs */
 	if (cfmt.barsperstaff) {
 		i = cfmt.barsperstaff;
-		s2 = s
-		for ( ; s; s = s.ts_next) {
-			if (s.type != BAR
-			 || !s.bar_num)
+		for (s2 = s; s2; s2 = s2.ts_next) {
+			if (s2.type != BAR
+			 || !s2.bar_num
+			 || --i > 0)
 				continue
-			if (--i > 0)
-				continue
-			s.eoln = true;
+			s2.eoln = true;
 			i = cfmt.barsperstaff
 		}
-		s = s2
 	}
 
 	/* cut at explicit end of line, checking the line width */
