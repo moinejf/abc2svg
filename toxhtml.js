@@ -55,9 +55,9 @@ function abc_init() {
 
 		a = abc.header_footer(str)
 		for (i = 0; i < 3; i++) {
-			if (!a[i])
-				continue
 			str = a[i]
+			if (!str)
+				continue
 			if (str.indexOf('\n') >= 0)
 				str = str.replace('\n', '<br/>')
 			if (str.indexOf('\x0c') >= 0) {
