@@ -101,7 +101,7 @@ javascript:(function(){if(typeof%20loadjs=='function'){loadjs('abckbd2-1.js')}el
 ### nodeJS usage
 
 Installed via **npm**, the **abc2svg** package comes with the
-command line program `abc2svg`.
+command line (batch) program `abc2svg`.
 
 This one may be used as **abcm2ps** to generate XHTML files,
 but it writes to standard output:
@@ -155,3 +155,22 @@ following shell scripts (the result goes to stdout):
 - `abcjsc` with `jsc-1` (webkitgtk2)
 - `abcnode` with `node` (nodeJS)
 - `abcv8` with `d8` (Google libv8)
+
+#### backend scripts
+
+By default, the batch scripts generate (XHTML+SVG) files.   
+This output may be modified by backend scripts. These ones must appear
+just after the command.   
+There are:
+
+- `toabc.js`
+  This script outputs back the (selected) ABC tunes of the ABC source file.   
+  Transposition is applied.   
+  The resulting file does not contain the formatting parameters.
+
+- `toabw.js`
+  This script outputs a Abiword file (ABW+SVG) which may be read by some
+  word processors (abiword, libreoffice...) and converted to many other
+  formats by the batch function of abiword.   
+  The abc2svg font (`abc2svf.woff`) must be installed in the local system
+  for displaying and/or converting the .abw file.
