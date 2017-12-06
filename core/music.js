@@ -2909,7 +2909,15 @@ function init_music_line() {
 
 	/* add bar if needed (for repeat bracket) */
 	for (v = 0; v < nv; v++) {
+
+		// if bar already, keep it in sequence
 		p_voice = voice_tb[v];
+		if (last_s.v == v && last_s.type == BAR) {
+			p_voice.last_sym = last_s;
+			last_s = last_s.ts_next
+			continue
+		}
+
 		s2 = p_voice.bar_start
 		if (!s2)
 			continue
@@ -2917,13 +2925,6 @@ function init_music_line() {
 		if (cur_sy.voices[v].range < 0
 		 || !cur_sy.st_print[cur_sy.voices[v].st])
 			continue
-
-		// if bar already, ignore
-		if (last_s.v == v && last_s.type == BAR) {
-			p_voice.last_sym = last_s;
-			last_s = last_s.ts_next
-			continue
-		}
 
 		s2.next = p_voice.last_sym.next
 		if (s2.next)
