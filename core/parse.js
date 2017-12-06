@@ -1196,11 +1196,13 @@ function new_bar() {
 	s2 = curvoice.last_sym
 	if (s2 && s2.type == SPACE) {
 		s2.time--		// keep the space at the right place
-	} else if (s2 && s2.type == BAR) {
+	} else if (s2 && s2.type == BAR
+		&& !s2.a_gch && !s2.a_dd
+		&& !s.a_gch && !s.a_dd) {
 
 		/* remove the invisible repeat bars when no shift is needed */
 		if (bar_type == "["
-		 && !s2.text && !s2.a_gch
+		 && !s2.text
 		 && (curvoice.st == 0
 		  || (par_sy.staves[curvoice.st - 1].flags & STOP_BAR)
 		  || s.norepbra)) {
@@ -1219,8 +1221,7 @@ function new_bar() {
 		}
 
 		/* merge back-to-back repeat bars */
-		if (bar_type == "|:"
-		 && !s.text) {
+		if (bar_type == "|:") {
 			if (s2.bar_type == ":|") {
 				s2.bar_type = "::";
 				s2.rbstop = 2
