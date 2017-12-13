@@ -72,8 +72,7 @@ function dom_loaded() {
 		re_stop = /\n<|\n%.begin/g;	// stop on "<" and skip "%%begin"
 
 	abc = new Abc(user);
-	abc.tosvg('abcexample', '%abc2.2\n\
-%%bgcolor white\n\
+	abc.tosvg('abcexample', '%%bgcolor white\n\
 %%rightmargin 0.8cm\n\
 %%leftmargin 0.8cm\n\
 %%topspace 0')
