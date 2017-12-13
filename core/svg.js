@@ -986,24 +986,25 @@ function vskip(h) {
 
 // create the SVG image of the block
 function svg_flush() {
-	var head
-
 	if (multicol || output.length == 0 || !user.img_out || posy == 0)
 		return
+
+    var	head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
+	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
+	color="black"'
+
+	if (cfmt.bgcolor)
+		head += ' style="background-color: ' + cfmt.bgcolor + '"';
+
 	posy *= cfmt.scale
 
 	if (user.imagesize) {
-		head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
-	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
-	color="black"\n' +
+		head += '\n' +
 			user.imagesize +
 			' viewBox="0 0 ' + img.width.toFixed(0) + ' ' +
 			 posy.toFixed(0) + '">\n'
 	} else {
-		head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
-	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
-	color="black"\n\
-	width="' + img.width.toFixed(0) +
+		head += '\n\twidth="' + img.width.toFixed(0) +
 			'px" height="' + posy.toFixed(0) + 'px">\n'
 	}
 
@@ -1025,9 +1026,6 @@ function svg_flush() {
 	}
 	if (defs)
 		head += '<defs>' + defs + '\n</defs>\n'
-	if (cfmt.bgcolor)
-		head += '<rect width="100%" height="100%" fill="' +
-				cfmt.bgcolor + '"/>\n'
 	if (cfmt.scale == 1)
 		head += '<g class="music" stroke-width=".7">\n'
 	else
