@@ -1407,10 +1407,12 @@ function do_begin_end(type,
 		break
 	case "text":
 		action = get_textopt(opt);
+		if (!action)
+			action = cfmt.textoption
 		if (parse.state >= 2) {
 			s = new_block(type);
 			s.text = cnv_escape(text);
-			s.opt = get_textopt(opt)
+			s.opt = action
 			break
 		}
 		write_text(cnv_escape(text), action)
