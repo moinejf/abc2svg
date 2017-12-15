@@ -1045,8 +1045,8 @@ function svg_flush() {
 	} else {
 		musicfont = '';
 		style = '';
-		defs = ''
 	}
+	defs = '';
 	posy = 0
 }
 
