@@ -107,11 +107,6 @@ function abw_out() {
     var	now = new Date(),
 	cdate = now.toUTCString()
 
-	if (header)
-		header = gen_hf("header", header)
-	if (footer)
-		footer = gen_hf("footer", footer);
-
 	print('<?xml version="1.0" encoding="UTF-8"?>\n\
 <!DOCTYPE abiword PUBLIC "-//ABISOURCE//DTD AWML 1.0 Strict//EN"\
  "http://www.abisource.com/awml.dtd">\n\
@@ -210,6 +205,16 @@ function svg_out(str) {
 			'" props="height:' + h.toFixed(2) + 'in; width:' +
 				w.toFixed(2) + 'in"/></p>\n';
 		seq++
+
+		// get the first header/footer
+		if (header == undefined) {
+			r = abc.get_fmt("header");
+			header = r ? gen_hf("header", r) : ''
+		}
+		if (footer == undefined) {
+			r = abc.get_fmt("footer");
+			footer = r ? gen_hf("footer", r) : ''
+		}
 		break
 	case '<div':
 		if (str.indexOf('newpage') > 0)
@@ -239,8 +244,6 @@ function abc_init() {
 				'width="210.00" height="297.00" units="mm"';
 		topmargin = set_unit(abc.get_fmt("topmargin") || 37.8);
 		botmargin = set_unit(abc.get_fmt("botmargin") || 37.8);
-		header = abc.get_fmt("header");
-		footer = abc.get_fmt("footer");
 
 		// output the first generated string
 		svg_out(str);
