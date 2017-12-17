@@ -824,6 +824,8 @@ Abc.prototype.header_footer = function(str) {
 			for (j = 0; j < 3; j++) {
 				if (r[j])
 					r[j] += '\n'
+				else
+					r[j] = '\n'
 			}
 			j = 0;
 			i++
