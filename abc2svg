@@ -3,7 +3,8 @@
 // abc2svg with native nodeJS
 
 // define the system functions
-var	fs = require("fs");
+var	fs = require("fs"),
+	sep = require('path').sep;
 
 // interpreter specific functions
 function print(str) {
@@ -20,7 +21,7 @@ function readFile(fname) {
 
 function loadRelativeToScript(script) {
 	var geval = eval;
-	geval(readFile(__dirname + '/' + script))
+	geval(readFile(__dirname + sep + script))
 }
 
 function quit() {
