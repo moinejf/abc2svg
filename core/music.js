@@ -268,12 +268,10 @@ function unlksym(s) {
 	else
 		s.p_v.sym = s.next
 	if (s.ts_next) {
-		if (s.seqst) {
-			s.ts_next.seqst = true
-			if (s.ts_next.shrink < s.shrink)
-				s.ts_next.shrink = s.shrink
-			if (s.ts_next.space < s.space)
-				s.ts_next.space = s.space
+		if (s.seqst && !s.ts_next.seqst) {
+			s.ts_next.seqst = true;
+			s.ts_next.shrink = s.shrink;
+			s.ts_next.space = s.space
 		}
 		s.ts_next.ts_prev = s.ts_prev
 	}
