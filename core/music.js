@@ -1271,6 +1271,7 @@ function set_repeat(s) {	// first note
 			error(1, s, err_no_s)
 			return
 		}
+		dur = s.time - s3.time;
 
 		i = k * n		/* whole number of notes/rests to repeat */
 		for (s2 = s; s2; s2 = s2.next) {
@@ -1295,30 +1296,34 @@ function set_repeat(s) {	// first note
 				break
 			}
 		}
-		s3 = s
 		for (j = k; --j >= 0; ) {
 			i = n			/* number of notes/rests */
-			if (s3.dur)
+			if (s.dur)
 				i--;
-			s2 = s3.ts_next
+			s2 = s.ts_next
 			while (i > 0) {
-				if (s2.st != st)
-					continue
-				if (s2.v == v
-				 && s2.dur)
-					i--;
-				unlksym(s2);
+				if (s2.st == st) {
+					unlksym(s2)
+					if (s2.v == v
+					 && s2.dur)
+						i--
+				}
 				s2 = s2.ts_next
 			}
-			to_rest(s3);
-			s3.dur = s3.notes[0].dur = s2.time - s3.time;
-			s3.rep_nb = -1;		// single repeat
-			s3.beam_st = true;
-			set_width(s3)
-			if (s3.seqst)
-				s3.space = set_space(s3);
-			s3.head = SQUARE;
-			s3 = s2
+			to_rest(s);
+			s.dur = s.notes[0].dur = dur;
+			s.rep_nb = -1;		// single repeat
+			s.beam_st = true;
+			set_width(s)
+			if (s.seqst)
+				s.space = set_space(s);
+			s.head = SQUARE;
+			for (s = s2; s; s = s.ts_next) {
+				if (s.st == st
+				 && s.v == v
+				 && s.dur)
+					break
+			}
 		}
 		return
 	}
