@@ -1205,24 +1205,6 @@ function set_allsymwidth(last_s) {
 			s = s.ts_next
 		} while (!s.seqst)
 	}
-
-	// if the last symbol of the tune is not a bar, add some extra space
-	if (last_s)
-		return
-	xa = 0
-	for (s = s2; ; s = s.ts_next) {
-		if (s.type == BAR)
-			return
-		if (s.wr > xa)
-			xa = s.wr
-		if (!s.ts_next)
-			break
-	}
-	s2 = add_end_bar(s);
-	s2.prev = s2.ts_prev = s;
-	s.ts_next = s.next = s2;
-	s2.shrink = xa + 8;
-	s2.space = set_space(s2)
 }
 
 /* change a symbol into a rest */
@@ -4089,7 +4071,7 @@ function sym_staff_move(st) {
 /* -- define the start and end of a piece of tune -- */
 /* tsnext becomes the beginning of the next line */
 function set_piece() {
-	var	s, p_voice, st, v, nst, nv,
+	var	s, last, p_voice, st, v, nst, nv,
 		non_empty = [],
 		non_empty_gl = [],
 		sy = cur_sy
@@ -4236,44 +4218,42 @@ function set_piece() {
 	// keep the array of the staves to be printed
 	gene.st_print = new Uint8Array(non_empty_gl)
 
-	/* if last music line, nothing more to do */
-	if (!tsnext)
-		return
+	// if not the end of the tune, set the end of the music line
+	if (tsnext) {
+		s = tsnext;
+		delete s.nl;
+		last = s.ts_prev;
+		last.ts_next = null;
 
-	s = tsnext;
-	delete s.nl;
-	s = s.ts_prev;
-	s.ts_next = null;
-
-	/* set the end of the voices */
-	nv = voice_tb.length
-	for (v = 0; v < nv; v++) {
-		p_voice = voice_tb[v]
-		if (p_voice.sym
-		 && p_voice.sym.time <= tsnext.time) {
-			for (s = tsnext.ts_prev; s; s = s.ts_prev) {
-				if (s.v == v) {
-					p_voice.s_next = s.next;
-					s.next = null;
-					check_bar(s)
-					break
+		// and the end of the voices
+		nv = voice_tb.length
+		for (v = 0; v < nv; v++) {
+			p_voice = voice_tb[v]
+			if (p_voice.sym
+			 && p_voice.sym.time <= tsnext.time) {
+				for (s = tsnext.ts_prev; s; s = s.ts_prev) {
+					if (s.v == v) {
+						p_voice.s_next = s.next;
+						s.next = null;
+						check_bar(s)
+						break
+					}
 				}
+				if (s)
+					continue
 			}
-			if (s)
-				continue
+			p_voice.s_next = p_voice.sym;
+			p_voice.sym = null
 		}
-		p_voice.s_next = p_voice.sym;
-		p_voice.sym = null
 	}
 
 	// if the last symbol is not a bar, add an invisible bar
-	if (tsnext.ts_prev.type != BAR) {
-	    var	s2 = tsnext.ts_prev;
-		s = add_end_bar(s2)
-		s.prev = s.ts_prev = s2;
-		s2.ts_next = s2.next = s;
-		s.shrink = s2.wr + 8;
-		s.space = tsnext.space * .9 - 7
+	if (last.type != BAR) {
+		s = add_end_bar(last);
+		s.prev = s.ts_prev = last;
+		last.ts_next = last.next = s;
+		s.shrink = last.wr + 8;
+		s.space = set_space(s) * .9 - 7
 	}
 }
 
