@@ -4068,6 +4068,53 @@ function sym_staff_move(st) {
 	}
 }
 
+// generate a block symbol
+var blocks = []		// array of delayed block symbols
+
+function block_gen(s) {
+	switch (s.subtype) {
+	case "leftmargin":
+	case "rightmargin":
+	case "pagescale":
+	case "pagewidth":
+	case "scale":
+	case "staffwidth":
+		set_format(s.subtype, s.param);
+		break
+	case "ml":
+		svg_flush();
+		user.img_out(s.text)
+		break
+	case "newpage":
+		blk_out();
+		blk_flush();
+		block.newpage = true
+		break
+	case "sep":
+		set_page();
+		vskip(s.sk1);
+		output.push('<path class="stroke"\n\td="M');
+		out_sxsy(s.x, ' ', 0);
+		output.push('h' + s.l.toFixed(2) + '"/>\n');
+		vskip(s.sk2);
+		blk_out()
+		break
+	case "text":
+		write_text(s.text, s.opt)
+		break
+	case "title":
+		write_title(s.text, true)
+		break
+	case "vskip":
+		vskip(s.sk);
+		blk_out()
+		break
+	default:
+		error(2, s, 'Block $1 not treated', s.subtype)
+		break
+	}
+}
+
 /* -- define the start and end of a piece of tune -- */
 /* tsnext becomes the beginning of the next line */
 function set_piece() {
@@ -4148,9 +4195,20 @@ function set_piece() {
 	 * and mark the empty staves
 	 */
 	for (s = tsfirst; s; s = s.ts_next) {
-		if (s.nl)
+		if (s.nl) {
+//fixme: not useful
+//			// delay the next block symbols
+//			while (s && s.type == BLOCK) {
+//				blocks.push(s);
+//				unlksym(s);
+//				s = s.ts_next
+//			}
 			break
-		if (s.type == STAVES) {
+		}
+		if (!s.ts_next)
+			last = s		// keep the last symbol
+		switch (s.type) {
+		case STAVES:
 			set_brace();
 			sy.st_print = new Uint8Array(non_empty);
 			sy = s.sy;
@@ -4161,6 +4219,14 @@ function set_piece() {
 				nstaff = nst
 			}
 			non_empty = []
+			continue
+
+		// the block symbols will be treated after music line generation
+		case BLOCK:
+			blocks.push(s);
+			unlksym(s)
+			if (last)
+				last = s.ts_prev
 			continue
 		}
 		st = s.st
@@ -4470,47 +4536,7 @@ function gen_init() {
 			cur_sy = s.sy
 			break
 		case BLOCK:
-			switch (s.subtype) {
-			case "leftmargin":
-			case "rightmargin":
-			case "pagescale":
-			case "pagewidth":
-			case "scale":
-			case "staffwidth":
-				set_format(s.subtype, s.param);
-				break
-			case "ml":
-				svg_flush();
-				user.img_out(s.text)
-				break
-			case "newpage":
-				blk_out();
-				blk_flush();
-				block.newpage = true
-				break
-			case "sep":
-				set_page();
-				vskip(s.sk1);
-				output.push('<path class="stroke"\n\td="M');
-				out_sxsy(s.x, ' ', 0);
-				output.push('h' + s.l.toFixed(2) + '"/>\n');
-				vskip(s.sk2);
-				blk_out()
-				break
-			case "text":
-				write_text(s.text, s.opt)
-				break
-			case "title":
-				write_title(s.text, true)
-				break
-			case "vskip":
-				vskip(s.sk);
-				blk_out()
-				break
-			default:
-				error(2, s, 'Block $1 not treated', s.subtype)
-				break
-			}
+			block_gen(s)
 			break
 		}
 		unlksym(s)
@@ -4580,6 +4606,8 @@ function output_music() {
 				posx -= indent;
 				insert_meter &= ~2	// no more indentation
 			}
+			while (blocks.length != 0)
+				block_gen(blocks.shift())
 		}
 
 		tsfirst = tsnext
