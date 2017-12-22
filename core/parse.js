@@ -1131,6 +1131,8 @@ function new_bar() {
 			s.text = ''
 			break
 		}
+		if (c > '0' && c <= '9')	// ":|[2"
+			break
 		bar_type = bar_type.slice(0, -1);
 		line.index--;
 		c = '['
