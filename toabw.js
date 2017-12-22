@@ -32,9 +32,10 @@
 //	abiword -t pdf --to-name=o.pdf o.abw
 //
 //Constraints:
-// The abc2svg font (abc2svg.woff) must be installed in the local system
-// for correct rendering and conversion to PDF (the generated pdf file
-// contains the used glyphs so that it may be displayed anywhere).
+// The abc2svg music font (abc2svg.woff or abc2svg.ttf) must be installed
+// in the local system for correct rendering and conversion to PDF
+// (the generated pdf file contains the used glyphs so that it may be
+// displayed anywhere).
 
     var	topmargin, botmargin, page_size, page_type,
 	header, footer,
