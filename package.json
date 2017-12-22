@@ -36,6 +36,7 @@
     "toabc.js",
     "toabw.js",
     "toaudio-1.js",
+    "toodt.js",
     "toxhtml.js"
   ],
   "scripts": {

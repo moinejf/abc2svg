@@ -167,10 +167,32 @@ There are:
   This script outputs back the (selected) ABC tunes of the ABC source file.   
   Transposition is applied.   
   The resulting file does not contain the formatting parameters.
+  Example:
+
+```
+	abcjs24 toabc.js my_file.abc --select X:2 > tune_2.abc
+```
 
 - `toabw.js`
   This script outputs a Abiword file (ABW+SVG) which may be read by some
   word processors (abiword, libreoffice...) and converted to many other
   formats by the batch function of abiword.   
-  The abc2svg font (`abc2svf.woff`) must be installed in the local system
-  for displaying and/or converting the .abw file.
+  The abc2svg music font (`abc2svf.woff` or `abc2svg.ttf`) must be installed
+  in the local system for displaying and/or converting the .abw file.   
+  Example:
+
+```
+	abcv8 toabw.js my_file.abc > my_file.abw
+```
+
+- `toodt.js`
+  This script creates an Open Document (ODT+SVG) which may be read by most
+  word processors (abiword, libreoffice...).   
+  It runs only with the npm script `abc2svg` and asks for the npm module
+  `jszip` to be installed.   
+  The ODT document is created as `abc.odt` in the current directory.   
+  Example:
+
+```
+	abc2svg toodt.js my_file.abc
+```
