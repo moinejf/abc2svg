@@ -99,7 +99,7 @@ function out_str(str) {
 		o_font = gene.curfont,
 		c_font = o_font;
 
-	output.push(str.replace(/<|>|&.*?;|&|\$./g, function(c){
+	output.push(str.replace(/<|>|&.*?;|&|  |\$./g, function(c){
 			switch (c[0]) {
 			case '<': return "&lt;"
 			case '>': return "&gt;"
@@ -107,6 +107,8 @@ function out_str(str) {
 				if (c == '&')
 					 return "&amp;"
 				return c
+			case ' ':
+				return '  '		// space + nbspace
 			case '$':
 				if (c[1] == '0') {
 					n_font = gene.deffont;

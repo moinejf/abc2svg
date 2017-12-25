@@ -20,7 +20,6 @@
 var	output = [],		// output buffer
 	style = '\n.fill {fill: currentColor}\
 \n.stroke {stroke: currentColor; fill: none}\
-\ntext {white-space: pre}\
 \n.music text, .music tspan {fill:currentColor}',
 	font_style = '',
 	posx = cfmt.leftmargin / cfmt.scale,	// default x offset of the images
