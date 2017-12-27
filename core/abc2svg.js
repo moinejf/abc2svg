@@ -19,7 +19,11 @@
 
 // start of the Abc object
 function Abc(user) {
-"use strict"
+	"use strict";
+
+	// mask some unsafe functions
+    var	require = function(){return {}}
+
 	this.user = user
 
 // -- constants --
