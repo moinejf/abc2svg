@@ -115,7 +115,7 @@ function abc_init() {
 		div.right {text-align: right}\n\
 	}';
 
-	print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
+		print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">\n\
 <html xmlns="http://www.w3.org/1999/xhtml">\n\
 <head>\n\
@@ -123,7 +123,6 @@ function abc_init() {
 <meta name="generator" content="abc2svg-' + abc2svg.version + '"/>\n\
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
-	text, tspan {white-space:pre}\n\
 	svg {display:block}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
 </style>\n\
@@ -144,6 +143,7 @@ function abc_init() {
 }
 
 function abc_end() {
+//fixme: bad output if no output...
 	if (errtxt)
 		print("<pre>" + clean_txt(errtxt) + "</pre>")
 	print("</body>\n</html>")
