@@ -13,8 +13,7 @@ case $1 in
 		;;
 esac
 cat <<EOF >> /tmp/toto.js
-var	fs = require("fs"),
-	progdir='${progdir}/'
+    var	progdir='${progdir}/'
 
 function print(str) {
 	process.stdout.write(str + '\n')
@@ -25,6 +24,8 @@ function printErr(str) {
 }
 
 function readFile(fname) {
+    var	fs = require("fs");
+
 	return fs.readFileSync(fname).toString()
 }
 

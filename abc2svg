@@ -3,8 +3,7 @@
 // abc2svg with native nodeJS
 
 // define the system functions
-var	fs = require("fs"),
-	sep = require('path').sep;
+    var	sep = require('path').sep
 
 // interpreter specific functions
 function print(str) {
@@ -16,6 +15,8 @@ function printErr(str) {
 }
 
 function readFile(fname) {
+    var	fs = require("fs")
+
 	return fs.readFileSync(fname).toString()
 }
 
