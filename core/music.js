@@ -2410,7 +2410,8 @@ function set_pitch(last_s) {
 			break
 		}
 	}
-	smallest_duration = dur
+	if (!last_s)
+		smallest_duration = dur
 }
 
 /* -- set the stem direction when multi-voices -- */
@@ -4318,8 +4319,10 @@ function set_piece() {
 		s = add_end_bar(last);
 		s.prev = s.ts_prev = last;
 		last.ts_next = last.next = s;
-		s.shrink = last.wr + 8;
-		s.space = set_space(s) * .9 - 7
+		s.shrink = last.wr + 2;	// just a small space before end of staff
+		s.space = set_space(s)
+		if (s.space < s.shrink)
+			s.space = s.shrink
 	}
 }
 
@@ -4404,11 +4407,8 @@ function set_sym_glue(width) {
 	while (1) {
 		if (s.seqst) {
 			space = s.shrink
-			if (s.space != 0) {
-				if (space < s.space * spafac)
-					space = s.space * spafac;
-				xmax += s.space * spafac * 1.8
-			}
+			if (s.space != 0)
+				xmax += s.space * spafac * 1.8;
 			x += space;
 			xmax += space;
 			s.x = x;
