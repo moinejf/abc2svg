@@ -123,7 +123,8 @@ function abc_init() {
 <meta name="generator" content="abc2svg-' + abc2svg.version + '"/>\n\
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
-	svg {display:block}\n' +
+	svg {display:block}\n\
+	p {line-height:100%;margin-top:0em;margin-bottom:0.5em}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
 </style>\n\
 <title>abc2svg document</title>\n\
