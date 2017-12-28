@@ -1338,9 +1338,7 @@ function draw_basic_note(x, s, m, y_tb) {
 		p = "ghd";
 		x_note -= 4.5 * stv_g.scale
 	} else if (note.map && note.map[0]) {
-		i = -s.nflags
-		if (i < 0)
-			i = 0;
+		i = s.head;
 		p = note.map[0][i]		// heads
 		if (!p)
 			p = note.map[0][note.map[0].length - 1]

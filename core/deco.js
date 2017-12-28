@@ -779,7 +779,8 @@ function deco_cnv(a_dcn, s, prev) {
 		case 34:		/* trem1..trem4 */
 			if (s.type != NOTE
 			 || !prev
-			 || prev.type != NOTE) {
+			 || prev.type != NOTE
+			 || s.nflags != prev.nflags) {
 				error(1, s,
 					"!$1! must be on the last of a couple of notes",
 					dd.name)
@@ -792,19 +793,18 @@ function deco_cnv(a_dcn, s, prev) {
 			prev.beam_st = true;
 //			prev.beam_end = false;
 			s.ntrem = prev.ntrem = Number(dd.name[4]);
-			s.nflags--;
-			prev.nflags--
+			prev.nflags = --s.nflags;
+			prev.head = ++s.head
 			if (s.nflags > 0) {
 				s.nflags += s.ntrem;
-				prev.nflags += s.ntrem
 			} else {
 				if (s.nflags <= -2) {
 					s.stemless = true;
 					prev.stemless = true
 				}
 				s.nflags = s.ntrem;
-				prev.nflags = s.ntrem
 			}
+			prev.nflags = s.nflags
 			for (j = 0; j <= s.nhd; j++)
 				s.notes[j].dur *= 2;
 			for (j = 0; j <= prev.nhd; j++)
