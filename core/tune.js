@@ -2091,7 +2091,8 @@ function new_voice(id) {
 	p_voice = {
 		v: v,
 		id: id,
-//		time: 0,	// used to know if new voice
+		time: 0,
+		new: true,
 		pos: {
 			dyn: 0,
 			gch: 0,
@@ -2170,8 +2171,8 @@ function get_voice(parm) {
 	set_transp();
 
 	v = curvoice.v
-	if (curvoice.time == undefined) {	// if new voice
-		curvoice.time = 0
+	if (curvoice.new) {			// if new voice
+		delete curvoice.new
 		if (staves_found < 0) {		// if no %%score/%%staves
 			curvoice.st = curvoice.cst = ++nstaff;
 			par_sy.nstaff = nstaff;
@@ -2217,7 +2218,6 @@ function goto_tune(is_K) {
 		curvoice.clef.istart = curvoice.key.istart;
 		curvoice.clef.iend = curvoice.key.iend;
 //		nstaff = 0;
-//		curvoice.time = 0;
 		curvoice.default = true
 	} else if (!curvoice) {
 		curvoice = voice_tb[staves_found < 0 ? 0 : par_sy.top_voice]
@@ -2244,8 +2244,7 @@ function goto_tune(is_K) {
 		nstaff = voice_tb.length - 1
 		for (v = 0; v <= nstaff; v++) {
 			p_voice = voice_tb[v];
-			p_voice.time = 0;		// old voice
-			p_voice.clef.time = 0;
+			delete p_voice.new;		// old voice
 			p_voice.st = p_voice.cst =
 				par_sy.voices[v].st =
 					par_sy.voices[v].range = v;
