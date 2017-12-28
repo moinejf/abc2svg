@@ -2065,11 +2065,11 @@ function new_voice(id) {
 	var	p_voice, v, p_v_sav,
 		n = voice_tb.length
 
-	// if first explicit voice and no symbol, replace the default V:1
+	// if first explicit voice and no music, replace the default V:1
 	if (n == 1
 	 && voice_tb[0].default) {
-		voice_tb[0].default = false
-		if (!voice_tb[0].last_sym) {
+		delete voice_tb[0].default
+		if (voice_tb[0].time == 0) {
 			p_voice = voice_tb[0];
 			p_voice.id = id
 			if (cfmt.transp	// != undefined
