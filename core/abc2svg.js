@@ -79,7 +79,7 @@ var	BAR = 0,
 	BASE_LEN = 1536,
 	IN = 96,		// resolution 96 PPI
 	CM = 37.8,		// 1 inch = 2.54 centimeter
-	YSTEP = 128		/* number of steps for y offsets */
+	YSTEP = 256		/* number of steps for y offsets */
 
 var	glovar = {
 		meter: {
