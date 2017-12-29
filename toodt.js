@@ -32,7 +32,7 @@
 // the npm module 'jszip' to be installed.
 
     var	margins, page_size, page_type, page_mid, page_right,
-	header, footer, headerfont, footerfont,
+	header, footer, headerfont, footerfont, in_p,
 	style = '',
 	content = '',
 	imgs = '',
@@ -116,11 +116,12 @@ function header_footer(str) {
 function gen_hf(type, stype, str) {
     var	a, i, j,
 	more = true,
-	res = '<style:' + type + '><text:p text:style-name="' + stype + '\">';
+	res = '<style:' + type + '>';
 
 	a = header_footer(str)
 	while (more) {
-	    more = false
+	    more = false;
+	    res += '<text:p text:style-name="' + stype + '\">'
 	    for (i = 0; i < 3; i++) {
 		if (i != 0)
 			res += '<text:tab/>';
@@ -137,8 +138,9 @@ function gen_hf(type, stype, str) {
 			a[i] = ''
 		}
 	    }
+	    res += '</text:p>'
 	}
-	return res + '</text:p></style:' + type + '>\n'
+	return res + '</style:' + type + '>\n'
 } // gen_hf()
 
 // create the odt file
@@ -146,6 +148,10 @@ function odt_out() {
     var	cdate = (new Date()).toUTCString();
 
 	// content.xml
+	if (in_p) {
+		in_p = false;
+		content += '</text:p>\n'
+	}
 	zip.file('content.xml',
 		'<?xml version="1.0" encoding="UTF-8"?>\n\
 <office:document-content\
@@ -358,13 +364,16 @@ function svg_out(str) {
 		r = str.slice(0, 200).match(/.*width="(.*?)px" height="(.*?)px"/);
 		w = r[1] / 96;		// convert pixel to inch
 		h = r[2] / 96;
-		content += '<text:p text:style-name="' + (pbr ? 'Pbr' : 'P') + '">\
-<draw:frame text:anchor-type="as-char"\
+		if (!in_p) {
+			in_p = true;
+			content += '<text:p text:style-name="P">\n'
+		}
+		content += '<draw:frame text:anchor-type="as-char"\
  draw:z-index="0" draw:style-name="graphic1"\
  svg:width="' + w.toFixed(2) + 'in" svg:height="' + h.toFixed(2) + 'in">\
 <draw:image xlink:href="' + img + '"\
  xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>\
-</draw:frame></text:p>\n';
+</draw:frame>\n';
 
 		// get the first header/footer
 		if (header == undefined) {
@@ -378,14 +387,26 @@ function svg_out(str) {
 			footerfont = def_font("footerfont")
 		}
 		break
-	case '<div':				// start of image or header/footer
+	case '<div':		// start of image or header/footer or page break
+		if (in_p) {
+			in_p = false;
+			content += '</text:p>\n'
+		}
 		if (str.indexOf('newpage') > 0)
 			content += '<text:p text:style-name="Pbr"></text:p>\n'
 		break
 	case '</di':				// end of image
+		if (in_p) {
+			in_p = false;
+			content += '</text:p>\n'
+		}
 		break
 //fixme: markup - more tags to be added
 	default:
+		if (in_p) {
+			in_p = false;
+			content += '</text:p>\n'
+		}
 		content += str.replace(/  |<p|<\/p|<br\/>/g, function(c) {
 			switch (c) {
 			case '  ': return '  '		// space + nbspace
