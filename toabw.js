@@ -276,11 +276,31 @@ function svg_out(str) {
 			section += '<p style="Normal" xid="' +
 				(++seq).toString() + '"><pbr/></p>\n'
 		break
-//	case '</di':
-//		break
+	case '</di':		// end of image
+		break
 //fixme: markup
-//	default:
-//		break
+	default:
+		section += str.replace(/<p| style|<span|<\/span>|<br\/>|size:.+?px/g,
+					function(c) {
+			switch (c) {
+			case '<p':
+				return '<p style="Normal" xid="' +
+					(++seq).toString() + '"'
+			case ' style':
+				return ' props'
+			case '<span':
+				return '<c'
+			case '</span>':
+				return '</c>'
+			case '<br/>':			// hope followed by '\n'!
+				return ''
+			default:			// size:..px
+				var r = c.match(/size:(.+)px/)
+				return 'size:' + (r[1] * 72 / 96).toFixed(2) + 'pt'
+			}
+		})
+		section += '\n'
+		break
 	}
 }
 
