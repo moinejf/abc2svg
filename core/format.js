@@ -108,11 +108,6 @@ H "History: "',
 	wordsspace: 5
 }
 
-// exported function: return a parameter value
-Abc.prototype.get_fmt = function(k) {
-	return cfmt[k]
-}
-
 function get_bool(param) {
 	return !param || !param.match(/^(0|n|f)/i) // accept void as true !
 }

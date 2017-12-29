@@ -40,26 +40,84 @@ function abort(e) {
 	quit()
 }
 
+function get_date() {
+	return (new Date()).toUTCString()
+} // get_date()
+
+function header_footer(str) {
+    var	c, i, t,
+	j = 0,
+	r = ["", "", ""]
+
+	if (str[0] == '"')
+		str = str.slice(1, -1)
+	if (str.indexOf('\t') < 0)		// if no TAB
+		str = '\t' + str		// center
+
+	for (i = 0; i < str.length; i++) {
+		c = str[i]
+		switch (c) {
+		case '\t':
+			if (j < 2)
+				j++		// next column
+			continue
+		case '\\':			// hope '\n'
+			for (j = 0; j < 3; j++) {
+				if (r[j])
+					r[j] += '<br/>'
+				else
+					r[j] = '<br/>'
+			}
+			j = 0;
+			i++
+			continue
+		default:
+			r[j] += c
+			continue
+		case '$':
+			break
+		}
+		c = str[++i]
+		switch (c) {
+		case 'd':	// cannot know the modification date of the file
+			break
+		case 'D':
+			r[j] += get_date()
+			break
+		case 'F':
+			r[j] += abc.get_fname()
+			break
+		case 'I':
+			c = str[++i]
+		case 'T':
+			t = abc.get_info(c)
+			if (t)
+				r[j] += t
+			break
+		case 'P':
+			r[j] += '\x0c'	// form feed
+			break
+		case 'V':
+			r[j] += "abc2svg-" + abc2svg.version
+			break
+		}
+	}
+	return r
+}
+
 // entry point from cmdline
 function abc_init() {
-	function get_date() {
-		var now = new Date()
-
-		return now.toUTCString()
-	} // get_date()
 
 	// output a header or footer
 	function gen_hf(type, str) {
 		var	a, i, page,
 			lcr = ["left", "center", "right"];
 
-		a = abc.header_footer(str)
+		a = header_footer(str)
 		for (i = 0; i < 3; i++) {
 			str = a[i]
 			if (!str)
 				continue
-			if (str.indexOf('\n') >= 0)
-				str = str.replace('\n', '<br/>')
 			if (str.indexOf('\x0c') >= 0) {
 				str = str.replace('\x0c', '');
 				page = " page"
@@ -141,6 +199,13 @@ function abc_init() {
 		// change the output function
 		user.img_out = function(str) { print(str) }
 	}
+
+	// define some functions in the Abc object
+	abc.tosvg('toxhtml', "%%beginjs\n\
+Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
+Abc.prototype.get_info = function(k) { return info[k] }\n\
+Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
+%%endjs\n")
 }
 
 function abc_end() {

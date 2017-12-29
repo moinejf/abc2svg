@@ -32,7 +32,7 @@
 // the npm module 'jszip' to be installed.
 
     var	margins, page_size, page_type, page_mid, page_right,
-	header, footer, pbr, headerfont, footerfont,
+	header, footer, headerfont, footerfont,
 	style = '',
 	content = '',
 	imgs = '',
@@ -51,13 +51,74 @@ function set_unit(p) {
 	return (p / 37.8).toFixed(2) + 'cm'
 }
 
+function header_footer(str) {
+    var	c, i, t,
+	j = 0,
+	r = ["", "", ""]
+
+	if (str[0] == '"')
+		str = str.slice(1, -1)
+	if (str.indexOf('\t') < 0)		// if no TAB
+		str = '\t' + str		// center
+
+	for (i = 0; i < str.length; i++) {
+		c = str[i]
+		switch (c) {
+		case '\t':
+			if (j < 2)
+				j++		// next column
+			continue
+		case '\\':			// hope '\n'
+			for (j = 0; j < 3; j++) {
+				if (r[j])
+					r[j] += '\n'
+				else
+					r[j] = '\n'
+			}
+			j = 0;
+			i++
+			continue
+		default:
+			r[j] += c
+			continue
+		case '$':
+			break
+		}
+		c = str[++i]
+		switch (c) {
+		case 'd':	// cannot know the modification date of the file
+			break
+		case 'D':
+			r[j] += (new Date()).toUTCString()
+			break
+		case 'F':
+			r[j] += abc.get_fname()
+			break
+		case 'I':
+			c = str[++i]
+		case 'T':
+			t = abc.get_info(c)
+			if (t)
+				r[j] += t
+			break
+		case 'P':
+			r[j] += '<text:page-number/>'
+			break
+		case 'V':
+			r[j] += "abc2svg-" + abc2svg.version
+			break
+		}
+	}
+	return r
+} // header_footer()
+
 // output a header or a footer
 function gen_hf(type, stype, str) {
     var	a, i, j,
 	more = true,
 	res = '<style:' + type + '><text:p text:style-name="' + stype + '\">';
 
-	a = abc.header_footer(str)
+	a = header_footer(str)
 	while (more) {
 	    more = false
 	    for (i = 0; i < 3; i++) {
@@ -66,8 +127,6 @@ function gen_hf(type, stype, str) {
 		str = a[i]
 		if (!str)
 			continue
-		if (str.indexOf('\x0c') >= 0)	// formfeed = page number
-			str = str.replace('\x0c', '<text:page-number/>');
 		j = str.indexOf('\n')
 		if (j >= 0) {
 			res += str.slice(0, j);
@@ -84,8 +143,7 @@ function gen_hf(type, stype, str) {
 
 // create the odt file
 function odt_out() {
-    var	now = new Date(),
-	cdate = now.toUTCString();
+    var	cdate = (new Date()).toUTCString();
 
 	// content.xml
 	zip.file('content.xml',
@@ -300,7 +358,6 @@ function svg_out(str) {
 		r = str.slice(0, 200).match(/.*width="(.*?)px" height="(.*?)px"/);
 		w = r[1] / 96;		// convert pixel to inch
 		h = r[2] / 96;
-//fixme: are text:anchor-type, z-index useless?
 		content += '<text:p text:style-name="' + (pbr ? 'Pbr' : 'P') + '">\
 <draw:frame text:anchor-type="as-char"\
  draw:z-index="0" draw:style-name="graphic1"\
@@ -308,7 +365,6 @@ function svg_out(str) {
 <draw:image xlink:href="' + img + '"\
  xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>\
 </draw:frame></text:p>\n';
-		pbr = false
 
 		// get the first header/footer
 		if (header == undefined) {
@@ -324,16 +380,17 @@ function svg_out(str) {
 		break
 	case '<div':				// start of image or header/footer
 		if (str.indexOf('newpage') > 0)
-			pbr = true
+			content += '<text:p text:style-name="Pbr"></text:p>\n'
 		break
 	case '</di':				// end of image
 		break
 //fixme: markup - more tags to be added
 	default:
-		content += str.replace(/<p>|<\/p>|<br\/>/g, function(c) {
+		content += str.replace(/  |<p|<\/p|<br\/>/g, function(c) {
 			switch (c) {
-			case '<p>': return '<text:p>'
-			case '</p>': return '</text:p>'
+			case '  ': return '  '		// space + nbspace
+			case '<p': return '<text:p'
+			case '</p': return '</text:p'
 			case '<br/>': return '<text:line-break/>'
 			}
 		})
@@ -350,7 +407,13 @@ console.log('ODT generation started')
 		'application/vnd.oasis.opendocument.text',
 		{ compression: "STORE" });
 
-	abc.tosvg("toodt", "%%fullsvg 1\n\
+	// define some functions in the Abc object
+	abc.tosvg("toodt", "%%beginjs\n\
+Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
+Abc.prototype.get_info = function(k) { return info[k] }\n\
+Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
+%%endjs\n\
+%%fullsvg 1\n\
 %%printmargin 1.5cm\n\
 %%musicfont abc2svg")
 

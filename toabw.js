@@ -52,6 +52,64 @@ function set_unit(p) {
 	return (p / 37.8).toFixed(2) + 'cm'
 }
 
+function header_footer(str) {
+    var	c, i, t,
+	j = 0,
+	r = ["", "", ""]
+
+	if (str[0] == '"')
+		str = str.slice(1, -1)
+	if (str.indexOf('\t') < 0)		// if no TAB
+		str = '\t' + str		// center
+
+	for (i = 0; i < str.length; i++) {
+		c = str[i]
+		switch (c) {
+		case '\t':
+			if (j < 2)
+				j++		// next column
+			continue
+		case '\\':			// hope '\n'
+			for (j = 0; j < 3; j++)
+				r[j] += '\n';
+			j = 0;
+			i++
+			continue
+		default:
+			r[j] += c
+			continue
+		case '$':
+			break
+		}
+		c = str[++i]
+		switch (c) {
+		case 'd':	// cannot know the modification date of the file
+			break
+		case 'D':
+			r[j] += (new Date()).toUTCString()
+			break
+		case 'F':
+			r[j] += abc.get_fname()
+			break
+		case 'I':
+			c = str[++i]
+		case 'T':
+			t = abc.get_info(c)
+			if (t)
+				r[j] += t
+			break
+		case 'P':
+			r[j] += '<field type="page_number" xid="' +
+					(++seq).toString() + '"></field>'
+			break
+		case 'V':
+			r[j] += "abc2svg-" + abc2svg.version
+			break
+		}
+	}
+	return r
+}
+
 // output a header or footer
 function gen_hf(type, str) {
 	var	a, i, j, res,
@@ -76,7 +134,7 @@ function gen_hf(type, str) {
  props="list-tag:1; table-column-props:6.00cm/6.00cm/6.00cm/;\
 table-column-leftpos:' + (page_type[0] == 'L' ? '0.6in' : '1.5cm') + '">\n';
 
-	a = abc.header_footer(str)
+	a = header_footer(str)
 	for (i = 0; i < 3; i++) {
 		res += '<cell xid="' + (++seq).toString() + '"\
  props="left-attach:' + i + '; right-attach:' + (i + 1).toString() +
@@ -88,16 +146,12 @@ table-column-leftpos:' + (page_type[0] == 'L' ? '0.6in' : '1.5cm') + '">\n';
 			res += '</cell>\n'
 			continue
 		}
-		if (str.indexOf('\x0c') >= 0)
-			str = str.replace('\x0c',
-				'<field type="page_number" xid="' +
-					(++seq).toString() + '"></field>');
 		j = str.indexOf('\n')
 		if (j >= 0)
 			res += hfp(i) + str.slice(0, j) + '</p>\n' +
 				hfp(i) + str.slice(j + 1)
 		else
-			res += hfp(i) + str
+			res += hfp(i) + str;
 		res += '</p>\n</cell>\n'
 	}
 	return res + '</table>\n</section>'
@@ -196,12 +250,12 @@ function svg_out(str) {
 		r = str.slice(0, 200).match(/.*width="(.*?)px" height="(.*?)px"/);
 		w = r[1] / 96;
 		h = r[2] / 96;
-		data += '<d name="gg'+ (++seq).toString() +
+		data += '<d name="g'+ (++seq).toString() +
 			'" mime-type="image/svg+xml" base64="no">\n\
 <![CDATA[' + str + ']]>\n\
 </d>\n';
 		section += '<p style="Normal" xid="'+
-			(seq + 1).toString() + '"><image dataid="gg' +
+			(seq + 1).toString() + '"><image dataid="g' +
 			seq.toString() + '" xid="' +seq.toString() +
 			'" props="height:' + h.toFixed(2) + 'in; width:' +
 				w.toFixed(2) + 'in"/></p>\n';
@@ -232,8 +286,6 @@ function svg_out(str) {
 
 // entry point from cmdline
 function abc_init() {
-	abc.tosvg("toabw", "%%fullsvg 1\n\
-%%musicfont abc2svg")
 
 	// get the page parameters
 	user.img_out = function(str) {
@@ -254,6 +306,15 @@ function abc_init() {
 	}
 
 	user.page_format = true
+
+	// define some parameters and functions in the Abc object
+	abc.tosvg('toabw', "%%beginjs\n\
+Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
+Abc.prototype.get_info = function(k) { return info[k] }\n\
+Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
+%%endjs\n\
+%%fullsvg 1\n\
+%%musicfont abc2svg")
 }
 
 function abc_end() {
