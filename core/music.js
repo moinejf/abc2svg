@@ -4236,7 +4236,7 @@ function set_piece() {
 		switch (s.type) {
 		case CLEF:
 			if (st > nstaff) {	// if clef warning/change for new staff
-				staff_tb[s.st].clef = s;
+				staff_tb[st].clef = s;
 				unlksym(s)
 			}
 			break

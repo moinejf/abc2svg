@@ -1332,8 +1332,6 @@ function draw_basic_note(x, s, m, y_tb) {
 	/* draw the head */
 	if (note.invis) {
 		;
-	} else if (note.head) {
-		p = note.head
 	} else if (s.grace) {			// don't apply %%map to grace notes
 		p = "ghd";
 		x_note -= 4.5 * stv_g.scale

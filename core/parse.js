@@ -2117,8 +2117,6 @@ function new_note(grace, tp_fact) {
 			s.head = res[0];
 			s.dots = res[1];
 			s.nflags = res[2]
-			if (s.xstem)
-				s.nflags = 0
 			if (s.nflags <= -2)
 				s.stemless = true
 		} else {					// rest
