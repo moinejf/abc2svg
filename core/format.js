@@ -24,7 +24,7 @@ var	defined_font = {},
 		serif: 1.05,
 		serifBold: 1.05,
 		'sans-serif': 1.1,
-		'sans-serifBold': 1.15,
+		'sans-serifBold': 1.1,
 		Palatino: 1.1,
 		Mono: 1.35
 	},
@@ -122,7 +122,7 @@ function get_int(param) {
 	return v
 }
 
-// %%font <font> [<encoding>] <scale>]
+// %%font <font> [<encoding>] [<scale>]
 function get_font_scale(param) {
 	var	a = param.split(/\s+/)	// a[0] = font name
 
