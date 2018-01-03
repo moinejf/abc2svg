@@ -1,6 +1,6 @@
 // abc2svg - subs.js - text output
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -277,7 +277,8 @@ function write_text(text, action) {
 			}
 			if (i == j) {			// new paragraph
 				vskip(parskip);
-				blk_out()
+//				blk_out()
+				svg_flush();
 				use_font(gene.curfont)
 				while (text[i + 1] == '\n') {
 					vskip(lineskip);
@@ -292,7 +293,8 @@ function write_text(text, action) {
 			j = i + 1
 		}
 		vskip(parskip);
-		blk_out()
+//		blk_out()
+		svg_flush()
 		break
 	case 'f':
 	case 'j':
@@ -322,7 +324,8 @@ function write_text(text, action) {
 				xy_str(0, 0, words.slice(k).join(' '))
 			}
 			vskip(parskip);
-			blk_out()
+//			blk_out()
+			svg_flush()
 			if (i < 0)
 				break
 			while (text[i + 2] == '\n') {
@@ -692,6 +695,7 @@ function write_heading() {
 	var	i, j, area, composer, origin, rhythm, down1, down2,
 		lwidth = get_lwidth()
 
+	blk_out();
 	vskip(cfmt.topspace)
 
 	if (cfmt.titleformat) {

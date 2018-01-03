@@ -1,6 +1,6 @@
 // abc2svg - tune.js - tune generation
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -1347,7 +1347,8 @@ function do_pscom(text) {
 		}
 		if (cmd == "newpage") {
 			blk_flush();
-			block.newpage = true
+			block.newpage = true;
+			blk_out()
 			return
 		}
 		break

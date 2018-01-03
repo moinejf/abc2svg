@@ -1,6 +1,6 @@
 // abc2svg - music.js - music generation
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -4087,9 +4087,9 @@ function block_gen(s) {
 		user.img_out(s.text)
 		break
 	case "newpage":
-		blk_out();
 		blk_flush();
-		block.newpage = true
+		block.newpage = true;
+		blk_out()
 		break
 	case "sep":
 		set_page();
@@ -4108,7 +4108,7 @@ function block_gen(s) {
 		break
 	case "vskip":
 		vskip(s.sk);
-		blk_out()
+//		blk_out()
 		break
 	default:
 		error(2, s, 'Block $1 not treated', s.subtype)
@@ -4614,7 +4614,8 @@ function output_music() {
 		if (!tsnext)
 			break
 
-		blk_out();
+//		blk_out();
+		svg_flush();
 
 		// next line
 		gen_init()
