@@ -1440,10 +1440,8 @@ function generate() {
 	if (user.get_abcmodel)
 		user.get_abcmodel(tsfirst, voice_tb, anno_type, info)
 
-	if (!user.img_out)
-		return			// no SVG generation
-
-	output_music()
+	if (user.img_out)		// if SVG generation
+		output_music()
 
 	/* reset the parser */
 	for (v = 0; v < voice_tb.length; v++) {
