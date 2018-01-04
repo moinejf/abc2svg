@@ -218,7 +218,9 @@ function para_build(str) {
 
 // output a text (called from write_text)
 function write_xhtml(text, action) {
-    var i, j, text2,
+    var i, j, text2, skip
+
+	abc.svg_flush();
 	skip = abc.get_posy()		// handle %%vskip
 
 	// output the XHTML header if not done yet
