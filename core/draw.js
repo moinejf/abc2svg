@@ -3631,9 +3631,16 @@ function draw_symbols(p_voice) {
 
 //	bm.s2 = undefined
 	for (s = p_voice.sym; s; s = s.next) {
-		if (s.invis
-		 && s.type != NOTE)	// (beams may start on invisible notes)
-			continue
+		if (s.invis) {
+			switch (s.type) {
+			case KEY:
+				p_voice.key = s
+			default:
+				continue
+			case NOTE:	// (beams may start on invisible notes)
+				break
+			}
+		}
 		x = s.x;
 		set_color(s.color)
 		switch (s.type) {
