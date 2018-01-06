@@ -44,9 +44,8 @@ function clean_txt(txt) {
 		switch (c) {
 		case '<': return "&lt;"
 		case '>': return "&gt;"
+		case '&': return "&amp;"
 		}
-		if (c == '&')
-			return "&amp;"
 		return c
 	})
 }
