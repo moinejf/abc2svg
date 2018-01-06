@@ -414,11 +414,7 @@ function set_kv_parm(a) {	// array of items
 			pos[item] = val
 			break
 		case "scale=":			// %%voicescale
-			val = parseFloat(a.shift())
-			if (isNaN(val))
-				syntax(1, err_bad_val_s, item)
-			else
-				curvoice[item.slice(0, -1)] = val
+			do_pscom('voicescale ' + a.shift())
 			break
 		case "score=":
 			if (cfmt.sound)
@@ -445,11 +441,10 @@ function set_kv_parm(a) {	// array of items
 				curvoice.snm = curvoice.snm.slice(1, -1);
 			break
 		case "stafflines=":
-			val = get_st_lines(a.shift())
-			if (val == undefined)
-				syntax(1, err_bad_val_s, item)
-			else
-				curvoice.stafflines = val
+			do_pscom('stafflines ' + a.shift())
+			break
+		case "staffscale=":
+			do_pscom('staffscale ' + a.shift())
 			break
 		default:
 			switch (item.slice(0, 4)) {
