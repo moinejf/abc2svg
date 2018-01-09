@@ -58,7 +58,7 @@ the following bookmarklet and render the music
 into the address/location box).
 
 ```
-javascript:(function(){d=document;b=d.body;b.innerHTML="\n%25abc2.2\n%25<!--[CDATA[\n"+b.textContent+"%25]]-->\n";function%20f(u){s=d.createElement('script');s.setAttribute('src',u);b.appendChild(s);};f('http://moinejf.free.fr/js/abc2svg-1.js');f('http://moinejf.free.fr/js/abcemb-1.js');f('http://moinejf.free.fr/js/play-1.js');function%20t(){if(typeof%20dom_loaded=="function"){dom_loaded()}else{setTimeout(t,200)}};setTimeout(t,200)})();void(0)
+javascript:(function(){d=document;b=d.body;b.innerHTML="\n%25abc-2.2\n%25<!--\n"+b.textContent+"%25-->\n";function%20f(u){s=d.createElement('script');s.setAttribute('src',u);b.appendChild(s);};f('http://moinejf.free.fr/js/abc2svg-1.js');f('http://moinejf.free.fr/js/abcemb-1.js');f('http://moinejf.free.fr/js/play-1.js');function%20t(){if(typeof%20dom_loaded=="function"){dom_loaded()}else{setTimeout(t,200)}};setTimeout(t,200)})();void(0)
 ```
 
 ##### Notes:
@@ -105,18 +105,18 @@ command line (batch) program `abc2svg`.
 
 This one may be used as **abcm2ps** to generate XHTML files,
 but it writes to standard output:
-
+```
     abc2svg mytunes.abc > Out.xhtml
-
+```
 ### Build
 
 If you want to build the **abc2svg** scripts in your machine,
 you must first get the files
 from [github](https://github.com/moinejf/abc2svg),
 either as a `tar.gz` or `.zip` file, or by cloning the repository:
-
+```
     git clone http://github.com/moinejf/abc2svg
-
+```
 (you may use `--depth=1` if you don't want the full `git` history)
 
 Then, building is done using the tool [ninja](https://ninja-build.org/)
