@@ -1,6 +1,6 @@
 // abc2svg - svg.js - svg functions
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -1051,8 +1051,9 @@ function svg_flush() {
 
 // output a part of a block of images
 function blk_out() {
-	if (multicol || !output || !user.img_out)
+	if (multicol || !user.img_out)
 		return
+	blk_flush()
 	if (user.page_format && !block.started) {
 		block.started = true
 		if (block.newpage) {
@@ -1062,12 +1063,12 @@ function blk_out() {
 			user.img_out('<div class="nobrk">')
 		}
 	}
-	svg_flush()
 }
 Abc.prototype.blk_out = blk_out
 
 // output the end of a block (or tune)
 function blk_flush() {
+	svg_flush()
 	if (block.started) {
 		block.started = false;
 		user.img_out('</div>')

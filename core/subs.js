@@ -257,7 +257,11 @@ function write_text(text, action) {
 	var	strlw = get_lwidth(),
 		lineskip = gene.curfont.size * cfmt.lineskipfac,
 		parskip = gene.curfont.size * cfmt.parskipfac,
+		p_start = block.started ? function(){} : blk_out,
+		p_flush = block.started ? svg_flush : blk_flush,
 		i, j, x, words, w, k, ww
+
+	p_start()
 	switch (action) {
 	default:
 //	case 'c':
@@ -277,8 +281,7 @@ function write_text(text, action) {
 			}
 			if (i == j) {			// new paragraph
 				vskip(parskip);
-//				blk_out()
-				svg_flush();
+				p_flush();
 				use_font(gene.curfont)
 				while (text[i + 1] == '\n') {
 					vskip(lineskip);
@@ -286,6 +289,7 @@ function write_text(text, action) {
 				}
 				if (i == text.length)
 					break
+				p_start()
 			} else {
 				vskip(lineskip);
 				xy_str(x, 0, text.slice(j, i), action)
@@ -293,8 +297,7 @@ function write_text(text, action) {
 			j = i + 1
 		}
 		vskip(parskip);
-//		blk_out()
-		svg_flush()
+		p_flush()
 		break
 	case 'f':
 	case 'j':
@@ -324,8 +327,7 @@ function write_text(text, action) {
 				xy_str(0, 0, words.slice(k).join(' '))
 			}
 			vskip(parskip);
-//			blk_out()
-			svg_flush()
+			p_flush()
 			if (i < 0)
 				break
 			while (text[i + 2] == '\n') {
@@ -334,6 +336,7 @@ function write_text(text, action) {
 			}
 			if (i == text.length)
 				break
+			p_start();
 			use_font(gene.curfont);
 			j = i + 2
 		}

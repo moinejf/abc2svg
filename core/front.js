@@ -1,6 +1,6 @@
 // abc2svg - front.js - ABC parsing front-end
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -308,7 +308,6 @@ function tosvg(in_fname,		// file name
 		if (info.W)
 			put_words(info.W);
 		put_history();
-		blk_out();
 		blk_flush();
 		parse.state = 0;		// file header
 		cfmt = cfmt_sav;
@@ -681,7 +680,6 @@ function tosvg(in_fname,		// file name
 		return
 	if (parse.state >= 2)
 		end_tune();
-	blk_flush();
 	parse.state = 0
 }
 Abc.prototype.tosvg = tosvg

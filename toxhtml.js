@@ -1,6 +1,6 @@
 // abc2svg - toxhtml.js - SVG generation
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -34,7 +34,6 @@ function clean_txt(txt) {
 }
 
 function abort(e) {
-	abc.blk_out();
 	abc.blk_flush();
 	if (errtxt)
 		print("<pre>" + clean_txt(errtxt) + "</pre>");
@@ -146,7 +145,8 @@ function set_pstyle() {
 function para_start(action, skip) {
     var	r,
 	sc = abc.get_fmt("scale"),
-	sty = '<p style="' + set_pstyle()
+	newpage = abc.get_newpage(),
+	sty = '<p' + (newpage ? ' class="newpage"' : '') + ' style="' + set_pstyle()
 
 	if (sc == 1) {
 		sty += abc.style_font(o_font.name + '.' + o_font.size)
@@ -298,7 +298,7 @@ function abc_init() {
 			botmargin = abc.get_fmt("botmargin") || "1cm",
 			media_s = '	@media print {\n\
 		body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0}\n\
-		div.newpage {page-break-before: always}\n\
+		.newpage {page-break-before: always}\n\
 		div.nobrk {page-break-inside: avoid}\n\
 	}',
 			media_f ='	@media screen {\n\
@@ -309,7 +309,7 @@ function abc_init() {
 		body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0;\n\
 			counter-reset: page;\n\
 			counter-increment: page; }\n\
-		div.newpage {page-break-before: always}\n\
+		.newpage {page-break-before: always}\n\
 		div.nobrk {page-break-inside: avoid}\n\
 		div.header {\n\
 			position: fixed;\n\
@@ -367,6 +367,12 @@ Abc.prototype.get_info = function(k) { return info[k] }\n\
 Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
 Abc.prototype.get_font = get_font\n\
 Abc.prototype.get_multi = function() { return multicol }\n\
+Abc.prototype.get_newpage = function() {\n\
+	if (block.newpage) {\n\
+		block.newpage = false;\n\
+		return true\n\
+	}\n\
+}\n\
 Abc.prototype.get_posy = function() { var t = posy; posy = 0; return t }\n\
 Abc.prototype.set_xhtml = function(wt) {\n\
 var wto=write_text; write_text = wt; return wto\n\

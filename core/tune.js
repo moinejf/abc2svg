@@ -1176,12 +1176,13 @@ function do_pscom(text) {
 			s.sk2 = h2
 			return
 		}
+		blk_out();
 		vskip(h1);
 		output.push('<path class="stroke"\n\td="M');
 		out_sxsy((lwidth - len) / 2 / cfmt.scale, ' ', 0);
 		output.push('h' + (len / cfmt.scale).toFixed(2) + '"/>\n');
 		vskip(h2);
-		blk_out()
+		blk_flush()
 		return
 	case "setbarnb":
 		val = parseInt(param)
@@ -1330,7 +1331,6 @@ function do_pscom(text) {
 			return
 		}
 		vskip(val);
-		blk_out()
 		return
 	case "newpage":
 	case "leftmargin":
@@ -1348,7 +1348,6 @@ function do_pscom(text) {
 		if (cmd == "newpage") {
 			blk_flush();
 			block.newpage = true;
-			blk_out()
 			return
 		}
 		break

@@ -4102,7 +4102,6 @@ function block_gen(s) {
 		out_sxsy(s.x, ' ', 0);
 		output.push('h' + s.l.toFixed(2) + '"/>\n');
 		vskip(s.sk2);
-		blk_out()
 		break
 	case "text":
 		write_text(s.text, s.opt)
@@ -4615,11 +4614,9 @@ function output_music() {
 		}
 
 		tsfirst = tsnext
+		svg_flush()
 		if (!tsnext)
 			break
-
-//		blk_out();
-		svg_flush();
 
 		// next line
 		gen_init()
