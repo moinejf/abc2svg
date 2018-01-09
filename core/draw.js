@@ -1,6 +1,6 @@
 // abc2svg - draw.js - draw functions
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -3565,8 +3565,10 @@ function draw_systems(indent) {
 				bar_set()
 			}
 
+			set_sscale(st);		// (for symbol annotation)
 			anno_start(s);
 			draw_bar(s, bar_bot[st], bar_height[st]);
+			set_sscale(st);
 			anno_stop(s)
 			break
 		case STBRK:
