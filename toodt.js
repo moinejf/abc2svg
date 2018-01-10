@@ -1,6 +1,6 @@
 // abc2svg - toodt.js - ABC translation to ODT+SVG
 //
-// Copyright (C) 2017 Jean-Francois Moine
+// Copyright (C) 2017-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -32,7 +32,7 @@
 // the npm module 'jszip' to be installed.
 
     var	margins, page_size, page_type, page_mid, page_right,
-	header, footer, headerfont, footerfont, in_p,
+	header, footer, headerfont, footerfont, in_p, t_info, title,
 	style = '',
 	content = '',
 	imgs = '',
@@ -51,10 +51,12 @@ function set_unit(p) {
 	return (p / 37.8).toFixed(2) + 'cm'
 }
 
-function header_footer(str) {
-    var	c, i, t,
+// output a header or a footer
+function gen_hf(type, stype, str) {
+    var	c, i, res_left,
 	j = 0,
-	r = ["", "", ""]
+	res = '<style:' + type + '>\n\
+<text:p text:style-name="' + stype + '\">'
 
 	if (str[0] == '"')
 		str = str.slice(1, -1)
@@ -65,82 +67,75 @@ function header_footer(str) {
 		c = str[i]
 		switch (c) {
 		case '\t':
-			if (j < 2)
+			if (j < 2) {
+				res += '<text:tab/>';
 				j++		// next column
+			}
 			continue
 		case '\\':			// hope '\n'
-			for (j = 0; j < 3; j++) {
-				if (r[j])
-					r[j] += '\n'
-				else
-					r[j] = '\n'
-			}
+			res += '</text:p>\n\
+<text:p text:style-name="' + stype + '\">';
 			j = 0;
 			i++
 			continue
 		default:
-			r[j] += c
+			res += c
 			continue
 		case '$':
 			break
 		}
 		c = str[++i]
 		switch (c) {
-		case 'd':	// cannot know the modification date of the file
+		case 'd':
+			t = abc.get_fname();
+			res += fs.statSync(t).ctime.toLocaleString()
 			break
 		case 'D':
-			r[j] += (new Date()).toUTCString()
+			res += (new Date()).toLocaleString()
 			break
 		case 'F':
-			r[j] += abc.get_fname()
+			res += abc.get_fname()
 			break
 		case 'I':
 			c = str[++i]
 		case 'T':
 			t = abc.get_info(c)
-			if (t)
-				r[j] += t
+			if (t) {
+				t_info = '\
+  <text:variable-decls>\n\
+   <text:variable-decl office:value-type="string" text:name="tinfo"/>\n\
+  </text:variable-decls>\n\
+<text:p text:style-name="P">\n';
+				in_p = true;
+				res += '\
+<text:variable-get text:name="tinfo">any</text:variable-get>'
+			}
 			break
 		case 'P':
-			r[j] += '<text:page-number/>'
+			res += '<text:page-number/>'
 			break
 		case 'V':
-			r[j] += "abc2svg-" + abc2svg.version
+			res += "abc2svg-" + abc2svg.version
 			break
 		}
 	}
-	return r
-} // header_footer()
+	res = res + '</text:p>\n\
+</style:' + type + '>\n';
 
-// output a header or a footer
-function gen_hf(type, stype, str) {
-    var	a, i, j,
-	more = true,
-	res = '<style:' + type + '>';
-
-	a = header_footer(str)
-	while (more) {
-	    more = false;
-	    res += '<text:p text:style-name="' + stype + '\">'
-	    for (i = 0; i < 3; i++) {
-		if (i != 0)
-			res += '<text:tab/>';
-		str = a[i]
-		if (!str)
-			continue
-		j = str.indexOf('\n')
-		if (j >= 0) {
-			res += str.slice(0, j);
-			a[i] = str.slice(j + 1);
-			more = true
-		} else {
-			res += str;
-			a[i] = ''
-		}
-	    }
-	    res += '</text:p>'
-	}
-	return res + '</style:' + type + '>\n'
+	// handle page even/odd
+	i = res.indexOf('page-number/>')
+	if (i <= 0)
+		return res
+	c = res[i + 13]
+	if (c != '0' && c != '1')
+		return res
+	res_left = res.replace('<style:' + type, '<style:' + type + '-left')
+		.replace('</style:' + type, '</style:' + type + '-left');
+	res = res.replace('<text:page-number/>0', '')
+		.replace('page-number/>1', 'page-number/>');
+	res_left = res_left.replace('<text:page-number/>1', '')
+		.replace('page-number/>0', 'page-number/>')
+	return res + res_left
 } // gen_hf()
 
 // create the odt file
@@ -180,7 +175,8 @@ function odt_out() {
 </office:font-face-decls>\n\
 <office:body>\n\
  <office:text>\n' +
-		content +'\
+		(t_info || '') +
+		content + '\
  </office:text>\n\
 </office:body>\n\
 </office:document-content>\n',
@@ -351,6 +347,18 @@ function svg_out(str) {
 	switch (str.slice(0, 4)) {
 	case '<svg':
 
+		// get the first header/footer
+		if (header == undefined) {
+			r = abc.get_fmt("header");
+			header = r ? gen_hf("header", "Header", r) : '';
+			headerfont = def_font("headerfont")
+		}
+		if (footer == undefined) {
+			r = abc.get_fmt("footer");
+			footer = r ? gen_hf("footer", "Footer", r) : '';
+			footerfont = def_font("footerfont")
+		}
+
 		// save the image
 		img = 'Pictures/abc' + (++seq).toString() + '.svg';
 		zip.file(img, str, { compression: "DEFLATE" });
@@ -374,28 +382,18 @@ function svg_out(str) {
 <draw:image xlink:href="' + img + '"\
  xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>\
 </draw:frame>\n';
-
-		// get the first header/footer
-		if (header == undefined) {
-			r = abc.get_fmt("header");
-			header = r ? gen_hf("header", "Header", r) : '';
-			headerfont = def_font("headerfont")
-		}
-		if (footer == undefined) {
-			r = abc.get_fmt("footer");
-			footer = r ? gen_hf("footer", "Footer", r) : '';
-			footerfont = def_font("footerfont")
-		}
 		break
-	case '<div':		// start of image or header/footer or page break
+	case '<div':		// start of block or header/footer or page break
 		if (in_p) {
 			in_p = false;
 			content += '</text:p>\n'
 		}
-		if (str.indexOf('newpage') > 0)
-			content += '<text:p text:style-name="Pbr"></text:p>\n'
+		if (str.indexOf('newpage') > 0) {
+			content += '<text:p text:style-name="Pbr">\n';
+			in_p = true
+		}
 		break
-	case '</di':				// end of image
+	case '</di':				// end of block
 		if (in_p) {
 			in_p = false;
 			content += '</text:p>\n'
@@ -416,6 +414,20 @@ function svg_out(str) {
 			}
 		})
 		break
+	}
+
+	// if header/footer with $T, define the variable
+	if (t_info && in_p) {
+	    var	title2 = abc.get_info('T')
+
+		if (title2 && title2 != title) {
+			title = title2;
+			content += '<text:variable-set \
+text:display="none" text:formula="ooow:' + title + '" \
+office:value-type="string" \
+office:string-value="' +
+				title + '" text:name="tinfo"/>'
+		}
 	}
 }
 
@@ -456,7 +468,7 @@ Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
 		}
 
 		// top and bottom margins default = 1cm
-		margins = 'fo:margin-top=" ' +
+		margins = 'fo:margin-top="' +
 			set_unit(abc.get_fmt("topmargin") || 37.8) +
 			'" fo:margin-bottom="' +
 			set_unit(abc.get_fmt("botmargin") || 37.8) + '"';
