@@ -372,8 +372,6 @@ function do_combine(s) {
 			combine_notes(s, s2)
 		}
 
-		if (s2.text)
-			s.text = s2.text
 		if (s2.a_gch)
 			s.a_gch = s2.a_gch;
 		if (s2.a_dd) {
