@@ -1,6 +1,6 @@
 // abc2svg - format.js - formatting functions
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -465,6 +465,12 @@ function set_format(cmd, param, lock) {
 	case "titleleft":
 	case "titletrim":
 		cfmt[cmd] = get_bool(param)
+		break
+	case "chordnames":
+		v = param.split(',')
+		cfmt.chordnames = {}
+		for (i = 0; i < v.length; i++)
+			cfmt.chordnames['CDEFGAB'[i]] = v[i]
 		break
 	case "composerspace":
 	case "indent":

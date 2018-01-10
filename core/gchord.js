@@ -1,6 +1,6 @@
 // abc2svg - gchord.js - chord symbols
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -346,6 +346,9 @@ function gch_build(s) {
 					}
 					return "&#x1d12b;"
 				});
+			if (cfmt.chordnames)
+				gch.text = gch.text.replace(/A|B|C|D|E|F|G/g,
+					function(c){return cfmt.chordnames[c]});
 			gch.font = gch_font
 		} else {
 			gch.text = cnv_escape(gch.text);
