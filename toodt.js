@@ -21,9 +21,9 @@
 // instead of the (XHTML+SVG) default of the batch script 'abc2svg'.
 //
 // Usage:
-// - creation of a .odt file (./abc.odt)
+// - creation of a .odt file (default: ./abc.odt)
 //
-//	abc2svg toodt.js some_ABC_file.abc
+//	abc2svg toodt.js some_ABC_file.abc [-o output_file]
 //
 //  (this script must appear immediately after the command)
 //
@@ -37,10 +37,27 @@
 	content = '',
 	imgs = '',
 	seq = 0,
+	outfn = 'abc.odt',
 	fs = require('fs'),		// file system
 	JSZip = require('jszip'),	// Zip
 	zip = new JSZip(),
 	sep = require('path').sep;	// '/' or '\'
+
+// get the command line arguments
+function get_args(args) {
+    var	a, i
+
+	if (!args)			// compatibility
+		return
+
+	for (i = 0; i < args.length; i++) {
+		a = args[i]
+		if (a == '-o') {
+			outfn = args[i + 1];
+			args.splice(i++, 2)
+		}
+	}
+}
 
 // convert a pixel value into page unit
 function set_unit(p) {
@@ -311,9 +328,9 @@ function odt_out() {
 
 // - generate the ODT file
 	zip	.generateNodeStream({streamFiles:true})
-		.pipe(fs.createWriteStream('abc.odt'))
+		.pipe(fs.createWriteStream(outfn))
 		.on('finish', function () {
-			console.log('abc.odt created')
+			console.log(outfn + ' created')
 		})
 }
 
@@ -432,8 +449,10 @@ office:string-value="' +
 }
 
 // entry point from cmdline
-function abc_init() {
-console.log('ODT generation started')
+function abc_init(args) {
+	console.log('ODT generation started');
+
+	get_args(args);
 
 	// generate mimetype which is the first item and without compression
 	zip.file('mimetype',
