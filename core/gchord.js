@@ -336,6 +336,12 @@ function gch_build(s) {
 	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix]
 		if (gch.type == 'g') {
+			if (cfmt.chordnames) {
+				gch.text = gch.text.replace(/A|B|C|D|E|F|G/g,
+					function(c){return cfmt.chordnames[c]})
+				if (cfmt.chordnames.B == 'H')
+					gch.text = gch.text.replace(/Hb/g, 'B')
+			}
 			gch.text = gch.text.replace(/##|#|=|bb|b/g,
 				function(x) {
 					switch (x) {
@@ -346,9 +352,6 @@ function gch_build(s) {
 					}
 					return "&#x1d12b;"
 				});
-			if (cfmt.chordnames)
-				gch.text = gch.text.replace(/A|B|C|D|E|F|G/g,
-					function(c){return cfmt.chordnames[c]});
 			gch.font = gch_font
 		} else {
 			gch.text = cnv_escape(gch.text);
