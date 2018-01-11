@@ -1,6 +1,6 @@
 // abc2svg - cmdline.js - command line
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -81,7 +81,7 @@ function do_file(fn) {
 function abc_cmd(cmd, args) {
 	var	arg, parm, fn;
 
-	abc_init()
+	abc_init(args)
 	while (1) {
 		arg = args.shift()
 		if (!arg)
