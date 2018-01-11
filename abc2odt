@@ -1,0 +1,76 @@
+#! /usr/bin/env node
+
+// abc2odt
+
+// define the system functions
+    var	sep = require('path').sep
+
+// interpreter specific functions
+function print(str) {
+	process.stdout.write(str + '\n')
+}
+
+function printErr(str) {
+	process.stderr.write(str + '\n')
+}
+
+function readFile(fname) {
+    var	fs = require("fs")
+
+	return fs.readFileSync(fname).toString()
+}
+
+function loadRelativeToScript(script) {
+	var geval = eval;
+	geval(readFile(__dirname + sep + script))
+}
+
+function quit() {
+	process.exit(1)
+}
+
+global.print = print;
+global.printErr = printErr;
+global.loadRelativeToScript = loadRelativeToScript;
+global.readFile = readFile;
+global.quit = quit;
+
+function usage() {
+	printErr('ABC to ODT translator with\
+ abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
+Usage:\n\
+  abc2odt [g_options] ABC_file [f_options] [ABC_file [f_options]]* [-o output_file]\n\
+Arguments:\n\
+  g_options   global ABC options\n\
+  ABC_file    ABC file\n\
+  f_options   file options\n\
+  output_file output file - default is "./abc.odt"')
+	quit()
+}
+
+// load the abc2svg core
+var m = require("abc2svg/abc2svg-1");
+global.abc2svg = m.abc2svg;
+global.Abc = m.Abc;
+
+// load the command line
+m = require("abc2svg/cmdline");
+global.abc = m.abc;
+global.errtxt = m.errtxt;
+global.user = m.user;
+global.abc_cmd = m.abc_cmd
+
+// load the ODT backend
+m = require("abc2svg/toodt");
+global.abort = m.abort;
+global.abc_init = m.abc_init;
+global.abc_end = m.abc_end
+
+// main
+var args = process.argv
+if (!args[2])
+	usage();
+args.shift();
+args.shift()
+
+abc_cmd("abc2odt", args)

@@ -101,13 +101,21 @@ javascript:(function(){if(typeof%20loadjs=='function'){loadjs('abckbd2-1.js')}el
 ### nodeJS usage
 
 Installed via **npm**, the **abc2svg** package comes with the
-command line (batch) program `abc2svg`.
+command line (batch) programs `abc2svg` and `abc2odt`.
 
-This one may be used as **abcm2ps** to generate XHTML files,
-but it writes to standard output:
+These ones may be used as **abcm2ps** to generate XHTML or ODT files.   
+
+`abc2svg` writes to standard output:
 ```
     abc2svg mytunes.abc > Out.xhtml
 ```
+
+`abc2odt` output is `abc.odt` or the file specified
+by the command line argument `-o`:
+```
+	abc2odt my_file.abc -o my_file.odt
+```
+
 ### Build
 
 If you want to build the **abc2svg** scripts in your machine,
@@ -190,9 +198,10 @@ There are:
   word processors (abiword, libreoffice...).   
   It runs only with the npm script `abc2svg` and asks for the npm module
   `jszip` to be installed.   
-  The ODT document is created as `abc.odt` in the current directory.   
+  The output ODT document may be specified by the command line argument `-o`
+  (default `abc.odt`).   
   Example:
 
 ```
-	abc2svg toodt.js my_file.abc
+	abc2svg toodt.js my_file.abc -o my_file.odt
 ```
