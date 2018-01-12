@@ -486,7 +486,10 @@ function sy(y) {
 		return (posy - y) / stv_g.scale	// voice scale
 	return stv_g.dy - y			// staff scale
 }
-Abc.prototype.sy = sy
+Abc.prototype.sy = sy;
+// return absolute X,Y coordinates
+Abc.prototype.ax = function(x) { return x + posx }
+Abc.prototype.ay = function(y) { return posy - y }
 
 // output scaled (x + <sep> + y)
 function out_sxsy(x, sep, y) {
