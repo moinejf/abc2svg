@@ -939,10 +939,25 @@ function draw_bar(s, bot, h) {
 		st = s.st,
 		x = s.x
 
+	bar_type = bar_cnv(s.bar_type)
+	if (!bar_type)
+		return				/* invisible */
+
+	/* don't put a line between the staves if there is no bar above */
+	if (st != 0
+	 && s.ts_prev
+//fixme: 's.ts_prev.st != st - 1' when floating voice in lower staff
+//	 && (s.ts_prev.type != BAR || s.ts_prev.st != st - 1))
+	 && s.ts_prev.type != BAR)
+		h = staff_tb[st].topbar * staff_tb[st].staffscale;
+
+	s.ymx = s.ymn + h;
+	set_sscale(st);
+	anno_start(s)
+
 	/* if measure repeat, draw the '%' like glyphs */
 	if (s.bar_mrep) {
 		yb = staff_tb[st].y + 12;
-		set_scale(s)
 		if (s.bar_mrep == 1) {
 			for (s2 = s.prev; s2.type != REST; s2 = s2.prev)
 				;
@@ -957,17 +972,6 @@ function draw_bar(s, bot, h) {
 		}
 	}
 
-	/* don't put a line between the staves if there is no bar above */
-	if (st != 0
-	 && s.ts_prev
-//fixme: 's.ts_prev.st != st - 1' when floating voice in lower staff
-//	 && (s.ts_prev.type != BAR || s.ts_prev.st != st - 1))
-	 && s.ts_prev.type != BAR)
-		h = staff_tb[st].topbar * staff_tb[st].staffscale;
-
-	bar_type = bar_cnv(s.bar_type)
-	if (!bar_type)
-		return				/* invisible */
 	for (i = bar_type.length; --i >= 0; ) {
 		switch (bar_type[i]) {
 		case "|":
@@ -989,6 +993,8 @@ function draw_bar(s, bot, h) {
 		}
 		x -= 3
 	}
+	set_sscale(st);
+	anno_stop(s)
 }
 
 /* -- draw a rest -- */
@@ -3565,11 +3571,7 @@ function draw_systems(indent) {
 				bar_set()
 			}
 
-			set_sscale(st);		// (for symbol annotation)
-			anno_start(s);
 			draw_bar(s, bar_bot[st], bar_height[st]);
-			set_sscale(st);
-			anno_stop(s)
 			break
 		case STBRK:
 			if (cur_sy.voices[s.v].range == 0) {
