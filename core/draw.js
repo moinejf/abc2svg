@@ -1044,6 +1044,8 @@ function draw_rest(s) {
 	staffb = p_staff.y			/* bottom of staff */
 
 	if (s.rep_nb) {
+		set_sscale(s.st);
+		anno_start(s);
 		staffb += 12
 		if (s.rep_nb < 0) {
 			xygl(x, staffb, "srep")
@@ -1055,8 +1057,12 @@ function draw_rest(s) {
 					s.rep_nb.toString(), "c")
 			}
 		}
+		anno_stop(s)
 		return
 	}
+
+	set_scale(s);
+	anno_start(s);
 
 	y = s.y;
 
@@ -1107,6 +1113,7 @@ function draw_rest(s) {
 		xygl(x, y, "dot");
 		x += 3.5
 	}
+	anno_stop(s)
 }
 
 /* -- draw grace notes -- */
@@ -3665,10 +3672,7 @@ function draw_symbols(p_voice) {
 				bm.s2 = null
 			break
 		case REST:
-			set_scale(s);
-			anno_start(s);
 			draw_rest(s);
-			anno_stop(s)
 			break
 		case BAR:
 			break			/* drawn in draw_systems */
