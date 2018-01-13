@@ -952,12 +952,13 @@ function draw_bar(s, bot, h) {
 		h = staff_tb[st].topbar * staff_tb[st].staffscale;
 
 	s.ymx = s.ymn + h;
-	set_sscale(st);
+	set_sscale(-1);
 	anno_start(s)
 
 	/* if measure repeat, draw the '%' like glyphs */
 	if (s.bar_mrep) {
 		yb = staff_tb[st].y + 12;
+		set_sscale(st)
 		if (s.bar_mrep == 1) {
 			for (s2 = s.prev; s2.type != REST; s2 = s2.prev)
 				;
@@ -993,7 +994,7 @@ function draw_bar(s, bot, h) {
 		}
 		x -= 3
 	}
-	set_sscale(st);
+	set_sscale(-1);
 	anno_stop(s)
 }
 
