@@ -487,10 +487,23 @@ function sy(y) {
 	return stv_g.dy - y			// staff scale
 }
 Abc.prototype.sy = sy;
-// return absolute X,Y coordinates
+Abc.prototype.sh = function(h) {
+	if (stv_g.st < 0)
+		return h / abc.stv_g.scale
+	return h
+}
+// for absolute X,Y coordinates
 Abc.prototype.ax = function(x) { return x + posx }
-Abc.prototype.ay = function(y) { return posy - y }
-
+Abc.prototype.ay = function(y) {
+	if (stv_g.st < 0)
+		return posy - y
+	return posy + (stv_g.dy - y) * stv_g.scale - stv_g.dy
+}
+Abc.prototype.ah = function(h) {
+	if (stv_g.st < 0)
+		return h
+	return h * abc.stv_g.scale
+}
 // output scaled (x + <sep> + y)
 function out_sxsy(x, sep, y) {
 	x = sx(x);
