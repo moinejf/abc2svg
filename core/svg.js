@@ -19,7 +19,7 @@
 
 var	output = [],		// output buffer
 	style = '\n.fill {fill: currentColor}\
-\n.stroke {stroke: currentColor; fill: none}\
+\n.stroke {stroke: currentColor; fill: none; stroke-width:.7}\
 \n.music text, .music tspan {fill:currentColor}',
 	font_style = '',
 	posx = cfmt.leftmargin / cfmt.scale,	// default x offset of the images
@@ -993,8 +993,11 @@ function svg_flush() {
 
     var	head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
-	color="black"'
+	color="black" class="music"'
 
+	if (cfmt.scale != 1)
+		head += ' transform="scale(' +
+			cfmt.scale.toFixed(2) + ')"'
 	if (cfmt.bgcolor)
 		head += ' style="background-color: ' + cfmt.bgcolor + '"';
 
@@ -1028,16 +1031,11 @@ function svg_flush() {
 	}
 	if (defs)
 		head += '<defs>' + defs + '\n</defs>\n'
-	if (cfmt.scale == 1)
-		head += '<g class="music" stroke-width=".7">\n'
-	else
-		head += '<g class="music" stroke-width=".7" transform="scale(' +
-				cfmt.scale.toFixed(2) + ')">\n';
 
 	if (psvg)			// if PostScript support
 		psvg.ps_flush(true);	// + setg(0)
 
-	user.img_out(head + output.join('') + "</g>\n</svg>");
+	user.img_out(head + output.join('') + "</svg>");
 	output = []
 
 	font_style = ''
