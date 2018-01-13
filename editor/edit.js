@@ -82,7 +82,13 @@ var user = {
 			'_" x="');
 		abc.out_sxsy(x, '" y="', y);
 		abc.out_svg('" width="' + w.toFixed(2) +
-			'" height="' + h.toFixed(2) + '"/>\n')
+			'" height="' + abc.sh(h).toFixed(2) + '"/>\n')
+// with absolute coordinates, the rectangles would be inserted at the end
+// of the images as:
+//  '<rect class="abcr _' + start +
+//	'_" x="' + abc.ax(x).toFixed(2) + '" y="' + abc.ay(y).toFixed(2) +
+//	'" width="' + w.toFixed(2) +
+//	'" height="' + abc.ah(h).toFixed(2) + '"/>\n'
 	},
 	// -- optional attributes
 	page_format: true		// define the non-page-breakable blocks
