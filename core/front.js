@@ -273,31 +273,16 @@ function tosvg(in_fname,		// file name
 
 		if (do_escape && src.indexOf('\\') >= 0)
 			src = cnv_escape(src);
-		l = src.length
-		for (i = 0; i < l; i++) {
-			c = src[i]
-			switch (c) {
-			case '\\':
-				i++
-				continue
-			case '%':
-				return src.slice(0, i).replace(/\s+$/, '')
-			case '"':
+		j = 0
+		while (1) {
+			i = src.indexOf('%', j)
+			if (i < 0)
 				break
-			default:
-				continue
+			if (src[i - 1] != '\\') {
+				src = src.slice(0, i)
+				break
 			}
 			j = i + 1
-			for (;;) {			// in ".." sequence
-				j = src.indexOf('"', j)
-				if (j < 0)
-					break		// fixme: no string end
-				if (src[j - 1] != '\\')
-					break
-			}
-			if (j < 0)
-				break
-			i = j
 		}
 		src = src.replace(/\s+$/, '');		// trimRight
 		return src.replace(/\\%/g,'%')
