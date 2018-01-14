@@ -236,7 +236,7 @@ var	err_ign_s = "$1: inside tune - ignored",
 function tosvg(in_fname,		// file name
 		file) {			// file content
 	var	i, c, bol, eol, end,
-		ext, select, skip,
+		ext, select,
 		line0, line1,
 		last_info, opt, text, a, b, s,
 		cfmt_sav, info_sav, char_tb_sav, glovar_sav, maps_sav,
@@ -347,17 +347,19 @@ function tosvg(in_fname,		// file name
 			break
 		}
 		eol++
-		if (skip) {			// tune skip
-			if (eol != bol)
-				continue
-			skip = false
-		}
 		if (eol == bol) {		// empty line
 			if (parse.state == 1) {
 				parse.istart = bol;
 				syntax(1, "Empty line in tune header - ignored")
-			} else if (parse.state >= 2)
+			} else if (parse.state >= 2) {
 				end_tune()
+				if (parse.select) {	// skip to next tune
+					eol = file.indexOf('\nX:', parse.eol)
+					if (eol < 0)
+						eol = eof
+					parse.eol = eol
+				}
+			}
 			continue
 		}
 		parse.istart = parse.bol = bol;
@@ -555,8 +557,11 @@ function tosvg(in_fname,		// file name
 				continue
 			}
 			if (parse.select
-			 && !tune_selected()) {
-				skip = true
+			 && !tune_selected()) {	// skip to the next tune
+				eol = file.indexOf('\nX:', parse.eol)
+				if (eol < 0)
+					eol = eof;
+				parse.eol = eol
 				continue
 			}
 
