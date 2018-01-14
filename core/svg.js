@@ -1043,8 +1043,12 @@ function svg_flush() {
 	if (defs)
 		head += '<defs>' + defs + '\n</defs>\n'
 
+	// if %%pagescale != 1, do a global scale
+	// (with a container: transform scale in <svg> does not work
+	//	the same in all browsers)
+	// the class is used to know that the container is global
 	if (cfmt.scale != 1) {
-		head += '<g transform="scale(' +
+		head += '<g class="g" transform="scale(' +
 			cfmt.scale.toFixed(2) + ')">\n';
 		g = '</g>\n'
 	}
