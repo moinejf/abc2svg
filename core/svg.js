@@ -489,7 +489,7 @@ function sy(y) {
 Abc.prototype.sy = sy;
 Abc.prototype.sh = function(h) {
 	if (stv_g.st < 0)
-		return h / abc.stv_g.scale
+		return h / stv_g.scale
 	return h
 }
 // for absolute X,Y coordinates
@@ -502,7 +502,7 @@ Abc.prototype.ay = function(y) {
 Abc.prototype.ah = function(h) {
 	if (stv_g.st < 0)
 		return h
-	return h * abc.stv_g.scale
+	return h * stv_g.scale
 }
 // output scaled (x + <sep> + y)
 function out_sxsy(x, sep, y) {
