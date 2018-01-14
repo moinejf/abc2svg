@@ -1006,11 +1006,9 @@ function svg_flush() {
 
     var	head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
-	color="black" class="music"'
+	color="black" class="music"',
+	g = ''
 
-	if (cfmt.scale != 1)
-		head += ' transform="scale(' +
-			cfmt.scale.toFixed(2) + ')"'
 	if (cfmt.bgcolor)
 		head += ' style="background-color: ' + cfmt.bgcolor + '"';
 
@@ -1045,10 +1043,16 @@ function svg_flush() {
 	if (defs)
 		head += '<defs>' + defs + '\n</defs>\n'
 
+	if (cfmt.scale != 1) {
+		head += '<g transform="scale(' +
+			cfmt.scale.toFixed(2) + ')">\n';
+		g = '</g>\n'
+	}
+
 	if (psvg)			// if PostScript support
 		psvg.ps_flush(true);	// + setg(0)
 
-	user.img_out(head + output.join('') + "</svg>");
+	user.img_out(head + output.join('') + g + "</svg>");
 	output = []
 
 	font_style = ''
