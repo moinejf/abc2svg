@@ -340,7 +340,7 @@ function gch_build(s) {
 				gch.text = gch.text.replace(/A|B|C|D|E|F|G/g,
 					function(c){return cfmt.chordnames[c]})
 				if (cfmt.chordnames.B == 'H')
-					gch.text = gch.text.replace(/Hb/g, 'B')
+					gch.text = gch.text.replace(/Hb/g, 'Bb')
 			}
 			gch.text = gch.text.replace(/##|#|=|bb|b/g,
 				function(x) {
