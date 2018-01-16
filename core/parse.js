@@ -1,6 +1,6 @@
 // abc2svg - parse.js - ABC parse
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -2175,15 +2175,15 @@ var char_tb = [
 	nil, nil, nil, nil,
 	nil, nil, nil, nil,
 	nil, nil, nil, nil,		/* .. - 1f */
-	" ", "!", '"', nil,		/* (sp) ! " # */
+	" ", "!", '"', "i",		/* (sp) ! " # */
 	"\n", nil, "&", nil,		/* $ % & ' */
-	"(", ")", nil, nil,		/* ( ) * + */
+	"(", ")", "i", nil,		/* ( ) * + */
 	nil, "-", "!dot!", nil,		/* , - . / */
 	nil, nil, nil, nil, 		/* 0 1 2 3 */
 	nil, nil, nil, nil, 		/* 4 5 6 7 */
-	nil, nil, "|", nil,		/* 8 9 : ; */
-	"<", "n", "<", nil,		/* < = > ? */
-	nil, "n", "n", "n",		/* @ A B C */
+	nil, nil, "|", "i",		/* 8 9 : ; */
+	"<", "n", "<", "i",		/* < = > ? */
+	"i", "n", "n", "n",		/* @ A B C */
 	"n", "n", "n", "n", 		/* D E F G */
 	"!fermata!", "d", "d", "d",	/* H I J K */
 	"!emphasis!", "!lowermordent!",
