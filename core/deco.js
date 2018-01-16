@@ -1,6 +1,6 @@
 // abc2svg - deco.js - decorations
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -1756,9 +1756,6 @@ function draw_notempo(s, x, y, dur, sc) {
 		stv_g.started = false
 	}
 
-//	output.push('<g transform="translate(');
-//	out_sxsy(x + 8, ',', y + 3);
-//	output.push(') scale(' + sc + ')">\n')
 	out_XYAB('<g transform="translate(X,Y) scale(F)">\n',
 		x + 4, y + 2, sc)
 	switch (head) {
@@ -1806,7 +1803,7 @@ function draw_notempo(s, x, y, dur, sc) {
 				dx = 6
 		}
 	}
-	output.push('\n</g>\n')
+	output.push('</g>\n')
 	return (dx + 15) * sc
 }
 
@@ -1893,6 +1890,7 @@ function draw_partempo(st, top) {
 		x = s.x - 5 + w
 	}
 	if (some_tempo) {
+		set_sscale(-1);
 		set_font("tempo");
 		ht = gene.curfont.size + 2 + 2;
 		y = 2 - ht;
@@ -1939,6 +1937,7 @@ function draw_partempo(st, top) {
 			ymin = y
 	}
 	if (some_part) {
+		set_sscale(-1)
 		if (top < ymin + h + ht)
 			dy = ymin + h + ht - top
 
