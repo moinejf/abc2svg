@@ -306,9 +306,13 @@ var	pt, nr, i, elts, elt, x, y, cl,
 		colorsel(false);
 		svg.onmousemove = svgsel;
 		svg.onmouseup = svgsel;
-		pt = svg.getBoundingClientRect();
-		selrec.xs = evt.clientX - pt.left;
-		selrec.ys = evt.clientY - pt.top;
+		pt = svg.createSVGPoint();
+		pt.x = evt.clientX;
+		pt.y = evt.clientY;
+		cl = pt.matrixTransform(svg.getScreenCTM().inverse());
+		selrec.xs = cl.x;
+		selrec.ys = cl.y;
+
 		selrec.sel = true;
 		evt.stopImmediatePropagation();
 		evt.preventDefault()
@@ -316,9 +320,13 @@ var	pt, nr, i, elts, elt, x, y, cl,
 	case "mousemove":
 		if (!selrec.sel)
 			break
-		pt = svg.getBoundingClientRect();
-		selrec.x = evt.clientX - pt.left;
-		selrec.y = evt.clientY - pt.top
+		pt = svg.createSVGPoint();
+		pt.x = evt.clientX;
+		pt.y = evt.clientY;
+		cl = pt.matrixTransform(svg.getScreenCTM().inverse());
+		selrec.x = cl.x;
+		selrec.y = cl.y
+
 		if (!selrec.rect) {
 			nr = true;
 			selrec.rect = document.createElementNS("http://www.w3.org/2000/svg",
