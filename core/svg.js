@@ -19,7 +19,7 @@
 
 var	output = [],		// output buffer
 	style = '\n.fill {fill: currentColor}\
-\n.stroke {stroke: currentColor; fill: none; stroke-width:.7}\
+\n.stroke {stroke: currentColor; fill: none}\
 \n.music text, .music tspan {fill:currentColor}',
 	font_style = '',
 	posx = cfmt.leftmargin / cfmt.scale,	// default x offset of the images
@@ -1006,7 +1006,7 @@ function svg_flush() {
 
     var	head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
-	color="black" class="music"',
+	color="black" class="music" stroke-width=".7"',
 	g = ''
 
 	if (cfmt.bgcolor)
