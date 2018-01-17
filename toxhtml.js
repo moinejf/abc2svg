@@ -383,7 +383,8 @@ Abc.prototype.svg_flush = svg_flush\n\
 }
 
 function abc_end() {
-//fixme: bad output if no output...
+	if (!init_done)				// if empty document
+		user.img_out('')
 	if (errtxt)
 		print("<pre>" + clean_txt(errtxt) + "</pre>")
 	print("</body>\n</html>")
