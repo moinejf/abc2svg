@@ -195,7 +195,7 @@ function para_build(str) {
 			if (c[1] == '0')
 				n_font = o_font
 			else if (c[1] >= '1' && c[1] <= '9')
-				n_font = get_font("u" + c[1])
+				n_font = abc.get_font("u" + c[1])
 			else
 				return c
 			c = ''
