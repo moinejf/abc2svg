@@ -146,8 +146,13 @@ function para_start(action, skip) {
     var	r,
 	sc = abc.get_fmt("scale"),
 	newpage = abc.get_newpage() ? 'newpage ' : '',
-	sty = '<p class="' + newpage + 'f' + o_font.fid,
+	sty = '<p class="' + newpage,
 	psty = set_pstyle()
+
+	if (o_font.class)
+		sty += o_font.class
+	else
+		sty += 'f' + o_font.fid
 
 	if (skip)
 		psty += ';margin-top:' + skip.toFixed(2) + 'px'
@@ -172,8 +177,14 @@ function para_build(str) {
     var	n_font, txt,
 	 span = ''
 
-	if (c_font != o_font)
-		span += '<span class="f' + c_font.fid + '">';
+	if (c_font != o_font) {
+		span += '<span class="'
+		if (c_font.class)
+			span += c_font.class
+		else
+			span += 'f' + c_font.fid
+		span += '">'
+	}
 	txt = str.replace(/<|>|&.*?;|&|  |\$./g, function(c){
 		switch (c[0]) {
 		case '<': return "&lt;"
@@ -199,6 +210,8 @@ function para_build(str) {
 			c_font = n_font
 			if (c_font == o_font)
 				return c
+			if (c_font.class)
+				return c + '<span class="' + c_font.class + '">'
 			return c + '<span class="f' + c_font.fid + '">'
 		}
 	})
@@ -375,6 +388,8 @@ Abc.prototype.svg_flush = svg_flush\n\
 }
 
 function abc_end() {
+    var	font_style = abc.get_font_style()
+
 	if (!init_done)				// if empty document
 		user.img_out('')
 	if (errtxt)

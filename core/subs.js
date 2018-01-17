@@ -125,8 +125,8 @@ function out_str(str) {
 				c_font = n_font
 				if (c_font == o_font)
 					return c
-				return c + '<tspan\n\tclass="f' +
-					n_font.fid + cfmt.fullsvg + '">'
+				return c + '<tspan\n\tclass="' +
+						font_class(n_font) + '">'
 			}
 		}))
 	if (c_font != o_font) {
@@ -145,7 +145,7 @@ function out_str(str) {
 function xy_str(x, y, str,
 		 action,
 		 line_w) {
-	output.push('<text class="f' + gene.curfont.fid + cfmt.fullsvg + '" x="');
+	output.push('<text class="' + font_class(gene.curfont) + '" x="');
 	out_sxsy(x, '" y="', y)
 	switch (action) {
 	case 'c':

@@ -146,7 +146,7 @@ function get_font_scale(param) {
 
 // %%xxxfont fontname|* [encoding] [size|*]
 function param_set_font(xxxfont, param) {
-	var font, fn, old_fn, n, a, new_name, new_fn, new_size, scale
+	var font, fn, old_fn, n, a, new_name, new_fn, new_size, scale, cl
 
 	// "setfont-<n>" goes to "u<n>font"
 	if (xxxfont[xxxfont.length - 2] == '-') {
@@ -158,9 +158,24 @@ function param_set_font(xxxfont, param) {
 	fn = cfmt[xxxfont]
 	if (fn) {
 		font = font_tb[fn]
-		if (font)
+		if (font) {
 			old_fn = font.name + "." + font.size
+			if (font.class)
+				old_fn += '.' + font.class
+		}
 	}
+
+	n = param.indexOf('class=')
+	if (n >= 0) {
+		n += 6;
+		a = param.indexOf(' ', n)
+		if (a > 0)
+			cl = param.slice(n, a)
+		else
+			cl = param.slice(n);
+		param = param.replace(new RegExp('class=' + cl), '').trim()
+	}
+
 	a = param.split(/\s+/);
 	new_name = a[0]
 	if (new_name == "*"
@@ -184,6 +199,8 @@ function param_set_font(xxxfont, param) {
 		return
 	}
 	new_fn = new_name + "." + new_size
+	if (cl)
+		new_fn += '.' + cl
 	if (new_fn == old_fn)
 		return
 	font = font_tb[new_fn]
@@ -198,6 +215,8 @@ function param_set_font(xxxfont, param) {
 		}
 		font_tb[new_fn] = font
 	}
+	if (cl)
+		font.class = cl;
 	cfmt[xxxfont] = new_fn
 }
 
@@ -691,9 +710,16 @@ function style_font(fn) {		// 'font_name'.'size'
 }
 Abc.prototype.style_font = style_font
 
+// build a font class
+function font_class(font) {
+	if (font.class)
+		return font.class
+	return 'f' + font.fid + cfmt.fullsvg
+}
+
 // output a font style
 function style_add_font(font) {
-	font_style += "\n.f" + font.fid + cfmt.fullsvg +
+	font_style += "\n." + font_class(font) +
 			" {" + style_font(font.name + '.' + font.size) + "}"
 }
 
