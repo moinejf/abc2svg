@@ -145,31 +145,26 @@ function set_pstyle() {
 function para_start(action, skip) {
     var	r,
 	sc = abc.get_fmt("scale"),
-	newpage = abc.get_newpage(),
-	sty = '<p' + (newpage ? ' class="newpage"' : '') + ' style="' + set_pstyle()
-
-	if (sc == 1) {
-		sty += abc.style_font(o_font.name + '.' + o_font.size)
-	} else {
-		r = abc.style_font(o_font.name + '.' + o_font.size)
-			.match(/(.*:)(.*)px/);
-		sty += r[1] + (r[2] * sc).toFixed(2) + 'px'
-	}
+	newpage = abc.get_newpage() ? 'newpage ' : '',
+	sty = '<p class="' + newpage + 'f' + o_font.fid,
+	psty = set_pstyle()
 
 	if (skip)
-		sty += ';margin-top:' + skip.toFixed(2) + 'px'
+		psty += ';margin-top:' + skip.toFixed(2) + 'px'
 
 	switch (action) {
 	case 'c':
-		sty += ';text-align:center'
+		psty += ';text-align:center'
 		break
 	case 'r':
-		sty += ';text-align:right'
+		psty += ';text-align:right'
 		break
 	case 'j':
-		sty += ';text-align:justify'
+		psty += ';text-align:justify'
 		break
 	}
+	if (psty)
+		sty += '" style="' + psty
 	return sty + '">'
 } // para_start()
 
@@ -178,9 +173,7 @@ function para_build(str) {
 	 span = ''
 
 	if (c_font != o_font)
-		span += '<span style="' +
-				abc.style_font(c_font.name + '.' + c_font.size) +
-			'">';
+		span += '<span class="f' + c_font.fid + '">';
 	txt = str.replace(/<|>|&.*?;|&|  |\$./g, function(c){
 		switch (c[0]) {
 		case '<': return "&lt;"
@@ -206,9 +199,7 @@ function para_build(str) {
 			c_font = n_font
 			if (c_font == o_font)
 				return c
-			return c + '<span style="' +
-				abc.style_font(c_font.name + '.' + c_font.size) +
-				'">'
+			return c + '<span class="f' + c_font.fid + '">'
 		}
 	})
 	if (c_font != o_font)
@@ -366,6 +357,7 @@ Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
 Abc.prototype.get_info = function(k) { return info[k] }\n\
 Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
 Abc.prototype.get_font = get_font\n\
+Abc.prototype.get_font_style = function() { return font_style }\n\
 Abc.prototype.get_multi = function() { return multicol }\n\
 Abc.prototype.get_newpage = function() {\n\
 	if (block.newpage) {\n\
@@ -387,6 +379,8 @@ function abc_end() {
 		user.img_out('')
 	if (errtxt)
 		print("<pre>" + clean_txt(errtxt) + "</pre>")
+	if (font_style)				// if some %%text at the end
+		print('<style type="text/css">' + font_style + '\n</style>');
 	print("</body>\n</html>")
 }
 
