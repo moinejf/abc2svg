@@ -32,6 +32,7 @@ var	output = [],		// output buffer
 	},
 	defined_glyph = {},
 	defs = '',
+	fulldefs = '',		// unreferenced defs as <filter>
 	stv_g = {		/* staff/voice graphic parameters */
 		scale: 1,
 		dy: 0,
@@ -264,7 +265,10 @@ function defs_add(text) {
 				break
 			ie += 3 + tag.length
 		}
-		glyphs[gl] = text.slice(is, ie)
+		if (text.substr(is, 7) == '<filter')
+			fulldefs += '\n' + text.slice(is, ie)
+		else
+			glyphs[gl] = text.slice(is, ie)
 	}
 }
 
@@ -1037,6 +1041,7 @@ function svg_flush() {
 		}
 		head += '\n</style>\n'
 	}
+	defs += fulldefs
 	if (defs)
 		head += '<defs>' + defs + '\n</defs>\n'
 
@@ -1063,6 +1068,7 @@ function svg_flush() {
 	} else {
 		musicfont = '';
 		style = '';
+		fulldefs = ''
 	}
 	defs = '';
 	posy = 0
