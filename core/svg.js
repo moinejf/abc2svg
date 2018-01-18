@@ -234,16 +234,13 @@ function defs_add(text) {
 	var	i, j, gl, tag, is,
 		ie = 0
 
+	// remove XML comments
+	text = text.replace(/<!--.*?-->/g, '')
+
 	while (1) {
 		is = text.indexOf('<', ie);
 		if (is < 0)
 			break
-		if (text.slice(is, is + 4) == "<!--") {
-			ie = text.indexOf('-->', is + 4)
-			if (ie < 0)
-				break
-			continue
-		}
 		i = text.indexOf('id="', is)
 		if (i < 0)
 			break
