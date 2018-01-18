@@ -713,13 +713,13 @@ Abc.prototype.style_font = style_font
 // build a font class
 function font_class(font) {
 	if (font.class)
-		return font.class
+		return 'f' + font.fid + cfmt.fullsvg + ' ' + font.class
 	return 'f' + font.fid + cfmt.fullsvg
 }
 
 // output a font style
 function style_add_font(font) {
-	font_style += "\n." + font_class(font) +
+	font_style += "\n.f" + font.fid + cfmt.fullsvg +
 			" {" + style_font(font.name + '.' + font.size) + "}"
 }
 
