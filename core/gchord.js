@@ -165,6 +165,7 @@ function gch_capo(s) {
 		capo = true;
 		gch2.text += "  (capo: " + cfmt.capo.toString() + ")";
 	}
+	gch2.type = "^";		// capo as annotation
 	s.a_gch.splice(i, 0, gch2)
 }
 
