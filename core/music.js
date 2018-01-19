@@ -253,10 +253,15 @@ function lkvsym(s, next) {	// voice linkage
 	next.prev = s
 }
 function lktsym(s, next) {	// time linkage
-	s.ts_next = next;
-	s.ts_prev = next.ts_prev;
-	s.ts_prev.ts_next = s;
-	next.ts_prev = s
+	if (next) {
+		s.ts_next = next;
+		s.ts_prev = next.ts_prev
+		if (s.ts_prev)
+			s.ts_prev.ts_next = s;
+		next.ts_prev = s
+	} else {
+		s.ts_next = s.ts_prev = null
+	}
 }
 
 /* -- unlink a symbol -- */
@@ -2815,7 +2820,7 @@ function init_music_line() {
 		s.v = v;
 		s.p_v = p_voice;
 		s.st = st;
-		s.time = last_s.time;
+		s.time = tsfirst.time;
 		s.prev = null;
 		s.next = p_voice.sym
 		if (s.next)
@@ -2823,7 +2828,10 @@ function init_music_line() {
 		p_voice.sym = s;
 		p_voice.last_sym = s;
 		s.ts_next = last_s;
-		s.ts_prev = last_s.ts_prev
+		if (last_s)
+			s.ts_prev = last_s.ts_prev
+		else
+			s.ts_prev = null
 		if (!s.ts_prev) {
 			tsfirst = s;
 			s.seqst = true
@@ -2831,9 +2839,11 @@ function init_music_line() {
 			s.ts_prev.ts_next = s
 			delete s.seqst
 		}
-		last_s.ts_prev = s
-		if (last_s.type == CLEF)
-			delete last_s.seqst
+		if (last_s) {
+			last_s.ts_prev = s
+			if (last_s.type == CLEF)
+				delete last_s.seqst
+		}
 		delete s.clef_small;
 		s.second = cur_sy.voices[v].second
 // (fixme: needed for sample5 X:3 Fugue & staffnonote.xhtml)
@@ -2848,7 +2858,7 @@ function init_music_line() {
 		 || !cur_sy.st_print[cur_sy.voices[v].st])
 			continue
 		p_voice = voice_tb[v]
-		if (last_s.v == v && last_s.type == KEY) {
+		if (last_s && last_s.v == v && last_s.type == KEY) {
 			p_voice.last_sym = last_s;
 			last_s.k_old_sf = last_s.k_sf;	// no key cancel
 			last_s = last_s.ts_next
@@ -2881,7 +2891,7 @@ function init_music_line() {
 			 || !cur_sy.st_print[cur_sy.voices[v].st]
 			 || s2.a_meter.length == 0)
 				continue
-			if (last_s.v == v && last_s.type == METER) {
+			if (last_s && last_s.v == v && last_s.type == METER) {
 				p_voice.last_sym = last_s;
 				last_s = last_s.ts_next
 				continue
@@ -2900,7 +2910,7 @@ function init_music_line() {
 
 		// if bar already, keep it in sequence
 		p_voice = voice_tb[v];
-		if (last_s.v == v && last_s.type == BAR) {
+		if (last_s && last_s.v == v && last_s.type == BAR) {
 			p_voice.last_sym = last_s;
 			last_s = last_s.ts_next
 			continue
@@ -2921,10 +2931,10 @@ function init_music_line() {
 		s2.prev = p_voice.last_sym;
 		p_voice.last_sym = s2;
 		lktsym(s2, last_s);
-		s2.time = last_s.time
+		s2.time = tsfirst.time
 		if (s2.ts_prev.type != s2.type)
 			s2.seqst = true;
-		if (last_s.type == s2.type && s2.v != last_s.v) {
+		if (last_s && last_s.type == s2.type && s2.v != last_s.v) {
 			delete last_s.seqst;
 			last_s.shrink = 0
 		}
