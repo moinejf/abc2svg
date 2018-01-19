@@ -4251,6 +4251,10 @@ function set_piece() {
 				unlksym(s)
 			}
 			break
+		case BAR:
+			if (cfmt.staffnonote <= 1)
+				break
+			// fall thru
 		case GRACE:
 			non_empty_gl[st] = non_empty[st] = true
 			break
