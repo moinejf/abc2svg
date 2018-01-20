@@ -1,6 +1,6 @@
 // psvg.js - small PS to SVG convertor for abc2svg
 
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -471,7 +471,14 @@ function Psvg(abcobj_r) {
 				(gcur.yoffs - y).toFixed(2) + '">';
 		g = 2
 	}
-	svgbuf += s
+	svgbuf += s.replace(/<|>|&|  /g, function(c){
+			switch (c) {
+			case '<': return "&lt;"
+			case '>': return "&gt;"
+			case '&': return "&amp;"
+			case '  ': return '  '		// space + nbspace
+			}
+		})
 	if (span)
 		svgbuf += "</tspan>";
 	gcur.cx = x + strw(s)
