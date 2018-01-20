@@ -1424,6 +1424,11 @@ function do_begin_end(type,
 function generate() {
 	var v, p_voice;
 
+	if (vover) {
+		syntax(1, "No end of voice overlap");
+		get_vover(vover.bar ? '|' : ')')
+	}
+
 	if (voice_tb.length == 0)
 		return
 	voice_adj();
