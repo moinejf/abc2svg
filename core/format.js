@@ -220,25 +220,8 @@ function param_set_font(xxxfont, param) {
 	cfmt[xxxfont] = new_fn
 }
 
-/* -- get a value with a unit in 72 PPI -- */
+// get a length with a unit - return the number of pixels
 function get_unit(param) {
-	var v = parseFloat(param)
-
-	switch (param.slice(-2)) {
-	case "CM":
-	case "cm":
-		v *= 28.35
-		break
-	case "IN":
-	case "in":
-		v *= 72
-		break
-	}
-	return v
-}
-
-/* -- get a page value with a unit -- */
-function get_unitp(param) {
 	var v = parseFloat(param)
 
 	switch (param.slice(-2)) {
@@ -250,8 +233,11 @@ function get_unitp(param) {
 	case "in":
 		v *= IN
 		break
-//	default:
-//		unit required...
+	case "PT":		// paper point in 1/72 inch
+	case "pt":
+		v *= .75
+		break
+//	default:  // ('px')	// screen pixel in 1/96 inch
 	}
 	return v
 }
@@ -523,7 +509,7 @@ function set_format(cmd, param, lock) {
 	case "pagewidth":
 	case "rightmargin":
 //	case "topmargin":
-		f = get_unitp(param)	// normally unit in cm or in - 96 DPI
+		f = get_unit(param)	// normally unit in cm or in - 96 DPI
 		if (isNaN(f)) {
 			syntax(1, "Bad value in $1", '%%' + cmd)
 			break
@@ -603,7 +589,11 @@ function set_format(cmd, param, lock) {
 		cfmt.sound = "sounding"
 		break
 	case "staffwidth":
-		v = get_unitp(param)
+		v = get_unit(param)
+		if (isNaN(v)) {
+			syntax(1, "Bad value in $1", '%%' + cmd)
+			break
+		}
 		if (v < 100) {
 			syntax(1, "%%staffwidth too small")
 			break
