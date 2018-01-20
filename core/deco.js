@@ -1372,7 +1372,7 @@ function draw_deco_staff() {
 		var s, s1, y, y2, i, p, w, first_repeat;
 
 		/* search the max y offset */
-		y = staff_tb[p_voice.st].topbar + 6 + 20;
+		y = staff_tb[p_voice.st].topbar + 25	// 20 (vert bar) + 5 (room)
 		for (s = p_voice.sym; s; s = s.next) {
 			if (s.type != BAR)
 				continue
@@ -1401,7 +1401,7 @@ function draw_deco_staff() {
 			if (s1.text) {
 				w = strw(s1.text);
 				y2 = y_get(p_voice.st, true, s1.x + 4, w);
-				y2 += gene.curfont.size + 2
+				y2 += gene.curfont.size
 				if (y < y2)
 					y = y2
 			}
@@ -1465,7 +1465,7 @@ function draw_deco_staff() {
 				delete p_voice.bar_start.a_gch
 			}
 			if (s1.text)
-				xy_str(x + 4, y2 - gene.curfont.size,
+				xy_str(x + 4, y2 - gene.curfont.size - 3,
 					s1.text);
 			xypath(x, y2);
 			if (s1.rbstart == 2)
