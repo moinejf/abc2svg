@@ -1,6 +1,6 @@
 // abc2svg - lyrics.js - lyrics
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -350,8 +350,8 @@ function ly_width(s, wlw) {
 /* (the staves are not yet defined) */
 /* !! this routine is tied to ly_width() !! */
 function draw_lyric_line(p_voice, j, y) {
-	var	l, p, lastx, w, s, s2, f, ly, lyl,
-		hyflag, lflag, x0, font, shift, desc
+	var	p, lastx, w, s, s2, ly, lyl,
+		hyflag, lflag, x0, font, shift
 
 	if (p_voice.hy_st & (1 << j)) {
 		hyflag = true;
@@ -474,7 +474,6 @@ function draw_lyrics(p_voice, nly, a_h, y,
 	if (incr > 0) {				/* under the staff */
 		if (y > -cfmt.vocalspace)
 			y = -cfmt.vocalspace;
-		y += a_h[0] / 6;		// descent
 		y *= sc
 		for (j = 0; j < nly; j++) {
 			y -= a_h[j] * 1.1;
@@ -487,7 +486,6 @@ function draw_lyrics(p_voice, nly, a_h, y,
 	top = staff_tb[p_voice.st].topbar + cfmt.vocalspace
 	if (y < top)
 		y = top;
-	y += a_h[nly - 1] / 6;			// descent
 	y *= sc
 	for (j = nly; --j >= 0;) {
 		draw_lyric_line(p_voice, j, y);

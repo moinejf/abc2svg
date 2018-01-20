@@ -145,6 +145,7 @@ function out_str(str) {
 function xy_str(x, y, str,
 		 action,
 		 line_w) {
+	y += gene.curfont.size * .2;	// a bit upper for the descent
 	output.push('<text class="' + font_class(gene.curfont) + '" x="');
 	out_sxsy(x, '" y="', y)
 	switch (action) {
@@ -176,7 +177,7 @@ function xy_str_b(x, y, str) {
 	var	w = strw(str);
 
 	output.push('<rect class="stroke" x="');
-	out_sxsy(x - 2, '" y="', y + gene.curfont.size - 2);
+	out_sxsy(x - 2, '" y="', y + gene.curfont.size + 1);
 	output.push('" width="' + (w + 4).toFixed(2) +
 		'" height="' + (gene.curfont.size + 3).toFixed(2) +
 		'"/>\n');
@@ -229,9 +230,9 @@ function write_title(title, is_subtitle) {
 		vskip(cfmt.titlespace + sz)
 	}
 	if (cfmt.titleleft)
-		xy_str(0, sz * .2, title)
+		xy_str(0, 0, title)
 	else
-		xy_str(get_lwidth() / 2, sz * .2, title, "c")
+		xy_str(get_lwidth() / 2, 0, title, "c")
 }
 
 /* -- output a header format '111 (222)' -- */
@@ -426,13 +427,12 @@ function put_words(words) {
 	vskip(cfmt.wordsspace)
 
 	for (i = 0; i < i_end || i2 < nw; i++) {
-		var desc = gene.curfont.size * .2
 //fixme:should also permit page break on stanza start
 		if (i < i_end && words[i].length == 0) {
 			blk_out();
 			use_font(gene.curfont)
 		}
-		vskip(cfmt.lineskipfac * gene.curfont.size - desc)
+		vskip(cfmt.lineskipfac * gene.curfont.size)
 		if (i < i_end)
 			put_wline(words[i], 45., 0)
 		if (i2 < nw) {
@@ -450,7 +450,6 @@ function put_words(words) {
 			}
 			i2++
 		}
-		vskip(desc)
 	}
 }
 

@@ -549,12 +549,11 @@ function draw_gchord(s, gchy_min, gchy_max) {
 					i = text.indexOf('\t', j)
 					if (i < 0)
 						break
-					xy_str(x, y + h * .2,
-							text.slice(j, i), 'c');
+					xy_str(x, y, text.slice(j, i), 'c');
 					x += expdx;
 					j = i + 1
 				}
-				xy_str(x, y + h * .2, text.slice(j), 'c')
+				xy_str(x, y, text.slice(j), 'c')
 				if (user.anno_stop)
 					user.anno_stop("gchord", gch.istart, gch.iend,
 						s.x - 2, y + h + 2, w + 4, h + 4, s)
@@ -577,9 +576,9 @@ function draw_gchord(s, gchy_min, gchy_max) {
 			user.anno_start("annot", gch.istart, gch.iend,
 				x - 2, y + h + 2, w + 4, h + 4, s)
 		if (gch.box)
-			xy_str_b(x, y + h * .2, text)
+			xy_str_b(x, y, text)
 		else
-			xy_str(x, y + h * .2, text)		/* (descent) */
+			xy_str(x, y, text)
 		if (user.anno_stop)
 			user.anno_stop("annot", gch.istart, gch.iend,
 				x - 2, y + h + 2, w + 4, h + 4, s)

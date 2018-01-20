@@ -1465,7 +1465,7 @@ function draw_deco_staff() {
 				delete p_voice.bar_start.a_gch
 			}
 			if (s1.text)
-				xy_str(x + 4, y2 - gene.curfont.size * .9,
+				xy_str(x + 4, y2 - gene.curfont.size,
 					s1.text);
 			xypath(x, y2);
 			if (s1.rbstart == 2)
