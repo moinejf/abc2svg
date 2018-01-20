@@ -3159,7 +3159,8 @@ function set_indent(first) {
 		st = cur_sy.voices[v].st
 //		if (!cur_sy.st_print[st])
 //			continue
-		p = (first || p_voice.new_name) ? p_voice.nm : p_voice.snm
+		p = ((first || p_voice.new_name) && p_voice.nm) ?
+			p_voice.nm : p_voice.snm
 		if (!p)
 			continue
 		if (!font) {
