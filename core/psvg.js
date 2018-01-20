@@ -509,10 +509,10 @@ function Psvg(abcobj_r) {
 
 // flush the PS buffer
 function ps_flush(g0) {
-	if (!svgbuf)
-		return
 	if (g0)
 		setg(0);
+	if (!svgbuf)
+		return
 	abcobj.out_svg(svgbuf);
 	svgbuf = ''
 }
