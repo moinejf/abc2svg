@@ -2369,8 +2369,14 @@ function draw_tuplet(s1,
     if (dir == SL_ABOVE) {
 
 	/* sole or upper voice: the bracket is above the staff */
+	if (s1.st == s2.st) {
+		y1 = y2 = staff_tb[upstaff].topbar + 4
+	} else {
+		y1 = s1.ymx;
+		y2 = s2.ymx
+	}
+
 	x1 = s1.x - 4;
-	y1 = 24
 	if (s1.st == upstaff) {
 		for (s3 = s1; !s3.dur; s3 = s3.next)
 			;
@@ -2380,7 +2386,7 @@ function draw_tuplet(s1,
 		if (s1.stem > 0)
 			x1 += 3
 	}
-	y2 = 24
+
 	if (s2.st == upstaff) {
 		for (s3 = s2; !s3.dur; s3 = s3.prev)
 			;
@@ -2434,14 +2440,14 @@ function draw_tuplet(s1,
 			continue
 		}
 		yy = ym + (s3.x - xm) * a;
-		yx = y_get(upstaff, 1, s3.x - 4, 8)
+		yx = y_get(upstaff, 1, s3.x - 4, 8) + 2
 		if (yx - yy > dy)
 			dy = yx - yy
 		if (s3 == s2)
 			break
 	}
 
-	ym += dy + 2;
+	ym += dy;
 	y1 = ym + a * (x1 - xm);
 	y2 = ym + a * (x2 - xm);
 
