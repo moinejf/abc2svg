@@ -860,19 +860,19 @@ function set_width(s) {
 
 			switch (bar_type) {
 			case "|":
-				w = 8		// 5 + 3
+				w = 7		// 4 + 3
 				break
 			case "|:":
 			case ":|":
-				w = 16		// 5 + 3 + 3 + 5
+				w = 15		// 4 + 5 + 6
 				break
 			case "::":
-				w = 24		// 5 + 5 + 3 + 3 + 3 + 5
+				w = 26		// 4 + 5 + 6 + 6 + 5
 				break
 			default:
 				if (!bar_type)
 					break
-				w = 5 + 3 * bar_type.length
+				w = 4 + 3 * bar_type.length
 				for (i = 0; i < bar_type.length; i++) {
 					switch (bar_type[i]) {
 					case "[":
@@ -889,7 +889,7 @@ function set_width(s) {
 			s.wl = w
 			if (s.next
 			 && s.next.type != METER)
-				s.wr = 8
+				s.wr = 7
 			else
 				s.wr = 5
 //			s.notes[0].shhd = (w - 5) * -.5
@@ -920,8 +920,7 @@ function set_width(s) {
 // there may be invisible clefs in empty staves
 //		if (s.invis)
 //			break
-		s.wl = //12;
-		    s.wr = s.clef_small ? 9 : 12
+		s.wl = s.wr = s.clef_small ? 6 : 12
 		return
 	case KEY:
 		var n1, n2, esp;
