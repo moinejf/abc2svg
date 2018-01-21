@@ -1470,12 +1470,17 @@ function set_nl(s) {
 	var s2, p_voice, done
 
 	// set the end of line marker and
-	// (if needed, add a space at the end of the music line - removed)
 	function set_eol(s) {
 		if (cfmt.custos && voice_tb.length == 1)
 			custos_add(s)
-		if (s.ts_next)
-			s.nl = true
+
+		// set the nl flag if more music
+		for (var s2 = s.ts_next; s2; s2 = s2.ts_next) {
+			if (s2.seqst) {
+				s.nl = true
+				break
+			}
+		}
 	} // set_eol()
 
 	// set the eol on the next symbol
