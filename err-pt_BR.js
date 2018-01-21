@@ -108,6 +108,7 @@ user.textrans = {
 	"No end of tuplet": "Quiáltera incompleta",
 	"No end of tuplet in this music line":
 				"No end of tuplet in this music line",
+	"No end of voice overlap": "No end of voice overlap",
 	"No function for decoration '$1'": "Falta função para decoração '$1'",
 	"No note before '-'": "Falta nota antes de '-'",
 	"No note before '<'": "Falta nota antes de '<'",

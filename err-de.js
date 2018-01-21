@@ -97,6 +97,7 @@ user.textrans = {
     "No end of tuplet": "kein Ende des Tuplets",
     "No end of tuplet in this music line":
 			"Kein ende des Tuplets in dieser Zeile",
+	"No end of voice overlap": "No end of voice overlap",
     "No function for decoration '$1'": "keine Funktion für Dekoration '$1'",
     "No note before '-'": "keine Note vor '-'",
     "No note before '<'": "keine Note vor '<'",
