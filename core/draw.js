@@ -3466,7 +3466,7 @@ function draw_systems(indent) {
 
 		// check if default staff
 		if (cache && cache.st_l == stafflines && cache.st_ws == ws) {
-			xygl(x1, staff_tb[st].y, "stdef")
+			xygl(x1, staff_tb[st].y, 'stdef' + cfmt.fullsvg)
 			return
 		}
 		for (i = 0; i < l; i++, y -= 6) {
@@ -3502,8 +3502,9 @@ function draw_systems(indent) {
 				st_l: stafflines,
 				st_ws: ws
 			}
-			glyphs.stdef = '<g id="stdef">\n' + ln + '</g>';
-			xygl(x1, y, "stdef")
+			i = 'stdef' + cfmt.fullsvg;
+			glyphs[i] = '<g id="' + i + '">\n' + ln + '</g>';
+			xygl(x1, y, i)
 			return
 		}
 		out_XYAB('<g transform="translate(X, Y)">\n' + ln + '</g>\n', x1, y)
