@@ -70,7 +70,7 @@ user.textrans = {
     "Cannot read file '$1'": "File '$1' kann nicht gelesen werden",
     "Decoration ignored": "Dekoration ignoriert",
     "Empty line in tune header - ignored": "Leerzeile in Kopfbereich - ignoriert",
-    "Erroneous end of voice overlap": "Fehlerhaftes Ende einer Stimme in überlagerten Stimmen",
+    "Erroneous end of voice overlay": "Fehlerhaftes Ende einer Stimme in überlagerten Stimmen",
     "Incorrect 1st value in %%repeat": "erster Wert fehlerhaft in %%repeat",
     "Incorrect 2nd value in %%repeat": "zweiter Wert fehlerhaft in %%repeat",
     "Invalid 'r' in tuplet": "'r' fehlerhaft in Tuplet",
@@ -97,7 +97,7 @@ user.textrans = {
     "No end of tuplet": "kein Ende des Tuplets",
     "No end of tuplet in this music line":
 			"Kein ende des Tuplets in dieser Zeile",
-	"No end of voice overlap": "No end of voice overlap",
+	"No end of voice overlay": "No end of voice overlay",
     "No function for decoration '$1'": "keine Funktion für Dekoration '$1'",
     "No note before '-'": "keine Note vor '-'",
     "No note before '<'": "keine Note vor '<'",

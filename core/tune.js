@@ -1425,7 +1425,7 @@ function generate() {
 	var v, p_voice;
 
 	if (vover) {
-		syntax(1, "No end of voice overlap");
+		syntax(1, "No end of voice overlay");
 		get_vover(vover.bar ? '|' : ')')
 	}
 
@@ -1833,7 +1833,7 @@ function get_vover(type) {
 		}
 		curvoice.last_note.beam_end = true
 		if (!vover) {
-			syntax(1, "Erroneous end of voice overlap")
+			syntax(1, "Erroneous end of voice overlay")
 			return
 		}
 		if (curvoice.time != vover.mxtime)

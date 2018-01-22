@@ -79,7 +79,7 @@ user.textrans = {
 	"Decoration ignored": "Décoration ignorée",
 	"Empty line in tune header - ignored":
 				"Ligne vide dans en-tête de morceau - ignorée",
-	"Erroneous end of voice overlap": "Fin de superposition de voix erronée",
+	"Erroneous end of voice overlay": "Fin de superposition de voix erronée",
 	"Incorrect 1st value in %%repeat": "Première valeur incorrecte dans %%repeat",
 	"Incorrect 2nd value in %%repeat": "Deuxième valeur incorrecte dans %%repeat",
 	"Invalid 'r' in tuplet": "'r' invalide dans des tuplets",
@@ -110,7 +110,7 @@ user.textrans = {
 	"No end of tuplet": "Pas de fin de tuplet",
 	"No end of tuplet in this music line":
 				"Pas de fin de tuplet dans cette ligne de musique",
-	"No end of voice overlap": "Pas de fin de superposition de voix",
+	"No end of voice overlay": "Pas de fin de superposition de voix",
 	"No function for decoration '$1'": "Pas de fonction pour décoration '$1'",
 	"No note before '-'": "Pas de note devant '-'",
 	"No note before '<'": "Pas de note devant '<'",
