@@ -345,6 +345,7 @@ function abc_init() {
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
 	svg {display:block}\n\
+	body {width:' + (abc.get_fmt("pagewidth") / 37.8).toFixed(2) +'cm}\n\
 	p {' + set_pstyle() + 'margin-top:0em;}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
 </style>\n\
