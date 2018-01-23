@@ -339,7 +339,7 @@ function new_block(subtype) {
 
 // set the K: / V: parameters
 function set_kv_parm(a) {	// array of items
-	var	s, item, pos, val
+	var	s, item, pos, val, clefpit
 
 	// add the global parameters if not done yet
 	if (!curvoice.init) {
@@ -367,6 +367,21 @@ function set_kv_parm(a) {	// array of items
 		switch (item) {
 		case "clef=":
 			s = a.shift()		// keep last clef
+			break
+		case "clefpitch=":
+			item = a.shift()		// (<note><octave>)
+			if (item) {
+				val = ntb.indexOf(item[0])
+				if (val >= 0) {
+					switch (item[1]) {
+					case "'": val += 7; break
+					case ',': val -= 7; break
+					}
+					clefpit = 4 - val	// 4 = 'G'
+					break
+				}
+			}
+			syntax(1, err_bad_val_s, item)
 			break
 		case "combine=":		// %%voicecombine
 		case "octave=":
@@ -474,8 +489,11 @@ function set_kv_parm(a) {	// array of items
 
 	if (s) {
 		s = new_clef(s)
-		if (s)
+		if (s) {
+			if (clefpit)
+				s.clefpit = clefpit
 			get_clef(s)
+		}
 	}
 }
 

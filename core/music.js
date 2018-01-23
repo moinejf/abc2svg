@@ -2339,6 +2339,8 @@ function set_pitch(last_s) {
 	for (st = 0; st <= nstaff; st++) {
 		s = staff_tb[st].clef;
 		staff_delta[st] = delta_tb[s.clef_type] + s.clef_line * 2
+		if (s.clefpit)
+			staff_delta[st] += s.clefpit
 		if (cfmt.sound) {
 			if (s.clef_octave && !s.clef_oct_transp)
 				staff_delta[st] += s.clef_octave
@@ -2354,6 +2356,8 @@ function set_pitch(last_s) {
 		case CLEF:
 			staff_delta[st] = delta_tb[s.clef_type] +
 						s.clef_line * 2
+			if (s.clefpit)
+				staff_delta[st] += s.clefpit
 			if (cfmt.sound) {
 				if (s.clef_octave && !s.clef_oct_transp)
 					staff_delta[st] += s.clef_octave
