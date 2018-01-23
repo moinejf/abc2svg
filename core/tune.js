@@ -1849,7 +1849,8 @@ function get_vover(type) {
 			syntax(1, "Voice overlay already started")
 			return
 		}
-		vover = {			// no voice yet
+		vover = {
+			p_voice: curvoice,
 			time: curvoice.time
 		}
 		return
@@ -1910,12 +1911,10 @@ function get_vover(type) {
 		}
 		vover.time = s.time
 	} else {
-		if (!vover.p_voice) {		// first '&' in '(&' sequence
-			vover.mxtime = curvoice.time;
-			vover.p_voice = curvoice
-		} else if (curvoice.time != vover.mxtime) {
+		if (!vover.mxtime)		// first '&' in '(&' sequence
+			vover.mxtime = curvoice.time
+		else if (curvoice.time != vover.mxtime)
 			syntax(1, "Wrong duration in voice overlay")
-		}
 	}
 	p_voice2.time = vover.time;
 	curvoice = p_voice2
