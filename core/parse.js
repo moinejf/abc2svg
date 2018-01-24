@@ -374,8 +374,14 @@ function set_kv_parm(a) {	// array of items
 				val = ntb.indexOf(item[0])
 				if (val >= 0) {
 					switch (item[1]) {
-					case "'": val += 7; break
-					case ',': val -= 7; break
+					case "'":
+						val += 7
+						break
+					case ',':
+						val -= 7
+						if (item[2] == ',')
+							val -= 7
+						break
 					}
 					clefpit = 4 - val	// 4 = 'G'
 					break
