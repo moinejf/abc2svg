@@ -24,7 +24,7 @@ function lead(tsfirst, voice_tb, music_types, info) {
 		line = '';
 
 	function get_beat(s) {
-		if (s.a_meter[0].top[0] == 'C') {
+		if (s.a_meter[0].top[0] == 'C' || !s.a_meter[0].bot) {
 			beat = BASE_LEN / 4
 		} else {
 			beat = BASE_LEN / s.a_meter[0].bot[0] |0
