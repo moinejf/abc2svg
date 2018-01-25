@@ -441,6 +441,10 @@ function tosvg(in_fname,		// file name
 							false)
 				if (select[0] == '"')
 					select = select.slice(1, -1);
+				if (!select) {
+					delete parse.select
+					continue
+				}
 				select = select.replace(/\(/g, '\\(');
 				select = select.replace(/\)/g, '\\)');
 //				select = select.replace(/\|/g, '\\|');
