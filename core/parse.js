@@ -767,12 +767,12 @@ function new_meter(text) {
 		}
 	}
 	if (p[i] == '=') {
-		val = p.substring(++i)
-		if (!val.match(/^(\d|\/)+$/)) {
-			syntax(1, "Bad duration '$1' in M:", val)
+		val = p.substring(++i).match(/^(\d+)\/(\d+)$/)
+		if (!val) {
+			syntax(1, "Bad duration '$1' in M:", p.substring(i))
 			return
 		}
-		wmeasure = BASE_LEN * eval(val)
+		wmeasure = BASE_LEN * val[1] / val[2]
 	}
 	s.wmeasure = wmeasure
 
