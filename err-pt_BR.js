@@ -140,6 +140,7 @@ user.textrans = {
 	"Unknown font $1": "Fonte $1 desconhecida",
 	"Unknown glyph: '$1'": "Glifo '$1' desconhecido",
 	"Unknown keyword '$1' in %%multicol": "Palavra-chave '$1' desconhecida em %%multicol",
+	"Unsecure code": "Unsecure code",
 	"Unterminated string": "Cadeia de caracteres não terminada",
 	"Unterminated string in Q:": "Cadeia de caracteres não terminada em Q:",
 	"Voice overlay already started": "Divisão de vozes já se iniciou",

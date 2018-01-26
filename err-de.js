@@ -126,6 +126,7 @@ user.textrans = {
     "Unknown font $1": "unbekannte schriftart '$1' ",
     "Unknown glyph: '$1'": "Unbekanntes Schriftsybol '$1'",
     "Unknown keyword '$1' in %%multicol": "unbekanntes Schlüsselwort  '$1' in %%multicol",
+	"Unsecure code": "Unsecure code",
     "Unterminated string": "nicht abgeschlossene Zeichenkette",
     "Unterminated string in Q:": "nicht abgeschlossene Zeichenkette in Q:",
     "Voice overlay already started": "Stimmüberlagerung bereits gestartet",

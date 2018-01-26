@@ -143,6 +143,7 @@ user.textrans = {
 	"Unknown font $1": "Police $1 inconnue",
 	"Unknown glyph: '$1'": "Glyph '$1' inconnu",
 	"Unknown keyword '$1' in %%multicol": "Mot clé '$1' inconnu dans %%multicol",
+	"Unsecure code": "Code dangereux",
 	"Unterminated string": "Chaine de caractères non terminée",
 	"Unterminated string in Q:": "Chaine de caractères non terminée dans Q:",
 	"Voice overlay already started": "Superposition de voix déjà démarrée",
