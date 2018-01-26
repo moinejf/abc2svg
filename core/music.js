@@ -1451,6 +1451,8 @@ function custos_add(s) {
 	if (new_s.shrink < 8 + 4)
 		new_s.shrink = 8 + 4;
 	new_s.space = s2.space;
+	new_s.wl = 0;
+	new_s.wr = 4;
 
 	new_s.nhd = s2.nhd;
 	new_s.notes = []
