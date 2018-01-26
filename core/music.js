@@ -773,6 +773,8 @@ function set_width(s) {
 		if (s.dots > 0) {
 			switch (s.head) {
 			case SQUARE:
+				s.xmx += 4
+				break
 			case OVALBARS:
 			case OVAL:
 				s.xmx += 2
