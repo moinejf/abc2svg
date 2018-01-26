@@ -1178,7 +1178,8 @@ function set_allsymwidth(last_s) {
 			s2 = s
 
 		do {
-			set_width(s)
+			if (!last_s || !s.dur)	// (don't recompute if new music line)
+				set_width(s);
 			new_val = (xl[s.st] || 0) + s.wl
 			if (new_val > maxx)
 				maxx = new_val;
