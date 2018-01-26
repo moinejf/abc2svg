@@ -701,7 +701,21 @@ function draw_meter(x, s) {
 		return
 	var	dx, i,
 		st = s.st,
-		y = staff_tb[st].y;
+		p_staff = staff_tb[st],
+		y = p_staff.y;
+
+	// adjust the vertical offset according to the staff definition
+	if (p_staff.stafflines != '|||||') {
+		for (i = 0; i < p_staff.stafflines.length; i++) {
+			if (p_staff.stafflines[i].match(/[\[|]/))
+				break
+		}
+		if (i == p_staff.stafflines.length)
+			i--;
+//		y += (i - 1 + p_staff.stafflines.length) * 3 - 12
+		y += (i + p_staff.stafflines.length) * 3 - 15
+	}
+
 	x -= s.wl
 	for (i = 0; i < s.a_meter.length; i++) {
 		var	f,
