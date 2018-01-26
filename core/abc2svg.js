@@ -1,6 +1,6 @@
 // abc2svg - abc2svg.js
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -22,7 +22,10 @@ function Abc(user) {
 	"use strict";
 
 	// mask some unsafe functions
-    var	require = function(){return {}}
+    var	require = empty_function,
+	system = empty_function,
+	write = empty_function,
+	XMLHttpRequest = empty_function;
 
 	this.user = user
 
@@ -200,4 +203,9 @@ function syntax(sev, msg, a1, a2, a3, a4) {
 	}
 
 	error(sev, s, msg, a1, a2, a3, a4)
+}
+
+// check if a script is secure
+function is_secure(js) {
+	return !js.match(/eval *\(|Function/)
 }

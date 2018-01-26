@@ -220,7 +220,10 @@ function do_include(fn) {
 		return
 	}
 	if (fn.slice(-3) == '.js') {
-		eval(file)
+		if (is_secure(file))
+			eval('"use strict"\n' + file)
+		else
+			syntax(1, "Unsecure code")
 	} else {
 		parse_sav = clone(parse);
 		tosvg(fn, file);

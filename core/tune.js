@@ -1368,7 +1368,10 @@ function do_begin_end(type,
 			psvg.ps_eval(text)
 		break
 	case "js":
-		eval(text)
+		if (is_secure(text))
+			eval('"use strict"\n' + text)
+		else
+			syntax(1, "Unsecure code")
 		break
 	case "ml":
 		if (parse.state >= 2) {
