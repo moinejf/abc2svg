@@ -1173,6 +1173,7 @@ function draw_deco_near() {
 			}
 
 			switch (dd.func) {
+			default:
 			case 2:			// arpeggio
 			case 5:			// trill
 			case 7:			// d_cresc
@@ -1186,6 +1187,9 @@ function draw_deco_near() {
 				continue
 			case 32:		// invisible
 				note.invis = true
+				continue
+			case 40:		// stemless chord (abcm2ps behaviour)
+				s.stemless = true
 				continue
 			}
 
