@@ -272,23 +272,10 @@ function tosvg(in_fname,		// file name
 
 	// remove the comment at end of text
 	function uncomment(src, do_escape) {
-		var i, j, c, l
-
+		src = src.replace(/[ \t]*[^\\]%.*/, '').replace(/\\%/g,'%')
 		if (do_escape && src.indexOf('\\') >= 0)
-			src = cnv_escape(src);
-		j = 0
-		while (1) {
-			i = src.indexOf('%', j)
-			if (i < 0)
-				break
-			if (src[i - 1] != '\\') {
-				src = src.slice(0, i)
-				break
-			}
-			j = i + 1
-		}
-		src = src.replace(/\s+$/, '');		// trimRight
-		return src.replace(/\\%/g,'%')
+			return cnv_escape(src)
+		return src
 	} // uncomment()
 
 	function end_tune() {
