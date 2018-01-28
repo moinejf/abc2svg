@@ -34,11 +34,11 @@ function clean_txt(txt) {
 }
 
 function abort(e) {
+	if (!init_done)				// if empty document
+		user.img_out('')
 	abc.blk_flush();
-	if (errtxt)
-		print("<pre>" + clean_txt(errtxt) + "</pre>");
 	print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
-	print("</body> </html>");
+	abc_end();
 	quit()
 }
 
@@ -393,8 +393,8 @@ function abc_end() {
 
 	if (!init_done)				// if empty document
 		user.img_out('')
-	if (errtxt)
-		print("<pre>" + clean_txt(errtxt) + "</pre>")
+	if (user.errtxt)
+		print("<pre>" + clean_txt(user.errtxt) + "</pre>")
 	if (font_style)				// if some %%text at the end
 		print('<style type="text/css">' + font_style + '\n</style>');
 	print("</body>\n</html>")

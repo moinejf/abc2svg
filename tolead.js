@@ -1,6 +1,6 @@
 // abc2svg - tolead.js - convert ABC to lead sheet
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -89,8 +89,7 @@ function lead(tsfirst, voice_tb, music_types, info) {
 
 // -- local functions
 function abort(e) {
-	if (errtxt)
-		print("Errors:\n" + errtxt);
+	abc_end()
 	print(e.message + "\n*** Abort ***\n" + e.stack);
 	quit()
 }
@@ -99,6 +98,6 @@ function abc_init() {
 	user.get_abcmodel = lead
 }
 function abc_end() {
-	if (errtxt)
-		print("Errors:\n" + errtxt)
+	if (user.errtxt)
+		print("Errors:\n" + user.errtxt)
 }

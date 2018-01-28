@@ -1,6 +1,6 @@
-// abc2svg - a2a.js - convert ABC to ABC
+// abc2svg - toabc.js - convert ABC to ABC
 //
-// Copyright (C) 2016 Jean-Francois Moine
+// Copyright (C) 2016-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -882,12 +882,12 @@ function abc_init() {
 }
 
 function abc_end() {
-	if (errtxt)
-		print("Errors:\n" + errtxt)
+	if (user.errtxt)
+		print("Errors:\n" + user.errtxt)
 }
 
 function abort(e) {
-	abc_end();
 	print(e.message + "\n*** Abort ***\n" + e.stack);
+	abc_end();
 	quit()
 }

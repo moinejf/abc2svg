@@ -17,9 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-// global variables
-var errtxt = ''
-
 // -- replace the exotic end of lines by standard ones
 function set_eoln(file) {
 	var i = file.indexOf('\r')
@@ -30,20 +27,21 @@ function set_eoln(file) {
 	return file.replace(/\r/g, '\n')		// Mac
 }
 
-// -- abc2svg init argument
+// user definitions
 var user = {
 	read_file: function(fn) {	// include a file (%%abc-include)
 		var	file = readFile(fn),
 			file2 = set_eoln(file)
 		return file2 || file
 	},
-	errmsg: function(msg, l, c) {	// get the errors
-		if (typeof printErr == 'function')
-			printErr(msg)
-		else
-			errtxt += msg + '\n'
-	}
+	errtxt: ''
 }
+
+	// print or store the error messages
+	if (typeof printErr == 'function')
+		user.errmsg = function(msg, l, c) { printErr(msg) }
+	else
+		user.errmsg = function(msg, l, c) { user.errtxt += msg + '\n' }
 
 var	abc = new Abc(user)		// (global for 'toxxx.js')
 
@@ -109,7 +107,6 @@ function abc_cmd(cmd, args) {
 // nodejs
 if (typeof module == 'object' && typeof exports == 'object') {
 	exports.abc = abc;
-	exports.errtxt = errtxt;
 	exports.user = user;
 	exports.abc_cmd = abc_cmd
 }
