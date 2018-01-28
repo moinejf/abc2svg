@@ -1,6 +1,6 @@
 {
   "name": "abc2svg",
-  "version": "1.15.8",
+  "version": "1.15.9",
   "description": "ABC music notation translator",
   "devDependencies": {
     "uglify-js": "^2.5.0"

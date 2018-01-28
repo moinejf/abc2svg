@@ -160,7 +160,7 @@ function Psvg(abcobj_r) {
     function path_end() {
 	svgbuf += path;
 	path = ''
-}
+    }
 
     function setg(newg) {
 	if (g == 2) {
@@ -181,7 +181,7 @@ function Psvg(abcobj_r) {
 	} else if (gchg) {
 		defg1()
 	}
-}
+    }
 
     function strw(s) {
 	return s.length * gcur.font_s * 0.5	// fixme: approximate value
