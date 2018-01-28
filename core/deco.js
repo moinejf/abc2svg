@@ -1173,6 +1173,11 @@ function draw_deco_near() {
 			}
 
 			switch (dd.func) {
+			case 0:
+			case 1:
+			case 3:
+			case 4:
+				break
 			default:
 			case 2:			// arpeggio
 			case 5:			// trill
