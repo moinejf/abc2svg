@@ -49,6 +49,15 @@ var abc_utf = {
 	"th": "þ"
 }
 
+// accidentals as octal values (abcm2ps compatibility)
+var oct_acc = {
+	"1": "\u266f",
+	"2": "\u266d",
+	"3": "\u266e",
+	"4": "&#x1d12a;",
+	"5": "&#x1d12b;"
+}
+
 // convert the escape sequences to utf-8
 function cnv_escape(src) {
 	var	c, c2,
@@ -66,37 +75,11 @@ function cnv_escape(src) {
 		switch (c) {
 		case '0':
 		case '2':
-			if (src[i + 1] == '0') {
-				switch (src[i + 2]) {	// compatibility
-				case '1':
-					dst += "\u266f";
-					j = i + 3
-					continue
-				case '2':
-					dst += "\u266d";
-					j = i + 3
-					continue
-				case '3':
-					dst += "\u266e";
-					j = i + 3
-					continue
-				case '4':
-					dst += "&#x1d12a;";
-					j = i + 3
-					continue
-				case '5':
-					dst += "&#x1d12b;";
-					j = i + 3
-					continue
-				}
-			}
-				// fall thru
-		case '1':
-		case '3':
-			if (src[i + 1] >= '0' && src[i + 1] <= '7'
-			 && src[i + 2] >= '0' && src[i + 2] <= '7') {
-				j = parseInt(src.slice(i, i + 3), 8);
-				dst += String.fromCharCode(j);
+			if (src[i + 1] != '0')
+				break
+			c2 = oct_acc[src[i + 2]]
+			if (c2) {
+				dst += c2;
 				j = i + 3
 				continue
 			}
