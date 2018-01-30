@@ -771,6 +771,7 @@ function set_width(s) {
 
 		/* leave room for dots and set their offset */
 		if (s.dots > 0) {
+		  if (s.wl == undefined)	// don't recompute if new music line
 			switch (s.head) {
 			case SQUARE:
 				s.xmx += 4
@@ -808,7 +809,7 @@ function set_width(s) {
 				if ((s.y > 27 && s2.y > 27)
 				 || (s.y < -3 && s2.y < -3)) {
 					if (wlw < 6)
-						wlw= 6
+						wlw = 6
 				}
 
 				/* have ties wide enough */
@@ -1180,8 +1181,7 @@ function set_allsymwidth(last_s) {
 			s2 = s
 
 		do {
-			if (!last_s || !s.dur)	// (don't recompute if new music line)
-				set_width(s);
+			set_width(s);
 			new_val = (xl[s.st] || 0) + s.wl
 			if (new_val > maxx)
 				maxx = new_val;
