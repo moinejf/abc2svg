@@ -1060,7 +1060,7 @@ function do_pscom(text) {
 			cfmt.leftmargin = multicol.lmarg;
 			cfmt.rightmargin = multicol.rmarg;
 			multicol = undefined;
-			blk_out();
+			blk_flush();
 			img.chg = true;
 			set_page()
 			break
