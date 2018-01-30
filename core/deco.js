@@ -1529,13 +1529,11 @@ function draw_deco_staff() {
 	if (first_gchord) {
 		for (i = 0; i <= nstaff; i++) {
 			bot = staff_tb[i].botbar;
-			minmax[i].ymin -= 3
-			if (minmax[i].ymin > bot - 10)
-				minmax[i].ymin = bot - 10
+			if (minmax[i].ymin > bot - 4)
+				minmax[i].ymin = bot - 4
 			top = staff_tb[i].topbar;
-			minmax[i].ymax += 3
-			if (minmax[i].ymax < top + 10)
-				minmax[i].ymax = top + 10
+			if (minmax[i].ymax < top + 4)
+				minmax[i].ymax = top + 4
 		}
 		set_sscale(-1)		/* restore the scale parameters */
 		for (s = first_gchord; s; s = s.ts_next) {
