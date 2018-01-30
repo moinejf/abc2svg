@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-/* translation table from the ABC draft version 2 */
+// translation table from the ABC draft version 2.2
 var abc_utf = {
 	"=D": "Đ",
 	"=H": "Ħ",
@@ -103,7 +103,7 @@ function cnv_escape(src) {
 			break
 		case 'u':
 			j = Number("0x" + src.slice(i + 1, i + 5));
-			if (isNaN(j)) {
+			if (isNaN(j) || j < 0x20) {
 				dst += src[++i] + "\u0306"	// breve
 				j = i + 1
 				continue
@@ -120,7 +120,7 @@ function cnv_escape(src) {
 			}
 			dst += String.fromCharCode.apply(null, codeUnits)
 			continue
-		case 't':
+		case 't':			// TAB
 			dst += ' ';
 			j = i + 1
 			continue
@@ -170,8 +170,8 @@ function cnv_escape(src) {
 				dst += src[++i] + "\u030a"	// ring
 				j = i + 1
 				continue
-			case ':':
-				dst += src[++i] + "\u030b"	// double acute
+			case 'H':
+				dst += src[++i] + "\u030b"	// hungarumlaut
 				j = i + 1
 				continue
 			case 'v':
