@@ -155,17 +155,17 @@ function para_start(action, skip) {
 		sty += 'f' + o_font.fid
 
 	if (skip)
-		psty += ';margin-top:' + skip.toFixed(2) + 'px'
+		psty += 'margin-top:' + skip.toFixed(2) + 'px;'
 
 	switch (action) {
 	case 'c':
-		psty += ';text-align:center'
+		psty += 'text-align:center;'
 		break
 	case 'r':
-		psty += ';text-align:right'
+		psty += 'text-align:right;'
 		break
 	case 'j':
-		psty += ';text-align:justify'
+		psty += 'text-align:justify;'
 		break
 	}
 	if (psty)
