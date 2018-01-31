@@ -4106,6 +4106,7 @@ function block_gen(s) {
 	case "pagewidth":
 	case "scale":
 	case "staffwidth":
+		svg_flush();
 		set_format(s.subtype, s.param);
 		break
 	case "ml":
