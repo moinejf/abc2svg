@@ -1,7 +1,7 @@
 //#javascript
 // abcemb-1.js file to include in html pages with abc2svg-1.js
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -108,6 +108,10 @@ function loadjs(fn, relay) {
 
 // function called when the page is loaded
 function dom_loaded() {
+	if (typeof Abc != "function") {		// wait for the abc2svg core
+		setTimeout(dom_loaded, 500)
+		return
+	}
 	var page = document.body.innerHTML;
 
 	// if some Postscript definition, load the interpreter
@@ -117,15 +121,8 @@ function dom_loaded() {
 		return
 	}
 
-	user.get_abcmodel =
-		function(tsfirst, voice_tb, music_types, info) {
-			if (play == 2)
-				abcplay.add(tsfirst, voice_tb)
-		}
-
 	// search the ABC tunes,
-	// replace them by SVG images and
-	// generate the sounds
+	// replace them by SVG images with play on click
 	var	i = 0, j, k, res, src,
 		seq = 0,
 		re = /\n%abc|\nX:/g,
@@ -191,6 +188,12 @@ function dom_loaded() {
 	} catch (e) {
 		alert("abc2svg bad generated SVG: " + e.message +
 			"\nStack:\n" + e.stack)
+	}
+	if (play) {
+		delete user.img_out
+		user.get_abcmodel = function(tsfirst, voice_tb) {
+				abcplay.add(tsfirst, voice_tb)
+			}
 	}
 }
 
