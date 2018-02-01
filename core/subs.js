@@ -249,6 +249,28 @@ function put_inf2r(x, y, str1, str2, action) {
 		xy_str(x, y, str1 + ' (' + str2 + ')', action)
 }
 
+// let vertical room for a text line
+function str_skip(str) {
+    var	i = 0, c, font,
+	h = gene.curfont.size
+
+	while (1) {
+		i = str.indexOf('$', i)
+		if (i < 0)
+			break
+		c = str[++i]
+		if (c == '0')
+			font = gene.deffont
+		else if (c >= '1' && c <= '9')
+			font = get_font("u" + c)
+		else
+			continue
+		if (font.size > h)
+			h = font.size
+	}
+	vskip(h * cfmt.lineskipfac)
+}
+
 /* -- write a text block (%%begintext / %%text / %%center) -- */
 function write_text(text, action) {
 	if (action == 's')
@@ -256,11 +278,12 @@ function write_text(text, action) {
 	set_font("text");
 	set_page();
 	var	strlw = get_lwidth(),
-		lineskip = gene.curfont.size * cfmt.lineskipfac,
-		parskip = gene.curfont.size * cfmt.parskipfac,
+		sz = gene.curfont.size,
+		lineskip = sz * cfmt.lineskipfac,
+		parskip = sz * cfmt.parskipfac,
 		p_start = block.started ? function(){} : blk_out,
 		p_flush = block.started ? svg_flush : blk_flush,
-		i, j, x, words, w, k, ww
+		i, j, x, words, w, k, ww, str;
 
 	p_start()
 	switch (action) {
@@ -276,8 +299,9 @@ function write_text(text, action) {
 		while (1) {
 			i = text.indexOf('\n', j)
 			if (i < 0) {
-				vskip(lineskip);
-				xy_str(x, 0, text.slice(j), action)
+				str = text.slice(j);
+				str_skip(str);
+				xy_str(x, 0, str, action)
 				break
 			}
 			if (i == j) {			// new paragraph
@@ -292,8 +316,9 @@ function write_text(text, action) {
 					break
 				p_start()
 			} else {
-				vskip(lineskip);
-				xy_str(x, 0, text.slice(j, i), action)
+				str = text.slice(j, i);
+				str_skip(str);
+				xy_str(x, 0, str, action)
 			}
 			j = i + 1
 		}
@@ -315,17 +340,17 @@ function write_text(text, action) {
 				ww = strw(words[j] + ' ');
 				w += ww
 				if (w >= strlw) {
-					vskip(lineskip);
-					xy_str(0, 0,
-						words.slice(k, j).join(' '),
-						action, strlw);
+					str = words.slice(k, j).join(' ');
+					str_skip(str);
+					xy_str(0, 0, str, action, strlw);
 					k = j;
 					w = ww
 				}
 			}
 			if (w != 0) {
-				vskip(lineskip);
-				xy_str(0, 0, words.slice(k).join(' '))
+				str = words.slice(k).join(' ');
+				str_skip(str);
+				xy_str(0, 0, str)
 			}
 			vskip(parskip);
 			p_flush()
