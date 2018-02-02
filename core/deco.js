@@ -1764,7 +1764,7 @@ function draw_notempo(s, x, y, dur, sc) {
 	}
 
 	out_XYAB('<g transform="translate(X,Y) scale(F)">\n',
-		x + 4, y + 2, sc)
+		x + 4, y + 5, sc)
 	switch (head) {
 	case OVAL:
 		p = "HD"
@@ -1878,7 +1878,7 @@ function draw_partempo(st, top) {
 		ht = 0
 
 	/* get the minimal y offset */
-	var	ymin = staff_tb[st].topbar + 12,
+	var	ymin = staff_tb[st].topbar + 8,
 		dosh = 0,
 		shift = 1,
 		x = 0
@@ -1888,13 +1888,13 @@ function draw_partempo(st, top) {
 		if (!some_tempo)
 			some_tempo = s;
 		w = tempo_width(s);
-		y = y_get(st, true, s.x - 5, w) + 2
+		y = y_get(st, true, s.x - 16, w)
 		if (y > ymin)
 			ymin = y
-		if (x >= s.x - 5 && !(dosh & (shift >> 1)))
+		if (x >= s.x - 16 && !(dosh & (shift >> 1)))
 			dosh |= shift;
 		shift <<= 1;
-		x = s.x - 5 + w
+		x = s.x - 16 + w
 	}
 	if (some_tempo) {
 		set_sscale(-1);
@@ -1913,14 +1913,13 @@ function draw_partempo(st, top) {
 			 || s.del)		// (displayed by %%titleformat)
 				continue
 			if (user.anno_start || user.anno_stop) {
-				s.wl = 5;
-				s.wr = 40;
+				s.wl = 16;
+				s.wr = 30;
 				s.ymn = (dosh & 1) ? h : y;
 				s.ymx = s.ymn + 14;
 				anno_start(s)
 			}
-			/*fixme: cf left shift (-5)*/
-			write_tempo(s, s.x - 5, (dosh & 1) ? h : y);
+			write_tempo(s, s.x - 16, (dosh & 1) ? h : y);
 			anno_stop(s);
 			dosh >>= 1
 		}
@@ -1928,7 +1927,7 @@ function draw_partempo(st, top) {
 
 	/* then, put the parts */
 /*fixme: should reduce vertical space if parts don't overlap tempo...*/
-	ymin = staff_tb[st].topbar + 14
+	ymin = staff_tb[st].topbar + 8
 	for (s = tsfirst; s; s = s.ts_next) {
 		if (s.type != PART)
 			continue
@@ -1939,7 +1938,7 @@ function draw_partempo(st, top) {
 						/* + cfmt.partsspace ?? */
 		}
 		w = strw(s.text);
-		y = y_get(st, true, s.x - 10, w + 3) + 5
+		y = y_get(st, true, s.x - 10, w + 3)
 		if (ymin < y)
 			ymin = y
 	}
