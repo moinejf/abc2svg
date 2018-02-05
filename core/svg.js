@@ -45,6 +45,7 @@ var	output = [],		// output buffer
 
 // glyphs in music font
 var tgls = {
+  brace: {x: 0, y:0, c:"\ue000"},
   sgno: {x: -6, y:4, c:"\ue047"},
   coda: {x:-12, y:6, c:"\ue048"},
   tclef: {x:-8, y:0, c:"\ue050"},
@@ -61,17 +62,21 @@ var tgls = {
   HD: {x:-5.2, y:0, c:"\ue0a2"},
   Hd: {x:-3.8, y:0, c:"\ue0a3"},
   hd: {x:-3.7, y:0, c:"\ue0a4"},
+  ghd: {x:2, y:0, c:"\ue0a4", sc:.66},
+  pshhd: {x:-3.7, y:0, c:"\ue0a9"},
+  pfthd: {x:-3.7, y:0, c:"\ue0b3"},
   srep: {x:-5, y:0, c:"\ue101"},
   dot: {x:-2, y:0, c:"\ue1e7"},
  "acc-1": {x:-3, y:0, c:"\ue260"},
   acc3: {x:-2, y:0, c:"\ue261"},
   acc1: {x:-3, y:0, c:"\ue262"},
   acc2: {x:-3, y:0, c:"\ue263"},
-  pshhd: {x:-3, y:0, c:"\ue263"},
  "acc-2": {x:-3, y:0, c:"\ue264"},
+ "acc-1_1_4": {x:-3, y:0, c:"\ue280"},
   accent: {x:-3, y:0, c:"\ue4a0"},
   marcato: {x:-3, y:0, c:"\ue4ac"},
   hld: {x:-7, y:0, c:"\ue4c0"},
+  brth: {x:-7, y:0, c:"\ue4ce"},
   r00: {x:-1.5, y:0, c:"\ue4e1"},
   r0: {x:-1.5, y:0, c:"\ue4e2"},
   r1: {x:-3.5, y:6, c:"\ue4e3"},
@@ -86,6 +91,7 @@ var tgls = {
   mrep: {x:-6, y:0, c:"\ue500"},
   mrep2: {x:-9, y:0, c:"\ue501"},
   turn: {x:-5, y:4, c:"\ue567"},
+  turnx: {x:-5, y:4, c:"\ue569"},
   umrd: {x:-7, y:2, c:"\ue56c"},
   lmrd: {x:-7, y:2, c:"\ue56d"},
   ped: {x:-10, y:0, c:"\ue650"},
@@ -95,10 +101,6 @@ var tgls = {
 
 // glyphs to put in <defs>
 var glyphs = {
-  brace: '<text id="brace">\ue000</text>',
-  ghd: '<g id="ghd" transform="translate(4.5,0) scale(0.66)">\n\
-	<text x="-3.7">\ue0a4</text>\n\
-</g>',
   acc1_1_4: '<g id="acc1_1_4">\n\
 	<path d="m0 7.8v-15.4" class="stroke"/>\n\
 	<path class="fill" d="M-1.8 2.7l3.6 -1.1v2.2l-3.6 1.1v-2.2z\n\
@@ -109,22 +111,11 @@ var glyphs = {
 	<path class="fill" d="m-3.7 3.1l7.4 -2.2v2.2l-7.4 2.2v-2.2z\n\
 		M-3.7 -3.2l7.4 -2.2v2.2l-7.4 2.2v-2.2"/>\n\
 </g>',
- "acc-1_1_4": '<g id="acc-1_1_4" transform="scale(-1,1)">\n\
-	<text x="-3">\ue260</text>\n\
-</g>',
  "acc-1_3_4": '<g id="acc-1_3_4">\n\
     <path class="fill" d="m0.6 -2.7\n\
 	c-5.7 -3.1 -5.7 3.6 0 6.7c-3.9 -4 -4 -7.6 0 -5.8\n\
 	M1 -2.7c5.7 -3.1 5.7 3.6 0 6.7c3.9 -4 4 -7.6 0 -5.8"/>\n\
     <path d="m1.6 3.5v-13M0 3.5v-13" class="stroke" stroke-width=".6"/>\n\
-</g>',
-  turnx: '<g id="turnx">\n\
-	<text x="-5" y="-4">\ue567</text>\n\
-	<path class="stroke" d="m0 -1.5v-9"/>\n\
-</g>',
-  pfthd: '<g id="pfthd">\n\
-	<text x="-3">\ue263</text>\n\
-	<circle r="4" class="stroke"/>\n\
 </g>',
   pmsig: '<path id="pmsig" class="stroke" stroke-width="0.8"\n\
 	d="m0 -7a5 5 0 0 1 0 -10a5 5 0 0 1 0 10"/>',
@@ -155,8 +146,6 @@ var glyphs = {
 	-2.1 5 -5.4 6.8 -7.6 6"/>',
   emb: '<path id="emb" class="stroke" stroke-width="1.2" stroke-linecap="round"\n\
 	d="m-2.5 -3h5"/>',
-  brth: '<text id="brth" y="-6" \
-style="font-family:serif; font-weight:bold; font-style:italic; font-size:30px">,</text>',
   roll: '<path id="roll" class="fill" d="m-6 0\n\
 	c0.4 -7.3 11.3 -7.3 11.7 0\n\
 	-1.3 -6 -10.4 -6 -11.7 0"/>',
@@ -526,8 +515,13 @@ function xygl(x, y, gl) {
 //		return
 	var 	tgl = tgls[gl]
 	if (tgl && !glyphs[gl]) {
-		out_XYAB('<text x="X" y="Y">A</text>\n',
-			x + tgl.x * stv_g.scale, y + tgl.y, tgl.c)
+		x += tgl.x * stv_g.scale;
+		y += tgl.y
+		if (tgl.sc)
+			out_XYAB('<text transform="translate(X,Y) scale(F)">B</text>\n',
+				x, y, tgl.sc, tgl.c);
+		else
+			out_XYAB('<text x="X" y="Y">A</text>\n', x, y, tgl.c)
 		return
 	}
 	if (!glyphs[gl]) {
@@ -566,15 +560,14 @@ function out_bnum(x, y, str) {
 }
 // staff system brace
 function out_brace(x, y, h) {
-	def_use("brace");
 //fixme: '-6' depends on the scale
 	x += posx - 6;
 	y = posy - y;
 	h /= 24;
-	output.push('<use transform="translate(' +
+	output.push('<text transform="translate(' +
 				x.toFixed(2) + ',' + y.toFixed(2) +
 			') scale(2.5,' + h.toFixed(2) +
-			')" xlink:href="#brace"/>\n')
+			')">' + tgls.brace.c + '</text>\n')
 }
 
 // staff system bracket
