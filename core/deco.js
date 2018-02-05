@@ -1757,11 +1757,12 @@ function draw_notempo(s, x, y, dur, sc) {
 		dots = elts[1],
 		nflags = elts[2]
 
-	// protection against end of container
-	if (stv_g.started) {
-		output.push("</g>\n");
-		stv_g.started = false
-	}
+//useless
+//	// protection against end of container
+//	if (stv_g.started) {
+//		output.push("</g>\n");
+//		stv_g.started = false
+//	}
 
 	out_XYAB('<g transform="translate(X,Y) scale(F)">\n',
 		x + 4, y + 5, sc)
