@@ -112,19 +112,19 @@ function set_pstyle() {
 	if (nml != ml) {
 		if (ml == undefined)
 			ml = nml;
-		psty += 'margin-left:' + (nml / 37.8).toFixed(2) + 'cm;'
+		psty += 'margin-left:' + nml.toFixed(2) + 'px;'
 	}
 	nmr = abc.get_fmt("rightmargin");
 	if (nmr != mr) {
 		if (mr == undefined)
 			mr = nmr;
-		psty += 'margin-right:' + (nmr / 37.8).toFixed(2) + 'cm;'
+		psty += 'margin-right:' + nmr.toFixed(2) + 'px;'
 	}
 	nlkf = abc.get_fmt("lineskipfac");
 	if (nlkf != lkf) {
 		if (lkf == undefined)
 			lkf = nlkf;
-		psty += 'line-height:' + (nlkf * 100).toFixed(2) + '%;'
+		psty += 'line-height:' + ((nlkf * 100) | 0).toString() + '%;'
 	}
 	npkf = abc.get_fmt("parskipfac");
 	if (npkf != pkf) {
@@ -136,7 +136,7 @@ function set_pstyle() {
 	if (npw != pw || nml != ml || nmr != mr) {
 		if (pw == undefined)
 			pw = npw;
-		psty += 'width:' + ((npw - nml - nmr) / 37.8).toFixed(2) + 'cm;'
+		psty += 'width:' + (npw - nml - nmr).toFixed(2) + 'px;'
 	}
 
 	return psty
@@ -345,9 +345,12 @@ function abc_init() {
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
 	svg {display:block}\n\
-	body {width:' + (abc.get_fmt("pagewidth") / 37.8).toFixed(2) +'cm}\n\
-	p {' + set_pstyle() + 'margin-top:0em;}\n' +
-			((header || footer) ? media_f : media_s) + '\n\
+	body {width:' + abc.get_fmt("pagewidth").toFixed(0) +'px}\n\
+	p {' + set_pstyle() + 'margin-top:0}\n\
+	p span {line-height:' +
+			((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
+		((header || footer) ? media_f : media_s) +
+		'\
 </style>\n\
 <title>abc2svg document</title>\n\
 </head>\n\
