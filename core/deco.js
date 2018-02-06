@@ -1378,7 +1378,7 @@ function draw_deco_staff() {
 
 	/* draw the repeat brackets */
 	function draw_repbra(p_voice) {
-		var s, s1, y, y2, i, p, w, first_repeat;
+		var s, s1, y, y2, i, p, w, wh, first_repeat;
 
 		/* search the max y offset */
 		y = staff_tb[p_voice.st].topbar + 25	// 20 (vert bar) + 5 (room)
@@ -1408,9 +1408,9 @@ function draw_deco_staff() {
 
 			/* have room for the repeat numbers */
 			if (s1.text) {
-				w = strw(s1.text);
-				y2 = y_get(p_voice.st, true, s1.x + 4, w);
-				y2 += gene.curfont.size
+				wh = strwh(s1.text);
+				y2 = y_get(p_voice.st, true, s1.x + 4, wh[0]);
+				y2 += wh[1]
 				if (y < y2)
 					y = y2
 			}
@@ -1821,14 +1821,14 @@ function tempo_width(s) {
 
 	set_font("tempo")
 	if (s.tempo_str1)
-		w = strw(s.tempo_str1)
+		w = strwh(s.tempo_str1)[0]
 	if (s.tempo_ca)
-		w += strw(s.tempo_ca)
+		w += strwh(s.tempo_ca)[0]
 	if (s.tempo_notes)
 		w += 10 * s.tempo_notes.length +
 			6 + cwid(' ') * gene.curfont.swfac * 6 + 10
 	if (s.tempo_str2)
-		w += strw(s.tempo_str2)
+		w += strwh(s.tempo_str2)[0]
 	return w
 }
 
@@ -1840,16 +1840,16 @@ function write_tempo(s, x, y) {
 	set_font("tempo")
 	if (s.tempo_str1) {
 		xy_str(x, y, s.tempo_str1);
-		x += strw(s.tempo_str1) + 3
+		x += strwh(s.tempo_str1)[0] + 3
 	}
 	if (s.tempo_notes) {
 		for (j = 0; j < s.tempo_notes.length; j++)
 			x += draw_notempo(s, x, y, s.tempo_notes[j], sc);
 		xy_str(x, y, "=");
-		x += strw("= ")
+		x += strwh("= ")[0]
 		if (s.tempo_ca) {
 			xy_str(x, y, s.tempo_ca);
-			x += strw(s.tempo_ca) //+ 5
+			x += strwh(s.tempo_ca)[0]
 		}
 		if (s.tempo) {
 			xy_str(x, y, s.tempo.toString());
@@ -1938,7 +1938,7 @@ function draw_partempo(st, top) {
 			h = gene.curfont.size + 2 + 2
 						/* + cfmt.partsspace ?? */
 		}
-		w = strw(s.text);
+		w = strwh(s.text)[0];
 		y = y_get(st, true, s.x - 10, w + 3)
 		if (ymin < y)
 			ymin = y
@@ -1953,7 +1953,7 @@ function draw_partempo(st, top) {
 				continue
 			s.x -= 10;
 			if (user.anno_start || user.anno_stop) {
-				w = strw(s.text);
+				w = strwh(s.text)[0];
 				s.wl = 0;
 				s.wr = w;
 				s.ymn = -ht - h;

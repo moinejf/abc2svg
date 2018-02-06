@@ -52,12 +52,14 @@ function cwid(c) {
 	return cw_tb[i]
 }
 
-// estimate the width of a string
-function strw(str) {
-	var	swfac = gene.curfont.swfac,
-		w = 0,
-		i, j, c,
-		n = str.length
+// estimate the width and height of a string
+function strwh(str) {
+    var	font = gene.curfont,
+	swfac = font.swfac,
+	h = font.size,
+	w = 0,
+	i, j, c,
+	n = str.length
 
 	for (i = 0; i < n; i++) {
 		c = str[i]
@@ -65,15 +67,17 @@ function strw(str) {
 		case '$':
 			c = str[i + 1]
 			if (c == '0') {
-				gene.curfont = gene.deffont
+				font = gene.deffont
 			} else if (c >= '1' && c <= '9') {
-				gene.curfont = get_font("u" + c)
+				font = get_font("u" + c)
 			} else {
 				c = '$'
 				break
 			}
-			i++
-			swfac = gene.curfont.swfac
+			i++;
+			swfac = font.swfac
+			if (font.size > h)
+				h = font.size
 			continue
 		case '&':
 			j = str.indexOf(';', i)
@@ -85,7 +89,8 @@ function strw(str) {
 		}
 		w += cwid(c) * swfac
 	}
-	return w
+	gene.curfont = font
+	return [w, h]
 }
 
 // set the default and current font
@@ -145,7 +150,8 @@ function out_str(str) {
 function xy_str(x, y, str,
 		 action,
 		 line_w) {
-	y += gene.curfont.size * .2;	// a bit upper for the descent
+    var	h = strwh(str)[1];
+	y += h * .2;			// a bit upper for the descent
 	output.push('<text class="' + font_class(gene.curfont) + '" x="');
 	out_sxsy(x, '" y="', y)
 	switch (action) {
@@ -174,12 +180,12 @@ function xy_str_b(x, y, str) {
 // outline-width: 1px">\n');
 //	xy_str(x, y, str, action, line_w);
 //	output.push('</g>\n')
-	var	w = strw(str);
+    var	wh = strwh(str);
 
 	output.push('<rect class="stroke" x="');
-	out_sxsy(x - 2, '" y="', y + gene.curfont.size + 1);
-	output.push('" width="' + (w + 4).toFixed(2) +
-		'" height="' + (gene.curfont.size + 3).toFixed(2) +
+	out_sxsy(x - 2, '" y="', y + wh[1] + 1);
+	output.push('" width="' + (wh[0] + 4).toFixed(2) +
+		'" height="' + (wh[1] + 3).toFixed(2) +
 		'"/>\n');
 	xy_str(x, y, str)
 }
@@ -214,7 +220,7 @@ function get_lwidth() {
 
 // header generation functions
 function write_title(title, is_subtitle) {
-	var font, sz
+    var	font, h
 
 	if (!title)
 		return
@@ -222,13 +228,12 @@ function write_title(title, is_subtitle) {
 	title = trim_title(title, is_subtitle)
 	if (is_subtitle) {
 		set_font("subtitle");
-		sz = gene.curfont.size;
-		vskip(cfmt.subtitlespace + sz)
+		h = cfmt.subtitlespace
 	} else {
 		set_font("title");
-		sz = gene.curfont.size;
-		vskip(cfmt.titlespace + sz)
+		h = cfmt.titlespace
 	}
+	vskip(strwh(title)[1] + h)
 	if (cfmt.titleleft)
 		xy_str(0, 0, title)
 	else
@@ -251,24 +256,7 @@ function put_inf2r(x, y, str1, str2, action) {
 
 // let vertical room for a text line
 function str_skip(str) {
-    var	i = 0, c, font,
-	h = gene.curfont.size
-
-	while (1) {
-		i = str.indexOf('$', i)
-		if (i < 0)
-			break
-		c = str[++i]
-		if (c == '0')
-			font = gene.deffont
-		else if (c >= '1' && c <= '9')
-			font = get_font("u" + c)
-		else
-			continue
-		if (font.size > h)
-			h = font.size
-	}
-	vskip(h * cfmt.lineskipfac)
+	vskip(strwh(str)[1] * cfmt.lineskipfac)
 }
 
 /* -- write a text block (%%begintext / %%text / %%center) -- */
@@ -337,7 +325,7 @@ function write_text(text, action) {
 			words = words.split(/\s+/);
 			w = k = 0
 			for (j = 0; j < words.length; j++) {
-				ww = strw(words[j] + ' ');
+				ww = strwh(words[j] + ' ')[0];
 				w += ww
 				if (w >= strlw) {
 					str = words.slice(k, j).join(' ');
@@ -502,7 +490,7 @@ function put_history() {
 			head = head.slice(1, -1);
 		vskip(h);
 		xy_str(0, 0, head);
-		w = strw(head);
+		w = strwh(head)[0];
 		str = str.split('\n');
 		xy_str(w, 0, str[0])
 		for (j = 1; j < str.length; j++) {

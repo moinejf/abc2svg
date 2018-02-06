@@ -915,7 +915,7 @@ function set_width(s) {
 		if (s.text && s.text.length < 4
 		 && s.next && s.next.a_gch) {
 			set_font("repeat");
-			s.wr += strw(s.text) + 2
+			s.wr += strwh(s.text)[0] + 2
 		}
 		return
 	case CLEF:
@@ -3184,9 +3184,10 @@ function set_indent(first) {
 		while (1) {
 			j = p.indexOf("\\n", i)
 			if (j < 0)
-				w = strw(p.slice(i))
+				w = strwh(p.slice(i))
 			else
-				w = strw(p.slice(i, j))
+				w = strwh(p.slice(i, j))
+			w = w[0]
 			if (w > maxw)
 				maxw = w
 			if (j < 0)

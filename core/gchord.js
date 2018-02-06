@@ -310,7 +310,7 @@ function gch_build(s) {
 
 	/* split the chord indications / annotations
 	 * and initialize their vertical offsets */
-	var	gch, w, xspc, ix,
+	var	gch, wh, xspc, ix,
 		pos = curvoice.pos.gch == SL_BELOW ? -1 : 1,
 		gch_font = get_font("gchord"),
 		ann_font = get_font("annotation"),
@@ -318,8 +318,6 @@ function gch_build(s) {
 		y_below = 0,
 		y_left = 0,
 		y_right = 0,
-		h_gch = gch_font.size,
-		h_ann = ann_font.size,
 		box = cfmt.gchordbox,
 		GCHPRE = .4;		// portion of chord before note
 
@@ -363,52 +361,52 @@ function gch_build(s) {
 
 		/* set the offsets and widths */
 		gene.curfont = gch.font;
-		w = strw(gch.text);
-		gch.w = w //+ 4
+		wh = strwh(gch.text);
+		gch.w = wh[0]
 		switch (gch.type) {
 		case '@':
 			break
 		case '^':			/* above */
-			xspc = w * GCHPRE
+			xspc = wh[0] * GCHPRE
 			if (xspc > 8)
 				xspc = 8;
 			gch.x = -xspc;
-			y_above -= h_ann;
+			y_above -= wh[1];
 			gch.y = y_above
 			break
 		case '_':			/* below */
-			xspc = w * GCHPRE
+			xspc = wh[0] * GCHPRE
 			if (xspc > 8)
 				xspc = 8;
 			gch.x = -xspc;
-			y_below -= h_ann;
+			y_below -= wh[1];
 			gch.y = y_below
 			break
 		case '<':			/* left */
-			gch.x = -(w + 6);
-			y_left -= h_ann;
-			gch.y = y_left + h_ann / 2
+			gch.x = -(wh[0] + 6);
+			y_left -= wh[1];
+			gch.y = y_left + wh[1] / 2
 			break
 		case '>':			/* right */
 			gch.x = 6;
-			y_right -= h_ann;
-			gch.y = y_right + h_ann / 2
+			y_right -= wh[1];
+			gch.y = y_right + wh[1] / 2
 			break
 		default:			// chord symbol
 			gch.box = box
-			xspc = w * GCHPRE
+			xspc = wh[0] * GCHPRE
 			if (xspc > 8)
 				xspc = 8;
 			gch.x = -xspc;
 			if (pos < 0) {		/* below */
-				y_below -= h_gch;
+				y_below -= wh[1];
 				gch.y = y_below
 				if (box) {
 					y_below -= 2;
 					gch.y -= 1
 				}
 			} else {
-				y_above -= h_gch;
+				y_above -= wh[1];
 				gch.y = y_above
 				if (box) {
 					y_above -= 2;

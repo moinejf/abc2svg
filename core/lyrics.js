@@ -241,7 +241,7 @@ function get_lyrics(text, cont) {
 			ly = {
 				t: word,
 				font: gene.curfont,
-				w: strw(word),
+				w: strwh(word)[0],
 				istart: j,
 				iend: j + word.length
 			}
@@ -281,7 +281,7 @@ function ly_width(s, wlw) {
 				j = p.indexOf(' ');
 				gene.curfont = gene.deffont = ly.font
 				if (j > 0)
-					sz = strw(p.slice(0, j))
+					sz = strwh(p.slice(0, j))[0]
 				else
 					sz = w
 			}
