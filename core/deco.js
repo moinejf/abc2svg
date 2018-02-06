@@ -1662,6 +1662,9 @@ function draw_measnb() {
 			}
 			while (s.st != st)
 				s = s.ts_next
+
+			// don't display the number twice
+		     if (s.type != BAR || !s.bar_num) {
 			if (s.prev && s.prev.type != CLEF)
 				s = s.prev;
 			x = s.x - s.wl;
@@ -1684,6 +1687,7 @@ function draw_measnb() {
 			y += gene.curfont.size;
 			y_set(st, true, x, w, y);
 			s.ymx = y
+		     }
 		}
 	}
 
