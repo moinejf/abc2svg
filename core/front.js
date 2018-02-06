@@ -252,7 +252,10 @@ function tosvg(in_fname,		// file name
 
 	// remove the comment at end of text
 	function uncomment(src, do_escape) {
-		src = src.replace(/[ \t]*[^\\]%.*/, '').replace(/\\%/g,'%')
+		if (src.indexOf('%') >= 0)
+			src = src.replace(/(.*[^\\])%.*/, '$1')
+				 .replace(/\\%/g, '%');
+		src = src.trim()
 		if (do_escape && src.indexOf('\\') >= 0)
 			return cnv_escape(src)
 		return src
@@ -407,8 +410,7 @@ function tosvg(in_fname,		// file name
 					syntax(1, "%%select ignored")
 					continue
 				}
-				select = uncomment(text.slice(7).trim(),
-							false)
+				select = uncomment(text.slice(7), false)
 				if (select[0] == '"')
 					select = select.slice(1, -1);
 				if (!select) {
@@ -428,7 +430,7 @@ function tosvg(in_fname,		// file name
 					syntax(1, "%%voice ignored")
 					continue
 				}
-				select = uncomment(text.slice(6).trim(), false)
+				select = uncomment(text.slice(6), false)
 
 				/* if void %%voice, free all voice options */
 				if (!select) {
@@ -469,7 +471,7 @@ function tosvg(in_fname,		// file name
 					switch (a[0]) {
 					default:
 						opt[select].push(
-							uncomment(text.trim(), true))
+							uncomment(text, true))
 						continue
 					case "score":
 					case "staves":
@@ -483,7 +485,7 @@ function tosvg(in_fname,		// file name
 				parse.eol = bol - 1
 				continue
 			}
-			do_pscom(uncomment(text.trim(), true))
+			do_pscom(uncomment(text, true))
 			continue
 		}
 
@@ -498,8 +500,7 @@ function tosvg(in_fname,		// file name
 		}
 
 		// information fields
-		text = uncomment(file.slice(bol + 2, eol).trim(),
-				 true)
+		text = uncomment(file.slice(bol + 2, eol), true)
 		if (line0 == '+') {
 			if (!last_info) {
 				syntax(1, "+: without previous info field")
