@@ -4352,7 +4352,8 @@ function set_piece() {
 		last.ts_next = last.next = s;
 		s.shrink = last.wr + 2;	// just a small space before end of staff
 		s.space = set_space(s)
-		if (s.space < s.shrink)
+		if (s.space < s.shrink
+		 && last.type != KEY)
 			s.space = s.shrink
 	}
 }
