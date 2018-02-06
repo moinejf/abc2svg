@@ -1680,6 +1680,7 @@ function draw_measnb() {
 			y += 2;
 			if (cfmt.measurebox) {
 				xy_str_b(x, y, bar_num.toString());
+				y += 2;
 				w += 3
 			} else {
 				xy_str(x, y, bar_num.toString())
@@ -1739,6 +1740,7 @@ function draw_measnb() {
 		y += 2;
 		if (cfmt.measurebox) {
 			xy_str_b(x, y, bar_num.toString());
+			y += 2;
 			w += 3
 		} else {
 			xy_str(x, y, bar_num.toString())
