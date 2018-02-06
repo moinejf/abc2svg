@@ -1365,9 +1365,9 @@ function draw_deco_note() {
 }
 
 // -- define the music elements tied to the staff --
-//	- chord indications
 //	- repeat brackets
 //	- decoration tied to the staves
+//	- chord symbols
 /* (the staves are not yet defined) */
 /* (unscaled delayed output) */
 function draw_deco_staff() {
@@ -1491,71 +1491,6 @@ function draw_deco_staff() {
 		}
 	} // draw_repbra()
 
-	/* search the vertical offset for the guitar chords */
-	for (i = 0; i <= nstaff; i++)
-		minmax[i] = {
-			ymin: 0,
-			ymax: 24
-		}
-	for (s = tsfirst; s; s = s.ts_next) {
-		if (!s.a_gch)
-			continue
-		if (!first_gchord)
-			first_gchord = s;
-		gch2 = null
-		for (ix = 0; ix < s.a_gch.length; ix++) {
-			gch = s.a_gch[ix]
-			if (gch.type != 'g')
-				continue
-			gch2 = gch	/* guitar chord closest to the staff */
-			if (gch.y < 0)
-				break
-		}
-		if (gch2) {
-			w = gch2.w
-			if (gch2.y >= 0) {
-				y = y_get(s.st, true, s.x, w)
-				if (y > minmax[s.st].ymax)
-					minmax[s.st].ymax = y
-			} else {
-				y = y_get(s.st, false, s.x, w)
-				if (y < minmax[s.st].ymin)
-					minmax[s.st].ymin = y
-			}
-		}
-	}
-
-	/* draw the chord indications if any */
-	if (first_gchord) {
-		for (i = 0; i <= nstaff; i++) {
-			bot = staff_tb[i].botbar;
-			if (minmax[i].ymin > bot - 4)
-				minmax[i].ymin = bot - 4
-			top = staff_tb[i].topbar;
-			if (minmax[i].ymax < top + 4)
-				minmax[i].ymax = top + 4
-		}
-		set_sscale(-1)		/* restore the scale parameters */
-		for (s = first_gchord; s; s = s.ts_next) {
-			if (!s.a_gch)
-				continue
-//			switch (s.type) {
-//			case NOTE:
-//			case REST:
-//			case SPACE:
-//			case MREST:
-//			case BAR:
-//--fixme: what when gchord and repeat ?
-//				if (s.text == undefined) // not a repeat bar
-//					break
-//			default:
-//				continue
-//			}
-			draw_gchord(s, minmax[s.st].ymin,
-					minmax[s.st].ymax)
-		}
-	}
-
 	/* draw the repeat brackets */
 	for (v = 0; v < voice_tb.length; v++) {
 		p_voice = voice_tb[v]
@@ -1614,6 +1549,59 @@ function draw_deco_staff() {
 			y += dd.h;
 		y_set(de.st, de.up, de.x, de.val, y)
 	}
+
+	// search the vertical offset for the chord symbols
+	for (i = 0; i <= nstaff; i++)
+		minmax[i] = {
+			ymin: 0,
+			ymax: 24
+		}
+	for (s = tsfirst; s; s = s.ts_next) {
+		if (!s.a_gch)
+			continue
+		if (!first_gchord)
+			first_gchord = s;
+		gch2 = null
+		for (ix = 0; ix < s.a_gch.length; ix++) {
+			gch = s.a_gch[ix]
+			if (gch.type != 'g')
+				continue
+			gch2 = gch	// chord closest to the staff
+			if (gch.y < 0)
+				break
+		}
+		if (gch2) {
+			w = gch2.w
+			if (gch2.y >= 0) {
+				y = y_get(s.st, true, s.x, w)
+				if (y > minmax[s.st].ymax)
+					minmax[s.st].ymax = y
+			} else {
+				y = y_get(s.st, false, s.x, w)
+				if (y < minmax[s.st].ymin)
+					minmax[s.st].ymin = y
+			}
+		}
+	}
+
+	// draw the chord symbols if any
+	if (first_gchord) {
+		for (i = 0; i <= nstaff; i++) {
+			bot = staff_tb[i].botbar;
+			if (minmax[i].ymin > bot - 4)
+				minmax[i].ymin = bot - 4
+			top = staff_tb[i].topbar;
+			if (minmax[i].ymax < top + 4)
+				minmax[i].ymax = top + 4
+		}
+		set_sscale(-1)		/* restore the scale parameters */
+		for (s = first_gchord; s; s = s.ts_next) {
+			if (!s.a_gch)
+				continue
+			draw_gchord(s, minmax[s.st].ymin, minmax[s.st].ymax)
+		}
+	}
+
 }
 
 /* -- draw the measure bar numbers -- */
