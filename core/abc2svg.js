@@ -205,7 +205,10 @@ function syntax(sev, msg, a1, a2, a3, a4) {
 	error(sev, s, msg, a1, a2, a3, a4)
 }
 
-// check if a script is secure
-function is_secure(js) {
-	return !js.match(/eval *\(|Function/)
+// inject javascript code
+function js_inject(js) {
+	if (!js.match(/eval *\(|Function/))
+		eval('"use strict"\n' + js)
+	else
+		syntax(1, "Unsecure code")
 }
