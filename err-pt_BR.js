@@ -49,6 +49,8 @@ user.textrans = {
 	"Bad %%staffscale value": "Valor incorreto em %%staffscale",
 	"Bad char '$1' in M:": "Caractere inválido '$1' em M:",
 	"Bad character '$1'": "Caractere inválido '$1'",
+	"Bad controller number in %%MIDI": "Bad controller number in %%MIDI",
+	"Bad controller value in %%MIDI": "Bad controller value in %%MIDI",
 	"Bad duration '$1' in M:": "Duração '$1' incorreta em M:",
 	"Bad integer value": "Número inteiro incorreto",
 	"Bad instr= value": "Valor incorreto para instr=",
