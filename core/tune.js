@@ -872,18 +872,15 @@ function get_map(text) {
 
 // %%MIDI
 function get_midi(param) {
-	var	chan, prog,
+	var	prog, n, v, ctl,
 		a = param.split(/\s+/)
 
 	switch (a[0]) {
 	case "program":
-		if (a[2]) {		// channel program
-			chan = a[1];
+		if (a[2] != undefined)	// the channel program is unused
 			prog = a[2]
-		} else {		// program
-			chan = 0;
-			prog = a[1]
-		}
+		else
+			prog = a[1];
 		prog = parseInt(prog)
 		if (isNaN(prog) || prog < 0 || prog > 127) {
 			syntax(1, "Bad program in %%MIDI")
@@ -893,6 +890,28 @@ function get_midi(param) {
 			curvoice.instr = prog
 		else
 			glovar.instr = prog
+		break
+	case "control":
+		n = parseInt(a[1])
+		if (isNaN(n) || n < 0 || n > 127) {
+			syntax(1, "Bad controller number in %%MIDI")
+			return
+		}
+		v = parseInt(a[2])
+		if (isNaN(v) || v < 0 || v > 127) {
+			syntax(1, "Bad controller value in %%MIDI")
+			return
+		}
+		if (curvoice) {
+			ctl = curvoice.midictl
+			if (!ctl)
+				ctl = curvoice.midictl = {}
+		} else {
+			ctl = glovar.midictl
+			if (!ctl)
+				ctl = glovar.midictl = {}
+		}
+		ctl[n] = v
 		break
 	}
 }
@@ -2124,6 +2143,8 @@ function new_voice(id) {
 		hy_st: 0,
 		instr: glovar.instr || 0	// MIDI instrument
 	}
+	if (glovar.midictl)
+		p_voice.midictl = glovar.midictl; // MIDI control
 
 	voice_tb.push(p_voice);
 
