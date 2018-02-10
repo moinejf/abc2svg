@@ -699,22 +699,14 @@ function draw_lstaff(x) {
 function draw_meter(x, s) {
 	if (!s.a_meter)
 		return
-	var	dx, i,
+	var	dx, i, j, tmp1, tmp2,
 		st = s.st,
 		p_staff = staff_tb[st],
 		y = p_staff.y;
 
 	// adjust the vertical offset according to the staff definition
-	if (p_staff.stafflines != '|||||') {
-		for (i = 0; i < p_staff.stafflines.length; i++) {
-			if (p_staff.stafflines[i].match(/[\[|]/))
-				break
-		}
-		if (i == p_staff.stafflines.length)
-			i--;
-//		y += (i - 1 + p_staff.stafflines.length) * 3 - 12
-		y += (i + p_staff.stafflines.length) * 3 - 15
-	}
+	if (p_staff.stafflines != '|||||')
+		y += (p_staff.topbar + p_staff.botbar) / 2 - 12	// bottom
 
 	x -= s.wl
 	for (i = 0; i < s.a_meter.length; i++) {
@@ -728,11 +720,16 @@ function draw_meter(x, s) {
 		if (meter.bot) {
 			if (meter.bot.length > meter.top.length)
 				dx = 13 * meter.bot.length;
-			out_XYAB('<g style="font-family:serif; font-weight:bold; font-size: 16px"\n\
-	transform="translate(X,Y) scale(1.2,1)">\n\
-	<text y="-12" text-anchor="middle">A</text>\n\
-	<text text-anchor="middle">B</text>\n\
-</g>\n', x + dx * .5, y, meter.top, meter.bot)
+	
+			tmp1 = tmp2 = ''
+			for (j = 0; j < meter.top.length; j++)
+				tmp1 += tgls["meter" + meter.top[j]].c
+			for (j = 0; j < meter.bot.length; j++)
+				tmp2 += tgls["meter" + meter.bot[j]].c;
+			out_XYAB('<g transform="translate(X,Y)" text-anchor="middle">\n\
+	<text y="-12">A</text>\n\
+	<text>B</text>\n\
+</g>\n', x + dx * .5, y + 6, tmp1, tmp2)
 		} else {
 			switch (meter.top[0]) {
 			case 'C':
@@ -747,10 +744,16 @@ function draw_meter(x, s) {
 				f = meter.top[1] != '.' ? "pmsig" : "pMsig"
 				break
 			default:
-				out_XYAB('<g style="font-family:serif; font-weight:bold; font-size: 18px"\n\
-	transform="translate(X,Y) scale(1.2,1)">\n\
-	<text y="-6" text-anchor="middle">A</text>\n\
-</g>\n', x + dx * .5, y, meter.top)
+				tmp1 = ''
+				if (meter.top == ')')
+					dx -= 7
+				for (j = 0; j < meter.top.length; j++)
+					tmp1 += tgls["meter" + meter.top[j]].c;
+				out_XYAB('\
+<text x="X" y="Y" text-anchor="middle">A</text>\n',
+					x + dx * .5, y + 12, tmp1)
+				if (meter.top == '(')
+					dx -= 4
 				break
 			}
 		}
@@ -1320,7 +1323,7 @@ function y_head(s, note) {
 /* (the staves are defined) */
 // sets {x,y}_note
 function draw_basic_note(x, s, m, y_tb) {
-	var	i, k, y, p, yy, dotx, doty,
+	var	i, k, p, yy, dotx, doty,
 		old_color = false,
 		note = s.notes[m],
 		staffb = staff_tb[s.st].y,	/* bottom of staff */

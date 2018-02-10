@@ -45,8 +45,8 @@ var	output = [],		// output buffer
 
 // glyphs in music font
 var tgls = {
-  brace: {x: 0, y:0, c:"\ue000"},
-  sgno: {x: -6, y:4, c:"\ue047"},
+  brace: {x:0, y:0, c:"\ue000"},
+  sgno: {x:-6, y:4, c:"\ue047"},
   coda: {x:-12, y:6, c:"\ue048"},
   tclef: {x:-8, y:0, c:"\ue050"},
   cclef: {x:-8, y:0, c:"\ue05c"},
@@ -55,6 +55,19 @@ var tgls = {
   stclef: {x:-8, y:0, c:"\ue07a"},
   scclef: {x:-8, y:0, c:"\ue07b"},
   sbclef: {x:-7, y:0, c:"\ue07c"},
+  meter0: {c:"\ue080"},
+  meter1: {c:"\ue081"},
+  meter2: {c:"\ue082"},
+  meter3: {c:"\ue083"},
+  meter4: {c:"\ue084"},
+  meter5: {c:"\ue085"},
+  meter6: {c:"\ue086"},
+  meter7: {c:"\ue087"},
+  meter8: {c:"\ue088"},
+  meter9: {c:"\ue089"},
+  "meter+": {c:"\ue08c"},
+  "meter(": {c:"\ue094"},
+  "meter)": {c:"\ue095"},
   csig: {x:0, y:0, c:"\ue08a"},
   ctsig: {x:0, y:0, c:"\ue08b"},
   HDD: {x:-7, y:0, c:"\ue0a0"},
@@ -455,10 +468,7 @@ function g_close() {
 }
 
 // external SVG string
-function out_svg(str) {
-	output.push(str)
-}
-Abc.prototype.out_svg = out_svg
+Abc.prototype.out_svg = function(str) { output.push(str) }
 
 // exported functions for the annotation
 function sx(x) {
