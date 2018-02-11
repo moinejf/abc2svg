@@ -708,19 +708,13 @@ function draw_meter(x, s) {
 	if (p_staff.stafflines != '|||||')
 		y += (p_staff.topbar + p_staff.botbar) / 2 - 12	// bottom
 
-	x -= s.wl
 	for (i = 0; i < s.a_meter.length; i++) {
 		var	f,
 			meter = s.a_meter[i]
 
-		if (meter.top == "C|")
-			dx = 13
-		else
-			dx = 13 * meter.top.length
+		x = s.x + s.x_meter[i]
+
 		if (meter.bot) {
-			if (meter.bot.length > meter.top.length)
-				dx = 13 * meter.bot.length;
-	
 			tmp1 = tmp2 = ''
 			for (j = 0; j < meter.top.length; j++)
 				tmp1 += tgls["meter" + meter.top[j]].c
@@ -729,7 +723,7 @@ function draw_meter(x, s) {
 			out_XYAB('<g transform="translate(X,Y)" text-anchor="middle">\n\
 	<text y="-12">A</text>\n\
 	<text>B</text>\n\
-</g>\n', x + dx * .5, y + 6, tmp1, tmp2)
+</g>\n', x, y + 6, tmp1, tmp2)
 		} else {
 			switch (meter.top[0]) {
 			case 'C':
@@ -745,21 +739,16 @@ function draw_meter(x, s) {
 				break
 			default:
 				tmp1 = ''
-				if (meter.top == ')')
-					dx -= 7
 				for (j = 0; j < meter.top.length; j++)
 					tmp1 += tgls["meter" + meter.top[j]].c;
 				out_XYAB('\
 <text x="X" y="Y" text-anchor="middle">A</text>\n',
-					x + dx * .5, y + 12, tmp1)
-				if (meter.top == '(')
-					dx -= 4
+					x, y + 12, tmp1)
 				break
 			}
 		}
 		if (f)
-			xygl(x + dx * .5, y, f);
-		x += dx
+			xygl(x, y, f)
 	}
 }
 

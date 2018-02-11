@@ -966,22 +966,40 @@ function set_width(s) {
 		s.wr = 5.5 * n1 + esp
 		return
 	case METER:
-		/* !!tied to draw_meter()!! */
-		w = 0
+		wlw = 0;
+		s.x_meter = []
 		for (i = 0; i < s.a_meter.length; i++) {
 			var meter = s.a_meter[i]
-			if (meter.top == "C|") {
-				w += 6.5
+			if (meter.top[0] == "C") {
+				s.x_meter[i] = wlw + 6;
+				wlw += 12
 			} else {
+				w = 0
 				if (!meter.bot
 				 || meter.top.length > meter.bot.length)
-					w += 6.5 * meter.top.length
+					meter = meter.top
 				else
-					w += 6.5 * meter.bot.length
+					meter = meter.bot;
+				for (m = 0; m < meter.length; m++) {
+					switch (meter[m]) {
+					case '(':
+						wlw += 4
+						// fall thru
+					case ')':
+					case '1':
+						w += 4
+						break
+					default:
+						w += 12
+						break
+					}
+				}
+				s.x_meter[i] = wlw + w / 2
+				wlw += w
 			}
 		}
-		s.wl = w;
-		s.wr = w + 7
+		s.wl = 0;
+		s.wr = wlw + 6
 		return
 	case MREST:
 		s.wl = 6;
