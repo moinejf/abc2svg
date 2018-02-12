@@ -472,6 +472,7 @@ function Audio5(i_conf) {
 		}
 
 		// all resources are there
+		gain.connect(ac.destination);
 		stime = ac.currentTime + .2		// start time + 0.2s
 			- a_e[evt_idx][1] * speed;
 		play_next()
@@ -485,6 +486,18 @@ function Audio5(i_conf) {
 			onend()			// nothing to play
 			return
 		}
+
+		// initialize the audio subsystem if not done yet
+		// (needed for iPhone/iPad/...)
+		if (!gain) {
+			ac = conf.ac
+			if (!ac)
+				conf.ac = ac = new (window.AudioContext ||
+							window.webkitAudioContext);
+			gain = ac.createGain();
+			gain.gain.value = gain_val
+		}
+
 		iend = i_iend;
 		evt_idx = 0
 		while (a_e[evt_idx] && a_e[evt_idx][0] < istart)
@@ -500,6 +513,8 @@ function Audio5(i_conf) {
 	// stop playing
 	Audio5.prototype.stop = function() {
 		iend = 0
+		if (gain)
+			gain.disconnect()
 	} // stop()
 
 	function set_cookie(n, v) {
@@ -558,14 +573,6 @@ function Audio5(i_conf) {
 	Audio5.prototype.get_vol = Audio5.prototype.set_vol	// compatibility
 
 	// Audio5 object creation
-	ac = conf.ac
-	if (!ac) {
-		conf.ac = ac = new (window.AudioContext ||
-					window.webkitAudioContext);
-		gain = ac.createGain();
-		gain.gain.value = gain_val;
-		gain.connect(ac.destination)
-	}
 
 	// get the soundfont
 	// 1- from the object configuration
