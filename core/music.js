@@ -919,10 +919,11 @@ function set_width(s) {
 		}
 		return
 	case CLEF:
-		/* shift the clef to the left - see draw_symbols() */
-// there may be invisible clefs in empty staves
-//		if (s.invis)
-//			break
+// (there may be invisible clefs in empty staves)
+		if (s.invis) {
+			s.wl = s.wr = 1		// (!! not 0 !!)
+			return
+		}
 		s.wl = s.wr = s.clef_small ? 6 : 12
 		return
 	case KEY:
