@@ -3217,15 +3217,15 @@ function set_indent(first) {
 	if (font)
 		maxw += 4 * cwid(' ') * font.swfac;
 
-	w = 0
+	w = .5				// (width of left bar)
 	for (st = 0; st <= cur_sy.nstaff; st++) {
 		if (cur_sy.staves[st].flags
 				& (OPEN_BRACE2 | OPEN_BRACKET2)) {
-			w = 16
+			w = 12
 			break
 		}
 		if (cur_sy.staves[st].flags & (OPEN_BRACE | OPEN_BRACKET))
-			w = 8
+			w = 6
 	}
 	maxw += w
 
