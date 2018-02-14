@@ -30,6 +30,11 @@ var	errtxt = '',
 					// 1: play possible,
 					// 2: playing
 	abcplay,
+	playconf = {
+		onend: endplay
+//uncomment for test
+//		,sfu: "./"
+	},
 	a_src = [],			// index: #sequence, value: ABC source
 	a_pe = []			// index: #sequence, value: playing events
 
@@ -71,13 +76,8 @@ function playseq(seq) {
 	}
 	play = 2
 	if (!a_pe[seq]) {		// if no playing event
-		if (!abcplay) {
-			abcplay = new AbcPlay({
-					endplay: endplay
-//uncomment for test
-//					,sfu: "./"
-				})
-		}
+		if (!abcplay)
+			abcplay = new AbcPlay(playconf)
 		var abc = new Abc(user);
 
 		abcplay.clear();
@@ -195,7 +195,7 @@ function dom_loaded() {
 				abcplay.add(tsfirst, voice_tb)
 			}
 	}
-}
+} // dom_loaded()
 
 // if playing is possible, load the playing scripts
 if (window.AudioContext || window.webkitAudioContext)

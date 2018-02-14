@@ -1,6 +1,6 @@
 // toaudio5.js - audio output using HTML5 audio
 //
-// Copyright (C) 2015-2017 Jean-Francois Moine
+// Copyright (C) 2015-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -232,7 +232,7 @@ function Audio5(i_conf) {
 		gain,			// global gain
 		gain_val = 0.7,
 		a_e,			// event array
-		follow,			// follow the music
+		follow = true,		// follow the music
 		speed = 1,		// speed factor
 		new_speed,
 
