@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 0
 CreationTime: 1433498007
-ModificationTime: 1518281128
+ModificationTime: 1518628013
 PfmFamily: 17
 TTFWeight: 400
 TTFWidth: 5
@@ -1519,26 +1519,23 @@ EndChar
 
 StartChar: uniE4CE
 Encoding: 44 58574 44
-Width: 152
-Flags: W
-HStem: 133 118<15.4701 72.9963>
-VStem: 73 79<96.8309 173.5>
+Width: 182
+Flags: HMW
 LayerCount: 2
 Fore
 SplineSet
-72 251 m 0
- 105 251 129 235 143 206 c 0
- 149 194 152 180 152 167 c 0
- 152 131 132 94 107 64 c 0
- 78 30 39 4 23 4 c 0
- 21 4 19 5 18 6 c 0
- 17 7 17 8 17 9 c 0
- 17 25 73 91 73 120 c 0
- 73 128 68 133 56 133 c 1
- 19 133 -0 160 -0 189 c 0
- -0 219 23 251 72 251 c 0
+86 301 m 0
+ 123 301 136 294 156 272 c 0
+ 175 251 182 226 182 195 c 0
+ 182 152 162 110 132 74 c 0
+ 97 34 43 0 23 0 c 0
+ 21 0 19 2 17 3 c 0
+ 16 4 16 5 16 6 c 0
+ 16 26 87 105 87 140 c 0
+ 87 149 81 155 67 155 c 0
+ 32 156 -0 184 -0 222 c 0
+ -0 258 27 301 86 301 c 0
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: uniE4E1

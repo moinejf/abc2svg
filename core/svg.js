@@ -89,7 +89,7 @@ var tgls = {
   accent: {x:-3, y:0, c:"\ue4a0"},
   marcato: {x:-3, y:0, c:"\ue4ac"},
   hld: {x:-7, y:0, c:"\ue4c0"},
-  brth: {x:-7, y:0, c:"\ue4ce"},
+  brth: {x:0, y:0, c:"\ue4ce"},
   r00: {x:-1.5, y:0, c:"\ue4e1"},
   r0: {x:-1.5, y:0, c:"\ue4e2"},
   r1: {x:-3.5, y:6, c:"\ue4e3"},
