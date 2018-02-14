@@ -35,14 +35,14 @@ function loadtxt() {
 	document.getElementById("hlp").outerHTML = '<ul id="hlp">\n\
 <li>Opzioni:\n\
     <ul>\n\
-	<li>scrivere direttamente codice ABC nell'area di testo, oppure</li>\n\
-	<li>incollare codice ABC nell'area di testo, oppure</li>\n\
+	<li>scrivere direttamente codice ABC nell\'area di testo, oppure</li>\n\
+	<li>incollare codice ABC nell\'area di testo, oppure</li>\n\
 	<li>caricare un file ABC locale (menu \'ABC | Carica file\'), oppure</li>\n\
 	<li>trascinare un file locale da file manager\n\
-		o del testo selezionato nell'area di testo.</li>\n\
+		o del testo selezionato nell\'area di testo.</li>\n\
     </ul></li>\n\
-	<li>Puoi modificare il codice ABC nell'area di testo;<br/>\n\
+	<li>Puoi modificare il codice ABC nell\'area di testo;<br/>\n\
 	dopo 2 secondi la musica viene visualizzata o aggiornata.</li>\n\
-	<li>L'opzione \'Stampa\' del browser stampa la musica.</li>\n\
+	<li>L\'opzione \'Stampa\' del browser stampa la musica.</li>\n\
 </ul>'
 }
