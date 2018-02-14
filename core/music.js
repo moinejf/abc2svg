@@ -4226,8 +4226,13 @@ function set_piece() {
 					break
 			p_staff.botline = p_staff.botbar = i * 6
 			if (i >= l - 2) {		// 0, 1 or 2 lines
-				p_staff.botbar -= 6;
-				p_staff.topbar += 6
+				if (p_staff.stafflines[i] != '.') {
+					p_staff.botbar -= 6;
+					p_staff.topbar += 6
+				} else {		// no line: big bar
+					p_staff.botbar -= 12;
+					p_staff.topbar += 12
+				}
 			}
 		}
 	} // set_top_bot()
