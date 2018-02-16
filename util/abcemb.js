@@ -35,7 +35,9 @@ var	errtxt = '',
 //uncomment for test
 //		,sfu: "./"
 	},
-	a_src = [],			// index: #sequence, value: ABC source
+	page,				// document source
+	a_src = [],			// index: #sequence,
+					//	value: [start_idx, end_idx]
 	a_pe = []			// index: #sequence, value: playing events
 
 // -- abc2svg init argument
@@ -83,7 +85,7 @@ function playseq(seq) {
 		abcplay.clear();
 		abc.tosvg("play", "%%play")
 		try {
-			abc.tosvg("abcemb" + seq, a_src[seq])
+			abc.tosvg("abcemb" + seq, page, a_src[seq][0], a_src[seq][1])
 		} catch(e) {
 			alert(e.message + '\nabc2svg tosvg bug - stack:\n' + e.stack);
 			play = 1;
@@ -112,7 +114,7 @@ function dom_loaded() {
 		setTimeout(dom_loaded, 500)
 		return
 	}
-	var page = document.body.innerHTML;
+	page = document.body.innerHTML;
 
 	// if some Postscript definition, load the interpreter
 	if (typeof Psvg != "function"
@@ -154,15 +156,14 @@ function dom_loaded() {
 			k = page.length
 		else
 			k = re_stop.lastIndex - 2;
-		src = page.slice(j, k)
 		if (play) {
 			new_page += '<div onclick="playseq(' +
 					a_src.length +
 					')">\n';
-			a_src.push(src)
+			a_src.push([j, k])
 		}
 		try {
-			abc.tosvg('abcemb', src)
+			abc.tosvg('abcemb', page, j, k)
 		} catch (e) {
 			alert("abc2svg javascript error: " + e.message +
 				"\nStack:\n" + e.stack)
