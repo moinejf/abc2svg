@@ -34,7 +34,7 @@ must or may contain:
 <dl>
 <dt><b>img_out</b> (optional)</dt>
 	<dd>Callback function which called when a new SVG image has been generated.<br/>
-	This function receives one argument, a string, which is a part of
+	This function receives one argument, a string, which is usually
 	a SVG image.<br/>
 	This function may be absent when no graphic generation is needed
 	as, for example, for playing only.</dd>
@@ -141,9 +141,12 @@ must or may contain:
 	</dd>
 <dt><b>page_format</b> (boolean)</dt>
 	<dd>Group the SVG images into non-page-breakable blocks.<br/>
-	When <code>page_format</code> is not set, the SVG images are generated
-	as text, on the right of the previous markup element (inlined images).<br/>
-	When <code>page_format</code> is set, the images are vertically aligned.
+	When <code>page_format</code> is not set, only the SVG images are generated.
+	With XHTML output, the images go to the right of the previous ones
+	(inlined images).<br/>
+	When <code>page_format</code> is set, the images are grouped in
+	<code>&lt;div&gt;</code> containers with a class "nobrk", and a class
+	"newpage" in case of %%newpage.
 	</dd>
 </dl>
 </p>
@@ -151,12 +154,16 @@ must or may contain:
 <h3>ABC to SVG translation</h3>
 <p>
 A ABC to SVG translation is done calling the Abc method <code>tosvg</code>:
-<pre>	abc.tosvg(file_name, ABC_source)</pre>
+<pre>	abc.tosvg(file_name, ABC_source, start_offset, end_offset)</pre>
 <dl>
 <dt><code>file_name</code></dt><dd>is the name of the ABC source.
 	It is used for information only in error messages.</dd>
 <dt><code>ABC_source</code></dt><dd>is the ABC source as a (UTF-16) string
 with the <code>'\n' (\u000a)</code> as the end of line marker.</dd>
+<dt><code>start_offset</code>, <code>end_offset</code></dt>
+<dd>are the character offsets of the ABC sequence in the ABC_source.<br/>
+They are optional and their default values are <code>0</code>
+and <code>ABC_source.length</code></dd>
 </dl>
 </p>
 <p>
@@ -169,78 +176,64 @@ by a second call to <code>tosvg</code>.
 <h3>Exported attributes and methods of the Abc class</h3>
 
 <dl>
-<dt><b>blk_out</b> function to start the output of a block of images</dt>
+<dt><b>blk_flush</b>: function to terminate a block of images.</dt>
 <dd>
-<p>
-It is useful in case of fatal error. See blk_flush.
-</p>
-<p>
+In case of fatal error during the SVG generation, this function may be called
+in the error callback function to output the last SVG elements.<br/>
 This function takes no argument.
-</p>
 </dd>
 
-<dt><b>blk_flush</b> function to terminate a block of images.</dt>
+<dt><b>out_svg</b>: function to add text in the current SVG image</dt>
 <dd>
-<p>
-In case of crash during the SVG generation in page_format mode,
-<b>blk_out</b> and <b>blk_flush</b> (in this order) may be called
-in the error callback function to output the last SVG elements.
-</p>
-<p>
-This function takes no argument.
-</p>
+It may be used only in the callback functions.<br/>
+This function expects one mandatory argument:<br/>
+	&nbsp;&nbsp;- <b>text</b> (string): Text to be added.
 </dd>
 
-<dt><b>out_svg</b> function to add text in the current SVG image</dt>
+<dt><b>sx</b>: function to convert the x coordinate</dt>
 <dd>
-<p>
-It may be used only in the callback functions.
-</p>
-<p>
-This function expects one mandatory argument:
-<dl>
-	<dt><b>text</b> (string)</dt><dd>Text to be added.</dd>
-</dl>
-</p>
+This function expects one mandatory argument:<br/>
+	&nbsp;&nbsp;- <b>x</b> (number): Local x.<br/>
+It returns the <code>x</code> coordinate in the current SVG container.
 </dd>
 
-<dt><b>sx</b> function to convert the x coordinate</dt>
+<dt><b>sy</b>: function to convert the y coordinate</dt>
 <dd>
-<p>
-This function expects one mandatory argument:
-<dl>
-	<dt><b>x</b> (number)</dt><dd>Local <code>x</code>.</dd>
-</dl>
-It returns the absolute <code>x</code> coordinate.
-</p>
+This function expects one mandatory argument:<br/>
+	&nbsp;&nbsp;- <b>y</b> (number): Local y.<br/>
+It returns the <code>y</code> coordinate in the current SVG container.
 </dd>
 
-<dt><b>sy</b> function to convert the y coordinate</dt>
+<dt><b>out_sxsy</b>: function to output x,y coordinates</dt>
 <dd>
-<p>
-This function expects one mandatory argument:
-<dl>
-	<dt><b>y</b> (number)</dt><dd>Local <code>y</code>.</dd>
-</dl>
-It returns the absolute <code>y</code> coordinate.
-</p>
+It may be used only in the callback functions.<br/>
+This function expects 3 mandatory arguments:<br/>
+	&nbsp;&nbsp;- <b>x</b> (number): x offset<br/>
+	&nbsp;&nbsp;- <b>separator</b> (string):
+			text between x and y in the SVG element<br/>
+	&nbsp;&nbsp;- <b>y</b> (number): y offset
 </dd>
 
-<dt><b>out_sxsy</b> function to output x,y coordinates</dt>
+<dt><b>sh</b>: function to convert a height</dt>
 <dd>
-<p>
-It may be used only in the callback functions.
-</p>
-<p>
-This function expects 3 mandatory arguments:
-<dl>
-	<dt><b>x</b> (number)</dt><dd>x offset</dd>
-	<dt><b>separator</b> (string)</dt>
-		<dd>text between x and y in the SVG element</dd>
-	<dt><b>y</b> (number)</dt><dd>y offset</dd>
-</dl>
-</p>
+This function expects one mandatory argument:<br/>
+	&nbsp;&nbsp;- <b>h</b> (number): Local height.<br/>
+It returns the height in the current SVG container.
 </dd>
+
+<dt><b>ax</b>: function to convert the x coordinate</dt>
+<dt><b>ay</b>: function to convert the y coordinate</dt>
+<dt><b>ah</b>: function to convert a height</dt>
+<dd>
+These functions return values relative to the global SVG container.<br/>
+They may be used in place of <code>sx</code>, <code>sy</code>
+and <code>sh</code> when elements must be globally added (by <code>out_svg</code>.<br/>
+When <code>%%pagescale</code> is 1 (default), there is no global container
+(the coordinates are the ones of the SVG image).<br/>
+When this is not the case, a global &lt;g&gt; container is added, with the class "g".
+
+</dd>
+
 </dl>
 
 <h3>Global variables</h3>
