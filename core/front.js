@@ -217,7 +217,8 @@ var	err_ign_s = "$1: inside tune - ignored",
 
 // parse ABC code
 function tosvg(in_fname,		// file name
-		file) {			// file content
+		file,			// file content
+		bol, eof) {		// beginning/end of file
 	var	i, c, bol, eol, end,
 		ext, select,
 		line0, line1,
@@ -225,8 +226,7 @@ function tosvg(in_fname,		// file name
 		cfmt_sav, info_sav, char_tb_sav, glovar_sav, maps_sav,
 		mac_sav, maci_sav,
 		pscom,
-		txt_add = '\n',		// for "+:"
-		eof = file.length
+		txt_add = '\n'		// for "+:"
 
 	// check if a tune is selected
 	function tune_selected() {
@@ -287,10 +287,13 @@ function tosvg(in_fname,		// file name
 	}
 
 	// scan the file
-	bol = 0
-	for (bol = 0; bol < eof; bol = parse.eol + 1) {
+	if (bol == undefined)
+		bol = 0
+	if (!eof)
+		eof = file.length
+	for ( ; bol < eof; bol = parse.eol + 1) {
 		eol = file.indexOf('\n', bol)	// get a line
-		if (eol < 0)
+		if (eol < 0 || eol > eof)
 			eol = eof;
 		parse.eol = eol
 
