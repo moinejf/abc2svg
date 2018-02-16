@@ -355,7 +355,8 @@ function gch_build(s) {
 		} else {
 			gch.text = cnv_escape(gch.text);
 			gch.font = ann_font
-			if (gch.type == '@' && !user.anno_start)
+			if (gch.type == '@'
+			 && !user.anno_start && !user.anno_stop)
 				continue		/* no width */
 		}
 
