@@ -1,6 +1,6 @@
 // toaudio.js - audio generation
 //
-// Copyright (C) 2015-2017 Jean-Francois Moine
+// Copyright (C) 2015-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -21,7 +21,7 @@
 function ToAudio() {
 
 // constants from Abc
-var	BAR = 0,
+  var	BAR = 0,
 	CLEF = 1,
 	GRACE = 4,
 	KEY = 5,
@@ -39,16 +39,18 @@ var	BAR = 0,
 	abc_time,			// last ABC time
 	play_factor;			// play time factor
 
+// ToAudio
+  return {
 // clear the playing events and return the old ones
-    ToAudio.prototype.clear = function() {
+    clear: function() {
 	var a_pe = a_e;
 	a_e = null
 	return a_pe
-    } // clear()
+    }, // clear()
 
 // add playing events from the ABC model
-    ToAudio.prototype.add = function(start,		// starting symbol
-				 voice_tb) {		// voice table
+    add: function(start,		// starting symbol
+		 voice_tb) {		// voice table
 	var	bmap = new Float32Array(7), // measure base map
 		map,			// map of the current voice - 10 octaves
 		vmap = [],		// map of all voices
@@ -369,7 +371,7 @@ var	BAR = 0,
 		s = s.ts_next
 	}
     } // add()
-
+  } // return
 } // ToAudio
 
 // nodejs

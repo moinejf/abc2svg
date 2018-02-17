@@ -633,7 +633,7 @@ function edit_init() {
 		var script = document.createElement('script');
 		script.src = "play-@MAJOR@.js";
 		script.onload = function() {
-			abcplay = new AbcPlay({
+			abcplay = AbcPlay({
 					onend: endplay,
 					onnote:notehlight,
 					});

@@ -480,46 +480,7 @@ function Audio5(i_conf) {
 		stime = ac.currentTime + .2		// start time + 0.2s
 			- a_e[evt_idx][1] * speed;
 		play_next()
-	}
-
-	// play the events
-	Audio5.prototype.play = function(istart, i_iend, a_pe) {
-		if (a_pe)			// force old playing events
-			a_e = a_pe
-		if (!a_e || !a_e.length) {
-			onend()			// nothing to play
-			return
-		}
-
-		// initialize the audio subsystem if not done yet
-		// (needed for iPhone/iPad/...)
-		if (!gain) {
-			ac = conf.ac
-			if (!ac)
-				conf.ac = ac = new (window.AudioContext ||
-							window.webkitAudioContext);
-			gain = ac.createGain();
-			gain.gain.value = gain_val
-		}
-
-		iend = i_iend;
-		evt_idx = 0
-		while (a_e[evt_idx] && a_e[evt_idx][0] < istart)
-			evt_idx++
-		if (!a_e[evt_idx]) {
-			onend()			// nothing to play
-			return
-		}
-		load_res();
-		play_start()
-	} // play()
-
-	// stop playing
-	Audio5.prototype.stop = function() {
-		iend = 0
-		if (gain)
-			gain.disconnect()
-	} // stop()
+	} // play_start()
 
 	function set_cookie(n, v) {
 	    var	d = new Date();
@@ -528,55 +489,7 @@ function Audio5(i_conf) {
 		document.cookie = n + "=" + v + ";expires=" + d.toUTCString()
 	}
 
-	// get/set 'follow music'
-	Audio5.prototype.set_follow = function(v) {
-		if (v == undefined)
-			return follow
-		follow = v;
-		set_cookie("follow", v)
-	} // set_follow()
-
-	// set soundfont type
-	Audio5.prototype.set_sft = function(v) {
-		if (v == undefined)
-			return sft
-		sft = v;
-		set_cookie("sft", v)
-	} // set_sft()
-	Audio5.prototype.get_sft = Audio5.prototype.set_sft	// compatibility
-
-	// set soundfont URL
-	Audio5.prototype.set_sfu = function(v) {
-		if (v == undefined)
-			return sfu
-		sfu = v;
-		set_cookie("sfu", v)
-	} // set_sft()
-	Audio5.prototype.get_sfu = Audio5.prototype.set_sfu	// compatibility
-
-	// set speed (< 1 slower, > 1 faster)
-	Audio5.prototype.set_speed = function(v) {
-		if (v == undefined)
-			return speed
-		new_speed = v
-	} // set_speed()
-
-	// set volume
-	Audio5.prototype.set_vol = function(v) {
-		if (v == undefined) {
-			if (gain)
-				return gain.gain.value
-			return gain_val
-		}
-		if (gain)
-			gain.gain.value = v
-		else
-			gain_val = v;
-		set_cookie("volume", v.toFixed(2))
-	} // set_vol()
-	Audio5.prototype.get_vol = Audio5.prototype.set_vol	// compatibility
-
-	// Audio5 object creation
+// Audio5 object creation
 
 	// get the soundfont
 	// 1- from the object configuration
@@ -613,4 +526,93 @@ function Audio5(i_conf) {
 	else
 		MIDI = {}
 
+    return {
+
+	// play the events
+	play: function(istart, i_iend, a_pe) {
+		if (a_pe)			// force old playing events
+			a_e = a_pe
+		if (!a_e || !a_e.length) {
+			onend()			// nothing to play
+			return
+		}
+
+		// initialize the audio subsystem if not done yet
+		// (needed for iPhone/iPad/...)
+		if (!gain) {
+			ac = conf.ac
+			if (!ac)
+				conf.ac = ac = new (window.AudioContext ||
+							window.webkitAudioContext);
+			gain = ac.createGain();
+			gain.gain.value = gain_val
+		}
+
+		iend = i_iend;
+		evt_idx = 0
+		while (a_e[evt_idx] && a_e[evt_idx][0] < istart)
+			evt_idx++
+		if (!a_e[evt_idx]) {
+			onend()			// nothing to play
+			return
+		}
+		load_res();
+		play_start()
+	}, // play()
+
+	// stop playing
+	stop: function() {
+		iend = 0
+		if (gain)
+			gain.disconnect()
+	}, // stop()
+
+	// get/set 'follow music'
+	set_follow: function(v) {
+		if (v == undefined)
+			return follow
+		follow = v;
+		set_cookie("follow", v)
+	}, // set_follow()
+
+	// set soundfont type
+	set_sft: function(v) {
+		if (v == undefined)
+			return sft
+		sft = v;
+		set_cookie("sft", v)
+	}, // set_sft()
+	get_sft: this.set_sft,	// compatibility
+
+	// set soundfont URL
+	set_sfu: function(v) {
+		if (v == undefined)
+			return sfu
+		sfu = v;
+		set_cookie("sfu", v)
+	}, // set_sft()
+	get_sfu: this.set_sfu,	// compatibility
+
+	// set speed (< 1 slower, > 1 faster)
+	set_speed: function(v) {
+		if (v == undefined)
+			return speed
+		new_speed = v
+	}, // set_speed()
+
+	// set volume
+	set_vol: function(v) {
+		if (v == undefined) {
+			if (gain)
+				return gain.gain.value
+			return gain_val
+		}
+		if (gain)
+			gain.gain.value = v
+		else
+			gain_val = v;
+		set_cookie("volume", v.toFixed(2))
+	}, // set_vol()
+	get_vol: this.set_vol	// compatibility
+    }
 } // end Audio5

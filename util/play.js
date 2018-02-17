@@ -1,6 +1,6 @@
 // play-1.js - file to include in html pages with abc2svg-1.js for playing
 //
-// Copyright (C) 2015-2017 Jean-Francois Moine
+// Copyright (C) 2015-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -20,8 +20,8 @@
 // This file is just a wrapper around ToAudio (toaudio.js) and Audio5 (toaudio5.js)
 
 function AbcPlay(conf) {
-var	audio = new ToAudio(),
-	audio5 = new Audio5(conf)
+var	audio = ToAudio(),
+	audio5 = Audio5(conf)
 
 	return {
 		clear: audio.clear,

@@ -79,7 +79,7 @@ function playseq(seq) {
 	play = 2
 	if (!a_pe[seq]) {		// if no playing event
 		if (!abcplay)
-			abcplay = new AbcPlay(playconf)
+			abcplay = AbcPlay(playconf)
 		var abc = new Abc(user);
 
 		abcplay.clear();
