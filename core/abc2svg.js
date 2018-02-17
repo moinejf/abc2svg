@@ -207,7 +207,7 @@ function syntax(sev, msg, a1, a2, a3, a4) {
 
 // inject javascript code
 function js_inject(js) {
-	if (!js.match(/eval *\(|Function/))
+	if (!js.match(/eval *\(|Function|setTimeout|setInterval/))
 		eval('"use strict"\n' + js)
 	else
 		syntax(1, "Unsecure code")
