@@ -206,17 +206,17 @@ function Audio5(i_conf) {
 			1, 1, 1, 1, 1, 1, 1, 1,		// 16  Organ
 			0, 0, 0, 0, 0, 0, 0, 0,		// 24  Guitar
 			0, 0, 0, 0, 0, 0, 0, 0,		// 32  Bass
-			1, 1, 1, 1, 1, 1, 1, 1,		// 40  Strings
-			1, 1, 0, 0, 0, 0, 0, 0,		// 48  Ensemble
+			1, 1, 1, 1, 1, 0, 0, 0,		// 40  Strings
+			1, 1, 1, 1, 1, 1, 1, 0,		// 48  Ensemble
 			1, 1, 1, 1, 1, 1, 1, 1,		// 56  Brass
 			1, 1, 1, 1, 1, 1, 1, 1,		// 64  Reed
 			1, 1, 1, 1, 1, 1, 1, 1,		// 72  Pipe
 			1, 1, 1, 1, 1, 1, 1, 1,		// 80  Synth Lead
 			1, 1, 1, 1, 1, 1, 1, 1,		// 88  Synth Pad
 			1, 1, 1, 1, 1, 1, 1, 1,		// 96  Synth Effects
-			0, 0, 0, 0, 0, 1, 1, 0,		// 104 Ethnic
+			0, 0, 0, 0, 0, 1, 1, 1,		// 104 Ethnic
 			0, 0, 0, 0, 0, 0, 0, 0,		// 112 Percussive
-			0, 0, 0, 0, 0, 0, 0, 0,		// 120 Sound Effects
+			0, 0, 0, 0, 0, 1, 1, 0		// 120 Sound Effects
 		]),
 
 		// note to name and note to octave
@@ -242,6 +242,7 @@ function Audio5(i_conf) {
 					// - "js" midi-js with encoded data structure
 					// - "mp3" midi-js mp3 samples
 					// - "ogg" midi-js ogg samples
+		sdur,			// sample duration in the soundfont
 		sounds = [],		// [instr][mi] decoded notes per instrument
 		w_instr = 0,		// number of instruments being loaded
 		note_q = [],		// [instr, note] to be decoded
@@ -303,6 +304,10 @@ function Audio5(i_conf) {
 				function(b) {
 					sounds[instr][mi] = b;
 					w_note--
+
+					// get the duration of the samples
+					if (!sdur)
+						sdur = b.duration
 				},
 				function(e) {
 					alert("Decode audio data error " +
@@ -411,14 +416,13 @@ function Audio5(i_conf) {
 					 o.detune.value = d
 			}
 			d = e[4] / speed
-			if (loop[e[2]]) {	// if not a percussion instrument
+			if (d > sdur && loop[e[2]]) {	// if not a percussion instrument
 				o.loop = true;
-				o.loopStart = 3; // (for sample 4s)
-				o.loopEnd = 10
+				o.loopStart = 1 + Math.random() * .2;
+				o.loopEnd = sdur - Math.random() * .2
 			}
 			st = t + stime;			// absolute start time
-			o.start(st);
-			o.stop(st + d)
+			o.start(st, 0, d)
 
 			if (follow) {
 			    var	i = e[0];
