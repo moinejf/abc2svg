@@ -387,18 +387,17 @@ function tosvg(in_fname,		// file name
 			}
 
 			// beginxxx/endxxx
-			b = a[0].match(/begin(.*)/)
-			if (b) {
-//fixme: ignore "I:beginxxx" ... ?
-				end = '\n' + line0 + line1 + "end" + b[1];
+			if (a[0].slice(0, 5) == 'begin') {
+				b = a[0].substr(5);
+				end = '\n' + line0 + line1 + "end" + b;
 				i = file.indexOf(end, eol)
 				if (i < 0) {
 					syntax(1, "No $1 after %%$2",
-							end.slice(1), b[0]);
+							end.slice(1), a[0]);
 					parse.eol = eof
 					continue
 				}
-				do_begin_end(b[1], a[1],
+				do_begin_end(b, a[1],
 					file.slice(eol + 1, i).replace(
 						new RegExp('^' + line0 + line1, 'gm'),
 										''));
