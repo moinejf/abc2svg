@@ -116,12 +116,9 @@ function dom_loaded() {
 	}
 	page = document.body.innerHTML;
 
-	// if some Postscript definition, load the interpreter
-	if (typeof Psvg != "function"
-	 && page.indexOf("\n%%beginps") > 0) {
-		loadjs("psvg-1.js", dom_loaded)
+	// load the required modules
+	if (!modules.load(page, null, dom_loaded))
 		return
-	}
 
 	// search the ABC tunes,
 	// replace them by SVG images with play on click

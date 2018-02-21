@@ -52,6 +52,7 @@ Arguments:\n\
 var m = require("abc2svg/abc2svg-1");
 global.abc2svg = m.abc2svg;
 global.Abc = m.Abc;
+global.modules = m.modules;
 
 // load the command line
 m = require("abc2svg/cmdline");

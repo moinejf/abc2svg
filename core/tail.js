@@ -1,6 +1,6 @@
 // abc2svg - tail.js
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg-core.
 //
@@ -20,70 +20,14 @@
     var	psdeco = function(f, x, y, de) { return false },
 	psxygl = function(x, y, gl) { return false }
 
-// try to install PostScript support
-function ps_def(abcobj) {
-	if (psvg || typeof Psvg != "function")
-		return		// already installed or no support
-
-// ---- Abc functions called from the PS interpreter
-	function svgcall(f, x, y, v1, v2) {
-	    var	xy = psvg.getorig();
-		psvg.ps_flush();
-		f((x + xy[0]) * stv_g.scale, y - xy[1], v1, v2)
-	}
-
-	// output an arpeggio
-	Abc.prototype.arpps = function(val, x, y) {
-		svgcall(out_arp, x, y, val)
-	}
-
-	// output a long trill
-	Abc.prototype.ltrps = function(val, x, y) {
-		svgcall(out_ltr, x, y, val)
-	}
-
-	// output a deco with string
-	Abc.prototype.xyglsps = function(str, x, y, gl) {
-		svgcall(out_deco_str, x, y, gl, str)
-	}
-
-	// output a deco with value
-	Abc.prototype.xyglvps = function(val, x, y, gl) {
-		svgcall(out_deco_val, x, y, gl, val)
-	}
-
-	// output a glyph
-	Abc.prototype.xyglps = function(x, y, gl) {
-		svgcall(xygl, x, y, gl)
-	}
-
-	Abc.prototype.get_y = function(st, y) {
-		return y + staff_tb[st].y
-	}
-
-	Abc.prototype.set_ps = function(deco, xygl) {
-		psdeco = deco;
-		psxygl = xygl
-	}
-	Abc.prototype.stv_g = stv_g
-	Abc.prototype.psget_x = function() {
-		return posx / stv_g.scale
-	}
-	Abc.prototype.psget_y = function() {
-		return stv_g.started ? stv_g.dy : posy
-	}
-
-	psvg = new Psvg(abcobj)
-}
-
-	Abc.prototype.ps_def = ps_def;
-
 // initialize
-	ps_def(this);
 	font_init();
 	init_tune()
 	for (var i = 0; i < 128; i++)
 		maci[i] = 0
+
+	if (modules)
+		modules.init(this)
 
 }	// end of Abc()
 

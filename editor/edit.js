@@ -1,6 +1,6 @@
 // edit.js - file used in the abc2svg editor
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -185,17 +185,10 @@ function render() {
 	if (!content)
 		return			// empty source
 
-	// if some Postscript definition, load the interpreter
-	if (typeof Psvg != "function") {
-		if (content.indexOf('%%beginps') >= 0
-		 || document.getElementById("src1").value.indexOf('%%beginps') >= 0) {
-			var script = document.createElement('script');
-			script.src = "psvg-@MAJOR@.js";
-			script.onload = render;
-			document.head.appendChild(script)
-			return
-		}
-	}
+	// load the required modules
+	if (!modules.load(content + document.getElementById("src1").value,
+			null, render))
+		return
 
 	// if include file not loaded yet, ask it
 	i = content.indexOf('%%abc-include ')

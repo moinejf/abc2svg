@@ -1,7 +1,7 @@
 //#javascript
 // abcdoc-1.js file to include in html pages with abc2svg-1.js
 //
-// Copyright (C) 2014-2017 Jean-Francois Moine
+// Copyright (C) 2014-2018 Jean-Francois Moine
 //
 // This file is part of abc2svg.
 //
@@ -55,15 +55,9 @@ var jsdir = document.currentScript.src.match(/.*\//) || ['']
 function dom_loaded() {
 	var page = document.body.innerHTML
 
-	// if some Postscript definition, load the interpreter
-	if (typeof Psvg != "function"
-	 && page.indexOf("\n%%beginps") > 0) {
-		var scr = document.createElement('script');
-		scr.src = jsdir[0] + "psvg-1.js";
-		scr.onload = dom_loaded;
-		document.head.appendChild(scr)
+	// load the required modules
+	if (!modules.load(page, null, dom_loaded))
 		return
-	}
 
 	// search the ABC tunes and add their rendering as SVG images
 	var	i = 0, j, k, res,

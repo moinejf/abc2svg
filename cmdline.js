@@ -45,6 +45,7 @@ var user = {
 
 var	abc = new Abc(user)		// (global for 'toxxx.js')
 
+// treat a file
 function do_file(fn) {
 	var	file = user.read_file(fn)
 
@@ -63,11 +64,11 @@ function do_file(fn) {
 //	if (typeof(utf_convert) == "function")
 //		file = utf_convert(file)
 
-	// if some Postscript definition, load the interpreter
-	if (file.indexOf('%%beginps') >= 0 && typeof Psvg != "function") {
-		loadRelativeToScript('psvg-1.js');
-		abc.ps_def(abc)
-	}
+	// load the required modules
+	if (modules)
+		modules.load(file, abc)
+
+	// generate
 	try {
 		abc.tosvg(fn, file)
 	}
