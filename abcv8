@@ -16,7 +16,7 @@ load(progdir + 'cmdline.js')
 
 // main
 	args = args.split(/\s+/)
-	if (args[0] && args[0].match(/\.js$/)) {
+	if (/\.js$/.test(args[0])) {
 		load(args[0])
 		args.shift()
 	} else {

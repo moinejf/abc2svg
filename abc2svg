@@ -68,7 +68,7 @@ args.shift();
 args.shift()
 
 // if the first argument is a script, load it
-if (args[0] && args[0].match(/\.js$/)) {
+if (/\.js$/.test(args[0])) {
     var fn = args[0][0] == '/' ? args[0] : (__dirname + '/' + args[0]),
 	f = readFile(fn);
 	eval(f);
