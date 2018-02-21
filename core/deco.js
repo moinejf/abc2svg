@@ -555,10 +555,8 @@ function d_upstaff(de) {
 	case "mphr":
 	case "sphr":
 		yc = stafft + 1
-		if (dd.glyph == "brth") {
-			if (yc < s.ymx)
-				yc = s.ymx
-		}
+		if (dd.glyph == "brth" && yc < s.ymx)
+			yc = s.ymx
 		for (s = s.ts_next; s; s = s.ts_next)
 			if (s.shrink)
 				break

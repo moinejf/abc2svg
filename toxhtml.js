@@ -350,7 +350,7 @@ function abc_init() {
 	p span {line-height:' +
 			((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
 		((header || footer) ? media_f : media_s) +
-		'\
+		'\n\
 </style>\n\
 <title>abc2svg document</title>\n\
 </head>\n\

@@ -79,7 +79,7 @@ must or may contain:
 	in the ABC source.</dd>
 <dt><b>anno_start</b> (optional)</dt>
 	<dd>Callback function for setting ABC references in the SVG images.<br/>
-	This function is called just before the generation of a music element.
+	This function is called just before the generation of a music element.<br/>
 	It receives 7 arguments:
 	<dl>
 		<dt>music_type</dt>
@@ -97,8 +97,8 @@ must or may contain:
 	</dl></dd>
 <dt><b>anno_stop</b> (optional)</dt>
 	<dd>Callback function for setting ABC references in the SVG images.<br/>
-	This function is called just after the generation of a music element.
-	It receives same 7 arguments as the callback function <b>anno_stop</b>.</dd>
+	This function is called just after the generation of a music element.<br/>
+	It receives the same 7 arguments as the callback function <b>anno_stop</b>.</dd>
 <dt><b>get_abcmodel</b> (optional)</dt>
 	<dd>Callback function to get the internal representation of the music
 	just before SVG generation.<br/>
@@ -227,7 +227,7 @@ It returns the height in the current SVG container.
 <dd>
 These functions return values relative to the global SVG container.<br/>
 They may be used in place of <code>sx</code>, <code>sy</code>
-and <code>sh</code> when elements must be globally added (by <code>out_svg</code>.<br/>
+and <code>sh</code> when elements must be globally added (by <code>out_svg</code>).<br/>
 When <code>%%pagescale</code> is 1 (default), there is no global container
 (the coordinates are the ones of the SVG image).<br/>
 When this is not the case, a global &lt;g&gt; container is added, with the class "g".

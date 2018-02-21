@@ -648,7 +648,7 @@ function gchord_width(s, wlnote, wlw) {
 			wl = -gch.x
 			if (wl > lspc)
 				lspc = wl;
-			w = gch.w + 2- wl
+			w = gch.w + 2 - wl
 			if (w > rspc)
 				rspc = w
 			break
