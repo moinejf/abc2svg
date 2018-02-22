@@ -335,7 +335,6 @@ function odt_out() {
 }
 
 function abort(e) {
-	abc.blk_out();
 	abc.blk_flush();
 	content += "<text:p>" + e.message +
 			"\n*** Abort ***\n" + e.stack + "</text:p>\n";

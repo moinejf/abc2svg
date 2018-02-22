@@ -234,7 +234,6 @@ function clean_txt(txt) {
 }
 
 function abort(e) {
-	abc.blk_out();
 	abc.blk_flush();
 	section += "<p>" + e.message + "\n*** Abort ***\n" + e.stack + "</p>\n";
 	abc_end();
