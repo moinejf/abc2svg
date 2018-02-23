@@ -83,8 +83,10 @@ function abc_cmd(cmd, args) {
 		if (arg[0] == "-") {
 			if (arg[1] == "-") {
 				parm = args.shift();
-				abc.tosvg(cmd, arg.replace('--', 'I:') +
-						" " + parm + "\n")
+				parm = arg.replace('--', 'I:') + " " + parm + "\n"
+				if (modules)
+					modules.load(parm, abc);
+				abc.tosvg(cmd, parm)
 			}
 		} else {
 			if (fn) {
