@@ -212,8 +212,6 @@ var	note_names = "CDEFGAB",
 			break
 		case 'R':
 			latin++
-			if (p[1] != 'e')
-				latin++;	/* Ré */
 			n = 1			/* Re */
 			break
 		case 'S':
