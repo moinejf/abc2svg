@@ -67,6 +67,7 @@ build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  core/svg.js core/tune.js core/lyrics.js core/gchord.js core/tail.js $
  core/modules.js | package.json
 
+build grid-$MAJOR.js: jscu modules/grid.js | package.json
 build psvg-$MAJOR.js: jscu core/wps.js core/psvg.js | package.json
 
 build edit-$MAJOR.css: cp editor/edit.css
@@ -87,6 +88,7 @@ build edit-$MAJOR.js: edit editor/edit.js | package.json
 build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
  abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js $
  play-$MAJOR.js toaudio-$MAJOR.js psvg-$MAJOR.js $
+ grid-$MAJOR.js $
  edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml $
  abckbd-$MAJOR.js abckbd2-$MAJOR.js follow-$MAJOR.js
 

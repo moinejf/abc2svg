@@ -19,9 +19,10 @@
 
 function Modules() {
     var modules = {
-		beginps: { fn: 'psvg-1.js', init: 'psvg_init(abc)' }
+		beginps: { fn: 'psvg-1.js', init: 'psvg_init(abc)' },
+		grid: { fn: 'grid-1.js', init: 'Grid(abc)' }
 	},
-	all_m = /beginps/g,
+	all_m = /beginps|grid/g,
 	nreq = 0,
 	cbf					// callback function
 
