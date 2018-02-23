@@ -17,22 +17,17 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-// -- replace the exotic end of lines by standard ones
-function set_eoln(file) {
-	var i = file.indexOf('\r')
-	if (i < 0)
-		return undefined	// standard
-	if (file[i + 1] == '\n')
-		return file.replace(/\r\n/g, '\n')	// M$
-	return file.replace(/\r/g, '\n')		// Mac
-}
-
 // user definitions
 var user = {
 	read_file: function(fn) {	// include a file (%%abc-include)
 		var	file = readFile(fn),
-			file2 = set_eoln(file)
-		return file2 || file
+		i = file.indexOf('\r')
+
+		if (i < 0)
+			return file	// standard
+		if (file[i + 1] == '\n')
+			return file.replace(/\r\n/g, '\n')	// M$
+		return file.replace(/\r/g, '\n')		// Mac
 	},
 	errtxt: ''
 }
@@ -75,7 +70,7 @@ function do_file(fn) {
 	catch (e) {
 		abort(e)
 	}
-}
+} // do_file()
 
 function abc_cmd(cmd, args) {
 	var	arg, parm, fn;
