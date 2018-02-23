@@ -33,11 +33,12 @@ function Modules() {
 	function load(file, abc, relay) {
 
 		// test if some keyword in the file
-	    var	m, r,
+	    var	m, r,nreq_i,
 		all = file.match(all_m)
 
 		if (!all)
 			return true;
+		nreq_i = nreq;
 		cbf = relay			// (only one callback function)
 		for (var i = 0; i < all.length; i++) {
 			m = modules[all[i]]
@@ -64,7 +65,7 @@ function Modules() {
 			}
 		}
 		if (relay)		// web
-			return nreq == 0
+			return nreq == nreq_i;
 		init(abc)		// batch
 		return true
 	}
