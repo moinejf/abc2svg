@@ -171,7 +171,7 @@ function gch_capo(s) {
 
 // transpose a chord symbol
 var	note_names = "CDEFGAB",
-	latin_names = [ "Do", "Ré", "Mi", "Fa", "Sol", "La", "Si" ],
+	latin_names = [ "Do", "Re", "Mi", "Fa", "Sol", "La", "Si" ],
 	acc_name = ["bb", "b", "", "#", "##"],
 	note_pit = new Int8Array([0, 2, 4, 5, 7, 9, 11]),
 	pit_note = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
