@@ -398,7 +398,6 @@ function set_format(cmd, param, lock) {
 	switch (cmd) {
 	case "aligncomposer":
 	case "barsperstaff":
-	case "capo":
 	case "infoline":
 	case "measurefirst":
 	case "measurenb":
@@ -635,7 +634,7 @@ function set_format(cmd, param, lock) {
 		set_v_param("scale", v)
 		break
 	default:		// memorize all global commands
-		if (parse.state == 0)
+		if (parse.state == 0)		// (needed for modules)
 			cfmt[cmd] = param
 		break
 	}

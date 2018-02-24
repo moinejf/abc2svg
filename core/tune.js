@@ -2165,8 +2165,6 @@ function init_tune() {
 	gene = {}
 	a_de = []			// remove old decorations
 	od = {}				// no ottava decorations anymore
-	if (capo)
-		capo = false
 }
 
 // treat a 'V:' info

@@ -1,0 +1,77 @@
+// capo.js - module to add a capo chord line
+//
+// Copyright (C) 2018 Jean-Francois Moine - GPL3+
+//
+// This module is loaded when "%%capo" appears in a ABC source.
+//
+// Parameters
+//	%%capo n	'n' is the capo fret number
+
+var abc_capo
+
+function Capo(abc_i) {
+    var abc = abc_i,
+	old_gm = user.get_abcmodel
+
+// function called when setting a chord symbol on a music element
+Capo.prototype.gch_capo = function(a_gch) {
+    var	gch, gch2, i2,
+	transp = abc.get_cfmt('capo'),
+	i = 0
+
+	while (1) {
+		gch = a_gch[i++]
+		if (!gch)
+			return
+		if (gch.type == 'g')
+			break
+	}
+	gch2 = Object.create(gch);
+	gch2.text = abc.gch_tr1(gch2.text, -transp)
+	if (!abc_capo) {		// if start of tune
+		abc_capo = true;
+		gch2.text += "  (capo: " + transp.toString() + ")"
+	}
+
+	gch2.font = abc.get_font(abc.get_cfmt("capofont") ?
+					"capo" : "annotation")
+	a_gch.splice(i, 0, gch2)
+} // gch_capo()
+
+// function called after parsing, before SVG generation
+user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
+	if (abc_capo)
+		abc_capo = false
+
+	// call the previous get_abcmodel()
+	if (old_gm)
+		old_gm(tsfirst, voice_tb, music_types, info)
+} // get_abcmodel()
+
+// Capo creation
+
+	//export some functions/variables
+	abc.tosvg('capo', '\
+%%beginjs\n\
+Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
+Abc.prototype.get_font = get_font;\n\
+Abc.prototype.gch_tr1 = gch_tr1;\n\
+\
+Capo.old_gch_b = gch_build;\n\
+gch_build = function(s) {\n\
+	if (cfmt.capo && a_gch)\n\
+		Capo.prototype.gch_capo(a_gch);\n\
+	Capo.old_gch_b(s)\n\
+}\n\
+Capo.old_set_format = set_format;\n\
+set_format = function(cmd, param, lock) {\n\
+	if (cmd == "capo") {\n\
+		cfmt.capo = param\n\
+		return\n\
+	}\n\
+	Capo.old_set_format(cmd, param, lock)\n\
+}\n\
+%%endjs\n\
+')
+
+} // Capo()

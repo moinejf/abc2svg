@@ -17,8 +17,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-var	capo			// capo indication
-
 // -- parse a chord symbol / annotation --
 // the result is added in the global variable a_gch
 // 'type' may be a single '"' or a string '"xxx"' created by U:
@@ -147,28 +145,6 @@ function parse_gchord(type) {
 			a_gch = []
 		a_gch.push(gch)
 	}
-}
-
-// create the guitar chords with capo
-function gch_capo(s) {
-    var	gch, gch2, i2,
-	i = 0
-
-	while (1) {
-		gch = s.a_gch[i++]
-		if (!gch)
-			return
-		if (gch.type == 'g')
-			break
-	}
-	gch2 = clone(gch);
-	gch2.text = gch_tr1(gch2.text, -cfmt.capo)
-	if (!capo) {
-		capo = true;
-		gch2.text += "  (capo: " + cfmt.capo.toString() + ")";
-	}
-	gch2.type = "^";		// capo as annotation
-	s.a_gch.splice(i, 0, gch2)
 }
 
 // transpose a chord symbol
@@ -322,8 +298,6 @@ function gch_build(s) {
 	s.a_gch = a_gch;
 	a_gch = null
 
-	if (cfmt.capo)
-		gch_capo(s)
 	if (curvoice.vtransp)
 		gch_transp(s)
 
