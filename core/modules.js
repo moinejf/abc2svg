@@ -19,8 +19,8 @@
 
 function Modules() {
     var modules = {
-		beginps: { fn: 'psvg-1.js', init: 'psvg_init(abc)' },
-		grid: { fn: 'grid-1.js', init: 'Grid(abc)' }
+		beginps: { fn: 'psvg-1.js', init: 'psvg_init' },
+		grid: { fn: 'grid-1.js', init: 'Grid' }
 	},
 	all_m = /beginps|grid/g,
 	nreq = 0,
@@ -52,6 +52,8 @@ function Modules() {
 				continue
 
 			m.loaded = true
+			if (eval('typeof ' + m.init + ' == "function"'))
+				continue		// already loaded
 
 			// load the module
 			if (!relay) {			// batch
@@ -78,9 +80,10 @@ function Modules() {
 	function init(abc) {
 		for (var i in modules) {
 			var m = modules[i]
-			if (!m.loaded)
+			if (!m.loaded || m.loaded === abc)
 				continue
-			eval(m.init)
+			m.loaded = abc;
+			eval(m.init + '(abc)')
 		}
 	}
 
