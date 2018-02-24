@@ -286,6 +286,15 @@ Abc.prototype.set_tsfirst = function(s) { tsfirst = s }\n\
 Abc.prototype.strwh = strwh;\n\
 Abc.prototype.syntax = syntax;\n\
 \
+Grid.old_set_format = set_format;\n\
+set_format = function(cmd, param, lock) {\n\
+	if (cmd == "grid") {\n\
+		cfmt.grid = param\n\
+		return\n\
+	}\n\
+	Grid.old_set_format(cmd, param, lock)\n\
+}\n\
+\
 style += "\\\n.chmid {text-anchor:middle}";\n\
 param_set_font("gridfont", "serif 16")\n\
 %%endjs\n\
