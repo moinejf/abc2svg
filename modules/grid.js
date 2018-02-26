@@ -25,7 +25,7 @@ function Grid(i_abc) {
 function get_beat(s) {
     var	beat = BASE_LEN / 4
 
-	if (s.a_meter[0].top[0] == 'C' || !s.a_meter[0].bot)
+	if (!s.a_meter[0] || s.a_meter[0].top[0] == 'C' || !s.a_meter[0].bot)
 		return beat;
 	beat = BASE_LEN / s.a_meter[0].bot[0] |0
 	if (isNaN(beat)) {
