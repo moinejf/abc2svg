@@ -23,7 +23,7 @@ var	capo			// capo indication
 // the result is added in the global variable a_gch
 // 'type' may be a single '"' or a string '"xxx"' created by U:
 function parse_gchord(type) {
-	var	c, text, gch, x_abs, y_abs, type,
+	var	c, text, gch, x_abs, y_abs,
 		i, istart, iend,
 		ann_font = get_font("annotation"),
 		h_ann = ann_font.size,
@@ -67,7 +67,6 @@ function parse_gchord(type) {
 		return
 
 	i = 0;
-	type = 'g'
 	while (1) {
 		c = text[i]
 		if (!c)
@@ -76,10 +75,11 @@ function parse_gchord(type) {
 			text: "",
 			istart: istart,
 			iend: iend,
+			font: ann_font
 		}
 		switch (c) {
 		case '@':
-			type = c;
+			gch.type = c;
 			i++;
 			x_abs = get_float()
 			if (c != ',') {
@@ -98,10 +98,12 @@ function parse_gchord(type) {
 		case '<':
 		case '>':
 			i++;
-			type = c
+			gch.type = c
 			break
+		default:
+			gch.type = 'g';
+			gch.font = get_font("gchord")
 		}
-		gch.type = type
 		while (1) {
 			c = text[i]
 			if (!c)
@@ -310,8 +312,6 @@ function gch_build(s) {
 	 * and initialize their vertical offsets */
 	var	gch, wh, xspc, ix,
 		pos = curvoice.pos.gch == SL_BELOW ? -1 : 1,
-		gch_font = get_font("gchord"),
-		ann_font = get_font("annotation"),
 		y_above = 0,
 		y_below = 0,
 		y_left = 0,
@@ -349,10 +349,8 @@ function gch_build(s) {
 					}
 					return "&#x1d12b;"
 				});
-			gch.font = gch_font
 		} else {
 			gch.text = cnv_escape(gch.text);
-			gch.font = ann_font
 			if (gch.type == '@'
 			 && !user.anno_start && !user.anno_stop)
 				continue		/* no width */
