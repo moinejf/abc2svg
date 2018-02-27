@@ -602,8 +602,8 @@ function out_hyph(x, y, w) {
 		n = 0;
 	x += (w - d * n - 5) / 2;
 	out_XYAB('<path class="stroke" stroke-width="1.2"\n\
-	stroke-dasharray="5,F"\n\
-	d="mX YhG"/>\n',
+	stroke-dasharray="5,A"\n\
+	d="mX YhB"/>\n',
 		x, y + 6,		// set the line a bit upper
 		Math.round((d - 5) / stv_g.scale), d * n + 5)
 }
