@@ -4642,7 +4642,7 @@ function output_music() {
 		cut_tune(lwidth, indent)
 	}
 
-	beta_last = 0
+	beta_last = 0.2
 	while (1) {				/* loop per music line */
 		set_piece();
 		set_sym_glue(lwidth - indent)
