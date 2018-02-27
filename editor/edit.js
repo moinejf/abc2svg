@@ -432,7 +432,8 @@ function seltxt(elt) {
 	  z = window.document.defaultView.getComputedStyle(s).getPropertyValue('z-index')
 		if (z != 10) {			// if select from textarea
 			elts = document.getElementsByClassName(colcl[0]);
-			elts[0].scrollIntoView()	// move the element on the screen
+			if (elts[0])
+				elts[0].scrollIntoView() // move the element on the screen
 		}
 	}
 }
