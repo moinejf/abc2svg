@@ -267,6 +267,10 @@ function ly_width(s, wlw) {
 		if (!ly)
 			continue
 		p = ly.t;
+		if (p == "-\n" || p == "_\n") {
+			ly.shift = 0
+			continue
+		}
 		w = ly.w;
 		swfac = ly.font.swfac;
 		xx = w + 2 * cwid(' ') * swfac
@@ -293,8 +297,6 @@ function ly_width(s, wlw) {
 				if (shift > align)
 					align = shift
 			}
-		} else if (p == "-\n" || p == "_\n") {
-			shift = 0
 		} else {
 			shift = xx * .4
 			if (shift > 20)
