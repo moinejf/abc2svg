@@ -279,7 +279,8 @@ function ToAudio() {
 
 			// right repeat
 			if (s.bar_type[0] == ':') {
-				s.bar_type = '|';	// don't repeat again
+				s.bar_type = '|' +
+					 s.bar_type.slice(1); // don't repeat again
 				rep_nx_s = s		// repeat next
 				if (!rep_en_s)		// if no "|1"
 					rep_en_s = s	// repeat end
