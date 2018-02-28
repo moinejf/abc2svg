@@ -300,41 +300,41 @@ function abc_init() {
 			footer = abc.get_fmt("footer"),
 			topmargin = abc.get_fmt("topmargin") || "1cm",
 			botmargin = abc.get_fmt("botmargin") || "1cm",
-			media_s = '	@media print {\n\
-		body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0}\n\
-		.newpage {page-break-before: always}\n\
-		div.nobrk {page-break-inside: avoid}\n\
-	}',
-			media_f ='	@media screen {\n\
-		div.header {display: none}\n\
-		div.footer {display: none}\n\
+			media_s = '@media print {\n\
+	body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0}\n\
+	.newpage {page-break-before: always}\n\
+	div.nobrk {page-break-inside: avoid}\n\
+}',
+			media_f ='@media screen {\n\
+	div.header {display: none}\n\
+	div.footer {display: none}\n\
+}\n\
+@media print {\n\
+	body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0;\n\
+		counter-reset: page;\n\
+		counter-increment: page; }\n\
+	.newpage {page-break-before: always}\n\
+	div.nobrk {page-break-inside: avoid}\n\
+	div.header {\n\
+		position: fixed;\n\
+		top: 0pt;\n\
+		width: 100%;\n\
+		' + abc.style_font(abc.get_fmt("headerfont")) + '\n\
 	}\n\
-	@media print {\n\
-		body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0;\n\
-			counter-reset: page;\n\
-			counter-increment: page; }\n\
-		.newpage {page-break-before: always}\n\
-		div.nobrk {page-break-inside: avoid}\n\
-		div.header {\n\
-			position: fixed;\n\
-			top: 0pt;\n\
-			width: 100%;\n\
-			' + abc.style_font(abc.get_fmt("headerfont")) + '\n\
-		}\n\
-		div.footer {\n\
-			position: fixed;\n\
-			bottom: 0pt;\n\
-			width: 100%;\n\
-			' + abc.style_font(abc.get_fmt("footerfont")) + '\n\
-		}\n\
-		div.page:after {\n\
-			counter-increment: page;\n\
-			content: counter(page);\n\
-		}\n\
-		div.left {text-align: left}\n\
-		div.center {text-align: center}\n\
-		div.right {text-align: right}\n\
-	}';
+	div.footer {\n\
+		position: fixed;\n\
+		bottom: 0pt;\n\
+		width: 100%;\n\
+		' + abc.style_font(abc.get_fmt("footerfont")) + '\n\
+	}\n\
+	div.page:after {\n\
+		counter-increment: page;\n\
+		content: counter(page);\n\
+	}\n\
+	div.left {text-align: left}\n\
+	div.center {text-align: center}\n\
+	div.right {text-align: right}\n\
+}';
 
 		print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">\n\
@@ -344,13 +344,12 @@ function abc_init() {
 <meta name="generator" content="abc2svg-' + abc2svg.version + '"/>\n\
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
-	svg {display:block}\n\
-	body {width:' + abc.get_fmt("pagewidth").toFixed(0) +'px}\n\
-	p {' + set_pstyle() + 'margin-top:0}\n\
-	p span {line-height:' +
-			((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
-		((header || footer) ? media_f : media_s) +
-		'\n\
+svg {display:block}\n\
+body {width:' + abc.get_fmt("pagewidth").toFixed(0) +'px}\n\
+p {' + set_pstyle() + 'margin-top:0}\n\
+p span {line-height:' + ((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
+			((header || footer) ? media_f : media_s) + '\n\
+@page{margin:0}\n\
 </style>\n\
 <title>abc2svg document</title>\n\
 </head>\n\

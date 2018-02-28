@@ -24,12 +24,8 @@ svg {display:block}
 		width: 90px;
 		text-align: center;
 	}
-	.dropbutton:hover {
-		outline: solid; outline-width: 2px;
-	}
-	.dropbutton:hover > ul {
-		display: block;
-	}
+	.dropbutton:hover { outline: solid; outline-width: 2px }
+	.dropbutton:hover > ul { display: block }
 	.droplinks {
 		list-style-type: none;
 		position: absolute;
@@ -41,13 +37,8 @@ svg {display:block}
 		padding: 0;
 		margin: 0;
 	}
-	.droplinks li:hover {
-		outline: solid; outline-width: 2px;
-	}
-	.droplinks li {
-		padding: 0 5px 0 5px;
-		margin: 2px;
-	}
+	.droplinks li:hover { outline: solid; outline-width: 2px }
+	.droplinks li { padding: 0 5px 0 5px; margin: 2px }
 	#dright {
 		width: 80%;
 		max-width: 800px;
@@ -80,14 +71,13 @@ svg {display:block}
 	}
 }
 @media print {
-	#dleft, .popup {
-		display: none;
-	}
+	#dleft, .popup { display: none }
 	body {
 		margin:0; padding:0; border:0;
 		background-color: white;
 	}
-	#dright { margin:0; padding:0; border:0; }
+	#dright { margin:0; padding:0; border:0 }
 	.newpage { page-break-before: always }
 	.nobrk { page-break-inside: avoid }
 }
+@page{margin:0}
