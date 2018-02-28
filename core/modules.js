@@ -53,7 +53,7 @@ function Modules() {
 				continue
 
 			m.loaded = true
-			if (eval('typeof ' + m.init + ' == "function"'))
+			if (typeof eval(m.init) == "function"))
 				continue		// already loaded
 
 			// load the module
