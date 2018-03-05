@@ -2225,7 +2225,7 @@ var char_tb = [
 	"d", "!upbow!",
 		"!downbow!", "d",	/* t u v w */
 	"n", "n", "n", "{",		/* x y z { */
-	"|", "}", "!roll!", nil,	/* | } ~ (del) */
+	"|", "}", "!gmark!", nil,	/* | } ~ (del) */
 ]
 
 function parse_music_line() {
