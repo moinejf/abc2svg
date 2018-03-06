@@ -235,7 +235,10 @@ function clean_txt(txt) {
 
 function abort(e) {
 	abc.blk_flush();
-	section += "<p>" + e.message + "\n*** Abort ***\n" + e.stack + "</p>\n";
+	if (typeof printErr == 'function')
+		printErr(e.message + "\n*** Abort ***\n" + e.stack)
+	else
+		section += "<p>" + e.message + "\n*** Abort ***\n" + e.stack + "</p>\n";
 	abc_end();
 	quit()
 }

@@ -336,7 +336,10 @@ function odt_out() {
 
 function abort(e) {
 	abc.blk_flush();
-	content += "<text:p>" + e.message +
+	if (typeof printErr == 'function')
+		printErr(e.message + "\n*** Abort ***\n" + e.stack)
+	else
+		content += "<text:p>" + e.message +
 			"\n*** Abort ***\n" + e.stack + "</text:p>\n";
 	odt_out();
 	quit()

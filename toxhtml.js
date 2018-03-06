@@ -37,7 +37,10 @@ function abort(e) {
 	if (!init_done)				// if empty document
 		user.img_out('')
 	abc.blk_flush();
-	print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
+	if (typeof printErr == 'function')
+		printErr(e.message + "\n*** Abort ***\n" + e.stack)
+	else
+		print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
 	abc_end();
 	quit()
 }
