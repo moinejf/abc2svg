@@ -1633,7 +1633,10 @@ function draw_measnb() {
 			y = y_get(st, true, 0, 20)
 			if (y < staff_tb[st].topbar + 14)
 				y = staff_tb[st].topbar + 14;
-			xy_str(0, y, bar_num.toString());
+			if (cfmt.measurebox)
+				xy_str_b(0, y, bar_num.toString())
+			else
+				xy_str(0, y, bar_num.toString());
 			y_set(st, true, 0, 20, y + gene.curfont.size + 2)
 		} else if (bar_num % cfmt.measurenb == 0) {
 			for ( ; ; s = s.ts_next) {
