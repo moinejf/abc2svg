@@ -338,7 +338,7 @@ function abort(e) {
 	abc.blk_flush();
 	content += "<text:p>" + e.message +
 			"\n*** Abort ***\n" + e.stack + "</text:p>\n";
-	abw_out();
+	odt_out();
 	quit()
 }
 
