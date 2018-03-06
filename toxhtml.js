@@ -301,7 +301,7 @@ function abc_init() {
 			topmargin = abc.get_fmt("topmargin") || "1cm",
 			botmargin = abc.get_fmt("botmargin") || "1cm",
 			media_s = '@media print {\n\
-	body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0}\n\
+	body {margin:0; padding:0; border:0}\n\
 	.newpage {page-break-before: always}\n\
 	div.nobrk {page-break-inside: avoid}\n\
 }',
@@ -310,7 +310,7 @@ function abc_init() {
 	div.footer {display: none}\n\
 }\n\
 @media print {\n\
-	body {margin:' + topmargin + ' 0 ' + botmargin + ' 0; padding:0; border:0;\n\
+	body {margin:0; padding:0; border:0;\n\
 		counter-reset: page;\n\
 		counter-increment: page; }\n\
 	.newpage {page-break-before: always}\n\
@@ -349,7 +349,7 @@ body {width:' + abc.get_fmt("pagewidth").toFixed(0) +'px}\n\
 p {' + set_pstyle() + 'margin-top:0}\n\
 p span {line-height:' + ((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
-@page{margin:0}\n\
+@page{margin:' + topmargin + ' 0 ' + botmargin + ' 0}\n\
 </style>\n\
 <title>abc2svg document</title>\n\
 </head>\n\
