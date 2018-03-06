@@ -254,6 +254,35 @@ function Audio5(i_conf) {
 		iend,			// source stop index
 		stime			// start playing time
 
+	// base64 stuff
+	    var b64d = []
+	function init_b64d() {
+	    var	b64l = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+		l = b64l.length
+		for (var i = 0; i < l; i++)
+			b64d[b64l[i]] = i
+		b64d['='] = 0
+	}
+	function data2bin(URI) {
+	    var	i, t,
+		s = URI.substr(URI.indexOf(',') + 1),
+		l = s.length,
+		ab = new ArrayBuffer(l * 3 / 4),
+		a = new Uint8Array(ab),
+		j = 0
+
+		for (i = 0; i < l; i += 4) {
+			t =	(b64d[s[i]] << 18) +
+				(b64d[s[i + 1]] << 12) +
+				(b64d[s[i + 2]] << 6) +
+				 b64d[s[i + 3]];
+			a[j++] = (t >> 16) & 0xff;
+			a[j++] = (t >> 8) & 0xff;
+			a[j++] = t & 0xff
+		}
+		return ab
+	}
+
 	// get the URL and the type of the soundfont from cookies
 	function get_cookies() {
 	    var	ac = document.cookie.split(';')
@@ -283,21 +312,6 @@ function Audio5(i_conf) {
 	}
 
 	function decode_note(instr, mi) {
-
-		// convert data URI to binary
-		function data2bin(dataURI) {
-			var	i,
-				base64Index = dataURI.indexOf(',') + 1,
-				base64 = dataURI.substring(base64Index),
-				raw = window.atob(base64),
-				rawl = raw.length,
-				ab = new ArrayBuffer(rawl),
-				array = new Uint8Array(ab)
-
-			for (i = 0; i < rawl; i++)
-				array[i] = raw.charCodeAt(i)
-			return ab
-		} // data2bin()
 
 		function audio_dcod(instr, mi, snd) {
 			ac.decodeAudioData(snd,
@@ -490,6 +504,9 @@ function Audio5(i_conf) {
 	}
 
 // Audio5 object creation
+
+	// initialize base64 decoding
+	init_b64d()
 
 	// get the soundfont
 	// 1- from the object configuration
