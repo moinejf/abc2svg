@@ -50,8 +50,22 @@ function clean_txt(txt) {
 	})
 }
 
+// load a javascript file (needed for modules)
+var jsdir = (function() {
+    var scrs = document.getElementsByTagName('script');
+	return scrs[scrs.length - 1].src.match(/.*\//) || ''
+})()
+
+function loadjs(fn, relay) {
+	var s = document.createElement('script');
+	s.src = jsdir + fn;
+	s.type = 'text/javascript'
+	if (relay)
+		s.onload = relay;
+	document.head.appendChild(s)
+}
+
 // function called when the page is loaded
-var jsdir = document.currentScript.src.match(/.*\//) || ['']
 function dom_loaded() {
 	var page = document.body.innerHTML
 

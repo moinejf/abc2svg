@@ -110,10 +110,14 @@ function clean_txt(txt) {
 }
 
 // load a javascript file
-var jsdir = document.currentScript.src.match(/.*\//) || ['']
+var jsdir = (function() {
+    var scrs = document.getElementsByTagName('script');
+	return scrs[scrs.length - 1].src.match(/.*\//) || ''
+})()
+
 function loadjs(fn, relay) {
 	var s = document.createElement('script');
-	s.src = jsdir[0] + fn;
+	s.src = jsdir + fn;
 	s.type = 'text/javascript'
 	if (relay)
 		s.onload = relay;
