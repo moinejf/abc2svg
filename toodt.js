@@ -439,6 +439,8 @@ function svg_out(str) {
 	if (t_info && in_p) {
 	    var	title2 = abc.get_info('T')
 
+		if (title2)			// extract the main title
+			title2 = title2.split('\n', 1)[0]
 		if (title2 && title2 != title) {
 			title = title2;
 			content += '<text:variable-set \

@@ -96,7 +96,7 @@ function header_footer(str) {
 		case 'T':
 			t = abc.get_info(c)
 			if (t)
-				r[j] += t
+				r[j] += t.split('\n', 1)[0]
 			break
 		case 'P':
 			r[j] += '<field type="page_number" xid="' +
