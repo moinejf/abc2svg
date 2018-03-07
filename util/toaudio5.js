@@ -420,10 +420,10 @@ function Audio5(i_conf) {
 		t = e[1] / speed;		// start time
 		maxt = t + 3			// max time = evt time + 3 seconds
 		while (1) {
+		    if (e[5] != 0) {		// if not a rest
 			o = ac.createBufferSource();
 			o.buffer = sounds[e[2]][e[3] | 0];
-			if (e[5] != 0)		// if no sound (rest), don't connect
-				o.connect(gain)
+			o.connect(gain)
 			if (o.detune) {
 				d = (e[3] * 100) % 100
 				if (d)			// if micro-tone
@@ -437,6 +437,9 @@ function Audio5(i_conf) {
 			}
 			st = t + stime;			// absolute start time
 			o.start(st, 0, d)
+		    } else {
+			d = e[4] / speed		// (rest)
+		    }
 
 			if (follow) {
 			    var	i = e[0];
