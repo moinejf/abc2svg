@@ -19,7 +19,14 @@
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
 window.onerror = function(msg) {
-	alert("window error: " + msg)
+	if (typeof msg == 'string')
+		alert("window error: " + msg +
+			"\nURL: " + url +
+			"\nLine: " + line)
+	else if (typeof msg == 'object')
+		alert("window error: " + msg.type + ' ' + msg.target.src)
+	else
+		alert("window error: " + msg)
 	return false
 }
 

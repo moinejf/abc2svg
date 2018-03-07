@@ -18,8 +18,15 @@
 // You should have received a copy of the GNU General Public License
 // along with abc2svg.  If not, see <http://www.gnu.org/licenses/>.
 
-window.onerror = function(msg) {
-	alert("window error: " + msg)
+window.onerror = function(msg, url, line) {
+	if (typeof msg == 'string')
+		alert("window error: " + msg +
+			"\nURL: " + url +
+			"\nLine: " + line)
+	else if (typeof msg == 'object')
+		alert("window error: " + msg.type + ' ' + msg.target.src)
+	else
+		alert("window error: " + msg)
 	return false
 }
 
