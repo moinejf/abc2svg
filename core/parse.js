@@ -916,19 +916,19 @@ function do_info(info_type, text) {
 //fixme: ??
 		if (parse.state == 2)
 			goto_tune();
-		a = text.match(/^(\d+)\/(\d+)(=(\d+)\/(\d+))?$/)
+		a = text.match(/^1\/(\d+)(=(\d+)\/(\d+))?$/)
 		if (a) {
-			d1 = Number(a[2])
+			d1 = Number(a[1])
 			if (!d1 || (d1 & (d1 - 1)) != 0)
 				break
-			d1 = Number(a[1]) / d1 * BASE_LEN
-			if (a[3]) {
-				d2 = Number(a[5])
+			d1 = BASE_LEN / d1
+			if (a[2]) {
+				d2 = Number(a[4])
 				if (!d2 || (d2 & (d2 - 1)) != 0) {
 					d2 = 0
 					break
 				}
-				d2 = Number(a[4]) / d2 * BASE_LEN
+				d2 = Number(a[3]) / d2 * BASE_LEN
 			} else {
 				d2 = d1
 			}
