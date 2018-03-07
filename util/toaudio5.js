@@ -231,7 +231,7 @@ function Audio5(i_conf) {
 		ac,			// audio context
 		gain,			// global gain
 		gain_val = 0.7,
-		a_e,			// event array
+		timout,			// timer while playing
 		follow = true,		// follow the music
 		speed = 1,		// speed factor
 		new_speed,
@@ -376,7 +376,7 @@ function Audio5(i_conf) {
 	} // load_instr()
 
 	// start loading the required MIDI resources
-	function load_res() {
+	function load_res(a_e) {
 		var i, e, instr, mi
 
 		for (i = evt_idx; ; i++) {
@@ -397,7 +397,7 @@ function Audio5(i_conf) {
 	}
 
 	// play the next time sequence
-	function play_next() {
+	function play_next(a_e) {
 		var	t, e, e2, maxt, o, st, d;
 
 		// play the next events
@@ -459,20 +459,19 @@ function Audio5(i_conf) {
 				break
 		}
 
-		setTimeout(play_next, (t + stime - ac.currentTime)
-				* 1000 - 300)	// wake before end of playing
+		timout = setTimeout(play_next, (t + stime - ac.currentTime)
+				* 1000 - 300,	// wake before end of playing
+				a_e)
 	} // play_next()
 
 	// wait for all resources, then start playing
-	function play_start() {
+	function play_start(a_e) {
 		if (iend == 0)		// play stop
 			return
 
 		// wait for instruments
 		if (w_instr != 0) {
-			setTimeout(function() {	// wait for all instruments
-				play_start()
-			}, 300)
+			timout = setTimeout(play_start, 300, a_e)
 			return
 		}
 
@@ -486,9 +485,7 @@ function Audio5(i_conf) {
 			}
 		}
 		if (w_note != 0) {
-			setTimeout(function() {	// wait for all notes
-				play_start()
-			}, 300)
+			timout = setTimeout(play_start, 300, a_e)
 			return
 		}
 
@@ -496,7 +493,7 @@ function Audio5(i_conf) {
 		gain.connect(ac.destination);
 		stime = ac.currentTime + .2		// start time + 0.2s
 			- a_e[evt_idx][1] * speed;
-		play_next()
+		play_next(a_e)
 	} // play_start()
 
 	function set_cookie(n, v) {
@@ -549,9 +546,7 @@ function Audio5(i_conf) {
     return {
 
 	// play the events
-	play: function(istart, i_iend, a_pe) {
-		if (a_pe)			// force old playing events
-			a_e = a_pe
+	play: function(istart, i_iend, a_e) {
 		if (!a_e || !a_e.length) {
 			onend()			// nothing to play
 			return
@@ -576,15 +571,18 @@ function Audio5(i_conf) {
 			onend()			// nothing to play
 			return
 		}
-		load_res();
-		play_start()
+		load_res(a_e);
+		play_start(a_e)
 	}, // play()
 
 	// stop playing
 	stop: function() {
+		clearTimeout(timout);
 		iend = 0
-		if (gain)
-			gain.disconnect()
+		if (gain) {
+			gain.disconnect();
+			gain = null
+		}
 	}, // stop()
 
 	// get/set 'follow music'
