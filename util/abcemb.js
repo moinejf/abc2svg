@@ -45,7 +45,9 @@ var	errtxt = '',
 	page,				// document source
 	a_src = [],			// index: #sequence,
 					//	value: [start_idx, end_idx]
-	a_pe = []			// index: #sequence, value: playing events
+	a_pe = [],			// index: #sequence, value: playing events
+	glop,				// global sequence for play
+	old_gm
 
 // -- abc2svg init argument
 var user = {
@@ -92,6 +94,8 @@ function playseq(seq) {
 		abcplay.clear();
 		abc.tosvg("play", "%%play")
 		try {
+			if (glop)
+				abc.tosvg("abcemb", page, glop[0], glop[1]);
 			abc.tosvg("abcemb" + seq, page, a_src[seq][0], a_src[seq][1])
 		} catch(e) {
 			alert(e.message + '\nabc2svg tosvg bug - stack:\n' + e.stack);
@@ -136,7 +140,7 @@ function dom_loaded() {
 	var	i = 0, j, k, res, src,
 		seq = 0,
 		re = /\n%abc|\nX:/g,
-		re_stop = /\n<|\n%.begin/g;
+		re_stop = /\nX:|\n<|\n%.begin/g;
 	abc = new Abc(user)
 	for (;;) {
 
@@ -152,7 +156,7 @@ function dom_loaded() {
 		re_stop.lastIndex = ++j
 		while (1) {
 			res = re_stop.exec(page)
-			if (!res || res[0] == "\n<")
+			if (!res || res[0][1] != "%")
 				break
 			k = page.indexOf(res[0].replace("begin", "end"),
 					re_stop.lastIndex)
@@ -165,10 +169,14 @@ function dom_loaded() {
 		else
 			k = re_stop.lastIndex - 2;
 		if (play) {
-			new_page += '<div onclick="playseq(' +
-					a_src.length +
-					')">\n';
-			a_src.push([j, k])
+			if (page[j] == 'X') {
+				new_page += '<div onclick="playseq(' +
+						a_src.length +
+						')">\n';
+				a_src.push([j, k])
+			} else if (!glop) {
+				glop = [j, k]
+			}
 		}
 		try {
 			abc.tosvg('abcemb', page, j, k)
@@ -184,14 +192,15 @@ function dom_loaded() {
 				"\n...\n\n" + errtxt);
 			errtxt = ""
 		}
-		if (play)
+		if (play && page[j] == 'X')
 			new_page += '</div>\n';
 		i = k
-		if (k >= page.length)
+		if (i >= page.length)
 			break
+		if (page[i] == 'X')
+			i--
 		re.lastIndex = i
 	}
-	user.img_out = null		// stop SVG generation
 	try {
 		document.body.innerHTML = new_page + page.slice(i)
 	} catch (e) {
@@ -199,8 +208,11 @@ function dom_loaded() {
 			"\nStack:\n" + e.stack)
 	}
 	if (play) {
-		delete user.img_out
-		user.get_abcmodel = function(tsfirst, voice_tb) {
+		delete user.img_out;		// stop SVG generation
+		old_gm = user.get_abcmodel;
+		user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
+				if (old_gm)
+					old_gm(tsfirst, voice_tb, music_types, info);
 				abcplay.add(tsfirst, voice_tb)
 			}
 	}
