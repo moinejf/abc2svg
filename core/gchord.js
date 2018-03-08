@@ -21,7 +21,7 @@
 // the result is added in the global variable a_gch
 // 'type' may be a single '"' or a string '"xxx"' created by U:
 function parse_gchord(type) {
-	var	c, text, gch, x_abs, y_abs,
+	var	c, text, gch, x_abs, y_abs, type,
 		i, istart, iend,
 		ann_font = get_font("annotation"),
 		h_ann = ann_font.size,
@@ -65,6 +65,7 @@ function parse_gchord(type) {
 		return
 
 	i = 0;
+	type = 'g'
 	while (1) {
 		c = text[i]
 		if (!c)
@@ -77,7 +78,7 @@ function parse_gchord(type) {
 		}
 		switch (c) {
 		case '@':
-			gch.type = c;
+			type = c;
 			i++;
 			x_abs = get_float()
 			if (c != ',') {
@@ -96,12 +97,22 @@ function parse_gchord(type) {
 		case '<':
 		case '>':
 			i++;
-			gch.type = c
+			type = c
 			break
 		default:
-			gch.type = 'g';
-			gch.font = get_font("gchord")
+			switch (type) {
+			case 'g':
+				gch.font = get_font("gchord")
+				break
+			case '@':
+				gch.x = x_abs;
+				y_abs -= h_ann;
+				gch.y = y_abs - h_ann / 2
+				break
+			}
+			break
 		}
+		gch.type = type
 		while (1) {
 			c = text[i]
 			if (!c)
