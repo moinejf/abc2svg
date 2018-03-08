@@ -66,8 +66,7 @@ function do_file(fn) {
 	// generate
 	try {
 		abc.tosvg(fn, file)
-	}
-	catch (e) {
+	} catch (e) {
 		abort(e)
 	}
 } // do_file()
@@ -75,6 +74,14 @@ function do_file(fn) {
 function abc_cmd(cmd, args) {
 	var	arg, parm, fn;
 
+	// load 'default.abc'
+	try {
+		arg = user.read_file('default.abc');
+		abc.tosvg(cmd, arg)
+	} catch (e) {
+	}
+
+	// initialize the backend
 	abc_init(args)
 	while (1) {
 		arg = args.shift()
