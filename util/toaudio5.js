@@ -436,7 +436,9 @@ function Audio5(i_conf) {
 				o.loopEnd = sdur - Math.random() * .2
 			}
 			st = t + stime;			// absolute start time
-			o.start(st, 0, d)
+//			o.start(st, 0, d)	// (does not work in firefox when loop)
+			o.start(st);
+			o.stop(st + d)
 		    } else {
 			d = e[4] / speed		// (rest)
 		    }
