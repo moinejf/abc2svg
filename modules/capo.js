@@ -7,11 +7,9 @@
 // Parameters
 //	%%capo n	'n' is the capo fret number
 
-var abc_capo
-
 function Capo(abc_i) {
-    var abc = abc_i,
-	old_gm = user.get_abcmodel
+    var abc_capo,
+	abc = abc_i
 
 // function called when setting a chord symbol on a music element
 Capo.prototype.gch_capo = function(a_gch) {
@@ -38,15 +36,9 @@ Capo.prototype.gch_capo = function(a_gch) {
 	a_gch.splice(i, 0, gch2)
 } // gch_capo()
 
-// function called after parsing, before SVG generation
-user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
-	if (abc_capo)
-		abc_capo = false
-
-	// call the previous get_abcmodel()
-	if (old_gm)
-		old_gm(tsfirst, voice_tb, music_types, info)
-} // get_abcmodel()
+Capo.prototype.capo_reset = function() {
+	abc_capo = false
+}
 
 // Capo creation
 
@@ -57,19 +49,26 @@ Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
 Abc.prototype.get_font = get_font;\n\
 Abc.prototype.gch_tr1 = gch_tr1;\n\
 \
-Capo.old_gch_b = gch_build;\n\
+var capo = {\n\
+	gch_b: gch_build,\n\
+	om: output_music,\n\
+	set_fmt: set_format\n\
+}\n\
 gch_build = function(s) {\n\
 	if (cfmt.capo && a_gch)\n\
 		Capo.prototype.gch_capo(a_gch);\n\
-	Capo.old_gch_b(s)\n\
+	capo.gch_b(s)\n\
 }\n\
-Capo.old_set_format = set_format;\n\
+output_music = function() {\n\
+	Capo.prototype.capo_reset();\n\
+	capo.om()\n\
+}\n\
 set_format = function(cmd, param, lock) {\n\
 	if (cmd == "capo") {\n\
 		cfmt.capo = param\n\
 		return\n\
 	}\n\
-	Capo.old_set_format(cmd, param, lock)\n\
+	capo.set_fmt(cmd, param, lock)\n\
 }\n\
 %%endjs\n\
 ')

@@ -9,8 +9,7 @@
 //	%%gridfont font_name size (default: 'serif 16')
 
 function Grid(i_abc) {
-    var	abc = i_abc,
-	old_gm = user.get_abcmodel
+    var	abc = i_abc
 
 // constants from the abc2svg core
     var	BASE_LEN = 1536,
@@ -160,7 +159,7 @@ function build_grid(chords, bars, font) {
 } // build_grid()
 
 // function called before tune generation
-function do_grid(tsfirst, voice_tb, music_types, info) {
+Grid.prototype.do_grid = function(tsfirst, voice_tb) {
     var	s, beat, cur_beat, i, beat_i, p_voice, n, font,
 	bars = [],
 	chords = [],
@@ -261,16 +260,6 @@ function do_grid(tsfirst, voice_tb, music_types, info) {
 	}
 } // do_grid()
 
-// function called after parsing, before SVG generation
-user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
-	if (user.img_out && abc.get_cfmt('grid'))
-		do_grid(tsfirst, voice_tb, music_types, info)
-
-	// call the previous get_abcmodel()
-	if (old_gm)
-		old_gm(tsfirst, voice_tb, music_types, info)
-}
-
 // Grid creation
 
 	//export some functions/variables
@@ -286,13 +275,21 @@ Abc.prototype.set_tsfirst = function(s) { tsfirst = s }\n\
 Abc.prototype.strwh = strwh;\n\
 Abc.prototype.syntax = syntax;\n\
 \
-Grid.old_set_format = set_format;\n\
+var grid = {\n\
+	om: output_music,\n\
+	set_fmt: set_format\n\
+}\n\
+output_music = function() {\n\
+	if (cfmt.grid)\n\
+		Grid.prototype.do_grid(tsfirst, voice_tb)\n\
+	grid.om()\n\
+}\n\
 set_format = function(cmd, param, lock) {\n\
 	if (cmd == "grid") {\n\
 		cfmt.grid = param\n\
 		return\n\
 	}\n\
-	Grid.old_set_format(cmd, param, lock)\n\
+	grid.set_fmt(cmd, param, lock)\n\
 }\n\
 \
 style += "\\\n.chmid {text-anchor:middle}";\n\

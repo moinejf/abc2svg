@@ -8,11 +8,10 @@
 //	%%diagram 1
 
 function Diag(i_abc) {
-    var	abc = i_abc,
-	old_gm = user.get_abcmodel
+    var	abc = i_abc
 
 // function called before tune generation
-    function do_diag(voice_tb) {
+Diag.prototype.do_diag = function(voice_tb) {
     var	s, i, gch, dd
 
 	for (s = voice_tb[0].sym; s; s = s.next) {
@@ -24,20 +23,10 @@ function Diag(i_abc) {
 				continue
 
 			// insert the diagram as a decoration
-			abc.deco_cnv([gch.text], s, null)
+			abc.deco_cnv(gch.text.split(/[ \t/]/, 1), s, null)
 		}
 	}
     } // do_diag()
-
-// function called after parsing, before SVG generation
-    user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
-	if (user.img_out && abc.get_cfmt('diag'))	// if %%diagram
-		do_diag(voice_tb)
-
-	// call the previous get_abcmodel()
-	if (old_gm)
-		old_gm(tsfirst, voice_tb, music_types, info)
-    }
 
 // Diagram creation
 
@@ -49,14 +38,23 @@ Abc.prototype.deco_cnv = deco_cnv\n\
 Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
 Abc.prototype.get_top_v = function() { return par_sy.top_voice }\n\
 \
-Diag.old_set_format = set_format;\n\
+var diag = {\n\
+	om: output_music,\n\
+	set_fmt: set_format\n\
+}\n\
+output_music = function() {\n\
+	if (cfmt.diag)\n\
+		Diag.prototype.do_diag(voice_tb)\n\
+	diag.om()\n\
+}\n\
 set_format = function(cmd, param, lock) {\n\
 	if (cmd == "diagram") {\n\
 		cfmt.diag = param\n\
 		return\n\
 	}\n\
-	Diag.old_set_format(cmd, param, lock)\n\
+	diag.set_fmt(cmd, param, lock)\n\
 }\n\
+\
 style += "\\n.diag {font-family:sansserif;font-size:6px}\
 \\n.frn {font-family:sansserif;font-style:italic;font-size:7px}"\n\
 %%endjs\n\
