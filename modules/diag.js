@@ -19,7 +19,7 @@ Diag.prototype.do_diag = function(voice_tb) {
 			continue
 		for (i = 0; i < s.a_gch.length; i++) {
 			gch = s.a_gch[i]
-			if (!gch || gch.type != 'g')
+			if (!gch || gch.type != 'g' || gch.capo)
 				continue
 
 			// insert the diagram as a decoration

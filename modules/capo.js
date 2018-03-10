@@ -25,6 +25,7 @@ Capo.prototype.gch_capo = function(a_gch) {
 			break
 	}
 	gch2 = Object.create(gch);
+	gch2.capo = false;		// (would be erased when setting gch)
 	gch2.text = abc.gch_tr1(gch2.text, -transp)
 	if (!abc_capo) {		// if start of tune
 		abc_capo = true;
@@ -34,6 +35,10 @@ Capo.prototype.gch_capo = function(a_gch) {
 	gch2.font = abc.get_font(abc.get_cfmt("capofont") ?
 					"capo" : "annotation")
 	a_gch.splice(i, 0, gch2)
+
+	// set a mark in the first chord symbol for %%diagram
+	gch.capo = true
+
 } // gch_capo()
 
 Capo.prototype.capo_reset = function() {
