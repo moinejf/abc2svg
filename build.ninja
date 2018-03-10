@@ -15,8 +15,8 @@ rule font
   command = fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.ttf")';$
    fontforge -c 'open("font/abc2svg.sfd").generate("abc2svg.woff")';$
    echo "// abc2svg music font" > font.js;$
-   echo -n "var musicfont = 'url(\"data:application/font-ttf;base64," >> font.js;$
-   base64 -w 0 abc2svg.ttf >> font.js;$
+   echo "var musicfont = 'url(\"data:application/font-ttf;base64,\\" >> font.js;$
+   base64 abc2svg.ttf | sed 's/$$/\\/' >> font.js;$
    echo "\")'" >> font.js
 
 rule jsc
