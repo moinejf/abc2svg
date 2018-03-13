@@ -34,7 +34,7 @@ var	abc_images,			// image buffer
 	abc,				// Abc object
 	ref,				// source reference array
 	colcl = [],			// colorized classes
-	colcl_sav,			// (saved while playing)
+	colcl_sav,			// (saved while playing/printing)
 	abcplay,			// play engine
 	a_pe,				// playing events
 	playing,
@@ -632,6 +632,16 @@ function edit_init() {
 	e.addEventListener("click", function(){selsrc(0)});
 	e = document.getElementById("s1");
 	e.addEventListener("click", function(){selsrc(1)})
+
+	// remove the selection on print
+	window.addEventListener("beforeprint", function() {
+		colcl_sav = colcl;
+		colorsel(false)
+	});
+	window.addEventListener("afterprint", function() {
+		colcl = colcl_sav;
+		colorsel(true)
+	})
 
 	// if playing is possible, load the playing script
 	if (window.AudioContext || window.webkitAudioContext) {
