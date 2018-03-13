@@ -247,7 +247,6 @@ function Audio5(i_conf) {
 		w_instr = 0,		// number of instruments being loaded
 		note_q = [],		// [instr, note] to be decoded
 		w_note = 0,		// number of notes being decoded
-		geval = eval,
 
 	// -- play the memorized events --
 		evt_idx,		// event index while playing
