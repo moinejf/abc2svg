@@ -246,10 +246,6 @@ function render() {
 		var	elts = target.getElementsByClassName('abcr'),
 			i = elts.length,
 			elt
-		while (--i >= 0) {
-			elt = elts[i];
-			elt.onmouseover = function() {m_over(this)}
-		}
 		elts = target.getElementsByTagName("svg");
 		i = elts.length
 		while (--i >= 0) {
@@ -296,6 +292,13 @@ var	pt, nr, i, elts, elt, x, y, cl,
 	svg = evt.target
 
 	while (svg.tagName != 'svg') {
+		if (evt.type == "mousedown") {
+			cl = svg.getAttribute('class');
+			if (cl && cl.substr(0, 4) == 'abcr')
+				m_over(svg)
+			else
+				colorsel(false)
+		}
 		svg = svg.parentNode
 		if (!svg)
 			return
