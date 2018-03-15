@@ -128,6 +128,9 @@ function loadjs(fn, relay) {
 	s.type = 'text/javascript'
 	if (relay)
 		s.onload = relay;
+	s.onerror = function() {
+		alert('error loading ' + fn)
+	}
 	document.head.appendChild(s)
 }
 
@@ -648,9 +651,7 @@ function edit_init() {
 
 	// if playing is possible, load the playing script
 	if (window.AudioContext || window.webkitAudioContext) {
-		var script = document.createElement('script');
-		script.src = "play-@MAJOR@.js";
-		script.onload = function() {
+		loadjs("play-@MAJOR@.js", function() {
 			abcplay = AbcPlay({
 					onend: endplay,
 					onnote:notehlight,
@@ -673,8 +674,7 @@ function edit_init() {
 //				Math.log(abcplay.set_speed()) / Math.log(3);
 			document.getElementById("gvol").setAttribute("value",
 				(abcplay.set_vol() * 10) | 0)
-		}
-		document.head.appendChild(script);
+		});
 
 		user.get_abcmodel =
 			function(tsfirst, voice_tb, music_types, info) {
