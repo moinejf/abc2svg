@@ -185,7 +185,7 @@ function ToAudio() {
 
 	// generate the grace notes
 	function gen_grace(s) {
-		var	g, i, n, t, d,
+		var	g, i, n, t, d, s2,
 			next = s.next
 
 		// before beat
@@ -194,10 +194,23 @@ function ToAudio() {
 		} else if ((!next || next.type != NOTE)
 			&& s.prev && s.prev.type == NOTE) {
 			d = s.prev.dur / 2
+
+		// on beat
 		} else {
 
-			// after beat
-			after = true
+			// keep the sound elements in time order
+			next.ts_prev.ts_next = next.ts_next;
+			next.ts_next.ts_prev = next.ts_prev;
+			for (s2 = next.ts_next; s2; s2 = s2.ts_next) {
+				if (s2.time != next.time) {
+					next.ts_next = s2
+					next.ts_prev = s2.ts_prev;
+					next.ts_prev.ts_next = next;
+					s2.ts_prev = next
+					break
+				}
+			}
+
 			if (!next.dots)
 				d = next.dur / 2
 			else if (next.dots == 1)
