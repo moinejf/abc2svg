@@ -876,6 +876,16 @@ function get_midi(param) {
 		a = param.split(/\s+/)
 
 	switch (a[0]) {
+	case "channel":
+		if (a[1] != "10")
+			break
+
+		// channel 10 is bank 128 program 0 = 128 * 128 + 0
+		if (curvoice)
+			curvoice.instr = 16384
+		else
+			glovar.instr = 16384
+		break
 	case "program":
 		if (a[2] != undefined)	// the channel program is unused
 			prog = a[2]
