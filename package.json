@@ -11,6 +11,7 @@
   "files": [
     "COPYING",
     "COPYING.LESSER",
+    "Scc1t2/"
     "abc2odt",
     "abc2svg",
     "abc2svg-1.js",

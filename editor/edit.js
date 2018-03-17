@@ -514,10 +514,6 @@ function setfont() {
 function set_follow(e) {
 	abcplay.set_follow(e.checked)
 }
-// set soundfont type
-function set_sft(v) {
-	abcplay.set_sft(v)
-}
 // set soundfont URL
 function set_sfu(v) {
 	abcplay.set_sfu(v)
@@ -667,9 +663,6 @@ function edit_init() {
 
 			document.getElementById("fol").checked = abcplay.set_follow();
 			document.getElementById("sfu").value = abcplay.set_sfu();
-			var t = { js:0, mp3:1, ogg:2 };
-			document.getElementById("sft").selectedIndex =
-				t[abcplay.set_sft()];
 //			document.getElementById("spv").innerHTML =
 //				Math.log(abcplay.set_speed()) / Math.log(3);
 			document.getElementById("gvol").setAttribute("value",

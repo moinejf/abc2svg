@@ -60,7 +60,22 @@ rule edit
 	sed "s+@MAJOR@+$MAJOR+" $in > $out;$
    fi
 
+# generate all Scc1t2/n.js from sf2-Scc1t2/n.sf2
+rule sf
+  command = for f in sf2-Scc1t2/*.sf2; do $
+   instr=`basename $$f`; $
+   o=$${f#sf2-}
+   o=$${o%.sf2}.js; $
+   if [ ! -r $$o -o $$f -nt $$o ]; then $
+   echo '// abc2svg sound font' > $$o; $
+   echo "abcsf2[$${instr%.sf2}] = '\\" >> $$o; $
+   base64 $$f | sed 's/$$/\\/' >> $$o; $
+   echo "'" >> $$o; $
+   fi; $
+   done
+
 build font: font | font/abc2svg.sfd
+build sf: sf | Scc1t2/
 
 build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  font.js core/format.js core/front.js core/music.js core/parse.js core/subs.js $
@@ -80,7 +95,8 @@ build abcemb-$MAJOR.js: jscu util/abcemb.js | package.json
 build follow-$MAJOR.js: jscu util/follow.js | package.json
 build json-$MAJOR.js: jscu util/json.js | package.json
 build midi-$MAJOR.js: jscu util/midi.js | package.json
-build play-$MAJOR.js: jscu util/play.js util/toaudio.js util/toaudio5.js | package.json
+build play-$MAJOR.js: jscu util/play.js util/toaudio.js $
+ util/toaudio5.js util/sf2-parser.js | package.json
 build toaudio-$MAJOR.js: jscu util/toaudio.js | package.json
 
 build edit-$MAJOR.xhtml: cpm editor/edit.xhtml

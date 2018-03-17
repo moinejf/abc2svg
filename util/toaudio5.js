@@ -21,13 +21,7 @@
 // one argument:
 // @conf: configuration object - all items are optional:
 //	ac: audio context
-// 	sft: soundfont type ("js", "mp3" or "ogg")
-//	sfu: soundfont URL
-//		When the type is "js", the URL is the directory containing
-//			the  <instrument>-ogg.js files of midi-js
-//		When the type is "mp3" or "ogg",
-//			the URL is the directory containing
-//			the <instrument>-<type> directories
+//	sfu: soundfont URL (sf2 base64 encoded)
 //	onend: callback function called at end of playing
 //		(no arguments)
 //	onnote: callback function called on note start/stop playing
@@ -45,15 +39,12 @@
 //	array of array
 //		[0]: index of the note in the ABC source
 //		[1]: time in seconds
-//		[2]: MIDI instrument
+//		[2]: MIDI instrument (MIDI GM number - 1)
 //		[3]: MIDI note pitch (with cents)
 //		[4]: duration
 //		[5]: volume (0..1 - optional)
 //
 // stop() - stop playing
-//
-// set_sft() - get/set the soundfont type
-// @type: either "js", "mp3" or "ogg" - undefined = return current value
 //
 // set_sfu() - get/set the soundfont URL
 // @url: URL - undefined = return current value
@@ -67,164 +58,10 @@
 // set_follow() - get/set the flag to call or not the 'onnote' callback
 // @follow: boolean - undefined = return current value
 
+    var	abcsf2 = []
+
 function Audio5(i_conf) {
-	// constants
-	var	instr_tb = [			// index = GM1 instrument - 1
-			"acoustic_grand_piano",
-			"bright_acoustic_piano",
-			"electric_grand_piano",
-			"honkytonk_piano",
-			"electric_piano_1",
-			"electric_piano_2",
-			"harpsichord",
-			"clavinet",
-			"celesta",
-			"glockenspiel",
-			"music_box",
-			"vibraphone",
-			"marimba",
-			"xylophone",
-			"tubular_bells",
-			"dulcimer",
-			"drawbar_organ",
-			"percussive_organ",
-			"rock_organ",
-			"church_organ",
-			"reed_organ",
-			"accordion",
-			"harmonica",
-			"tango_accordion",
-			"acoustic_guitar_nylon",
-			"acoustic_guitar_steel",
-			"electric_guitar_jazz",
-			"electric_guitar_clean",
-			"electric_guitar_muted",
-			"overdriven_guitar",
-			"distortion_guitar",
-			"guitar_harmonics",
-			"acoustic_bass",
-			"electric_bass_finger",
-			"electric_bass_pick",
-			"fretless_bass",
-			"slap_bass_1",
-			"slap_bass_2",
-			"synth_bass_1",
-			"synth_bass_2",
-			"violin",
-			"viola",
-			"cello",
-			"contrabass",
-			"tremolo_strings",
-			"pizzicato_strings",
-			"orchestral_harp",
-			"timpani",
-			"string_ensemble_1",
-			"string_ensemble_2",
-			"synth_strings_1",
-			"synth_strings_2",
-			"choir_aahs",
-			"voice_oohs",
-			"synth_choir",
-			"orchestra_hit",
-			"trumpet",
-			"trombone",
-			"tuba",
-			"muted_trumpet",
-			"french_horn",
-			"brass_section",
-			"synth_brass_1",
-			"synth_brass_2",
-			"soprano_sax",
-			"alto_sax",
-			"tenor_sax",
-			"baritone_sax",
-			"oboe",
-			"english_horn",
-			"bassoon",
-			"clarinet",
-			"piccolo",
-			"flute",
-			"recorder",
-			"pan_flute",
-			"blown_bottle",
-			"shakuhachi",
-			"whistle",
-			"ocarina",
-			"lead_1_square",
-			"lead_2_sawtooth",
-			"lead_3_calliope",
-			"lead_4_chiff",
-			"lead_5_charang",
-			"lead_6_voice",
-			"lead_7_fifths",
-			"lead_8_bass__lead",
-			"pad_1_new_age",
-			"pad_2_warm",
-			"pad_3_polysynth",
-			"pad_4_choir",
-			"pad_5_bowed",
-			"pad_6_metallic",
-			"pad_7_halo",
-			"pad_8_sweep",
-			"fx_1_rain",
-			"fx_2_soundtrack",
-			"fx_3_crystal",
-			"fx_4_atmosphere",
-			"fx_5_brightness",
-			"fx_6_goblins",
-			"fx_7_echoes",
-			"fx_8_scifi",
-			"sitar",
-			"banjo",
-			"shamisen",
-			"koto",
-			"kalimba",
-			"bagpipe",
-			"fiddle",
-			"shanai",
-			"tinkle_bell",
-			"agogo",
-			"steel_drums",
-			"woodblock",
-			"taiko_drum",
-			"melodic_tom",
-			"synth_drum",
-			"reverse_cymbal",
-			"guitar_fret_noise",
-			"breath_noise",
-			"seashore",
-			"bird_tweet",
-			"telephone_ring",
-			"helicopter",
-			"applause",
-			"gunshot"],
 
-		// instruments
-		loop = new Uint8Array([		// index = GM1 instrument - 1
-			0, 0, 0, 0, 0, 0, 0, 0,		// 0   Piano
-			0, 0, 0, 0, 0, 0, 0, 0,		// 8   Chromatic Percussion
-			1, 1, 1, 1, 1, 1, 1, 1,		// 16  Organ
-			0, 0, 0, 0, 0, 0, 0, 0,		// 24  Guitar
-			0, 0, 0, 0, 0, 0, 0, 0,		// 32  Bass
-			1, 1, 1, 1, 1, 0, 0, 0,		// 40  Strings
-			1, 1, 1, 1, 1, 1, 1, 0,		// 48  Ensemble
-			1, 1, 1, 1, 1, 1, 1, 1,		// 56  Brass
-			1, 1, 1, 1, 1, 1, 1, 1,		// 64  Reed
-			1, 1, 1, 1, 1, 1, 1, 1,		// 72  Pipe
-			1, 1, 1, 1, 1, 1, 1, 1,		// 80  Synth Lead
-			1, 1, 1, 1, 1, 1, 1, 1,		// 88  Synth Pad
-			1, 1, 1, 1, 1, 1, 1, 1,		// 96  Synth Effects
-			0, 0, 0, 0, 0, 1, 1, 1,		// 104 Ethnic
-			0, 0, 0, 0, 0, 0, 0, 0,		// 112 Percussive
-			0, 0, 0, 0, 0, 1, 1, 0		// 120 Sound Effects
-		]),
-
-		// note to name and note to octave
-		nn =	["C", "Db", "D",  "Eb", "E",  "F",
-			 "Gb", "G", "Ab", "A",  "Bb", "B"],
-		no = "0012345678"
-
-	// -- global --
 	var	conf = i_conf,		// configuration
 		onend = function() {},	// callback function on play end
 		onnote = function() {},	// callback function on note start/stop
@@ -238,15 +75,9 @@ function Audio5(i_conf) {
 
 	// instruments/notes
 		sfu,			// soundfont URL
-		sft,			// soundfont type:
-					// - "js" midi-js with encoded data structure
-					// - "mp3" midi-js mp3 samples
-					// - "ogg" midi-js ogg samples
-		sdur,			// sample duration in the soundfont
-		sounds = [],		// [instr][mi] decoded notes per instrument
+		params = [],		// [instr][key] note parameters per instrument
+		rates = [],		// [instr][key] playback rates
 		w_instr = 0,		// number of instruments being loaded
-		note_q = [],		// [instr, note] to be decoded
-		w_note = 0,		// number of notes being decoded
 
 	// -- play the memorized events --
 		evt_idx,		// event index while playing
@@ -262,14 +93,19 @@ function Audio5(i_conf) {
 			b64d[b64l[i]] = i
 		b64d['='] = 0
 	}
-	function data2bin(URI) {
-	    var	i, t,
-		s = URI.substr(URI.indexOf(',') + 1),
+	function b64dcod(s) {
+	    var	i, t, dl, a,
 		l = s.length,
-		ab = new ArrayBuffer(l * 3 / 4),
-		a = new Uint8Array(ab),
 		j = 0
 
+		dl = l * 3 / 4			// destination length
+		if (s[l - 1] == '=') {
+			if (s[l - 2] == '=')
+				dl--;
+			dl--;
+			l -= 4
+		}
+		a = new Uint8Array(dl)
 		for (i = 0; i < l; i += 4) {
 			t =	(b64d[s[i]] << 18) +
 				(b64d[s[i + 1]] << 12) +
@@ -279,7 +115,16 @@ function Audio5(i_conf) {
 			a[j++] = (t >> 8) & 0xff;
 			a[j++] = t & 0xff
 		}
-		return ab
+		if (l != s.length) {
+			t =	(b64d[s[i]] << 18) +
+				(b64d[s[i + 1]] << 12) +
+				(b64d[s[i + 2]] << 6) +
+				 b64d[s[i + 3]];
+			a[j++] = (t >> 16) & 0xff
+			if (j < dl)
+				a[j++] = (t >> 8) & 0xff
+		}
+		return a
 	}
 
 	// get the URL and the type of the soundfont from cookies
@@ -290,10 +135,6 @@ function Audio5(i_conf) {
 			switch (c[0].replace(/ */, '')) {
 			case "follow":
 				follow = c[1] == "true"
-				break
-			case "sft":
-				if (!sft)
-					sft = c[1]
 				break
 			case "sfu":
 				if (!sfu)
@@ -310,94 +151,151 @@ function Audio5(i_conf) {
 		}
 	}
 
-	function decode_note(instr, mi) {
+	// copy a sf2 sample to an audio buffer
+	// @b = audio buffer (array of [-1..1])
+	// @s = sf2 sample (PCM 16 bits)
+	function sample_cp(b, s) {
+	    var	i, n,
+		a = b.getChannelData(0)		// destination = array of float32
 
-		function audio_dcod(instr, mi, snd) {
-			ac.decodeAudioData(snd,
-				function(b) {
-					sounds[instr][mi] = b;
-					w_note--
+		for (i = 0; i < s.length; i++)
+			a[i] = s[i] / 32768
+	}
 
-					// get the duration of the samples
-					if (!sdur)
-						sdur = b.duration
-				},
-				function(e) {
-					alert("Decode audio data error " +
-						(e ? e.err : "???"));
-					w_note--;
-					iend = 0;
-					onend()
-				})
-		} // audio_dcod()
+	// create all notes of an instrument
+	function sf2_create(parser, instr) {
+	    var i, sid, gen, parm, sampleRate, sample,
+		infos = parser.getInstruments()[0].info;
 
-		// decode_note() main
-		w_note++
-		var p = nn[mi % 12] + no[(mi / 12) | 0]
-
-		if (sft == 'js') {
-			audio_dcod(instr, mi,
-				data2bin(MIDI.Soundfont[instr_tb[instr]][p]))
-		} else {
-			var	url = sfu + '/' + instr_tb[instr] + '-' +
-					sft + '/' + p + '.' + sft,
-				req = new XMLHttpRequest();
-
-			req.open('GET', url);
-			req.responseType = 'arraybuffer';
-			req.onload = function() {
-				audio_dcod(instr, mi, this.response)
+		rates[instr] = []
+		for (i = 0; i < infos.length; i++) {
+			gen = infos[i].generator;
+			sid = gen.sampleID.amount;
+			sampleRate = parser.sampleHeader[sid].sampleRate;
+			sample = parser.sample[sid];
+			parm = {
+				attack: Math.pow(2, (gen.attackVolEnv ?
+					gen.attackVolEnv.amount : -12000) / 1200),
+				hold: Math.pow(2, (gen.holdVolEnv ?
+					gen.holdVolEnv.amount : -12000) / 1200),
+				decay: Math.pow(2, (gen.decayVolEnv ?
+					gen.decayVolEnv.amount : -12000) / 1200) / 10,
+				sustain: gen.sustainVolEnv ?
+					(gen.sustainVolEnv.amount / 1000) : 0,
+//				release: Math.pow(2, (gen.releaseVolEnv ?
+//					gen.releaseVolEnv.amount : -12000) / 1200),
+				buffer: ac.createBuffer(1,
+							sample.length,
+							sampleRate)
 			}
-			req.onerror = function(msg) {
-				if (typeof msg == 'object')
-					msg = msg.type
-				alert("Error '" + msg + "' while loading\n" + url);
-				w_note--;
-				iend = 0;
-				onend()
+			parm.hold += parm.attack;
+			parm.decay += parm.hold;
+
+			sample_cp(parm.buffer, sample)
+
+			if (gen.sampleModes && (gen.sampleModes.amount & 1)) {
+				parm.loopStart = parser.sampleHeader[sid].startLoop /
+					sampleRate;
+				parm.loopEnd = parser.sampleHeader[sid].endLoop /
+					sampleRate
 			}
-			req.send()
+
+			// define the notes
+		    var scale = (gen.scaleTuning ?
+					gen.scaleTuning.amount : 100) / 100,
+			tune = (gen.coarseTune ? gen.coarseTune.amount : 0) +
+				(gen.fineTune ? gen.fineTune.amount : 0) / 100 +
+				parser.sampleHeader[sid].pitchCorrection / 100 -
+				(gen.overridingRootKey ?
+					gen.overridingRootKey.amount :
+					parser.sampleHeader[sid].originalPitch)
+
+			for (j = gen.keyRange.lo; j <= gen.keyRange.hi; j++) {
+				rates[instr][j] = Math.pow(Math.pow(2, 1 / 12),
+							(j + tune) * scale);
+				params[instr][j] = parm
+			}
 		}
-	} // decode_note()
+	} // sf2_create()
 
 	// load an instrument (.js file)
 	function load_instr(instr) {
-		if (sft != 'js')
-			return
-		w_instr++
-		var	url = sfu + '/' + instr_tb[instr] + '-ogg.js',
-			script = document.createElement('script');
-		script.src = url;
-		script.onload = function() {
-			w_instr--
-		}
-		document.head.appendChild(script)
+		w_instr++;
+		loadjs(sfu + '/' + instr + '.js',
+			function() {
+			    var	parser = new sf2.Parser(b64dcod(abcsf2[instr]));
+				parser.parse();
+				sf2_create(parser, instr);
+				w_instr--
+			})
 	} // load_instr()
 
-	// start loading the required MIDI resources
+	// start loading the instruments
 	function load_res(a_e) {
-		var i, e, instr, mi
+		var i, e, instr
 
 		for (i = evt_idx; ; i++) {
 			e = a_e[i]
 			if (!e || e[0] > iend)
 				break
 			instr = e[2]
-			if (!sounds[instr]) {
-				sounds[instr] = [];
+			if (!params[instr]) {
+				params[instr] = [];
 				load_instr(instr)
-			}
-			mi = e[3] | 0
-			if (!sounds[instr][mi]) {	// if no note yet
-				sounds[instr][mi] = true;
-				note_q.push([instr, mi])
 			}
 		}
 	}
 
+	// create a note
+	// @e[2] = instrument index
+	// @e[3] = MIDI key + detune
+	// @t = audio start time
+	// @d = duration adjusted for speed
+	function note_run(e, t, d) {
+	    var	g, st,
+		instr = e[2],
+		key = e[3] | 0,
+		parm = params[instr][key],
+		o = ac.createBufferSource();
+
+		o.buffer = parm.buffer
+		if (parm.loopStart) {
+			o.loop = true;
+			o.loopStart = parm.loopStart;
+			o.loopEnd = parm.loopEnd;
+		}
+		if (o.detune) {
+		    var	dt = (e[3] * 100) % 100
+			if (dt)			// if micro-tone
+				 o.detune.value = dt
+		}
+//		o.playbackRate.setValueAtTime(parm.rate, ac.currentTime);
+		o.playbackRate.value = rates[instr][key];
+
+//fixme: vol = .3, otherwise, saturation...
+	    var	vol = .3;
+		g = ac.createGain();
+		g.gain.setValueAtTime(0, t);
+		g.gain.linearRampToValueAtTime(vol, t + parm.attack);
+		g.gain.setTargetAtTime((1 - parm.sustain) * vol,
+					t + parm.hold, parm.decay);
+
+//fixme: does not work
+//		g.gain.setValueAtTime((1 - parm.sustain) * vol, t + d);
+//		g.gain.linearRampToValueAtTime(0,
+//					t + d);
+
+		o.connect(g);
+		g.connect(gain);
+
+		// start the note
+		o.start(t);
+		o.stop(t + d)
+	} // note_run()
+
 	// play the next time sequence
 	function play_next(a_e) {
-		var	t, e, e2, maxt, o, st, d;
+		var	t, e, e2, maxt, st, d;
 
 		// play the next events
 		e = a_e[evt_idx]
@@ -419,32 +317,14 @@ function Audio5(i_conf) {
 		t = e[1] / speed;		// start time
 		maxt = t + 3			// max time = evt time + 3 seconds
 		while (1) {
-		    if (e[5] != 0) {		// if not a rest
-			o = ac.createBufferSource();
-			o.buffer = sounds[e[2]][e[3] | 0];
-			o.connect(gain)
-			if (o.detune) {
-				d = (e[3] * 100) % 100
-				if (d)			// if micro-tone
-					 o.detune.value = d
-			}
 			d = e[4] / speed
-			if (d > sdur && loop[e[2]]) {	// if not a percussion instrument
-				o.loop = true;
-				o.loopStart = 1 + Math.random() * .2;
-				o.loopEnd = sdur - Math.random() * .2
-			}
-			st = t + stime;			// absolute start time
-//			o.start(st, 0, d)	// (does not work in firefox when loop)
-			o.start(st);
-			o.stop(st + d)
-		    } else {
-			d = e[4] / speed		// (rest)
-		    }
+			if (e[5] != 0)		// if not a rest
+				note_run(e, t + stime, d)
 
 			if (follow) {
 			    var	i = e[0];
-				st = (st - ac.currentTime) * 1000;
+
+				st = (t + stime - ac.currentTime) * 1000;
 				setTimeout(onnote, st, i, true);
 				setTimeout(onnote, st + d * 1000, i, false)
 			}
@@ -460,6 +340,7 @@ function Audio5(i_conf) {
 				break
 		}
 
+		// delay before next sound generation
 		timout = setTimeout(play_next, (t + stime - ac.currentTime)
 				* 1000 - 300,	// wake before end of playing
 				a_e)
@@ -472,20 +353,6 @@ function Audio5(i_conf) {
 
 		// wait for instruments
 		if (w_instr != 0) {
-			timout = setTimeout(play_start, 300, a_e)
-			return
-		}
-
-		// wait for notes
-		if (note_q.length != 0) {
-			while (1) {
-				var e = note_q.shift()
-				if (!e)
-					break
-				decode_note(e[0], e[1])
-			}
-		}
-		if (w_note != 0) {
 			timout = setTimeout(play_start, 300, a_e)
 			return
 		}
@@ -506,44 +373,19 @@ function Audio5(i_conf) {
 
 // Audio5 object creation
 
-	// initialize base64 decoding
-	init_b64d()
+	init_b64d();			// initialize base64 decoding
 
-	// get the soundfont
-	// 1- from the object configuration
-	if (conf.sft)
-		sft = conf.sft
-	if (conf.sfu)
-		sfu = conf.sfu
-	// 2- from cookies
-	if (!sfu || !sft)
-		get_cookies()
-	// 3- from the site location
-	if (!sfu || !sft) {
-		if (document.URL.match(/^http:\/\/moinejf.free.fr/)) {
-			if (!sfu)
-				sfu = "http://moinejf.free.fr/js/FluidR3_GM"
-			if (!sft)
-				sft = "ogg"
-		} else {
-			if (!sfu)
-			    sfu =
-				"https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM"
-			if (!sft)
-				sft = "js"
-		}
-	}
+	get_cookies()			// get the user parameters
+
+	if (!sfu)
+		sfu = "Scc1t2"		// set the default soundfont location
 
 	if (conf.onend)
 		onend = conf.onend
 	if (conf.onnote)
 		onnote = conf.onnote
 
-	if (typeof(MIDI) == "object")
-		sounds[0] = []		// default: acoustic grand piano
-	else
-		MIDI = {}
-
+    // external methods
     return {
 
 	// play the events
@@ -594,23 +436,13 @@ function Audio5(i_conf) {
 		set_cookie("follow", v)
 	}, // set_follow()
 
-	// set soundfont type
-	set_sft: function(v) {
-		if (v == undefined)
-			return sft
-		sft = v;
-		set_cookie("sft", v)
-	}, // set_sft()
-	get_sft: this.set_sft,	// compatibility
-
 	// set soundfont URL
 	set_sfu: function(v) {
 		if (v == undefined)
 			return sfu
 		sfu = v;
 		set_cookie("sfu", v)
-	}, // set_sft()
-	get_sfu: this.set_sfu,	// compatibility
+	}, // set_sfu()
 
 	// set speed (< 1 slower, > 1 faster)
 	set_speed: function(v) {
@@ -632,6 +464,5 @@ function Audio5(i_conf) {
 			gain_val = v;
 		set_cookie("volume", v.toFixed(2))
 	}, // set_vol()
-	get_vol: this.set_vol	// compatibility
     }
 } // end Audio5
