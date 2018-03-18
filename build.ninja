@@ -64,7 +64,7 @@ rule edit
 rule sf
   command = for f in sf2-Scc1t2/*.sf2; do $
    instr=`basename $$f`; $
-   o=$${f#sf2-}
+   o=$${f#sf2-}; $
    o=$${o%.sf2}.js; $
    if [ ! -r $$o -o $$f -nt $$o ]; then $
    echo '// abc2svg sound font' > $$o; $
