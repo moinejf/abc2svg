@@ -700,80 +700,13 @@
 
           zoneInfo.push({
             generator: instrumentGenerator.generator,
-            generatorSequence: instrumentGenerator.generatorInfo,
             modulator: instrumentModulator.modulator,
-            modulatorSequence: instrumentModulator.modulatorInfo
           });
         }
 
         output.push({
           name: instrument[i].instrumentName,
           info: zoneInfo
-        });
-      }
-
-      return output;
-    };
-
-    sf2.Parser.prototype.getPresets = function () {
-      /** @type {Array.<Object>} */
-      var preset   = this.presetHeader;
-      /** @type {Array.<Object>} */
-      var zone = this.presetZone;
-      /** @type {Array.<Object>} */
-      var output = [];
-      /** @type {number} */
-      var bagIndex;
-      /** @type {number} */
-      var bagIndexEnd;
-      /** @type {Array.<Object>} */
-      var zoneInfo;
-      /** @type {number} */
-      var instrument;
-      /** @type {{generator: Object, generatorInfo: Array.<Object>}} */
-      var presetGenerator;
-      /** @type {{modulator: Object, modulatorInfo: Array.<Object>}} */
-      var presetModulator;
-      /** @type {number} */
-      var i;
-      /** @type {number} */
-      var il;
-      /** @type {number} */
-      var j;
-      /** @type {number} */
-      var jl;
-
-      // preset -> preset bag -> generator / modulator
-      for (i = 0, il = preset.length; i < il; ++i) {
-        bagIndex    = preset[i].presetBagIndex;
-        bagIndexEnd = preset[i+1] ? preset[i+1].presetBagIndex : zone.length;
-        zoneInfo = [];
-
-        // preset bag
-        for (j = bagIndex, jl = bagIndexEnd; j < jl; ++j) {
-          presetGenerator = this.createPresetGenerator_(zone, j);
-          presetModulator = this.createPresetModulator_(zone, j);
-
-          zoneInfo.push({
-            generator: presetGenerator.generator,
-            generatorSequence: presetGenerator.generatorInfo,
-            modulator: presetModulator.modulator,
-            modulatorSequence: presetModulator.modulatorInfo
-          });
-
-          instrument =
-            presetGenerator.generator.instrument !== undefined ?
-              presetGenerator.generator.instrument.amount :
-            presetModulator.modulator.instrument !== undefined ?
-              presetModulator.modulator.instrument.amount :
-            null;
-        }
-
-        output.push({
-          name: preset[i].presetName,
-          info: zoneInfo,
-          header: preset[i],
-          instrument: instrument
         });
       }
 
@@ -796,7 +729,6 @@
 
       return {
         generator: modgen.modgen,
-        generatorInfo: modgen.modgenInfo
       };
     };
 
@@ -815,49 +747,7 @@
       );
 
       return {
-        modulator: modgen.modgen,
-        modulatorInfo: modgen.modgenInfo
-      };
-    };
-
-    /**
-     * @param {Array.<Object>} zone
-     * @param {number} index
-     * @returns {{generator: Object, generatorInfo: Array.<Object>}}
-     * @private
-     */
-    sf2.Parser.prototype.createPresetGenerator_ = function (zone, index) {
-      var modgen = this.createBagModGen_(
-        zone,
-        zone[index].presetGeneratorIndex,
-        zone[index+1] ? zone[index+1].presetGeneratorIndex : this.presetZoneGenerator.length,
-        this.presetZoneGenerator
-      );
-
-      return {
-        generator: modgen.modgen,
-        generatorInfo: modgen.modgenInfo
-      };
-    };
-
-      /**
-       * @param {Array.<Object>} zone
-       * @param {number} index
-       * @returns {{modulator: Object, modulatorInfo: Array.<Object>}}
-       * @private
-       */
-    sf2.Parser.prototype.createPresetModulator_ = function (zone, index) {
-      /** @type {{modgen: Object, modgenInfo: Array.<Object>}} */
-      var modgen = this.createBagModGen_(
-        zone,
-        zone[index].presetModulatorIndex,
-        zone[index+1] ? zone[index+1].presetModulatorIndex : this.presetZoneModulator.length,
-        this.presetZoneModulator
-      );
-
-      return {
-        modulator: modgen.modgen,
-        modulatorInfo: modgen.modgenInfo
+        modulator: modgen.modgen
       };
     };
 
@@ -870,8 +760,6 @@
      * @private
      */
     sf2.Parser.prototype.createBagModGen_ = function (zone, indexStart, indexEnd, zoneModGen) {
-      /** @type {Array.<Object>} */
-      var modgenInfo = [];
       /** @type {Object} */
       var modgen = {
         unknown: [],
@@ -889,7 +777,6 @@
 
       for (i = indexStart, il = indexEnd; i < il; ++i) {
         info = zoneModGen[i];
-        modgenInfo.push(info);
 
         if (info.type === 'unknown') {
           modgen.unknown.push(info.value);
@@ -899,8 +786,7 @@
       }
 
       return {
-        modgen: modgen,
-        modgenInfo: modgenInfo
+        modgen: modgen
       };
     };
 
