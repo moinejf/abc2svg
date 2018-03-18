@@ -872,7 +872,7 @@ function get_map(text) {
 
 // %%MIDI
 function get_midi(param) {
-	var	prog, n, v, ctl,
+	var	n, v,
 		a = param.split(/\s+/)
 
 	switch (a[0]) {
@@ -881,25 +881,20 @@ function get_midi(param) {
 			break
 
 		// channel 10 is bank 128 program 0 = 128 * 128 + 0
-		if (curvoice)
-			curvoice.instr = 16384
-		else
-			glovar.instr = 16384
+		v = 16384;
+		param = "instr"
 		break
 	case "program":
 		if (a[2] != undefined)	// the channel program is unused
-			prog = a[2]
+			v = a[2]
 		else
-			prog = a[1];
-		prog = parseInt(prog)
-		if (isNaN(prog) || prog < 0 || prog > 127) {
+			v = a[1];
+		v = parseInt(v)
+		if (isNaN(v) || v < 0 || v > 127) {
 			syntax(1, "Bad program in %%MIDI")
 			return
 		}
-		if (curvoice)
-			curvoice.instr = prog
-		else
-			glovar.instr = prog
+		param = "instr"
 		break
 	case "control":
 		n = parseInt(a[1])
@@ -912,18 +907,13 @@ function get_midi(param) {
 			syntax(1, "Bad controller value in %%MIDI")
 			return
 		}
-		if (curvoice) {
-			ctl = curvoice.midictl
-			if (!ctl)
-				ctl = curvoice.midictl = {}
-		} else {
-			ctl = glovar.midictl
-			if (!ctl)
-				ctl = glovar.midictl = {}
-		}
-		ctl[n] = v
+		param = "midictl";
+		v = a[1] + ' ' + a[2]
 		break
+	default:
+		return
 	}
+	set_v_param(param, v)
 }
 
 // set the transposition in the previous or starting key
@@ -2151,10 +2141,8 @@ function new_voice(id) {
 			time: 0
 		},
 		hy_st: 0,
-		instr: glovar.instr || 0	// MIDI instrument
+		instr: 0			// default MIDI instrument
 	}
-	if (glovar.midictl)
-		p_voice.midictl = glovar.midictl; // MIDI control
 
 	voice_tb.push(p_voice);
 

@@ -339,7 +339,7 @@ function new_block(subtype) {
 
 // set the K: / V: parameters
 function set_kv_parm(a) {	// array of items
-	var	s, item, pos, val, clefpit
+	var	s, item, pos, val, clefpit, midictl
 
 	// add the global parameters if not done yet
 	if (!curvoice.init) {
@@ -404,9 +404,16 @@ function set_kv_parm(a) {	// array of items
 		case "instrument=":
 			curvoice.transp = get_transp(a.shift(), 'instr')
 			break
+		case "instr=":			// %%MIDI program
 		case "map=":			// %%voicemap
 			item = item.slice(0, -1);
 			curvoice[item] = a.shift()
+			break
+		case "midictl=":		// %%MIDI control
+			if (!midictl)
+				midictl = {}
+			item = a.shift().split(' ');
+			midictl[item[0]] = item[1]
 			break
 		case "name=":
 		case "nm=":
@@ -484,6 +491,16 @@ function set_kv_parm(a) {	// array of items
 				break
 			}
 			break
+		}
+	}
+	if (midictl) {
+		if (!curvoice.midictl) {
+			curvoice.midictl = midictl
+		} else {
+			curvoice.midictl = clone(curvoice.midictl)
+			for (item in midictl)
+			    if (midictl.hasOwnProperty(item))
+				curvoice.midictl[item] = midictl[item]
 		}
 	}
 	if (pos) {
