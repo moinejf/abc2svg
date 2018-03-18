@@ -159,7 +159,7 @@ function Audio5(i_conf) {
 		a = b.getChannelData(0)		// destination = array of float32
 
 		for (i = 0; i < s.length; i++)
-			a[i] = s[i] / 32768
+			a[i] = s[i] / 131072	// volume divided by 4
 	}
 
 	// create all notes of an instrument
@@ -272,8 +272,7 @@ function Audio5(i_conf) {
 //		o.playbackRate.setValueAtTime(parm.rate, ac.currentTime);
 		o.playbackRate.value = rates[instr][key];
 
-//fixme: vol = .3, otherwise, saturation...
-	    var	vol = .3;
+	    var	vol = .5;
 		g = ac.createGain();
 		g.gain.setValueAtTime(0, t);
 		g.gain.linearRampToValueAtTime(vol, t + parm.attack);
