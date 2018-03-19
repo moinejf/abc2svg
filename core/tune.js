@@ -879,10 +879,7 @@ function get_midi(param) {
 	case "channel":
 		if (a[1] != "10")
 			break
-
-		// channel 10 is bank 128 program 0 = 128 * 128 + 0
-		v = 16384;
-		param = "instr"
+		set_v_param(0, 1, "midictl")	// channel 10 is bank 128 program 0
 		break
 	case "program":
 		if (a[2] != undefined)	// the channel program is unused
@@ -894,7 +891,7 @@ function get_midi(param) {
 			syntax(1, "Bad program in %%MIDI")
 			return
 		}
-		param = "instr"
+		set_v_param("instr", v)
 		break
 	case "control":
 		n = parseInt(a[1])
@@ -907,13 +904,9 @@ function get_midi(param) {
 			syntax(1, "Bad controller value in %%MIDI")
 			return
 		}
-		param = "midictl";
-		v = a[1] + ' ' + a[2]
+		set_v_param(a[1], a[2], "midictl")
 		break
-	default:
-		return
 	}
-	set_v_param(param, v)
 }
 
 // set the transposition in the previous or starting key

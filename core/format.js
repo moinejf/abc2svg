@@ -325,13 +325,22 @@ function set_writefields(parm) {
 // set a voice specific parameter
 function set_v_param(k, v, sub) {
 	if (curvoice) {
-		if (sub)
-			curvoice[sub][k] = posval[v]	// sub == "pos" only
-		else
+		if (sub) {
+			if (!curvoice[sub])
+				curvoice[sub] = {}
+			if (sub == "pos")
+				curvoice[sub][k] = posval[v]
+			else
+				curvoice[sub][k] = v
+		} else {
 			curvoice[k] = v
+		}
 		return
 	}
-	k = [k + '=', v];
+	if (sub == "midictl")
+		k = ['midictl=', k + ' ' + v]
+	else
+		k = [k + '=', v];
 	var vid = '*'
 	if (!info.V)
 		info.V = {}

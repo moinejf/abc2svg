@@ -63,22 +63,34 @@ function ToAudio() {
 		rep_st_map,		// and map
 		rep_st_fac,		// and play factor
 		transp,			// clef transposition per voice
+		instr = [],		// instrument per voice
 		s = start
 
 	// set the transpositions
 	function set_voices() {
-		var v, s
+	    var v, p_v, s, mi
 
 		transp = new Int8Array(voice_tb.length)
 		for (v = 0; v < voice_tb.length; v++) {
-			s = voice_tb[v].clef;
+			p_v = voice_tb[v];
+
+			mi = p_v.instr || 0
+			if (p_v.midictl) {
+				if (p_v.midictl[32])		// bank LSB
+					mi += p_v.midictl[32] * 128
+				if (p_v.midictl[0])		// bank MSB
+					mi += p_v.midictl[0] * 128 * 128
+			}
+			instr[v] = mi;			// MIDI instrument
+
+			s = p_v.clef;
 			transp[v] = (!s.clef_octave || s.clef_oct_transp) ?
 					0 : s.clef_octave
 			if (!vmap[v])
 				vmap[v] = new Float32Array(70);
 			map = vmap[v];
-			voice_tb[v].key.v = v;
-			key_map(voice_tb[v].key)
+			p_v.key.v = v;
+			key_map(p_v.key)
 		}
 	} // set_voices()
 
@@ -243,7 +255,7 @@ function ToAudio() {
 			a_e.push([
 				s.istart,
 				t,
-				s.p_v.instr,
+				instr[s.v],
 				pit2mid(s, i),
 				note.ti1 ? do_tie(s, note, d) : d])
 		}
