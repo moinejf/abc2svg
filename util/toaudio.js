@@ -51,9 +51,9 @@ function ToAudio() {
 // add playing events from the ABC model
     add: function(start,		// starting symbol
 		 voice_tb) {		// voice table
-	var	bmap = new Float32Array(7), // measure base map
+	var	kmaps = [],		// accidentals per voice from key signature
+		cmaps = [],		// current accidental table
 		map,			// map of the current voice - 10 octaves
-		vmap = [],		// map of all voices
 		i, n, dt, d, v,
 		top_v,			// top voice
 		rep_st_s,		// start of sequence to be repeated
@@ -66,7 +66,7 @@ function ToAudio() {
 		instr = [],		// instrument per voice
 		s = start
 
-	// set the transpositions
+	// set the accidentals, transpositions and instruments of the voices
 	function set_voices() {
 	    var v, p_v, s, mi
 
@@ -86,32 +86,26 @@ function ToAudio() {
 			s = p_v.clef;
 			transp[v] = (!s.clef_octave || s.clef_oct_transp) ?
 					0 : s.clef_octave
-			if (!vmap[v])
-				vmap[v] = new Float32Array(70);
-			map = vmap[v];
+
+			kmaps[v] = new Float32Array(70);
+			cmaps[v] = new Float32Array(70);
 			p_v.key.v = v;
 			key_map(p_v.key)
 		}
 	} // set_voices()
 
-	// re-initialize the map on bar
-	function bar_map(v) {
-		for (var j = 0; j < 10; j++)
-			for (var i = 0; i < 7; i++)
-				vmap[v][j * 7 + i] = bmap[i]
-	} // bar_map()
-
-	// define the note map
+	// define the accidentals of a voice
 	function key_map(s) {
+	    var i, bmap
+
 	    if (s.k_bagpipe) {
 		// detune for just intonation in A (C is C#, F is F# and G is Gnat)
-		bmap = [100-13.7, -2, 2, 100-15.6, -31.2, 0, 3.9]
-		for (var i = 0; i < 7; i++)
+		bmap = new Float32Array([100-13.7, -2, 2, 100-15.6, -31.2, 0, 3.9])
+		for (i = 0; i < 7; i++)
 			bmap[i] = (bmap[i] + 150.6) / 100 // 'A' bagpipe = 480Hz
 				// 150.6 = (Math.log2(480/440) - 1)*1200
 	    } else {
-		for (var i = 0; i < 7; i++)
-			bmap[i] = 0
+		bmap = new Float32Array(7)
 		switch (s.k_sf) {
 		case 7: bmap[6] = 1
 		case 6: bmap[2] = 1
@@ -129,7 +123,9 @@ function ToAudio() {
 		case -1: bmap[6] = -1; break
 		}
 	    }
-		bar_map(s.v)
+	    for (i = 0; i < 10; i++)
+		kmaps[s.v].set(bmap, i * 7);
+	    cmaps[s.v].set(kmaps[s.v])
 	} // key_map()
 
 	// convert ABC pitch to MIDI index
@@ -295,7 +291,7 @@ function ToAudio() {
 			abc_time = s.time
 		}
 
-		map = vmap[s.v]
+		map = cmaps[s.v]
 		switch (s.type) {
 		case BAR:
 //fixme: does not work if different measures per voice
@@ -320,8 +316,6 @@ function ToAudio() {
 				} else {			// back to start
 					s = start;
 					set_voices();
-					for (v = 0; v < voice_tb.length; v++)
-						bar_map(v)
 				}
 				abc_time = s.time
 				break
@@ -329,7 +323,7 @@ function ToAudio() {
 
 			if (!s.invis) {
 				for (v = 0; v < voice_tb.length; v++)
-					bar_map(v)
+					cmaps[v].set(kmaps[v])
 			}
 
 			// left repeat
