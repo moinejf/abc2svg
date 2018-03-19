@@ -295,13 +295,6 @@ var	pt, nr, i, elts, elt, x, y, cl,
 	svg = evt.target
 
 	while (svg.tagName != 'svg') {
-		if (evt.type == "mousedown") {
-			cl = svg.getAttribute('class');
-			if (cl && cl.substr(0, 4) == 'abcr')
-				m_over(svg)
-			else
-				colorsel(false)
-		}
 		svg = svg.parentNode
 		if (!svg)
 			return
@@ -310,10 +303,11 @@ var	pt, nr, i, elts, elt, x, y, cl,
 	switch (evt.type) {
 	case "mousedown":
 		if (selrec.rect) {
-			svg.removeChild(selrec.rect);
+			selrec.rect.parentNode.removeChild(selrec.rect);
 			selrec.rect = null
 		}
 		colorsel(false);
+		window.getSelection().removeAllRanges();
 		svg.onmousemove = svgsel;
 		svg.onmouseup = svgsel;
 		pt = svg.createSVGPoint();
@@ -323,13 +317,10 @@ var	pt, nr, i, elts, elt, x, y, cl,
 		selrec.xs = cl.x;
 		selrec.ys = cl.y;
 
-		selrec.sel = true;
 		evt.stopImmediatePropagation();
 		evt.preventDefault()
 		break
 	case "mousemove":
-		if (!selrec.sel)
-			break
 		pt = svg.createSVGPoint();
 		pt.x = evt.clientX;
 		pt.y = evt.clientY;
@@ -358,17 +349,18 @@ var	pt, nr, i, elts, elt, x, y, cl,
 		break
 	case "mouseup":
 //	case "mouseout":
-		if (!selrec.sel)
-			break
-		selrec.sel = false;
 		svg.onmousemove = null;
 		svg.onmouseup = null
-		if (!selrec.rect)
+		if (!selrec.rect) {
+			svg = evt.target
+			cl = svg.getAttribute('class')
+			if (cl && cl.substr(0, 4) == 'abcr')
+				m_over(svg)
 			break
+		}
 		svg.removeChild(selrec.rect);
 
 		// define the selection
-		colorsel(false);
 // (svg.getEnclosureList does not work)
 		elts = svg.getElementsByClassName("abcr");
 		i = elts.length
@@ -426,10 +418,8 @@ var	i, j, elts, d,
 // source text selection callback
 function seltxt(elt) {
 	var	start, end, s, z, elts
-	if (colcl.length != 0) {
+	if (colcl.length != 0)
 		colorsel(false);
-		colcl = []
-	}
 	if (elt.selectionStart == undefined)
 		return
 	start = elt.selectionStart;
