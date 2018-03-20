@@ -195,10 +195,16 @@ function trim_title(title, is_subtitle) {
 
 	if (cfmt.titletrim) {
 		i = title.lastIndexOf(", ")
-		if (i < 0 || title[i + 2] < 'A' || title[i + 2] > 'Z'
-		 || i < title.length - 7	// word no more than 5 characters
-		 || title.indexOf(' ', i + 3) >= 0)
+		if (i < 0 || title[i + 2] < 'A' || title[i + 2] > 'Z') {
 			i = 0
+		} else if (cfmt.titletrim == true) {	// compatibility
+			if (i < title.length - 7
+			 || title.indexOf(' ', i + 3) >= 0)
+				i = 0
+		} else {
+			if (i < title.length - cfmt.titletrim - 2)
+				i = 0
+		}
 	}
 	if (!is_subtitle
 	 && cfmt.writefields.indexOf('X') >= 0)

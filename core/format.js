@@ -477,7 +477,6 @@ function set_format(cmd, param, lock) {
 	case "timewarn":
 	case "titlecaps":
 	case "titleleft":
-	case "titletrim":
 		cfmt[cmd] = get_bool(param)
 		break
 	case "chordnames":
@@ -614,6 +613,13 @@ function set_format(cmd, param, lock) {
 		break
 	case "textoption":
 		cfmt[cmd] = get_textopt(param)
+		break
+	case "titletrim":
+		v = Number(param)
+		if (isNaN(v))
+			cfmt[cmd] = get_bool(param)
+		else
+			cfmt[cmd] = v
 		break
 	case "combinevoices":
 	case "voicecombine":
