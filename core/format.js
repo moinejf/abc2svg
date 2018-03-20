@@ -37,7 +37,7 @@ var cfmt = {
 	breakoneoln: true,
 	cancelkey: true,
 	composerspace: 6,
-//	contbarnb: 0,
+//	contbarnb: false,
 	dblrepbar: ':][:',
 	decoerr: true,
 	dynalign: true,
@@ -456,6 +456,7 @@ function set_format(cmd, param, lock) {
 	case "bstemdown":
 	case "breakoneoln":
 	case "cancelkey":
+	case "contbarnb":
 	case "custos":
 	case "decoerr":
 	case "dynalign":
@@ -527,9 +528,6 @@ function set_format(cmd, param, lock) {
 		break
 	case "concert-score":
 		cfmt.sound = "concert"
-		break
-	case "contbarnb":
-		cfmt.contbarnb = get_int(param)
 		break
 	case "writefields":
 		set_writefields(param)
