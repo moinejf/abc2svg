@@ -627,7 +627,7 @@ function do_clip() {
 
 /* -- set the bar numbers and treat %%clip / %%break -- */
 function set_bar_num() {
-	var	s, s2, tim,
+	var	s, s2, tim, bar_time, bar_num, rep_dtime,
 		v = cur_sy.top_voice,
 		wmeasure = voice_tb[v].meter.wmeasure,
 		bar_rep = gene.nbar
@@ -665,6 +665,7 @@ function set_bar_num() {
 			return
 		switch (s.type) {
 		case METER:
+			wmeasure = s.wmeasure
 		case CLEF:
 		case KEY:
 		case STBRK:
@@ -689,8 +690,8 @@ function set_bar_num() {
 	}
 
 	// set the measure number on the top bars
-	var	bar_time = s.time + wmeasure, // for incomplete measure at start of tune
-		bar_num = gene.nbar
+	bar_time = s.time + wmeasure; // for incomplete measure at start of tune
+	bar_num = gene.nbar
 
 	for ( ; s; s = s.ts_next) {
 		switch (s.type) {
@@ -708,33 +709,43 @@ function set_bar_num() {
 		case BAR:
 			if (s.bar_num) {
 				bar_num = s.bar_num		/* (%%setbarnb) */
-				if (s.time < bar_time) {
+				if (s.time < bar_time)
 					delete s.bar_num
-					break
+			}
+			if (s.time < bar_time) {	// incomplete measure
+				if (s.text && s.text[0] == '1') {
+					bar_rep = bar_num;
+					rep_dtime = bar_time - s.time
 				}
-			} else {
-				if (s.time < bar_time)	/* incomplete measure */
-					break
-				bar_num++
+				break
 			}
 
 			/* check if any repeat bar at this time */
 			tim = s.time;
 			s2 = s
 			do {
-				if (s2.type == BAR
-				 && s2.text		// if repeat bar
-				 && !cfmt.contbarnb) {
-					if (s2.text[0] == '1')
-						bar_rep = bar_num
-					else		/* restart bar numbering */
-						bar_num = bar_rep
+				if (s2.dur)
 					break
-				}
+				if (s2.type == BAR && s2.text)	// if repeat bar
+					break
 				s2 = s2.next
 			} while (s2 && s2.time == tim);
+			bar_num++
+			if (s2 && s2.type == BAR && s2.text) {
+				if (s2.text[0] == '1') {
+					rep_dtime = 0;
+					bar_rep = bar_num - 1
+				} else {			// restart bar numbering
+					if (!cfmt.contbarnb)
+						bar_num = bar_rep
+					if (rep_dtime) {
+						bar_time = tim + rep_dtime
+						break
+					}
+				}
+			}
 			s.bar_num = bar_num;
-			bar_time = s.time + wmeasure
+			bar_time = tim + wmeasure
 			break
 		}
 	}
