@@ -112,16 +112,6 @@ function get_bool(param) {
 	return !param || !param.match(/^(0|n|f)/i) // accept void as true !
 }
 
-function get_int(param) {
-	var	v = parseInt(param)
-
-	if (isNaN(v)) {
-		syntax(1, "Bad integer value");
-		v = 1
-	}
-	return v
-}
-
 // %%font <font> [<encoding>] [<scale>]
 function get_font_scale(param) {
 	var	a = param.split(/\s+/)	// a[0] = font name
@@ -414,10 +404,15 @@ function set_format(cmd, param, lock) {
 	case "rbmin":
 	case "shiftunison":
 	case "staffnonote":
-		cfmt[cmd] = get_int(param)
+		v = parseInt(param)
+		if (isNaN(v)) {
+			syntax(1, "Bad integer value");
+			break
+		}
+		cfmt[cmd] = v
 		break
 	case "microscale":
-		f = get_int(param)
+		f = parseInt(param)
 		if (isNaN(f) || f < 4 || f > 256 || f % 1) {
 			syntax(1, err_bad_val_s, "%%" + cmd)
 			break
