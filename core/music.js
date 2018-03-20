@@ -4423,7 +4423,8 @@ function set_sym_glue(width) {
 	beta0 = 1			/* max expansion before complaining */
 
 	/* memorize the glue for the last music line */
-	if (tsnext) {
+	if (tsnext
+	 && blocks.length == 0 && tsnext.type != BLOCK) { // (abcm2ps compatibility)
 		if (x >= width) {
 			beta_last = 0
 		} else {
