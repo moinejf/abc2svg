@@ -308,8 +308,7 @@ function ToAudio() {
 				if (rep_st_s) {		// if left repeat
 					s = rep_st_s
 					for (v = 0; v < voice_tb.length; v++) {
-						for (i = 0; i < 70; i++)
-							vmap[v][i] = rep_st_map[v][i];
+						cmaps[v].set(rep_st_map[v]);
 						transp[v] = rep_st_transp[v]
 					}
 					play_factor = rep_st_fac;
@@ -336,8 +335,7 @@ function ToAudio() {
 					if (!rep_st_map[v])
 						rep_st_map[v] =
 							new Float32Array(70)
-					for (i = 0; i < 70; i++)
-						rep_st_map[v][i] = vmap[v][i];
+					rep_st_map[v].set(cmaps[v]);
 					if (!rep_st_transp)
 						rep_st_transp = []
 					rep_st_transp[v] = transp[v]
