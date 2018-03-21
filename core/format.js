@@ -280,16 +280,10 @@ var posval = {
 
 /* -- set the position of elements in a voice -- */
 function set_pos(k, v) {		// keyword, value
-	if (posval[v] == undefined) {
-		syntax(1, err_bad_val_s, k)
-		return
-	}
 	k = k.slice(0, 3)
 	if (k == "ste")
 		k = "stm"
-	if (curvoice)
-		curvoice.pos = clone(curvoice.pos);
-	set_v_param(k, v, 'pos')
+	set_v_param("pos", k + ' ' + v)
 }
 
 // set/unset the fields to write
@@ -313,24 +307,12 @@ function set_writefields(parm) {
 }
 
 // set a voice specific parameter
-function set_v_param(k, v, sub) {
+function set_v_param(k, v) {
 	if (curvoice) {
-		if (sub) {
-			if (!curvoice[sub])
-				curvoice[sub] = {}
-			if (sub == "pos")
-				curvoice[sub][k] = posval[v]
-			else
-				curvoice[sub][k] = v
-		} else {
-			curvoice[k] = v
-		}
+		set_vp([k + '=', v])
 		return
 	}
-	if (sub == "midictl")
-		k = ['midictl=', k + ' ' + v]
-	else
-		k = [k + '=', v];
+	k = [k + '=', v];
 	var vid = '*'
 	if (!info.V)
 		info.V = {}
@@ -497,7 +479,7 @@ function set_format(cmd, param, lock) {
 	case "wordsspace":
 		f = get_unit(param)	// normally, unit in points - 72 DPI accepted
 		if (isNaN(f))
-			syntax(1, "Bad value in $1", '%%' + cmd)
+			syntax(1, err_bad_val_s, '%%' + cmd)
 		else
 			cfmt[cmd] = f
 		break
@@ -514,7 +496,7 @@ function set_format(cmd, param, lock) {
 //	case "topmargin":
 		f = get_unit(param)	// normally unit in cm or in - 96 DPI
 		if (isNaN(f)) {
-			syntax(1, "Bad value in $1", '%%' + cmd)
+			syntax(1, err_bad_val_s, '%%' + cmd)
 			break
 		}
 		cfmt[cmd] = f;
@@ -591,7 +573,7 @@ function set_format(cmd, param, lock) {
 	case "staffwidth":
 		v = get_unit(param)
 		if (isNaN(v)) {
-			syntax(1, "Bad value in $1", '%%' + cmd)
+			syntax(1, err_bad_val_s, '%%' + cmd)
 			break
 		}
 		if (v < 100) {
@@ -634,12 +616,7 @@ function set_format(cmd, param, lock) {
 		set_v_param("map", param)
 		break
 	case "voicescale":
-		v = parseFloat(param)
-		if (isNaN(v) || v < .6 || v > 1.5) {
-			syntax(1, err_bad_val_s, "%%" + cmd)
-			return
-		}
-		set_v_param("scale", v)
+		set_v_param("scale", param)
 		break
 	default:		// memorize all global commands
 		if (parse.state == 0)		// (needed for modules)

@@ -890,10 +890,10 @@ function get_midi(param) {
 	case "channel":
 		if (a[1] != "10")
 			break
-		set_v_param(0, 1, "midictl")	// channel 10 is bank 128 program 0
+		set_v_param("midictl", "0 1")	// channel 10 is bank 128 program 0
 		break
 	case "program":
-		if (a[2] != undefined)	// the channel program is unused
+		if (a[2] != undefined)	// the channel is unused
 			v = a[2]
 		else
 			v = a[1];
@@ -915,7 +915,7 @@ function get_midi(param) {
 			syntax(1, "Bad controller value in %%MIDI")
 			return
 		}
-		set_v_param(a[1], a[2], "midictl")
+		set_v_param("midictl", a[1] + ' ' + a[2])
 		break
 	}
 }
@@ -1262,18 +1262,8 @@ function do_pscom(text) {
 		sym_link(s)
 		return
 	case "stafflines":
-		val = get_st_lines(param)
-		if (val == undefined)
-			syntax(1, "Bad %%stafflines value")
-		else
-			set_v_param(cmd, val)
-		return
 	case "staffscale":
-		val = parseFloat(param)
-		if (isNaN(val) || val < .3 || val > 2)
-			syntax(1, "Bad %%staffscale value")
-		else
-			set_v_param(cmd, val)
+		set_v_param(cmd, param)
 		return
 	case "staves":
 	case "score":

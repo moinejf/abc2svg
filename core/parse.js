@@ -337,23 +337,9 @@ function new_block(subtype) {
 	return s
 }
 
-// set the K: / V: parameters
-function set_kv_parm(a) {	// array of items
-	var	s, item, pos, val, clefpit
-
-	// add the global parameters if not done yet
-	if (!curvoice.init) {
-		curvoice.init = true
-
-		if (info.V) {
-			if (info.V['*'])
-				a = info.V['*'].concat(a)
-			if (info.V[curvoice.id])
-				a = info.V[curvoice.id].concat(a)
-		}
-	}
-	if (a.length == 0)
-		return 0
+// set the voice parameters
+function set_vp(a) {
+    var	s, item, pos, val, clefpit
 
 	while (1) {
 		item = a.shift()
@@ -423,26 +409,27 @@ function set_kv_parm(a) {	// array of items
 			curvoice.new_name = true
 			break
 		case "stem=":
-			item = "stm="
-		case "dyn=":			// %%pos
-		case "gch=":
-		case "gst=":
-		case "orn=":
-		case "stm=":
-		case "voc=":
-		case "vol=":
-			val = posval[a.shift()]
+		case "pos=":
+			if (item == "pos=")
+				item = a.shift().split(' ')
+			else
+				item = ["stm", a.shift()];
+			val = posval[item[1]]
 			if (val == undefined) {
-				syntax(1, err_bad_val_s, item)
+				syntax(1, err_bad_val_s, item[0])
 				break
 			}
-			item = item.slice(0, -1)
 			if (!pos)
 				pos = {}
-			pos[item] = val
+			pos[item[0]] = val
 			break
 		case "scale=":			// %%voicescale
-			do_pscom('voicescale ' + a.shift())
+			val = a.shift()
+			if (isNaN(val) || val < .6 || val > 1.5) {
+				syntax(1, err_bad_val_s, "%%" + cmd)
+				break
+			}
+			curvoice.scale = val
 			break
 		case "score=":
 			if (cfmt.sound)
@@ -469,10 +456,18 @@ function set_kv_parm(a) {	// array of items
 				curvoice.snm = curvoice.snm.slice(1, -1);
 			break
 		case "stafflines=":
-			do_pscom('stafflines ' + a.shift())
+			val = get_st_lines(a.shift())
+			if (val == undefined)
+				syntax(1, "Bad %%stafflines value")
+			else
+				curvoice.stafflines = val
 			break
 		case "staffscale=":
-			do_pscom('staffscale ' + a.shift())
+			val = parseFloat(a.shift())
+			if (isNaN(val) || val < .3 || val > 2)
+				syntax(1, "Bad %%staffscale value")
+			else
+				curvoice.staffscale = val
 			break
 		default:
 			switch (item.slice(0, 4)) {
@@ -508,7 +503,22 @@ function set_kv_parm(a) {	// array of items
 			get_clef(s)
 		}
 	}
-}
+} // set_vp()
+
+// set the K: / V: parameters
+function set_kv_parm(a) {	// array of items
+	if (!curvoice.init) {	// add the global parameters if not done yet
+		curvoice.init = true
+		if (info.V) {
+			if (info.V['*'])
+				a = info.V['*'].concat(a)
+			if (info.V[curvoice.id])
+				a = info.V[curvoice.id].concat(a)
+		}
+	}
+	if (a.length != 0)
+		set_vp(a)
+} // set_kv_parm()
 
 // memorize the K:/V: parameters
 function memo_kv_parm(vid,	// voice ID (V:) / '*' (K:/V:*)
@@ -1466,7 +1476,6 @@ function parse_staves(p) {
 
 // split an info string
 function info_split(text) {
-//		    start) {		// handle 'key=' after 'start' items
 	var	a = [],
 		item = "",
 		i, j,
