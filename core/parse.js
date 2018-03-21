@@ -390,8 +390,11 @@ function set_vp(a) {
 		case "instrument=":
 			curvoice.transp = get_transp(a.shift(), 'instr')
 			break
-		case "instr=":			// %%MIDI program
 		case "map=":			// %%voicemap
+			if (cfmt.sound == "play")
+				break
+			// fall thru
+		case "instr=":			// %%MIDI program
 			item = item.slice(0, -1);
 			curvoice[item] = a.shift()
 			break
