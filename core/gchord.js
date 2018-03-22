@@ -319,6 +319,7 @@ function gch_build(s) {
 		gch = s.a_gch[ix]
 		if (gch.type == 'g') {
 			if (cfmt.chordnames) {
+				gch.otext = gch.text;	// save for %%diagram
 				gch.text = gch.text.replace(/A|B|C|D|E|F|G/g,
 					function(c){return cfmt.chordnames[c]})
 				if (cfmt.chordnames.B == 'H')

@@ -12,7 +12,7 @@ function Diag(i_abc) {
 
 // function called before tune generation
 Diag.prototype.do_diag = function(voice_tb) {
-    var	s, i, gch, dd
+    var	s, i, gch, t
 
 	for (s = voice_tb[0].sym; s; s = s.next) {
 		if (!s.a_gch)
@@ -22,8 +22,10 @@ Diag.prototype.do_diag = function(voice_tb) {
 			if (!gch || gch.type != 'g' || gch.capo)
 				continue
 
+			t = gch.otext || gch.text
+
 			// insert the diagram as a decoration
-			abc.deco_cnv(gch.text.split(/[ \t/]/, 1), s, null)
+			abc.deco_cnv(t.split(/[ \t/]/, 1), s, null)
 		}
 	}
     } // do_diag()
