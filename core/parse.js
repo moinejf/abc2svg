@@ -346,7 +346,7 @@ function set_vp(a) {
 		if (!item)
 			break
 		if (item[item.length - 1] == '='
-		 && !a[0]) {
+		 && a.length == 0) {
 			syntax(1, err_bad_val_s, item)
 			break
 		}
