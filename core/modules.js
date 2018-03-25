@@ -23,9 +23,10 @@ function Modules() {
 		beginps: { fn: 'psvg-1.js', init: 'psvg_init' },
 		capo: { fn: 'capo-1.js', init: 'Capo' },
 		diagram: { fn: 'diag-1.js', init: 'Diag' },
-		grid: { fn: 'grid-1.js', init: 'Grid' }
+		grid: { fn: 'grid-1.js', init: 'Grid' },
+		MIDI: { fn: 'MIDI-1.js', init: 'MIDI' }
 	},
-	all_m = /ambitus|beginps|capo|diagram|grid/g,
+	all_m = /ambitus|beginps|capo|diagram|grid|MIDI/g,
 	nreq = 0,
 	cbf					// callback function
 

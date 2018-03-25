@@ -391,18 +391,8 @@ function set_vp(a) {
 			curvoice.transp = get_transp(a.shift(), 'instr')
 			break
 		case "map=":			// %%voicemap
-			if (cfmt.sound == "play")
-				break
-			// fall thru
-		case "instr=":			// %%MIDI program
-			item = item.slice(0, -1);
-			curvoice[item] = a.shift()
-			break
-		case "midictl=":		// %%MIDI control
-			if (!curvoice.midictl)
-				curvoice.midictl = {}
-			item = a.shift().split(' ');
-			curvoice.midictl[item[0]] = Number(item[1])
+			if (cfmt.sound != "play")
+				curvoice.map = a.shift()
 			break
 		case "name=":
 		case "nm=":

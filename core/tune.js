@@ -881,45 +881,6 @@ function get_map(text) {
 	}
 }
 
-// %%MIDI
-function get_midi(param) {
-	var	n, v,
-		a = param.split(/\s+/)
-
-	switch (a[0]) {
-	case "channel":
-		if (a[1] != "10")
-			break
-		set_v_param("midictl", "0 1")	// channel 10 is bank 128 program 0
-		break
-	case "program":
-		if (a[2] != undefined)	// the channel is unused
-			v = a[2]
-		else
-			v = a[1];
-		v = parseInt(v)
-		if (isNaN(v) || v < 0 || v > 127) {
-			syntax(1, "Bad program in %%MIDI")
-			return
-		}
-		set_v_param("instr", v)
-		break
-	case "control":
-		n = parseInt(a[1])
-		if (isNaN(n) || n < 0 || n > 127) {
-			syntax(1, "Bad controller number in %%MIDI")
-			return
-		}
-		v = parseInt(a[2])
-		if (isNaN(v) || v < 0 || v > 127) {
-			syntax(1, "Bad controller value in %%MIDI")
-			return
-		}
-		set_v_param("midictl", a[1] + ' ' + a[2])
-		break
-	}
-}
-
 // set the transposition in the previous or starting key
 function set_transp() {
 	var	s, transp, vtransp
@@ -1034,9 +995,6 @@ function do_pscom(text) {
 		return
 	case "linebreak":
 		set_linebreak(param)
-		return
-	case "MIDI":
-		get_midi(param)
 		return
 	case "map":
 		get_map(param)
@@ -2134,8 +2092,7 @@ function new_voice(id) {
 			clef_type: "a",		// auto
 			time: 0
 		},
-		hy_st: 0,
-		instr: 0			// default MIDI instrument
+		hy_st: 0
 	}
 
 	voice_tb.push(p_voice);

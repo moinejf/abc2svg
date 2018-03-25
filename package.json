@@ -11,6 +11,7 @@
   "files": [
     "COPYING",
     "COPYING.LESSER",
+    "MIDI-1.js",
     "Scc1t2/",
     "abc2odt",
     "abc2svg",
