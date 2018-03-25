@@ -179,7 +179,7 @@ function Audio5(i_conf) {
 				hold: Math.pow(2, (gen.holdVolEnv ?
 					gen.holdVolEnv.amount : -12000) / 1200),
 				decay: Math.pow(2, (gen.decayVolEnv ?
-					gen.decayVolEnv.amount : -12000) / 1200) / 10,
+					gen.decayVolEnv.amount : -12000) / 1200) / 3,
 				sustain: gen.sustainVolEnv ?
 					(gen.sustainVolEnv.amount / 1000) : 0,
 //				release: Math.pow(2, (gen.releaseVolEnv ?
@@ -190,6 +190,12 @@ function Audio5(i_conf) {
 			}
 			parm.hold += parm.attack;
 			parm.decay += parm.hold;
+
+			// sustain > 40dB is not audible
+			if (parm.sustain >= .4)
+				parm.sustain = 0.01	// must not be null
+			else
+				parm.sustain = 1 - parm.sustain / .4
 
 			sample_cp(parm.buffer, sample)
 
@@ -272,17 +278,21 @@ function Audio5(i_conf) {
 //		o.playbackRate.setValueAtTime(parm.rate, ac.currentTime);
 		o.playbackRate.value = rates[instr][key];
 
-	    var	vol = .5;
 		g = ac.createGain();
-		g.gain.setValueAtTime(0, t);
-		g.gain.linearRampToValueAtTime(vol, t + parm.attack);
-		g.gain.setTargetAtTime((1 - parm.sustain) * vol,
-					t + parm.hold, parm.decay);
+		if (parm.hold < 0.002) {
+			g.gain.setValueAtTime(1, t)
+		} else {
+			if (parm.attack < 0.002) {
+				g.gain.setValueAtTime(1, t)
+			} else {
+				g.gain.setValueAtTime(0, t);
+				g.gain.linearRampToValueAtTime(1, t + parm.attack)
+			}
+			g.gain.setValueAtTime(1, t + parm.hold)
+		}
 
-//fixme: does not work
-//		g.gain.setValueAtTime((1 - parm.sustain) * vol, t + d);
-//		g.gain.linearRampToValueAtTime(0,
-//					t + d);
+		g.gain.exponentialRampToValueAtTime(parm.sustain,
+					t + parm.decay);
 
 		o.connect(g);
 		g.connect(gain);
@@ -462,6 +472,6 @@ function Audio5(i_conf) {
 		else
 			gain_val = v;
 		set_cookie("volume", v.toFixed(2))
-	}, // set_vol()
+	} // set_vol()
     }
 } // end Audio5
