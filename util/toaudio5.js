@@ -159,7 +159,7 @@ function Audio5(i_conf) {
 		a = b.getChannelData(0)		// destination = array of float32
 
 		for (i = 0; i < s.length; i++)
-			a[i] = s[i] / 131072	// volume divided by 4
+			a[i] = s[i] / 196608	// volume divided by 6
 	}
 
 	// create all notes of an instrument
