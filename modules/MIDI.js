@@ -34,7 +34,7 @@ function MIDI(i_abc) {
 
     // normalize a note for mapping
     function norm(p) {
-    var	a = p.match(/([_^]*)([A-Ga-g])([,']*)/)	// '
+    var	a = p.match(/^([_^]*)([A-Ga-g])([,']*)$/)	// '
 	if (!a) {
 		abc.syntax()
 		return
@@ -67,7 +67,7 @@ function MIDI(i_abc) {
 		n = norm(a[2]);
 		v = tonote(a[3]);
 		if (!n || !v) {
-			abc.syntax(1, err_bad_val_s, "%%MIDI drummap")
+			abc.syntax(1, abc.err_bad_val_s, "%%MIDI drummap")
 			break
 		}
 		if (!abc.maps.MIDIdrum)
@@ -133,6 +133,7 @@ function MIDI(i_abc) {
 	//export some functions/variables
 	abc.tosvg('MIDI', '\
 %%beginjs\n\
+Abc.prototype.err_bad_val_s = err_bad_val_s\n\
 Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
 Abc.prototype.get_curvoice = function() { return curvoice }\n\
 Abc.prototype.maps = maps\n\
