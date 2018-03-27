@@ -78,6 +78,8 @@ var tgls = {
   ghd: {x:2, y:0, c:"\ue0a4", sc:.66},
   pshhd: {x:-3.7, y:0, c:"\ue0a9"},
   pfthd: {x:-3.7, y:0, c:"\ue0b3"},
+  x: {x:-3.7, y:0, c:"\ue0a9"},
+  "circle-x": {x:-3.7, y:0, c:"\ue0b3"},
   srep: {x:-5, y:0, c:"\ue101"},
   dot: {x:-2, y:0, c:"\ue1e7"},
  "acc-1": {x:-3, y:0, c:"\ue260"},
@@ -204,6 +206,8 @@ font-style:italic; font-size:16px">tr</text>',
 		-2 -2.5 -2 2.5 -2 -2.5 -2 2.5"/>\n\
 	<path class="stroke" d="m3.5 0l5 -7"/>\n\
 </g>',
+  triangle: '<path id="triangle" class="fill" d="m-3.7 -3.2l7.4 0 -3.7 6.4 -3.7 -6.4"/>',
+  diamond: '<path id="diamond" class="fill" d="m0 3.5l-3.7 -3.5 3.7 -3.5 3.7 3.5z"/>',
   oct: '<text id="oct" style="font-family:serif; font-size:12px">8</text>'
 }
 
