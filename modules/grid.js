@@ -125,7 +125,6 @@ function build_grid(chords, bars, font) {
 	line += '"/>\n';
 
 	// insert the chords
-	j = 0;
 	y = -1 - hr * .2
 	for (i = 0; i < cells.length; i++) {
 		if (i % nc == 0) {
@@ -139,20 +138,27 @@ function build_grid(chords, bars, font) {
 	}
 
 	// show the repeat signs
+	y = -1 - hr * .2;
+	x = x0
 	for (i = 0; i < bars.length; i++) {
 		bar = bars[i]
 		if (bar[0] == ':')
 			line += '<text class="' + cls + '" x="' +
-				(x0 + wmx * (i % nc) - 5).toFixed(2) +
-				'" y="' + (1 + hr * (i % nr + .7)).toFixed(2) +
+				(x - 5).toFixed(2) +
+				'" y="' + y.toFixed(2) +
 				'" style="font-weight:bold;font-size:' +
 			(font.size + 2).toFixed(2) + '">:|</text>\n'
+		if (i % nc == 0) {
+			y += hr;			// new row
+			x = x0
+		}
 		if (bar[bar.length - 1] == ':')
 			line += '<text class="' + cls + '" x="' +
-				(x0 + wmx * (i % nc) + 5).toFixed(2) +
-				'" y="' + (1 + hr * (i % nr + .7)).toFixed(2) +
+				(x + 5).toFixed(2) +
+				'" y="' + y.toFixed(2) +
 				'" style="font-weight:bold;font-size:' +
 			(font.size + 2).toFixed(2) + '">|:</text>\n'
+		x += wmx
 	}
 
 	return line + '</svg>'
