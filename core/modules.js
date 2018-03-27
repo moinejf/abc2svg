@@ -24,9 +24,10 @@ function Modules() {
 		capo: { fn: 'capo-1.js', init: 'Capo' },
 		diagram: { fn: 'diag-1.js', init: 'Diag' },
 		grid: { fn: 'grid-1.js', init: 'Grid' },
-		MIDI: { fn: 'MIDI-1.js', init: 'MIDI' }
+		MIDI: { fn: 'MIDI-1.js', init: 'MIDI' },
+		percmap: { fn: 'perc-1.js', init: 'Perc' }
 	},
-	all_m = /ambitus|beginps|capo|diagram|grid|MIDI/g,
+	all_m = /ambitus|beginps|capo|diagram|grid|MIDI|percmap/g,
 	nreq = 0,
 	cbf					// callback function
 

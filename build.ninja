@@ -88,6 +88,7 @@ build diag-$MAJOR.js: jscu modules/diag.js | package.json
 build grid-$MAJOR.js: jscu modules/grid.js | package.json
 build psvg-$MAJOR.js: jscu core/wps.js core/psvg.js | package.json
 build MIDI-$MAJOR.js: jscu modules/MIDI.js | package.json
+build perc-$MAJOR.js: jscu modules/perc.js | package.json
 
 build edit-$MAJOR.css: cp editor/edit.css
 
@@ -109,7 +110,7 @@ build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
  abcemb-$MAJOR.js json-$MAJOR.js midi-$MAJOR.js $
  play-$MAJOR.js toaudio-$MAJOR.js psvg-$MAJOR.js $
  ambitus-$MAJOR.js capo-$MAJOR.js diag-$MAJOR.js grid-$MAJOR.js $
- MIDI-$MAJOR.js $
+ MIDI-$MAJOR.js perc-$MAJOR.js $
  edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml $
  abckbd-$MAJOR.js abckbd2-$MAJOR.js follow-$MAJOR.js
 
@@ -120,8 +121,8 @@ default all
 rule version
   command = npm version $out;$
 	tag=`grep '"version"' package.json|cut -d'"' -f4`;$
-	git commit -a -m "New release v$$tag";$
+	git commit -m "New release v$$tag" package.json;$
 	git tag -a v$$tag;$
-	echo "*** Don't forget: git push --follow-tags; ninja build; npm publish"
+	echo "*** Don't forget: git push --follow-tags; ninja; npm publish"
 build minor: version
 build patch: version
