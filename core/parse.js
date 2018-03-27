@@ -97,7 +97,8 @@ function new_clef(clef_def) {
 		i = 4
 	case 'P':				// perc
 		s.clef_type = "p";
-		s.clef_line = 3
+		s.clef_line = 3;
+		curvoice.key.k_sf = 0		// no accidental
 		break
 	default:
 		syntax(1, "Unknown clef '$1'", clef_def)
