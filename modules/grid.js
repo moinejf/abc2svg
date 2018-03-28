@@ -98,7 +98,11 @@ function build_grid(chords, bars, font) {
 	line = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
 	color="black" width="' + img.width.toFixed(0) +
-			'px" height="' + (hr * nr + 6).toFixed(0) + 'px">\n';
+			'px" height="' + (hr * nr + 6).toFixed(0) + 'px"'
+	i = abc.get_cfmt("bgcolor")
+	if (i)
+		line += ' style="background-color: ' + i + '"';
+	line += '>\n'
 
 	if (abc.get_cfmt('fullsvg')) {
 		line += '<style type="text/css">\n\
