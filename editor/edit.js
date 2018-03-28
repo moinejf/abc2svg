@@ -139,7 +139,7 @@ function loadlang(lang, no_memo) {
 	loadjs('edit-' + lang + '.js', function() { loadtxt() });
 	loadjs('err-' + lang + '.js')
 	if (!no_memo)
-		set_cookie("lang", lang)
+		localStorage.setItem("lang", lang)
 }
 
 // show/hide a popup message
@@ -484,29 +484,24 @@ function destroyClickedElement(evt) {
 	document.body.removeChild(evt.target)
 }
 
-// cookies stuff
-function set_cookie(n, v) {
-    var	d = new Date();
-	d.setTime(d.getTime() + 30 * 24 * 60 * 60 * 1000);	// one month
-	document.cookie = n + "=" + v + ";expires=" + d.toUTCString()
-}
-
 // set the size of the font of the textarea
 function setfont() {
     var	fs = document.getElementById("fontsize").value.toString();
 	document.getElementById("source").style.fontSize =
 		document.getElementById("src1").style.fontSize = fs + "px";
-	set_cookie("font", fs)
+	localStorage.setItem("fontsz", fs)
 }
 
 // playing
 // set 'follow music'
 function set_follow(e) {
 	abcplay.set_follow(e.checked)
+	localStorage.setItem("follow", e.checked ? "1" : "0")
 }
 // set soundfont URL
 function set_sfu(v) {
 	abcplay.set_sfu(v)
+	localStorage.setItem("sfu", v)
 }
 // set_speed value = 1..20, 10 = no change
 function set_speed(iv) {
@@ -519,6 +514,7 @@ function set_speed(iv) {
 // set volume
 function set_vol(v) {
 	abcplay.set_vol(v)
+	localStorage.setItem("volume", v.toFixed(2))
 }
 //fixme: do tune/start-stop selection of what to play
 function notehlight(i, on) {
@@ -596,22 +592,17 @@ function edit_init() {
 	}
 
 	function set_pref() {
-	    var	ac = document.cookie.split(';')
-		for (var i = 0; i < ac.length; i++) {
-			var c = ac[i].split('=')
-			switch (c[0].replace(/ */, '')) {
-			case "font":
-				document.getElementById("source").style.fontSize =
-					document.getElementById("src1").style.fontSize =
-						c[1] + "px";
-				document.getElementById("fontsize").value =
-						Number(c[1])
-				break
-			case "lang":
-				loadlang(c[1], true)
-				break
-			}
+	    var	v = localStorage.getItem("fontsz")
+		if (v) {
+			document.getElementById("source").style.fontSize =
+				document.getElementById("src1").style.fontSize =
+					v + "px";
+			document.getElementById("fontsize").value =
+					Number(v)
 		}
+		v = localStorage.getItem("lang")
+		if (v)
+			loadlang(v, true)
 	}
 
 	document.getElementById("abc2svg").innerHTML =
@@ -664,9 +655,8 @@ function edit_init() {
 				if (playing)
 					abcplay.add(tsfirst, voice_tb)
 			}
-	} else {
-		set_pref()	// set the preferences from the cookies
 	}
+	set_pref()	// set the preferences from local storage
 }
 
 // drag and drop

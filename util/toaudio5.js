@@ -127,28 +127,17 @@ function Audio5(i_conf) {
 		return a
 	}
 
-	// get the URL and the type of the soundfont from cookies
-	function get_cookies() {
-	    var	ac = document.cookie.split(';')
-		for (var i = 0; i < ac.length; i++) {
-			var c = ac[i].split('=')
-			switch (c[0].replace(/ */, '')) {
-			case "follow":
-				follow = c[1] == "true"
-				break
-			case "sfu":
-				if (!sfu)
-					sfu = c[1]
-				break
-//			case "speed":
-//			    var	v = Math.pow(3, (c[1] - 10) * .1);
-//				speed = v
-//				break
-			case "volume":
-				vol = Number(c[1])
-				break
-			}
-		}
+	// get the play parameters from localStorage
+	function get_param() {
+	    var	v = localStorage.getItem("follow")
+		if (v)
+			follow = v != "0";
+		v = localStorage.getItem("sfu")
+		if (v)
+			sfu = v;
+		v = localStorage.getItem("volume")
+		if (v)
+			gain_val = Number(v)
 	}
 
 	// copy a sf2 sample to an audio buffer
@@ -373,18 +362,11 @@ function Audio5(i_conf) {
 		play_next(a_e)
 	} // play_start()
 
-	function set_cookie(n, v) {
-	    var	d = new Date();
-		d.setTime(d.getTime() + 31536000000)	// one year
-//					365 * 24 * 60 * 60 * 1000
-		document.cookie = n + "=" + v + ";expires=" + d.toUTCString()
-	}
-
 // Audio5 object creation
 
 	init_b64d();			// initialize base64 decoding
 
-	get_cookies()			// get the user parameters
+	get_param()			// get the play parameters
 
 	if (!sfu)
 		sfu = "Scc1t2"		// set the default soundfont location
@@ -442,7 +424,6 @@ function Audio5(i_conf) {
 		if (v == undefined)
 			return follow
 		follow = v;
-		set_cookie("follow", v)
 	}, // set_follow()
 
 	// set soundfont URL
@@ -450,7 +431,6 @@ function Audio5(i_conf) {
 		if (v == undefined)
 			return sfu
 		sfu = v;
-		set_cookie("sfu", v)
 	}, // set_sfu()
 
 	// set speed (< 1 slower, > 1 faster)
@@ -471,7 +451,6 @@ function Audio5(i_conf) {
 			gain.gain.value = v
 		else
 			gain_val = v;
-		set_cookie("volume", v.toFixed(2))
 	} // set_vol()
     }
 } // end Audio5
