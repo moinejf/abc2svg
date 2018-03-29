@@ -414,6 +414,7 @@ function Audio5(i_conf) {
 	// stop playing
 	stop: function() {
 		clearTimeout(timout);
+		onend();
 		iend = 0
 		if (gain) {
 			gain.disconnect();

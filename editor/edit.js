@@ -549,7 +549,6 @@ function play_tune() {
 
 	if (playing) {
 		abcplay.stop();
-		endplay()
 		return
 	}
 	playing = true;
