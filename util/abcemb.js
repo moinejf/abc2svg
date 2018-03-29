@@ -82,7 +82,6 @@ function playseq(seq) {
 		return			// play-1.js not loaded
 	if (play == 2) {
 		abcplay.stop();
-		endplay()
 		return
 	}
 	play = 2

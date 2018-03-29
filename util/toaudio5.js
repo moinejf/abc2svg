@@ -68,7 +68,6 @@ function Audio5(i_conf) {
 		ac,			// audio context
 		gain,			// global gain
 		gain_val = 0.7,
-		timout,			// timer while playing
 		follow = true,		// follow the music
 		speed = 1,		// speed factor
 		new_speed,
@@ -341,7 +340,7 @@ function Audio5(i_conf) {
 		}
 
 		// delay before next sound generation
-		timout = setTimeout(play_next, (t + stime - ac.currentTime)
+		setTimeout(play_next, (t + stime - ac.currentTime)
 				* 1000 - 300,	// wake before end of playing
 				a_e)
 	} // play_next()
@@ -353,7 +352,7 @@ function Audio5(i_conf) {
 
 		// wait for instruments
 		if (w_instr != 0) {
-			timout = setTimeout(play_start, 300, a_e)
+			setTimeout(play_start, 300, a_e)
 			return
 		}
 
@@ -413,8 +412,6 @@ function Audio5(i_conf) {
 
 	// stop playing
 	stop: function() {
-		clearTimeout(timout);
-		onend();
 		iend = 0
 		if (gain) {
 			gain.disconnect();
