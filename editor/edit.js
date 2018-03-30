@@ -664,6 +664,8 @@ function edit_init() {
 //				Math.log(abcplay.set_speed()) / Math.log(3);
 			document.getElementById("gvol").setAttribute("value",
 				abcplay.set_vol() * 10)
+			document.getElementById("gvl").setAttribute("value",
+				(abcplay.set_vol() * 10).toFixed(2))
 		});
 
 		user.get_abcmodel =
