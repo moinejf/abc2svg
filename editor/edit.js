@@ -104,6 +104,21 @@ var user = {
 
 // -- local functions
 
+// Storage handling
+function storage(t, k, v) {
+	if (!t)
+		return
+	try {
+		if (v)
+			t.setItem(k, v)
+		else if (v === 0)
+			t.removeItem(k)
+		else
+			return t.getItem(k)
+	} catch(e) {
+	}
+}
+
 // replace <>& by XML character references
 function clean_txt(txt) {
 	return txt.replace(/<|>|&.*?;|&/g, function(c) {
@@ -139,7 +154,7 @@ function loadlang(lang, no_memo) {
 	loadjs('edit-' + lang + '.js', function() { loadtxt() });
 	loadjs('err-' + lang + '.js')
 	if (!no_memo)
-		localStorage.setItem("lang", lang)
+		storage(localStorage, "lang", lang == "en" ? 0 : lang)
 }
 
 // show/hide a popup message
@@ -489,19 +504,19 @@ function setfont() {
     var	fs = document.getElementById("fontsize").value.toString();
 	document.getElementById("source").style.fontSize =
 		document.getElementById("src1").style.fontSize = fs + "px";
-	localStorage.setItem("fontsz", fs)
+	storage(localStorage, "fontsz", fs == "14" ? 0 : fs)
 }
 
 // playing
 // set 'follow music'
 function set_follow(e) {
 	abcplay.set_follow(e.checked)
-	localStorage.setItem("follow", e.checked ? "1" : "0")
+	storage(localStorage, "follow", e.checked == "1" ? 0 : "0")
 }
 // set soundfont URL
 function set_sfu(v) {
 	abcplay.set_sfu(v)
-	localStorage.setItem("sfu", v)
+	storage(localStorage, "sfu", v == "Scc1t2" ? 0 : v)
 }
 // set_speed value = 1..20, 10 = no change
 function set_speed(iv) {
@@ -513,8 +528,10 @@ function set_speed(iv) {
 }
 // set volume
 function set_vol(v) {
+    var	gvl = document.getElementById("gvl");
+	gvl.innerHTML = v.toFixed(2);
 	abcplay.set_vol(v)
-	localStorage.setItem("volume", v.toFixed(2))
+	storage(localStorage, "volume", v == 0.7 ? 0 : v.toFixed(2))
 }
 //fixme: do tune/start-stop selection of what to play
 function notehlight(i, on) {
@@ -591,7 +608,7 @@ function edit_init() {
 	}
 
 	function set_pref() {
-	    var	v = localStorage.getItem("fontsz")
+	    var	v = storage(localStorage, "fontsz")
 		if (v) {
 			document.getElementById("source").style.fontSize =
 				document.getElementById("src1").style.fontSize =
@@ -599,7 +616,7 @@ function edit_init() {
 			document.getElementById("fontsize").value =
 					Number(v)
 		}
-		v = localStorage.getItem("lang")
+		v = storage(localStorage, "lang")
 		if (v)
 			loadlang(v, true)
 	}
@@ -646,7 +663,7 @@ function edit_init() {
 //			document.getElementById("spv").innerHTML =
 //				Math.log(abcplay.set_speed()) / Math.log(3);
 			document.getElementById("gvol").setAttribute("value",
-				(abcplay.set_vol() * 10) | 0)
+				abcplay.set_vol() * 10)
 		});
 
 		user.get_abcmodel =

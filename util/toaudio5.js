@@ -128,6 +128,8 @@ function Audio5(i_conf) {
 
 	// get the play parameters from localStorage
 	function get_param() {
+		if (!localStorage)
+			return
 	    var	v = localStorage.getItem("follow")
 		if (v)
 			follow = v != "0";
