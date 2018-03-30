@@ -7,30 +7,29 @@ function loadtxt() {
 		play: 'Jouer',
 		stop: 'Arrêter',
 	}
-	var text_kv = [
-		"a", 'A propos',
-		"b", 'Fichiers ABC:',
-//		"df", 'abc2svg features',
-//		"dp", 'abc2svg parameters',
-		"er", 'Erreurs',
-		"f", 'Fichier',
-		"fl", 'Ouvrir un fichier',
-		"fo", 'Suivre la musique',
-		"fs", 'Taille police',
-		"gv", 'Volume son',
-		"h", 'Aide',
-		"ha", 'Aide',
-		"lg", 'Langue',
-		"playbutton", 'Jouer',
-		"pr", 'Préférences',
-		"saveas", 'Sauver le fichier',
-		"sftl", 'type',
-		"sful", 'URL police de sons',
-		"sp", 'Vitesse'
-	]
+	var text_kv = {
+		a: 'A propos',
+		b: 'Fichiers ABC:',
+//		df: 'abc2svg features',
+//		dp: 'abc2svg parameters',
+		er: 'Erreurs',
+		f: 'Fichier',
+		fl: 'Ouvrir un fichier',
+		fo: 'Suivre la musique',
+		fs: 'Taille police',
+		gv: 'Volume son',
+		h: 'Aide',
+		ha: 'Aide',
+		lg: 'Langue',
+		playbutton: 'Jouer',
+		pr: 'Préférences',
+		saveas: 'Sauver le fichier',
+		sful: 'URL police de sons',
+		sp: 'Vitesse'
+	}
 
-	for (var i = 0; i < text_kv.length; i += 2)
-		document.getElementById(text_kv[i]).innerHTML = text_kv[i + 1];
+	for (var k in text_kv)
+		document.getElementById(k).innerHTML = text_kv[k];
 
 	document.getElementById("hlp").outerHTML = '<ul  id="hlp">\n\
 <li>Vous pouvez, soit:\n\

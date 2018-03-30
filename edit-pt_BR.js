@@ -7,30 +7,29 @@ function loadtxt() {
 		play: 'Tocar',
 		stop: 'Parar',
 	}
-	var text_kv = [
-		"a", 'Sobre',
-		"b", 'Arquivos ABC:',
-//		"df", 'abc2svg features',
-//		"dp", 'abc2svg parameters',
-		"er", 'Erros',
-		"f", 'Arquivo',
-		"fl", 'Abrir arquivo ABC',
-		"fo", 'Follow music',
-		"fs", 'Tamanho da fonte',
-		"gv", 'Volume',
-		"h", 'Ajuda',
-		"ha", 'Ajuda',
-		"lg", 'Língua',
-    		"playbutton", 'Tocar',
-		"pr", 'Opções',
-		"saveas", 'Salvar arquivo',
-		"sftl", 'type',
-		"sful", 'Sound font URL',
-		"sp", 'Speed'
-	]
+	var text_kv = {
+		a: 'Sobre',
+		b: 'Arquivos ABC:',
+//		df: 'abc2svg features',
+//		dp: 'abc2svg parameters',
+		er: 'Erros',
+		f: 'Arquivo',
+		fl: 'Abrir arquivo ABC',
+		fo: 'Follow music',
+		fs: 'Tamanho da fonte',
+		gv: 'Volume',
+		h: 'Ajuda',
+		ha: 'Ajuda',
+		lg: 'Língua',
+    		playbutton: 'Tocar',
+		pr: 'Opções',
+		saveas: 'Salvar arquivo',
+		sful: 'Sound font URL',
+		sp: 'Speed'
+	}
 
-	for (var i = 0; i < text_kv.length; i += 2)
-		document.getElementById(text_kv[i]).innerHTML = text_kv[i + 1];
+	for (var k in text_kv)
+		document.getElementById(k).innerHTML = text_kv[k];
 
 	document.getElementById("hlp").outerHTML = '<ul  id="hlp">\n\
 <li>Você pode:\n\
