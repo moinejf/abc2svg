@@ -707,7 +707,7 @@ function set_bar_num() {
 			if (s2 && s2.type == BAR && s2.text) {
 				if (s2.text[0] == '1') {
 					rep_dtime = 0;
-					bar_rep = bar_num - 1
+					bar_rep = bar_num
 				} else {			// restart bar numbering
 					if (!cfmt.contbarnb)
 						bar_num = bar_rep
