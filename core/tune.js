@@ -632,33 +632,6 @@ function set_bar_num() {
 		wmeasure = voice_tb[v].meter.wmeasure,
 		bar_rep = gene.nbar
 
-	// insert the EOL of %%break
-	function do_break() {
-		var s, i, m, n, d, t
-
-		for (i = 0; i < glovar.break.length; i++) {
-			m = glovar.break[i].m
-			n = glovar.break[i].n
-			d = glovar.break[i].d
-			for (s = voice_tb[v].sym; s; s = s.next) {
-				if (s.type == BAR && s.bar_num == m)
-					break
-			}
-			if (!s)
-				continue
-			if (n != 0) {
-				t = s.time + n / d
-				for ( ; s; s = s.next) {
-					if (s.time > t)
-						break
-				}
-				if (!s)
-					continue
-			}
-			s.eoln = true
-		}
-	} // do_break
-
 	/* don't count a bar at start of line */
 	for (s = tsfirst; ; s = s.ts_next) {
 		if (!s)
@@ -751,43 +724,9 @@ function set_bar_num() {
 	}
 //fixme
 	/* do the %%clip stuff */
-	/* do the %%break stuff */
-	if (glovar.break)
-		do_break()
 
 	if (cfmt.measurenb < 0)		/* if no display of measure bar */
 		gene.nbar = bar_num	/* update in case of more music to come */
-}
-
-// %%break measure_nb [":" num "/" den] [" " measure ...]*
-function get_break(param) {
-	var a = param.split(' '), b, c, d, i, j, k, n
-
-	glovar.break = []
-	for (k in a) {
-		if (!a.hasOwnProperty(k))
-			continue
-		b = a[k];
-		i = b.indexOf(':')
-		if (i < 0) {
-			glovar.break.push({m: b, n: 0, d: 1})
-			continue
-		}
-		j = b.indexOf('/')
-		if (j < 0) {
-			syntax(1, "'/' missing in %%break")
-			break
-		}
-		d = parseInt(b.slice(j + 1))
-		if (isNaN(d) || d <= 1) {
-			syntax(1, "Bad denominator in %%break")
-			break
-		}
-		glovar.break.push({
-			m: b.slice(0, i - 1),
-			n: b.slice(i + 1, j - 1),
-			d: d})
-	}
 }
 
 // note mapping
@@ -966,9 +905,6 @@ function do_pscom(text) {
 	cmd = cmd[0];
 	param = text.replace(cmd, '').trim()
 	switch (cmd) {
-	case "break":
-		get_break(param)
-		return
 	case "center":
 		if (parse.state >= 2) {
 			s = new_block("text");

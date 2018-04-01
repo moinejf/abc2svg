@@ -83,6 +83,7 @@ build abc2svg-$MAJOR.js: jsc core/abc2svg.js core/deco.js core/draw.js $
  core/modules.js | package.json
 
 build ambitus-$MAJOR.js: jscu modules/ambitus.js | package.json
+build break-$MAJOR.js: jscu modules/break.js | package.json
 build capo-$MAJOR.js: jscu modules/capo.js | package.json
 build diag-$MAJOR.js: jscu modules/diag.js | package.json
 build grid-$MAJOR.js: jscu modules/grid.js | package.json
@@ -109,7 +110,7 @@ build edit-$MAJOR.js: edit editor/edit.js | package.json
 build all: phony abc2svg-$MAJOR.js abcdoc-$MAJOR.js $
  abcemb-$MAJOR.js json-$MAJOR.js setmidi-$MAJOR.js $
  play-$MAJOR.js toaudio-$MAJOR.js psvg-$MAJOR.js $
- ambitus-$MAJOR.js capo-$MAJOR.js diag-$MAJOR.js grid-$MAJOR.js $
+ ambitus-$MAJOR.js break-$MAJOR.js capo-$MAJOR.js diag-$MAJOR.js grid-$MAJOR.js $
  MIDI-$MAJOR.js perc-$MAJOR.js $
  edit-$MAJOR.css edit-$MAJOR.js edit-$MAJOR.xhtml $
  abckbd-$MAJOR.js abckbd2-$MAJOR.js follow-$MAJOR.js
