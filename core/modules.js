@@ -23,12 +23,13 @@ function Modules() {
 		beginps: { fn: 'psvg-1.js', init: 'psvg_init' },
 		break: { fn: 'break-1.js', init: 'Break' },
 		capo: { fn: 'capo-1.js', init: 'Capo' },
+		clip: { fn: 'clip-1.js', init: 'Clip' },
 		diagram: { fn: 'diag-1.js', init: 'Diag' },
 		grid: { fn: 'grid-1.js', init: 'Grid' },
 		MIDI: { fn: 'MIDI-1.js', init: 'MIDI' },
 		percmap: { fn: 'perc-1.js', init: 'Perc' }
 	},
-	all_m = /ambitus|beginps|break|capo|diagram|grid|MIDI|percmap/g,
+	all_m = /ambitus|beginps|break|capo|clip|diagram|grid|MIDI|percmap/g,
 	nreq = 0,
 	cbf					// callback function
 
