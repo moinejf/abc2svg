@@ -1921,11 +1921,47 @@ function init_tune() {
 	od = {}				// no ottava decorations anymore
 }
 
+// treat V: with many voices
+function do_cloning(vs) {
+    var	i, eol,
+	file = parse.file,
+	start = parse.eol + 1,		// next line after V:
+	bol = start
+
+	// search the end of the music to be cloned
+	while (1) {
+		eol = file.indexOf('\n', bol)
+		if (eol < 0) {
+			eol = 0
+			break
+		}
+
+		// stop on comment, or information field
+		if (file.slice(eol + 1, eol + 4).match(/%.*|\n.*|.:.|\[.:/))
+			break
+		bol = eol + 1
+	}
+
+	// insert the music sequence in each voice
+	include++;
+	tosvg(parse.ctx.in_fname, file, start, eol)	// first voice
+	for (i = 0; i < vs.length; i++) {
+		get_voice(vs[i]);
+		tosvg(parse.ctx.in_fname, file, start, eol)
+	}
+	include--
+}
+
 // treat a 'V:' info
 function get_voice(parm) {
-	var	v, transp, vtransp,
+	var	v, transp, vtransp, vs,
 		a = info_split(parm, 1),
 		vid = a.shift();
+
+	if (vid.indexOf(',') > 0) {		// if many voices
+		vs = vid.split(',');
+		vid = vs.shift()
+	}
 
 	if (parse.state < 2) {
 		if (a.length != 0)
@@ -1973,6 +2009,9 @@ function get_voice(parm) {
 		curvoice.filtered = true;
 		voice_filter()
 	}
+
+	if (vs)
+		do_cloning(vs)
 }
 
 // change state from 'tune header after K:' to 'in tune body'
