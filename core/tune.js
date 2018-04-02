@@ -1882,7 +1882,6 @@ function new_voice(id) {
 			vol: 0
 		},
 		scale: 1,
-		combine: 0,
 //		st: 0,
 //		cst: 0,
 		ulen: glovar.ulen,

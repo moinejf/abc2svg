@@ -102,7 +102,6 @@ H "History: "',
 	topspace: 22,
 	tuplets: [0, 0, 0, 0],
 	vocalspace: 10,
-//	voicecombine: 0,
 //	voicescale: 1,
 	writefields: "CMOPQsTWw",
 	wordsspace: 5
@@ -599,18 +598,7 @@ function set_format(cmd, param, lock) {
 			cfmt[cmd] = v
 		break
 	case "combinevoices":
-	case "voicecombine":
-		v = parseInt(param)
-		if (isNaN(v)) {
-			syntax(1, err_bad_val_s, "%%" + cmd)
-			return
-		}
-		if (curvoice && cmd == "combinevoices") {
-			for (f = 0; f < voice_tb.length; f++)
-				voice_tb[f].combine = v
-			break
-		}
-		set_v_param("combine", v)
+		syntax("%%combinevoices is deprecated - use %%voicecombine instead")
 		break
 	case "voicemap":
 		set_v_param("map", param)

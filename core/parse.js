@@ -376,7 +376,6 @@ function set_vp(a) {
 			}
 			syntax(1, err_bad_val_s, item)
 			break
-		case "combine=":		// %%voicecombine
 		case "octave=":
 		case "uscale=":			// %%microscale
 			val = parseInt(a.shift())
@@ -2082,8 +2081,6 @@ function new_note(grace, tp_fact) {
 			case SL_BELOW: s.stem = -1; break
 			case SL_HIDDEN: s.stemless = true; break
 			}
-
-			s.combine = curvoice.combine
 
 			// adjust the symbol duration
 			s.dur *= tp_fact;

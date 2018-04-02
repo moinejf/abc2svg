@@ -24,12 +24,13 @@ function Modules() {
 		break: { fn: 'break-1.js', init: 'Break' },
 		capo: { fn: 'capo-1.js', init: 'Capo' },
 		clip: { fn: 'clip-1.js', init: 'Clip' },
+		voicecombine: { fn: 'combine-1.js', init: 'Combine' },
 		diagram: { fn: 'diag-1.js', init: 'Diag' },
 		grid: { fn: 'grid-1.js', init: 'Grid' },
 		MIDI: { fn: 'MIDI-1.js', init: 'MIDI' },
 		percmap: { fn: 'perc-1.js', init: 'Perc' }
 	},
-	all_m = /ambitus|beginps|break|capo|clip|diagram|grid|MIDI|percmap/g,
+	all_m = /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap/g,
 	nreq = 0,
 	cbf					// callback function
 
