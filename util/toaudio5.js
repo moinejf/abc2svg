@@ -229,6 +229,12 @@ function Audio5(i_conf) {
 				parser.parse();
 				sf2_create(parser, instr);
 				w_instr--
+			},
+			function() {
+				alert('could not find the instrument ' +
+					((instr / 128) | 0).toString() + '-' +
+					(instr % 128).toString());
+				w_instr--
 			})
 	} // load_instr()
 
@@ -260,6 +266,8 @@ function Audio5(i_conf) {
 		parm = params[instr][key],
 		o = ac.createBufferSource();
 
+		if (!parm)		// if the instrument could not be loaded
+			return		// or if it has not this key
 		o.buffer = parm.buffer
 		if (parm.loopStart) {
 			o.loop = true;

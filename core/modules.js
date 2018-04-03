@@ -68,16 +68,23 @@ function Modules() {
 				loadRelativeToScript(m.fn)
 			} else {			// web
 				nreq++;
-				loadjs(m.fn, function() {
+				loadjs(m.fn,
+				    function() {	// if success
 					nreq--;
 					if (nreq == 0)
+						cbf()},
+				    function() {	// if error
+					alert('error loading ' + m.fn);
+					nreq--
+					if (nreq == 0)
 						cbf()
-				})
+				    })
 			}
 		}
 		if (relay)		// web
 			return nreq == nreq_i;
-		init(abc)		// batch
+		if (abc)
+			init(abc)	// batch
 		return true
 	}
 
@@ -88,7 +95,8 @@ function Modules() {
 	function init(abc) {
 		for (var i in modules) {
 			var m = modules[i]
-			if (!m.loaded || m.loaded === abc)
+			if (eval('typeof ' + m.init) != "function"
+			 || m.loaded === abc)
 				continue
 			m.loaded = abc;
 			eval(m.init + '(abc)')

@@ -143,13 +143,13 @@ var jsdir = (function() {
 	return scrs[scrs.length - 1].src.match(/.*\//) || ''
 })()
 
-function loadjs(fn, relay) {
+function loadjs(fn, relay, onerror) {
 	var s = document.createElement('script');
 	s.src = jsdir + fn;
 	s.type = 'text/javascript'
 	if (relay)
 		s.onload = relay;
-	s.onerror = function() {
+	s.onerror = onerror || function() {
 		alert('error loading ' + fn)
 	}
 	document.head.appendChild(s)
