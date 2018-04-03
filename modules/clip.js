@@ -41,13 +41,13 @@ function Clip(i_abc) {
 		a = parm.split(/[ -]/)
 
 		if (a.length != 3) {
-			abc.syntax(1, err_bad_val_s, "%%clip")
+			abc.syntax(1, abc.err_bad_val_s, "%%clip")
 			return
 		}
 		b = get_symsel(a[1]);
 		c = get_symsel(a[2])
 		if (!b || !c) {
-			abc.syntax(1, err_bad_val_s, "%%clip")
+			abc.syntax(1, abc.err_bad_val_s, "%%clip")
 			return
 		}
 		abc.glovar.clip = [b, c]
