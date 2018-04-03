@@ -1989,6 +1989,8 @@ function set_clefs() {
 		if (!sy.voices[v].second) {		// main voices
 			if (p_voice.stafflines != undefined)
 				sy.staves[st].stafflines = p_voice.stafflines
+			if (p_voice.staffnonote != undefined)
+				sy.staves[st].staffnonote = p_voice.staffnonote
 			if (p_voice.staffscale)
 				sy.staves[st].staffscale = p_voice.staffscale
 			if (sy.voices[v].sep)
@@ -2035,6 +2037,8 @@ function set_clefs() {
 				if (!sy.voices[v].second) {
 					if (p_voice.stafflines != undefined)
 						sy.staves[st].stafflines = p_voice.stafflines
+					if (p_voice.staffnonote != undefined)
+						sy.staves[st].staffnonote = p_voice.staffnonote
 					if (p_voice.staffscale)
 						sy.staves[st].staffscale = p_voice.staffscale
 					if (sy.voices[v].sep)
@@ -4131,7 +4135,8 @@ function set_piece() {
 			}
 			break
 		case BAR:
-			if (cfmt.staffnonote <= 1)
+			if (!sy.staves[st].staffnonote	// default = 1
+			 || sy.staves[st].staffnonote <= 1)
 				break
 			// fall thru
 		case GRACE:
@@ -4141,10 +4146,10 @@ function set_piece() {
 		case REST:
 		case SPACE:
 		case MREST:
-			if (cfmt.staffnonote > 1) {
+			if (sy.staves[st].staffnonote > 1) {
 				non_empty_gl[st] = non_empty[st] = true
 			} else if (!s.invis) {
-				if (cfmt.staffnonote != 0
+				if (sy.staves[st].staffnonote != 0
 				 || s.type == NOTE)
 					non_empty_gl[st] = non_empty[st] = true
 			}

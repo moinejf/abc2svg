@@ -455,6 +455,13 @@ function set_vp(a) {
 			else
 				curvoice.stafflines = val
 			break
+		case "staffnonote=":
+			val = parseInt(a.shift())
+			if (isNaN(val))
+				syntax(1, "Bad %%staffscale value")
+			else
+				curvoice.staffnonote = val
+			break
 		case "staffscale=":
 			val = parseFloat(a.shift())
 			if (isNaN(val) || val < .3 || val > 2)

@@ -487,6 +487,8 @@ function new_syst(init) {
 			p_voice = voice_tb[v]
 		if (p_voice.stafflines != undefined)
 			sy_staff.stafflines = p_voice.stafflines
+		if (p_voice.staffnonote != undefined)
+			sy_staff.staffnonote = p_voice.staffnonote
 		if (p_voice.staffscale)
 			sy_staff.staffscale = p_voice.staffscale;
 		sy_new.voices[v] = clone(par_sy.voices[v]);
@@ -1027,6 +1029,7 @@ function do_pscom(text) {
 		return
 	case "stafflines":
 	case "staffscale":
+	case "staffnonote":
 		set_v_param(cmd, param)
 		return
 	case "staves":

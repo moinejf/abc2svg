@@ -85,7 +85,6 @@ H "History: "',
 	rbmin: 2,
 	scale: 1,
 	slurheight: 1.0,
-	staffnonote: 1,
 	staffsep: 46,
 	stemheight: 21,			// one octave
 	stretchlast: .25,
@@ -384,7 +383,6 @@ function set_format(cmd, param, lock) {
 	case "rbmax":
 	case "rbmin":
 	case "shiftunison":
-	case "staffnonote":
 		v = parseInt(param)
 		if (isNaN(v)) {
 			syntax(1, "Bad integer value");
