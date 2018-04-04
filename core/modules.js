@@ -74,7 +74,7 @@ function Modules() {
 					if (nreq == 0)
 						cbf()},
 				    function() {	// if error
-					alert('error loading ' + m.fn);
+					user.errmsg('error loading ' + m.fn);
 					nreq--
 					if (nreq == 0)
 						cbf()

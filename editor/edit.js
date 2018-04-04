@@ -212,18 +212,13 @@ function selsrc(idx) {
 
 // render the textarea content to the right side
 function render() {
-	var	i, j,
-		target = document.getElementById("target"),
-		diverr = document.getElementById("diverr"),
-		content = document.getElementById("source").value
+    var	i, j,
+	diverr = document.getElementById("diverr"),
+	content = document.getElementById("source").value;
+
 	a_pe = null
 	if (!content)
 		return			// empty source
-
-	// load the required modules
-	if (!modules.load(content + document.getElementById("src1").value,
-			null, render))
-		return
 
 	// if include file not loaded yet, ask it
 	i = content.indexOf('%%abc-include ')
@@ -238,12 +233,25 @@ function render() {
 			return
 		}
 	}
+	diverr.innerHTML = '';
+	render2()
+}
+function render2() {
+    var	i,
+	target = document.getElementById("target"),
+	diverr = document.getElementById("diverr"),
+	content = document.getElementById("source").value
+
+	// load the required modules
+	if (!modules.load(content + document.getElementById("src1").value,
+			null, render2))
+		return
+
 	user.img_out = user.my_img_out;
 	abc = new Abc(user);
 	abc_images = '';
 	abc.tosvg('edit', '%%bgcolor white');
 
-	diverr.innerHTML = '';
 //	document.body.style.cursor = "wait";
 	ref = []
 	try {
