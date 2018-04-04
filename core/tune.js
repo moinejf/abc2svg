@@ -540,8 +540,21 @@ function set_bar_num() {
 		break
 	}
 
+	// at start of tune, check for an anacrusis
+	bar_time = s.time + wmeasure
+	if (s.time == 0) {
+		for (s2 = s.ts_next; s2; s2 = s2.ts_next) {
+			if (s2.type == BAR && s2.time) {
+				if (s2.time < bar_time) {	// if anacrusis
+					s = s2;
+					bar_time = s.time + wmeasure
+				}
+				break
+			}
+		}
+	}
+
 	// set the measure number on the top bars
-	bar_time = s.time + wmeasure; // for incomplete measure at start of tune
 	bar_num = gene.nbar
 
 	for ( ; s; s = s.ts_next) {
