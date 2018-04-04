@@ -602,7 +602,9 @@ function set_bar_num() {
 				} else {			// restart bar numbering
 					if (!cfmt.contbarnb)
 						bar_num = bar_rep
-					if (rep_dtime) {
+					if (rep_dtime) {	// [1 inside measure
+						if (cfmt.contbarnb)
+							bar_num--;
 						bar_time = tim + rep_dtime
 						break
 					}
