@@ -114,7 +114,8 @@ do_pscom = function(text) {\n\
 }\n\
 set_bar_num = function() {\n\
 	brk.sbn();\n\
-	Break.prototype.do_break()\n\
+	if (glovar.break)\n\
+		Break.prototype.do_break()\n\
 }\n\
 %%endjs\n\
 ')

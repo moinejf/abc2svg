@@ -209,7 +209,8 @@ do_pscom = function(text) {\n\
 }\n\
 set_bar_num = function() {\n\
 	clip.sbn();\n\
-	Clip.prototype.do_clip()\n\
+	if (glovar.clip)\n\
+		Clip.prototype.do_clip()\n\
 }\n\
 %%endjs\n\
 ')
