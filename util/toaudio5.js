@@ -28,6 +28,7 @@
 //		Arguments:
 //			i: start index of the note in the ABC source
 //			on: true on note start, false on note stop
+//	errmsg: function called on error (default: alert)
 
 // Audio5 methods
 
@@ -61,10 +62,10 @@
     var	abcsf2 = []
 
 function Audio5(i_conf) {
-
 	var	conf = i_conf,		// configuration
-		onend = function() {},	// callback function on play end
-		onnote = function() {},	// callback function on note start/stop
+		onend = conf.onend || function() {},
+		onnote = conf.onnote || function() {},
+		errmsg = conf.errmsg || alert,
 		ac,			// audio context
 		gain,			// global gain
 		gain_val = 0.7,
@@ -231,7 +232,7 @@ function Audio5(i_conf) {
 				w_instr--
 			},
 			function() {
-				alert('could not find the instrument ' +
+				errmsg('could not find the instrument ' +
 					((instr / 128) | 0).toString() + '-' +
 					(instr % 128).toString());
 				w_instr--
@@ -385,11 +386,6 @@ function Audio5(i_conf) {
 
 	if (!sfu)
 		sfu = "Scc1t2"		// set the default soundfont location
-
-	if (conf.onend)
-		onend = conf.onend
-	if (conf.onnote)
-		onnote = conf.onnote
 
     // external methods
     return {
