@@ -1160,11 +1160,10 @@ function new_bar() {
 	}
 
 	/* if the last element is '[', it may start
-	 * a chord, an embedded header or an other bar */
+	 * a chord or an embedded header */
 	switch (bar_type.slice(-1)) {
 	case '[':
-		if ((c > '0' && c <= '9')	// :|[2
-		 || c == '"')			// :|["last"
+		if (c.match(/[0-9" ]/))		// "
 			break
 		bar_type = bar_type.slice(0, -1);
 		line.index--;
