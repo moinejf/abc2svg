@@ -1163,11 +1163,8 @@ function new_bar() {
 	 * a chord, an embedded header or an other bar */
 	switch (bar_type.slice(-1)) {
 	case '[':
-		if (bar_type.length == 1) {
-			s.text = ''
-			break
-		}
-		if (c > '0' && c <= '9')	// ":|[2"
+		if ((c > '0' && c <= '9')	// :|[2
+		 || c == '"')			// :|["last"
 			break
 		bar_type = bar_type.slice(0, -1);
 		line.index--;
@@ -1189,8 +1186,8 @@ function new_bar() {
 		}
 		s.rbstop = 2;
 		s.rbstart = 2
-	} else if (c == '"' && bar_type == "[") {
-//		s.text = ""
+	} else if (c == '"') {
+		s.text = ""
 		while (1) {
 			c = line.next_char()
 			if (!c) {
@@ -1234,9 +1231,10 @@ function new_bar() {
 	s2 = curvoice.last_sym
 	if (s2 && s2.type == SPACE) {
 		s2.time--		// keep the space at the right place
-	} else if (s2 && s2.type == BAR
-		&& !s2.a_gch && !s2.a_dd
-		&& !s.a_gch && !s.a_dd) {
+	} else if (s2 && s2.type == BAR) {
+//fixme: why these next lines?
+//		&& !s2.a_gch && !s2.a_dd
+//		&& !s.a_gch && !s.a_dd) {
 
 		/* remove the invisible repeat bars when no shift is needed */
 		if (bar_type == "["
