@@ -214,6 +214,7 @@ new_note = function(gr, tp) {\n\
 	var s = combine.new_n(gr, tp)\n\
 	if (s && s.notes && curvoice.combine != undefined)\n\
 		s.combine = curvoice.combine\n\
+	return s\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 13) == "voicecombine ")\n\
