@@ -489,7 +489,7 @@ function draw_beams(bm) {
 		output.push('l' + x2.toFixed(2) + ' ' + (-dy2).toFixed(2) +
 			'v' + h.toFixed(2) +
 			'l' + (-x2).toFixed(2) + ' ' + dy2.toFixed(2) +
-			'"/>\n')
+			'z"/>\n')
 	} // draw_beam()
 
 	anno_start(s1, 'beam')
