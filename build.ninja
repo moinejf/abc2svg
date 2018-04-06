@@ -125,7 +125,7 @@ default all
 rule version
   command = npm version $out;$
 	tag=`grep '"version"' package.json|cut -d'"' -f4`;$
-	git commit -m "New release v$$tag" package.json;$
+	echo "New release v$$tag" | git commit -F- package.json;$
 	git tag -a v$$tag;$
 	echo "*** Don't forget: git push --follow-tags; ninja; npm publish"
 build minor: version
