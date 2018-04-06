@@ -33,6 +33,7 @@ var	abc_images,			// image buffer
 	abc_fname = ["noname.abc", ""],	// file names
 	abc,				// Abc object
 	ref,				// source reference array
+	elt_ref = {},			// pointers to page elements
 	colcl = [],			// colorized classes
 	colcl_sav,			// (saved while playing/printing)
 	abcplay,			// play engine
@@ -49,29 +50,23 @@ var	abc_images,			// image buffer
 	}
 
 // -- Abc create argument
-var ignore_types = {
-	beam: true,
-	slur: true,
-	tuplet: true
-}
 var user = {
 	// -- required methods
 	// include a file (%%abc-include - only one)
 	read_file: function(fn) {
-		document.getElementById("s" + srcidx).style.display = "inline"
-		return document.getElementById("src1").value
+		elt_ref["s" + srcidx].style.display = "inline"
+		return elt_ref.src1.value
 	},
 	// insert the errors
 	errmsg: function(msg, l, c) {
-		var diverr = document.getElementById("diverr");
 		msg = clean_txt(msg)
 		if (l)
-			diverr.innerHTML += '<b onclick="gotoabc(' +
+			elt_ref.diverr.innerHTML += '<b onclick="gotoabc(' +
 				l + ',' + c +
 				')" style="cursor: pointer; display: inline-block">' +
 				msg + "</b><br/>\n"
 		else
-			diverr.innerHTML += msg + "<br/>\n"
+			elt_ref.diverr.innerHTML += msg + "<br/>\n"
 	},
 	// image output
 	my_img_out: function(str) {
@@ -80,7 +75,7 @@ var user = {
 	// -- optional methods
 	// annotations
 	anno_stop: function(type, start, stop, x, y, w, h) {
-		if (ignore_types[type])
+		if (["beam", "slur", "tuplet"].indexOf(type) >= 0)
 			return
 		ref[start] = stop;		// keep the source reference
 
@@ -111,10 +106,6 @@ function storage(t,		// session or local
 		t = t ? localStorage : sessionStorage
 		if (!t)
 			return
-	} catch(e) {
-		return
-	}
-	try {
 		if (v)
 			t.setItem(k, v)
 		else if (v === 0)
@@ -188,8 +179,8 @@ function loadtune() {
 		var	i, j, sl,
 			content = evt.target.result,
 			s = srcidx == 0 ? "source" : "src1"
-		document.getElementById(s).value = content;
-		document.getElementById("s" + srcidx).value = abc_fname[srcidx];
+		elt_ref[s].value = content;
+		elt_ref["s" + srcidx].value = abc_fname[srcidx];
 		src_change()
 	}
 
@@ -203,18 +194,17 @@ function selsrc(idx) {
 		return
 	var	o = srcidx ? "src" + srcidx : "source",
 		n = idx ? "src" + idx : "source";
-	document.getElementById(o).style.display = "none";
-	document.getElementById(n).style.display = "inline";
-	document.getElementById("s" + srcidx).style.backgroundColor = "#ffd0d0";
-	document.getElementById("s" + idx).style.backgroundColor = "#80ff80";
+	elt_ref[o].style.display = "none";
+	elt_ref[n].style.display = "inline";
+	elt_ref["s" + srcidx].style.backgroundColor = "#ffd0d0";
+	elt_ref["s" + idx].style.backgroundColor = "#80ff80";
 	srcidx = idx
 }
 
 // render the textarea content to the right side
 function render() {
     var	i, j,
-	diverr = document.getElementById("diverr"),
-	content = document.getElementById("source").value;
+	content = elt_ref.source.value;
 
 	a_pe = null
 	if (!content)
@@ -223,7 +213,7 @@ function render() {
 	// if include file not loaded yet, ask it
 	i = content.indexOf('%%abc-include ')
 	if (i >= 0) {
-		var sl = document.getElementById("s1")
+		var sl = elt_ref.s1
 		if (!sl.value) {
 			sl.style.display = "inline";
 			j = content.indexOf('\n', i);
@@ -233,17 +223,16 @@ function render() {
 			return
 		}
 	}
-	diverr.innerHTML = '';
+	elt_ref.diverr.innerHTML = '';
 	render2()
 }
 function render2() {
     var	i,
 	target = document.getElementById("target"),
-	diverr = document.getElementById("diverr"),
-	content = document.getElementById("source").value
+	content = elt_ref.source.value
 
 	// load the required modules
-	if (!modules.load(content + document.getElementById("src1").value,
+	if (!modules.load(content + elt_ref.src1.value,
 			null, render2))
 		return
 
@@ -271,7 +260,7 @@ function render2() {
 
 	// show the 'Error' button if some error
 	document.getElementById("er").style.display =
-				diverr.innerHTML ? 'inline' : 'none';
+				elt_ref.diverr.innerHTML ? 'inline' : 'none';
 
 	// set the callbacks in the SVG images
 	setTimeout(function(){
@@ -289,7 +278,7 @@ function render2() {
 
 // select a source ABC element
 function gotoabc(l, c) {
-	var	s = document.getElementById("source"),
+	var	s = elt_ref.source,
 		idx = 0;
 	selsrc(0)
 	while (--l >= 0) {
@@ -434,7 +423,7 @@ var	i, j, elts, d,
 		}
 	}
 	if (!nosel && i1 < i2) {
-		var s = document.getElementById("source");
+		var s = elt_ref.source;
 		selsrc(0);
 		s.setSelectionRange(i1, i2);
 		s.blur();
@@ -454,7 +443,7 @@ function seltxt(elt) {
 	start = elt.selectionStart;
 	end = elt.selectionEnd
 	if (start == 0
-	 && end == document.getElementById("source").value.length)
+	 && end == elt_ref.source.value.length)
 		return				// select all
 	if (ref) {
 		ref.forEach(function(e, o) {
@@ -477,14 +466,14 @@ function seltxt(elt) {
 // open a new window for file save
 function saveas() {      
 	var	s = srcidx == 0 ? "source" : "src1",
-		source = document.getElementById(s).value,
+		source = elt_ref[s].value,
 		uriContent = "data:text/plain;charset=utf-8," +
 				encodeURIComponent(source),
 
 	// create a link for our script to 'click'
 		link = document.createElement("a");
 
-	document.getElementById("s" + srcidx).value =
+	elt_ref["s" + srcidx].value =
 		link.download =
 			abc_fname[srcidx] =
 				prompt(texts.fn, abc_fname[srcidx]);
@@ -516,8 +505,8 @@ function destroyClickedElement(evt) {
 // set the size of the font of the textarea
 function setfont() {
     var	fs = document.getElementById("fontsize").value.toString();
-	document.getElementById("source").style.fontSize =
-		document.getElementById("src1").style.fontSize = fs + "px";
+	elt_ref.source.style.fontSize =
+		elt_ref.src1.style.fontSize = fs + "px";
 	storage(true, "fontsz", fs == "14" ? 0 : fs)
 }
 
@@ -591,7 +580,7 @@ function play_tune() {
 		abcplay.clear();
 		abc.tosvg("play", "%%play")
 		try {
-			abc.tosvg(abc_fname[0], document.getElementById("source").value)
+			abc.tosvg(abc_fname[0], elt_ref.source.value)
 		} catch(e) {
 			alert(e.message + '\nabc2svg tosvg bug - stack:\n' + e.stack);
 			playing = false;
@@ -624,8 +613,8 @@ function edit_init() {
 	function set_pref() {
 	    var	v = storage(true, "fontsz")
 		if (v) {
-			document.getElementById("source").style.fontSize =
-				document.getElementById("src1").style.fontSize =
+			elt_ref.source.style.fontSize =
+				elt_ref.src1.style.fontSize =
 					v + "px";
 			document.getElementById("fontsize").value =
 					Number(v)
@@ -638,12 +627,19 @@ function edit_init() {
 	document.getElementById("abc2svg").innerHTML =
 		'abc2svg-' + abc2svg.version + ' (' + abc2svg.vdate + ')'
 
+	// keep references on the page elements
+	var a = ["diverr", "source", "src1", "s0", "s1"]
+	for (var i = 0; i < a.length; i++) {
+		var e = a[i];
+		elt_ref[e] = document.getElementById(e)
+	}
+
 	// set the callback functions
-	var e = document.getElementById("saveas");
+	e = document.getElementById("saveas");
 	e.addEventListener("click", saveas);
-	e = document.getElementById("s0");
+	e = elt_ref.s0;
 	e.addEventListener("click", function(){selsrc(0)});
-	e = document.getElementById("s1");
+	e = elt_ref.s1;
 	e.addEventListener("click", function(){selsrc(1)})
 
 	// remove the selection on print
@@ -711,8 +707,7 @@ function dropped(evt) {
 	if (data.length != 0) {
 		var reader = new FileReader();
 		reader.onload = function(evt) {
-			document.getElementById('source').value =
-					evt.target.result;
+			elt_ref.source.value = evt.target.result;
 			src_change()
 		}
 		reader.readAsText(data[0],"UTF-8")
