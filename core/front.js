@@ -540,9 +540,7 @@ function tosvg(in_fname,		// file name
 			glovar_sav = clone(glovar);
 			maps_sav = maps;
 			mac_sav = clone(mac);
-			maci_sav = new Int8Array(128)
-			for (i = 0; i < 128; i++)
-				maci_sav[i] = maci[i];
+			maci_sav = new Int8Array(maci);
 			info.X = text;
 			parse.state = 1			// tune header
 			continue

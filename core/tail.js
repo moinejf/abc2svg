@@ -17,14 +17,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-    var	psdeco = function(f, x, y, de) { return false },
-	psxygl = function(x, y, gl) { return false }
+function psdeco() { return false }
+function psxygl() { return false }
 
 // initialize
 	font_init();
 	init_tune()
-	for (var i = 0; i < 128; i++)
-		maci[i] = 0
 
 	if (modules)
 		modules.init(this)
