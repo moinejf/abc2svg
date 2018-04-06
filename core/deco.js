@@ -1715,9 +1715,7 @@ function draw_measnb() {
 		y = y_get(st, true, x, w)
 		if (y < staff_tb[st].topbar + 6)
 			y = staff_tb[st].topbar + 6
-//fixme: can s.next be null?
 		if (s.next.type == NOTE) {
-//		if (s.next && s.next.type == NOTE) {
 			if (s.next.stem > 0) {
 				if (y < s.next.ys - gene.curfont.size)
 					y = s.next.ys - gene.curfont.size

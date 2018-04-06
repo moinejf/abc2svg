@@ -205,10 +205,6 @@ function key_press(e) {
 		s.setSelectionRange(st, st);
 		c = null
 		break
-//	case '\n':			// new line
-//		c = '\n'
-	default:
-		break
 	}
 	if (c) {
 		st = s.selectionStart;

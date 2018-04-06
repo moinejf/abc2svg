@@ -447,7 +447,7 @@ function svg_out(str) {
 text:display="none" text:formula="ooow:' + title + '" \
 office:value-type="string" \
 office:string-value="' +
-				title + '" text:name="tinfo"/>'
+				title + '" text:name="tinfo"/>\n'
 		}
 	}
 }
