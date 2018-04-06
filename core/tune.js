@@ -785,7 +785,7 @@ function do_pscom(text) {
 	var	h1, val, s, cmd, param, n, k, b,
 		lock = false
 
-	if (text.match(/ lock$/)) {
+	if (text.slice(-5) == ' lock') {
 		lock = true;
 		text = text.slice(0, -5).trim()
 	}
@@ -1955,7 +1955,7 @@ function do_cloning(vs) {
 		}
 
 		// stop on comment, or information field
-		if (file.slice(eol + 1, eol + 4).match(/%.*|\n.*|.:.|\[.:/))
+		if (/%.*|\n.*|.:.|\[.:/.test(file.slice(eol + 1, eol + 4)))
 			break
 		bol = eol + 1
 	}

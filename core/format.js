@@ -107,7 +107,7 @@ H "History: "',
 }
 
 function get_bool(param) {
-	return !param || !param.match(/^(0|n|f)/i) // accept void as true !
+	return !param || !/^(0|n|f)/i.test(param) // accept void as true !
 }
 
 // %%font <font> [<encoding>] [<scale>]
@@ -350,8 +350,7 @@ function set_format(cmd, param, lock) {
 	} else if (fmt_lock[cmd])
 		return
 
-	if (cmd.match(/.+font$/)
-	 || cmd.match(/.+font-[\d]$/)) {
+	if (/.+font(-[\d])?$/.test(cmd)) {
 		if (param.slice(-4) == " box") {
 			box = true;
 			param = param.slice(0, -4)

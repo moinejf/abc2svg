@@ -3464,7 +3464,7 @@ function draw_systems(indent) {
 			stafflines = staff_tb[st].stafflines,
 			l = stafflines.length
 
-		if (!stafflines.match(/[\[|]/))
+		if (!/[\[|]/.test(stafflines))
 			return				// no line
 		w = x2 - x1;
 		set_sscale(st);

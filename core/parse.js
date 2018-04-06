@@ -303,7 +303,7 @@ function get_st_lines(param) {
 
 	if (!param)
 		return
-	if (param.match(/^[\]\[|.]+$/))
+	if (/^[\]\[|.]+$/.test(param))
 		return param.replace(/\]/g, '[')
 
 	n = parseInt(param)
@@ -1162,7 +1162,7 @@ function new_bar() {
 	 * a chord or an embedded header */
 	switch (bar_type.slice(-1)) {
 	case '[':
-		if (c.match(/[0-9" ]/))		// "
+		if (/[0-9" ]/.test(c))		// "
 			break
 		bar_type = bar_type.slice(0, -1);
 		line.index--;
@@ -1397,7 +1397,7 @@ function parse_staves(p) {
 			flags |= MASTER_VOICE
 			break
 		default:
-			if (!p[i].match(/\w/)) {
+			if (!/\w/.test(p[i])) {
 				syntax(1, "Bad voice ID in %%staves");
 				err = true
 				break
