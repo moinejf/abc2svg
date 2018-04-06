@@ -3475,12 +3475,10 @@ function set_overlap() {
 		/* treat the stem on two staves with different directions */
 		if (s.xstem
 		 && s.ts_prev.stem < 0) {
-			s2 = s.ts_prev
-			for (m = 0; m <= s2.nhd; m++) {
-				s2.notes[m].shhd += 3.5 * 2;	// stem_xoff
-				s2.notes[m].shac -= 3.5 * 2
+			for (m = 0; m <= s.nhd; m++) {
+				s.notes[m].shhd -= 7;		// stem_xoff
+				s.notes[m].shac += 16
 			}
-			s2.xmx += 3.5 * 2
 		}
 
 		/* search the next note at the same time on the same staff */
