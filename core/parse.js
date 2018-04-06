@@ -1473,58 +1473,15 @@ function parse_staves(p) {
 
 // split an info string
 function info_split(text) {
-	var	a = [],
-		item = "",
-		i, j,
-		n = text.length
-
-	for (i = 0 ; i < n; i++) {
-		switch (text[i]) {
-		case '=':
-			if (!item) {
-				item = '='
-				break
-			}
-			item += '=';
-			a.push(item);
-			item = ""
-			break
-		case ' ':
-		case '\t':
-			if (!item)
-				break
-			a.push(item);
-			item = ""
-			break
-		case '"':
-			if (item) {
-				a.push(item);
-				item = ""
-			}
-			j = i++
-			while (i < n) {
-				if (text[i] == '"')
-					break
-				if (text[i] == '\\')
-					i++;
-				i++
-			}
-			if (text[i] != '"') {
-				syntax(1, "Unterminated string")
-				break
-			}
-			a.push(text.slice(j, i + 1))	// keep the '"'s
-			break
-		case '\\':
-			item += text[i++]
-			// fall thru
-		default:
-			item += text[i]
-			break
-		}
+	if (!text)
+		return []
+    var	a = text.match(/".+?"|.+?(\s+|=|$)/g)
+	if (!a) {
+		syntax(1, "Unterminated string")
+		return []
 	}
-	if (item)
-		a.push(item)
+	for (var i = 0; i < a.length; i++)
+		a[i] = a[i].trim()
 	return a
 }
 
