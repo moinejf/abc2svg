@@ -417,12 +417,11 @@ function set_vp(a) {
 			pos[item[0]] = val
 			break
 		case "scale=":			// %%voicescale
-			val = a.shift()
-			if (isNaN(val) || val < .6 || val > 1.5) {
-				syntax(1, err_bad_val_s, "%%" + cmd)
-				break
-			}
-			curvoice.scale = val
+			val = parseFloat(a.shift())
+			if (isNaN(val) || val < .6 || val > 1.5)
+				syntax(1, err_bad_val_s, "%%voicescale")
+			else
+				curvoice.scale = val
 			break
 		case "score=":
 			if (cfmt.sound)
@@ -458,7 +457,7 @@ function set_vp(a) {
 		case "staffnonote=":
 			val = parseInt(a.shift())
 			if (isNaN(val))
-				syntax(1, "Bad %%staffscale value")
+				syntax(1, "Bad %%staffnonote value")
 			else
 				curvoice.staffnonote = val
 			break
