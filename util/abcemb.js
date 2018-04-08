@@ -32,6 +32,7 @@ window.onerror = function(msg, url, line) {
 
 var	errtxt = '',
 	new_page = '',
+	abc,				// (must be global for follow.js)
 	play,				// undefined: no play possible,
 					// 1: play possible,
 					// 2: playing
@@ -141,7 +142,7 @@ function dom_loaded() {
 	var	i = 0, j, k, res, src,
 		seq = 0,
 		re = /\n%abc|\nX:/g,
-		re_stop = /\nX:|\n<|\n%.begin/g,
+		re_stop = /\nX:|\n<|\n%.begin/g;
 	abc = new Abc(user)
 	for (;;) {
 
