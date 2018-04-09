@@ -595,7 +595,7 @@ function set_format(cmd, param, lock) {
 			cfmt[cmd] = v
 		break
 	case "combinevoices":
-		syntax("%%combinevoices is deprecated - use %%voicecombine instead")
+		syntax(1, "%%combinevoices is deprecated - use %%voicecombine instead")
 		break
 	case "voicemap":
 		set_v_param("map", param)
