@@ -763,7 +763,7 @@ function set_width(s) {
 			s.wl = s.wr = 1		// (!! not 0 !!)
 			return
 		}
-		s.wl = s.wr = s.clef_small ? 6 : 12
+		s.wl = s.wr = s.clef_small ? 8 : 12
 		return
 	case KEY:
 		var n1, n2, esp;
@@ -950,7 +950,7 @@ function set_space(s) {
 			// (hack to have quite the same note widths between measures)
 			return space * .9 - 7
 		case CLEF:
-			return space - s.wl
+			return space - s.wl - s.wr
 		case BLOCK:			// no space
 		case PART:
 		case REMARK:
