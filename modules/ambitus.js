@@ -68,7 +68,7 @@ var ambitus = {\n\
 }\n\
 draw_symbols = function(p_voice) {\n\
     var	d, s = p_voice.sym\n\
-	if (s.type == CLEF && s.notes) {\n\
+	if (s.type == CLEF && s.nhd > 0) {\n\
 		d = delta_tb[s.clef_type] + s.clef_line * 2;\n\
 		s.notes[0].pit += d;\n\
 		s.notes[1].pit += d;\n\
@@ -81,6 +81,7 @@ draw_symbols = function(p_voice) {\n\
 				\'" stroke-width=".6"/>\\\n\');\n\
 		}\n\
 		s.x += 26;\n\
+		p_voice.clef.nhd = 0\n\
 	}\n\
 	ambitus.ds(p_voice)\n\
 }\n\
@@ -97,7 +98,7 @@ set_format = function(cmd, param, lock) {\n\
 	ambitus.set_fmt(cmd, param, lock)\n\
 }\n\
 set_width = function(s) {\n\
-	if (s.type == CLEF && s.notes) {\n\
+	if (s.type == CLEF && s.nhd > 0) {\n\
 		s.wl = 40;\n\
 		s.wr = 12\n\
 	} else {\n\
