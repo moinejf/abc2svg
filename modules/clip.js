@@ -44,7 +44,7 @@ function Clip(i_abc) {
 			abc.syntax(1, abc.err_bad_val_s, "%%clip")
 			return
 		}
-		if (!b)
+		if (!a[1])
 			b = {m: 0, t: 0}
 		else
 			b = get_symsel(a[1]);
