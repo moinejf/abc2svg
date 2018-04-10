@@ -581,7 +581,7 @@ function set_width(s) {
 			}
 			if (s.notes[m].acc) {
 				var tmp = s.notes[m].shac +
-					(s.notes[m].micro ? 6.5 : 4.5)
+					(s.notes[m].micro ? 5.5 : 3.5)
 				if (wlnote < tmp)
 					wlnote = tmp
 			}
@@ -623,8 +623,8 @@ function set_width(s) {
 				s.xmx += 1
 				break
 			}
-			if (s.wr < s.xmx + 12)
-				s.wr = s.xmx + 12
+			if (s.wr < s.xmx + 8)
+				s.wr = s.xmx + 8
 			if (s.dots >= 2)
 				s.wr += 3.5 * (s.dots - 1)
 		}
