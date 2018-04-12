@@ -652,7 +652,8 @@ function edit_init() {
 	})
 
 	// if playing is possible, load the playing script
-	if (window.AudioContext || window.webkitAudioContext) {
+	if (window.AudioContext || window.webkitAudioContext
+	 || navigator.requestMIDIAccess) {
 		loadjs("play-@MAJOR@.js", function() {
 			abcplay = AbcPlay({
 					onend: endplay,

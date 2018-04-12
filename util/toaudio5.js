@@ -32,6 +32,9 @@
 
 // Audio5 methods
 
+// get_outputs() - get the output devices
+//	return ['sf2'] or null
+//
 // play() - start playing
 // @start_index -
 // @stop_index: play the notes found in ABC source between
@@ -47,19 +50,10 @@
 //
 // stop() - stop playing
 //
-// set_sfu() - get/set the soundfont URL
-// @url: URL - undefined = return current value
-//
-// set_speed() - get/set the play speed
-// @speed: < 1 slower, > 1 faster - undefined = return current value
-//
-// set_vol() - get/set the current sound volume
+// set_vol() - set the current sound volume
 // @volume: range [0..1] - undefined = return current value
-//
-// set_follow() - get/set the flag to call or not the 'onnote' callback
-// @follow: boolean - undefined = return current value
 
-    var	abcsf2 = []
+    var	abcsf2 = []			// SF2 instruments
 
 function Audio5(i_conf) {
 	var	conf = i_conf,		// configuration
@@ -68,13 +62,8 @@ function Audio5(i_conf) {
 		errmsg = conf.errmsg || alert,
 		ac,			// audio context
 		gain,			// global gain
-		gain_val = 0.7,
-		follow = true,		// follow the music
-		speed = 1,		// speed factor
-		new_speed,
 
 	// instruments/notes
-		sfu,			// soundfont URL
 		params = [],		// [instr][key] note parameters per instrument
 		rates = [],		// [instr][key] playback rates
 		w_instr = 0,		// number of instruments being loaded
@@ -125,25 +114,6 @@ function Audio5(i_conf) {
 				a[j++] = (t >> 8) & 0xff
 		}
 		return a
-	}
-
-	// get the play parameters from localStorage
-	function get_param() {
-		try {
-			if (!localStorage)
-				return
-		} catch(e) {
-			return
-		}
-	    var	v = localStorage.getItem("follow")
-		if (v)
-			follow = v != "0";
-		v = localStorage.getItem("sfu")
-		if (v)
-			sfu = v;
-		v = localStorage.getItem("volume")
-		if (v)
-			gain_val = Number(v)
 	}
 
 	// copy a sf2 sample to an audio buffer
@@ -224,7 +194,7 @@ function Audio5(i_conf) {
 	// load an instrument (.js file)
 	function load_instr(instr) {
 		w_instr++;
-		loadjs(sfu + '/' + instr + '.js',
+		loadjs(conf.sfu + '/' + instr + '.js',
 			function() {
 			    var	parser = new sf2.Parser(b64dcod(abcsf2[instr]));
 				parser.parse();
@@ -320,22 +290,23 @@ function Audio5(i_conf) {
 		}
 
 		// if speed change, shift the start time
-		if (new_speed) {
+		if (conf.new_speed) {
 			stime = ac.currentTime -
-					(ac.currentTime - stime) * speed / new_speed;
-			speed = new_speed;
-			new_speed = 0
+					(ac.currentTime - stime) *
+						conf.speed / conf.new_speed;
+			conf.speed = conf.new_speed;
+			conf.new_speed = 0
 		}
 
 //fixme: better, count the number of events?
-		t = e[1] / speed;		// start time
+		t = e[1] / conf.speed;		// start time
 		maxt = t + 3			// max time = evt time + 3 seconds
 		while (1) {
-			d = e[4] / speed
+			d = e[4] / conf.speed
 			if (e[5] != 0)		// if not a rest
 				note_run(e, t + stime, d)
 
-			if (follow) {
+			if (conf.follow) {
 			    var	i = e[0];
 
 				st = (t + stime - ac.currentTime) * 1000;
@@ -349,7 +320,7 @@ function Audio5(i_conf) {
 					(t + stime - ac.currentTime + d) * 1000)
 				return
 			}
-			t = e[1] / speed
+			t = e[1] / conf.speed
 			if (t > maxt)
 				break
 		}
@@ -374,7 +345,7 @@ function Audio5(i_conf) {
 		// all resources are there
 		gain.connect(ac.destination);
 		stime = ac.currentTime + .2		// start time + 0.2s
-			- a_e[evt_idx][1] * speed;
+			- a_e[evt_idx][1] * conf.speed;
 		play_next(a_e)
 	} // play_start()
 
@@ -382,13 +353,17 @@ function Audio5(i_conf) {
 
 	init_b64d();			// initialize base64 decoding
 
-	get_param()			// get the play parameters
-
-	if (!sfu)
-		sfu = "Scc1t2"		// set the default soundfont location
+	if (!conf.sfu)
+		conf.sfu = "Scc1t2"	// set the default soundfont location
 
     // external methods
     return {
+
+	// get outputs
+	get_outputs: function() {
+		return (window.AudioContext || window.webkitAudioContext) ?
+				['sf2'] : null
+	}, // get_outputs()
 
 	// play the events
 	play: function(istart, i_iend, a_e) {
@@ -405,7 +380,7 @@ function Audio5(i_conf) {
 				conf.ac = ac = new (window.AudioContext ||
 							window.webkitAudioContext);
 			gain = ac.createGain();
-			gain.gain.value = gain_val
+			gain.gain.value = conf.gain
 		}
 
 		iend = i_iend;
@@ -429,38 +404,10 @@ function Audio5(i_conf) {
 		}
 	}, // stop()
 
-	// get/set 'follow music'
-	set_follow: function(v) {
-		if (v == undefined)
-			return follow
-		follow = v;
-	}, // set_follow()
-
-	// set soundfont URL
-	set_sfu: function(v) {
-		if (v == undefined)
-			return sfu
-		sfu = v;
-	}, // set_sfu()
-
-	// set speed (< 1 slower, > 1 faster)
-	set_speed: function(v) {
-		if (v == undefined)
-			return speed
-		new_speed = v
-	}, // set_speed()
-
 	// set volume
 	set_vol: function(v) {
-		if (v == undefined) {
-			if (gain)
-				return gain.gain.value
-			return gain_val
-		}
 		if (gain)
 			gain.gain.value = v
-		else
-			gain_val = v;
 	} // set_vol()
     }
 } // end Audio5

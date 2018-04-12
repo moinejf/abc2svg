@@ -101,7 +101,7 @@ build follow-$MAJOR.js: jscu util/follow.js | package.json
 build json-$MAJOR.js: jscu util/json.js | package.json
 build setmidi-$MAJOR.js: jscu util/midi.js | package.json
 build play-$MAJOR.js: jscu util/play.js util/toaudio.js $
- util/toaudio5.js util/sf2-parser.js | package.json
+ util/toaudio5.js util/sf2-parser.js util/tomidi5.js | package.json
 build toaudio-$MAJOR.js: jscu util/toaudio.js | package.json
 
 build edit-$MAJOR.xhtml: cpm editor/edit.xhtml

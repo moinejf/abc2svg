@@ -74,16 +74,19 @@ function endplay() {
 
 // function called on click on the music
 function playseq(seq) {
+    var	outputs
+
 	if (!abcplay) {
 		if (typeof AbcPlay == "undefined") { // as play-1.js not loaded,
 			playseq = function(){}	     // don't come here anymore
 			return
 		}
-		if (!window.AudioContext && !window.webkitAudioContext) {
-			playseq = function(){}
-			return
-		}
 		abcplay = AbcPlay(playconf);
+		outputs = abcplay.get_outputs()
+		if (outputs.length == 0) {
+			playseq = function(){}
+			return			// playing is not possible
+		}
 	}
 	if (playing) {
 		abcplay.stop();
