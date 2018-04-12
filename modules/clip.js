@@ -21,7 +21,7 @@ function Clip(i_abc) {
 	// get the start/stop points
 	function get_symsel(a) {
 	    var	j, d, sq,
-		b = a.match(/(\d)([a-z]?)(:\d\/\d)?/)
+		b = a.match(/(\d+)([a-z]?)(:\d+\/\d+)?/)
 
 		if (!b)
 			return
