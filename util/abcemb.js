@@ -33,14 +33,10 @@ window.onerror = function(msg, url, line) {
 var	errtxt = '',
 	new_page = '',
 	abc,				// (must be global for follow.js)
-	play,				// undefined: no play possible,
-					// 1: play possible,
-					// 2: playing
+	playing,
 	abcplay,
 	playconf = {
 		onend: endplay
-//uncomment for test
-//		,sfu: "./"
 	},
 	page,				// document source
 	a_src = [],			// index: #sequence,
@@ -73,21 +69,28 @@ function clean_txt(txt) {
 }
 
 function endplay() {
-	play = 1
+	playing = false
 }
 
-// function called on rendering click
+// function called on click on the music
 function playseq(seq) {
-	if (typeof AbcPlay == "undefined")
-		return			// play-1.js not loaded
-	if (play == 2) {
+	if (!abcplay) {
+		if (typeof AbcPlay == "undefined") { // as play-1.js not loaded,
+			playseq = function(){}	     // don't come here anymore
+			return
+		}
+		if (!window.AudioContext && !window.webkitAudioContext) {
+			playseq = function(){}
+			return
+		}
+		abcplay = AbcPlay(playconf);
+	}
+	if (playing) {
 		abcplay.stop();
 		return
 	}
-	play = 2
+	playing = true
 	if (!a_pe[seq]) {		// if no playing event
-		if (!abcplay)
-			abcplay = AbcPlay(playconf)
 		var abc = new Abc(user);
 
 		abcplay.clear();
@@ -98,7 +101,7 @@ function playseq(seq) {
 			abc.tosvg("abcemb" + seq, page, a_src[seq][0], a_src[seq][1])
 		} catch(e) {
 			alert(e.message + '\nabc2svg tosvg bug - stack:\n' + e.stack);
-			play = 1;
+			playing = false;
 			a_pe[seq] = null
 			return
 		}
@@ -167,16 +170,16 @@ function dom_loaded() {
 			k = page.length
 		else
 			k = re_stop.lastIndex - 2;
-		if (play) {
-			if (page[j] == 'X') {
-				new_page += '<div onclick="playseq(' +
-						a_src.length +
-						')">\n';
-				a_src.push([j, k])
-			} else if (!glop) {
-				glop = [j, k]
-			}
+
+		// clicking on the music plays this tune
+		if (page[j] == 'X') {
+			new_page += '<div onclick="playseq(' +
+					a_src.length + ')">\n';
+			a_src.push([j, k])
+		} else if (!glop) {
+			glop = [j, k]
 		}
+
 		try {
 			abc.tosvg('abcemb', page, j, k)
 		} catch (e) {
@@ -191,8 +194,8 @@ function dom_loaded() {
 				"\n...\n\n" + errtxt);
 			errtxt = ""
 		}
-		if (play && page[j] == 'X')
-			new_page += '</div>\n';
+		new_page += '</div>\n';
+
 		i = k
 		if (i >= page.length)
 			break
@@ -200,26 +203,24 @@ function dom_loaded() {
 			i--
 		re.lastIndex = i
 	}
+
+	// change the page
 	try {
 		document.body.innerHTML = new_page + page.slice(i)
 	} catch (e) {
 		alert("abc2svg bad generated SVG: " + e.message +
 			"\nStack:\n" + e.stack)
 	}
-	if (play) {
-		delete user.img_out;		// stop SVG generation
-		old_gm = user.get_abcmodel;
-		user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
-				if (old_gm)
-					old_gm(tsfirst, voice_tb, music_types, info);
-				abcplay.add(tsfirst, voice_tb)
-			}
-	}
-} // dom_loaded()
 
-// if playing is possible, load the playing scripts
-if (window.AudioContext || window.webkitAudioContext)
-	play = 1			// play possible
+	// prepare for playing
+	delete user.img_out;		// stop SVG generation
+	old_gm = user.get_abcmodel;
+	user.get_abcmodel = function(tsfirst, voice_tb, music_types, info) {
+			if (old_gm)
+				old_gm(tsfirst, voice_tb, music_types, info);
+			abcplay.add(tsfirst, voice_tb)
+		}
+} // dom_loaded()
 
 // wait for the page to be loaded
 document.addEventListener("DOMContentLoaded", dom_loaded, false)
