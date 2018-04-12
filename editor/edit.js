@@ -233,6 +233,8 @@ function render2() {
 		return
 
 	user.img_out = user.my_img_out;
+	user.get_abcmodel = null;
+
 	abc = new Abc(user);
 	abc_images = '';
 	abc.tosvg('edit', '%%bgcolor white');
@@ -570,6 +572,7 @@ function play_tune() {
 	playing = true;
 	if (!a_pe) {			// if no playing event
 		user.img_out = null	// get the schema and stop SVG generation
+		user.get_abcmodel = abcplay.add	// inject the model in the play engine
 
 		var abc = new Abc(user);
 
@@ -673,12 +676,6 @@ function edit_init() {
 			document.getElementById("gvl").setAttribute("value",
 				(abcplay.set_vol() * 10).toFixed(2))
 		});
-
-		user.get_abcmodel =
-			function(tsfirst, voice_tb, music_types, info) {
-				if (playing)
-					abcplay.add(tsfirst, voice_tb)
-			}
 	}
 	set_pref()	// set the preferences from local storage
 }
