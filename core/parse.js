@@ -2341,6 +2341,10 @@ function parse_music_line() {
 					curvoice.last_sym.eoln = true
 				break
 			case '&':			// voice overlay
+				if (grace) {
+					syntax(1, "Bad character '$1'", c)
+					break
+				}
 				c = line.next_char()
 				if (c == ')') {
 					get_vover(')')
@@ -2388,6 +2392,10 @@ function parse_music_line() {
 					continue
 				}
 				if (c == '&') {		// voice overlay start
+					if (grace) {
+						syntax(1, "Bad character '$1'", c)
+						break
+					}
 					get_vover('(')
 					break
 				}
