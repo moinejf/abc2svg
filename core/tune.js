@@ -1976,6 +1976,9 @@ function get_voice(parm) {
 		a = info_split(parm, 1),
 		vid = a.shift();
 
+	if (!vid)
+		return				// empty V:
+
 	if (vid.indexOf(',') > 0) {		// if many voices
 		vs = vid.split(',');
 		vid = vs.shift()
