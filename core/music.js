@@ -2659,6 +2659,7 @@ function init_music_line() {
 			continue
 		p_voice = voice_tb[v];
 		p_voice.second = cur_sy.voices[v].second;
+		p_voice.last_sym = p_voice.sym;
 
 		/* move the voice to a printed staff */
 		st = cur_sy.voices[v].st
