@@ -1631,8 +1631,11 @@ function get_vover(type) {
 			syntax(1, "Erroneous end of voice overlay")
 			return
 		}
-		if (curvoice.time != vover.mxtime)
+		if (curvoice.time != vover.p_voice.time) {
 			syntax(1, "Wrong duration in voice overlay");
+			if (curvoice.time > vover.p_voice.time)
+				vover.p_voice.time = curvoice.time
+		}
 		curvoice = vover.p_voice;
 		vover = null
 		return
@@ -1695,7 +1698,6 @@ function get_vover(type) {
 	if (!vover) {				/* first '&' in a measure */
 		vover = {
 			bar: true,
-			mxtime: curvoice.time,
 			p_voice: curvoice
 		}
 		time = p_voice2.time
@@ -1706,10 +1708,12 @@ function get_vover(type) {
 		}
 		vover.time = s.time
 	} else {
-		if (!vover.mxtime)		// first '&' in '(&' sequence
-			vover.mxtime = curvoice.time
-		else if (curvoice.time != vover.mxtime)
+		if (curvoice != vover.p_voice
+		 && curvoice.time != vover.p_voice.time) {
 			syntax(1, "Wrong duration in voice overlay")
+			if (curvoice.time > vover.p_voice.time)
+				vover.p_voice.time = curvoice.time
+		}
 	}
 	p_voice2.time = vover.time;
 	curvoice = p_voice2
