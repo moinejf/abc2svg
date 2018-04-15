@@ -114,7 +114,12 @@ function playseq(seq) {
 }
 
 // load a javascript file
-    var	jsdir = document.currentScript.src.match(/.*\//)
+    var	jsdir = document.currentScript ?
+		document.currentScript.src.match(/.*\//) :
+		(function() {
+			var scrs = document.getElementsByTagName('script');
+			return scrs[scrs.length - 1].src.match(/.*\//) || ''
+		})()
 
 function loadjs(fn, relay, onerror) {
 	var s = document.createElement('script');
