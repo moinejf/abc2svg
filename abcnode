@@ -44,7 +44,7 @@ function quit() {
 		print("abcnode-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
 			"	ABC to SVG translator\n" +
 			"	Usage: abcnode [options] ABC_file");
-		exit(1)
+		quit(1)
 	}
 	args.shift()
 	args.shift()
