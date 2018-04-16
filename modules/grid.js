@@ -108,7 +108,7 @@ function build_grid(chords, bars, font) {
 		line += '<style type="text/css">\n\
 .stroke {stroke: currentColor; fill: none}\n\
 .chmid {text-anchor:middle}\n\
-.' + font_cl + ' {' + style_font(font.name + '.' + font.size) +  '}\n\
+.' + font_cl + ' {' + abc.style_font(font.name + '.' + font.size) +  '}\n\
 </style>\n'
 	}
 
