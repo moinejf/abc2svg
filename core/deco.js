@@ -21,8 +21,8 @@ var	dd_tb = {},		// definition of the decorations
 	a_de,			// array of the decoration elements
 	od		// ottava: index = type + staff, value = counter + voice number
 
-// standard decorations
-var std_deco = {
+// decorations - populate with standard decorations
+var decos = {
 	dot: "0 stc 5 1 1",
 	tenuto: "0 emb 5 3 3",
 	slide: "1 sld 3 7 0",
@@ -127,8 +127,6 @@ var std_deco = {
 	f_near = [true, true, true],
 	f_note = [false, false, false, true, true, true, false, false, true],
 	f_staff = [false, false, false, false, false, false, true, true]
-
-var	user_deco = {}	/* user decorations */
 
 /* -- get the max/min vertical offset -- */
 function y_get(st, up, x, w) {
@@ -602,21 +600,28 @@ var func_tb = [
 	d_upstaff,	/* 4 (below the staff) */
 	d_trill,	/* 5 */
 	d_pf,		/* 6 - tied to staff (dynamic marks) */
-	d_cresc,	/* 7 */
+	d_cresc		/* 7 */
 ]
 
-/* -- add a decoration - from internal table or %%deco -- */
+// add a decoration
 /* syntax:
  *	%%deco <name> <c_func> <glyph> <h> <wl> <wr> [<str>]
  */
 function deco_add(param) {
 	var dv = param.match(/(\S*)\s+(.*)/);
-	user_deco[dv[1]] = dv[2]
+	decos[dv[1]] = dv[2]
 }
 
-// return the decoration
-function deco_build(nm, text) {
-	var a, dd, dd2, name2, c, i, elts, str
+// define a decoration
+function deco_def(nm) {
+    var a, dd, dd2, name2, c, i, elts, str,
+	text = decos[nm]
+
+	if (!text) {
+		if (cfmt.decoerr)
+			error(1, null, "Unknown decoration '$1'", nm)
+		return //undefined
+	}
 
 	// extract the values
 	a = text.match(/(\d+)\s+(.+?)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)/)
@@ -861,17 +866,6 @@ function deco_cnv(a_dcn, s, prev) {
 			s.a_dd = []
 		s.a_dd.push(dd)
 	}
-}
-
-/* -- define a decoration -- */
-function deco_def(nm) {
-	if (user_deco && user_deco[nm])
-		return deco_build(nm, user_deco[nm])
-	if (std_deco[nm])
-		return deco_build(nm, std_deco[nm])
-	if (cfmt.decoerr)
-		error(1, null, "Unknown decoration '$1'", nm)
-	return //undefined
 }
 
 /* -- update the x position of a decoration -- */
