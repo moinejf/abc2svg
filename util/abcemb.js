@@ -150,8 +150,18 @@ function dom_loaded() {
 	var	i = 0, j, k, res, src,
 		seq = 0,
 		re = /\n%abc|\nX:/g,
-		re_stop = /\nX:|\n<|\n%.begin/g;
+		re_stop = /\nX:|\n<|\n%.begin/g,
+		select = window.location.hash.slice(1)
 	abc = new Abc(user)
+
+	// check if a selection
+	if (select) {
+		select = decodeURIComponent(select);
+		select = page.indexOf(select)
+		if (select < 0)
+			select = 0
+	}
+
 	for (;;) {
 
 		// get the start of a ABC sequence
@@ -179,6 +189,9 @@ function dom_loaded() {
 		else
 			k = re_stop.lastIndex - 2;
 
+	    // selection
+	    if (!select || page[j] != 'X' || (select >= j && select < k)) {
+
 		// clicking on the music plays this tune
 		if (page[j] == 'X') {
 			new_page += '<div onclick="playseq(' +
@@ -203,6 +216,7 @@ function dom_loaded() {
 			errtxt = ""
 		}
 		new_page += '</div>\n';
+	    } // selection
 
 		i = k
 		if (i >= page.length)
