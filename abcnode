@@ -38,6 +38,10 @@ function quit() {
 	process.exit(1)
 }
 
+// (this file is wrapped)
+global.Abc = Abc
+global.abc2svg = abc2svg
+
 // main
 	var args = process.argv
 	if (!args[2]) {
