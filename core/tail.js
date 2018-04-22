@@ -67,10 +67,15 @@ Abc.prototype.syntax = syntax;
 Abc.prototype.unlksym = unlksym;
 Abc.prototype.voice_tb = voice_tb
 
+    var	self = this
+
 	if (modules)
 		modules.init(this)
 
 }	// end of Abc()
+
+// module hooks
+abc2svg.inject = ''
 
 // nodejs
 if (typeof module == 'object' && typeof exports == 'object') {

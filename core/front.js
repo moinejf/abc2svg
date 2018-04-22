@@ -215,6 +215,8 @@ function do_include(fn) {
 var	err_ign_s = "$1: inside tune - ignored",
 	err_bad_val_s = "Bad value in $1"
 
+    var	mod_init		// set when setting the module hooks
+
 // parse ABC code
 function tosvg(in_fname,		// file name
 		file,			// file content
@@ -227,6 +229,12 @@ function tosvg(in_fname,		// file name
 		mac_sav, maci_sav,
 		pscom,
 		txt_add = '\n'		// for "+:"
+
+	// set the module hooks
+	if (abc2svg.inject && !mod_init) {
+		eval(abc2svg.inject)
+		mod_init = true
+	}
 
 	// check if a tune is selected
 	function tune_selected() {
