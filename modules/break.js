@@ -97,11 +97,6 @@ function Break(i_abc) {
 	//export some functions/variables
 	abc.tosvg('break', '\
 %%beginjs\n\
-Abc.prototype.get_cur_sy = function() { return cur_sy }\n\
-Abc.prototype.glovar = glovar\n\
-Abc.prototype.syntax = syntax\n\
-Abc.prototype.voice_tb = voice_tb\n\
-\
 var brk = {\n\
 	psc: do_pscom,\n\
 	sbn: set_bar_num\n\

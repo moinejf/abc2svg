@@ -111,31 +111,31 @@ function set_pstyle() {
     var	nml, nmr, nlkf, npkf, npw,
 	psty = '';
 
-	nml = abc.get_fmt("leftmargin");
+	nml = abc.get_cfmt("leftmargin");
 	if (nml != ml) {
 		if (ml == undefined)
 			ml = nml;
 		psty += 'margin-left:' + nml.toFixed(2) + 'px;'
 	}
-	nmr = abc.get_fmt("rightmargin");
+	nmr = abc.get_cfmt("rightmargin");
 	if (nmr != mr) {
 		if (mr == undefined)
 			mr = nmr;
 		psty += 'margin-right:' + nmr.toFixed(2) + 'px;'
 	}
-	nlkf = abc.get_fmt("lineskipfac");
+	nlkf = abc.get_cfmt("lineskipfac");
 	if (nlkf != lkf) {
 		if (lkf == undefined)
 			lkf = nlkf;
 		psty += 'line-height:' + ((nlkf * 100) | 0).toString() + '%;'
 	}
-	npkf = abc.get_fmt("parskipfac");
+	npkf = abc.get_cfmt("parskipfac");
 	if (npkf != pkf) {
 		if (pkf == undefined)
 			pkf = npkf;
 		psty += 'margin-bottom:' + npkf.toFixed(2) + 'em;'
 	}
-	npw = abc.get_fmt("pagewidth")
+	npw = abc.get_cfmt("pagewidth")
 	if (npw != pw || nml != ml || nmr != mr) {
 		if (pw == undefined)
 			pw = npw;
@@ -147,7 +147,7 @@ function set_pstyle() {
 
 function para_start(action, skip) {
     var	r,
-	sc = abc.get_fmt("scale"),
+	sc = abc.get_cfmt("scale"),
 	newpage = abc.get_newpage() ? 'newpage ' : '',
 	sty = '<p class="' + newpage,
 	psty = set_pstyle()
@@ -299,10 +299,10 @@ function abc_init() {
 
 	// output the xhtml header
 	user.img_out = function(str) {
-		var	header = abc.get_fmt("header"),
-			footer = abc.get_fmt("footer"),
-			topmargin = abc.get_fmt("topmargin") || "1cm",
-			botmargin = abc.get_fmt("botmargin") || "1cm",
+		var	header = abc.get_cfmt("header"),
+			footer = abc.get_cfmt("footer"),
+			topmargin = abc.get_cfmt("topmargin") || "1cm",
+			botmargin = abc.get_cfmt("botmargin") || "1cm",
 			media_s = '@media print {\n\
 	body {margin:0; padding:0; border:0}\n\
 	.newpage {page-break-before: always}\n\
@@ -322,13 +322,13 @@ function abc_init() {
 		position: fixed;\n\
 		top: 0pt;\n\
 		width: 100%;\n\
-		' + abc.style_font(abc.get_fmt("headerfont")) + '\n\
+		' + abc.style_font(abc.get_cfmt("headerfont")) + '\n\
 	}\n\
 	div.footer {\n\
 		position: fixed;\n\
 		bottom: 0pt;\n\
 		width: 100%;\n\
-		' + abc.style_font(abc.get_fmt("footerfont")) + '\n\
+		' + abc.style_font(abc.get_cfmt("footerfont")) + '\n\
 	}\n\
 	div.page:after {\n\
 		counter-increment: page;\n\
@@ -348,9 +348,9 @@ function abc_init() {
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
 svg {display:block}\n\
-body {width:' + abc.get_fmt("pagewidth").toFixed(0) +'px}\n\
+body {width:' + abc.get_cfmt("pagewidth").toFixed(0) +'px}\n\
 p {' + set_pstyle() + 'margin-top:0}\n\
-p span {line-height:' + ((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
+p span {line-height:' + ((abc.get_cfmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
 @page{margin:' + topmargin + ' 0 ' + botmargin + ' 0}\n\
 </style>\n\
@@ -370,26 +370,6 @@ p span {line-height:' + ((abc.get_fmt("lineskipfac") * 100) | 0).toString() + '%
 		user.img_out = function(str) { print(str) }
 	}
 
-	// define some functions in the Abc object
-	abc.tosvg('toxhtml', "%%beginjs\n\
-Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_info = function(k) { return info[k] }\n\
-Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
-Abc.prototype.get_font = get_font\n\
-Abc.prototype.get_font_style = function() { return font_style }\n\
-Abc.prototype.get_multi = function() { return multicol }\n\
-Abc.prototype.get_newpage = function() {\n\
-	if (block.newpage) {\n\
-		block.newpage = false;\n\
-		return true\n\
-	}\n\
-}\n\
-Abc.prototype.get_posy = function() { var t = posy; posy = 0; return t }\n\
-Abc.prototype.set_xhtml = function(wt) {\n\
-var wto=write_text; write_text = wt; return wto\n\
-}\n\
-Abc.prototype.svg_flush = svg_flush\n\
-%%endjs\n");
 	wto = abc.set_xhtml(write_text)		// switch write_text()
 }
 

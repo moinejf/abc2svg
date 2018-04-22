@@ -133,13 +133,6 @@ function MIDI(i_abc) {
 	//export some functions/variables
 	abc.tosvg('MIDI', '\
 %%beginjs\n\
-Abc.prototype.err_bad_val_s = err_bad_val_s\n\
-Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_curvoice = function() { return curvoice }\n\
-Abc.prototype.maps = maps\n\
-Abc.prototype.set_v_param = set_v_param\n\
-Abc.prototype.syntax = syntax\n\
-\
 var midi = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\

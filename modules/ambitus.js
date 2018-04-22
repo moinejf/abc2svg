@@ -57,9 +57,6 @@ function Ambitus(i_abc) {
 	//export some functions/variables
 	abc.tosvg('ambitus', '\
 %%beginjs\n\
-Abc.prototype.clone = clone\n\
-Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
-\
 var ambitus = {\n\
 	ds: draw_symbols,\n\
 	om: output_music,\n\

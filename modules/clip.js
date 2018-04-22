@@ -187,16 +187,6 @@ function Clip(i_abc) {
 	//export some functions/variables
 	abc.tosvg('clip', '\
 %%beginjs\n\
-Abc.prototype.clone = clone\n\
-Abc.prototype.get_cur_sy = function() { return cur_sy }\n\
-Abc.prototype.err_bad_val_s = err_bad_val_s\n\
-Abc.prototype.get_tsfirst = function() { return tsfirst }\n\
-Abc.prototype.glovar = glovar\n\
-Abc.prototype.set_cur_sy = function(sy) { cur_sy = sy }\n\
-Abc.prototype.set_tsfirst = function(s) { tsfirst = s }\n\
-Abc.prototype.syntax = syntax\n\
-Abc.prototype.voice_tb = voice_tb\n\
-\
 var clip = {\n\
 	psc: do_pscom,\n\
 	sbn: set_bar_num\n\

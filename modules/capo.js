@@ -50,10 +50,6 @@ Capo.prototype.capo_reset = function() {
 	//export some functions/variables
 	abc.tosvg('capo', '\
 %%beginjs\n\
-Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_font = get_font;\n\
-Abc.prototype.gch_tr1 = gch_tr1;\n\
-\
 var capo = {\n\
 	gch_b: gch_build,\n\
 	om: output_music,\n\

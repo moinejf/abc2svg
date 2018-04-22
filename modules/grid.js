@@ -275,16 +275,6 @@ Grid.prototype.do_grid = function(tsfirst, voice_tb) {
 	//export some functions/variables
 	abc.tosvg('grid', '\
 %%beginjs\n\
-Abc.prototype.font_class = font_class;\n\
-Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_font = get_font;\n\
-Abc.prototype.get_top_v = function() { return par_sy.top_voice }\n\
-Abc.prototype.get_img = function() { return img }\n\
-Abc.prototype.set_font = set_font;\n\
-Abc.prototype.set_tsfirst = function(s) { tsfirst = s }\n\
-Abc.prototype.strwh = strwh;\n\
-Abc.prototype.syntax = syntax;\n\
-\
 var grid = {\n\
 	om: output_music,\n\
 	set_fmt: set_format\n\

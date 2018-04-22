@@ -263,11 +263,11 @@ function svg_out(str) {
 
 		// get the first header/footer
 		if (header == undefined) {
-			r = abc.get_fmt("header");
+			r = abc.get_cfmt("header");
 			header = r ? gen_hf("header", r) : ''
 		}
 		if (footer == undefined) {
-			r = abc.get_fmt("footer");
+			r = abc.get_cfmt("footer");
 			footer = r ? gen_hf("footer", r) : ''
 		}
 		break
@@ -309,14 +309,14 @@ function abc_init() {
 
 	// get the page parameters
 	user.img_out = function(str) {
-	    var pw = abc.get_fmt("pagewidth");
+	    var pw = abc.get_cfmt("pagewidth");
 
 		page_type = pw > 800 ? 'Letter' : 'A4';
 		page_size = pw > 800 ?
 				'width="8.50" height="11.00" units="in"' :
 				'width="210.00" height="297.00" units="mm"';
-		topmargin = set_unit(abc.get_fmt("topmargin") || 37.8);
-		botmargin = set_unit(abc.get_fmt("botmargin") || 37.8);
+		topmargin = set_unit(abc.get_cfmt("topmargin") || 37.8);
+		botmargin = set_unit(abc.get_cfmt("botmargin") || 37.8);
 
 		// output the first generated string
 		svg_out(str);
@@ -328,11 +328,7 @@ function abc_init() {
 	user.page_format = true
 
 	// define some parameters and functions in the Abc object
-	abc.tosvg('toabw', "%%beginjs\n\
-Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_info = function(k) { return info[k] }\n\
-Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
-%%endjs\n\
+	abc.tosvg('toabw', "\
 %%fullsvg 1\n\
 %%musicfont abc2svg")
 }

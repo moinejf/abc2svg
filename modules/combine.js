@@ -198,12 +198,6 @@ function do_combine(s) {
 	// export some functions/variables
 	abc.tosvg('combine', '\
 %%beginjs\n\
-Abc.prototype.get_curvoice = function() { return curvoice }\n\
-Abc.prototype.get_tsfirst = function() { return tsfirst }\n\
-Abc.prototype.set_v_param = set_v_param\n\
-Abc.prototype.sort_pitch = sort_pitch\n\
-Abc.prototype.unlksym = unlksym\n\
-\
 var combine = {\n\
 	new_n: new_note,\n\
 	psc: do_pscom,\n\

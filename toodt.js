@@ -348,7 +348,7 @@ function abort(e) {
 // convert a CSS font definition (in pixels) to ODT (in points)
 function def_font(font) {
     var	ws = '',
-	css_font = abc.style_font(abc.get_fmt(font)),
+	css_font = abc.style_font(abc.get_cfmt(font)),
 	r = css_font.match(/font-family:(.+?); (.*)font-size:(.+)px/)
 
 // r[2] may be empty or
@@ -368,12 +368,12 @@ function svg_out(str) {
 
 		// get the first header/footer
 		if (header == undefined) {
-			r = abc.get_fmt("header");
+			r = abc.get_cfmt("header");
 			header = r ? gen_hf("header", "Header", r) : '';
 			headerfont = def_font("headerfont")
 		}
 		if (footer == undefined) {
-			r = abc.get_fmt("footer");
+			r = abc.get_cfmt("footer");
 			footer = r ? gen_hf("footer", "Footer", r) : '';
 			footerfont = def_font("footerfont")
 		}
@@ -464,18 +464,14 @@ function abc_init(args) {
 		{ compression: "STORE" });
 
 	// define some functions in the Abc object
-	abc.tosvg("toodt", "%%beginjs\n\
-Abc.prototype.get_fmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_info = function(k) { return info[k] }\n\
-Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
-%%endjs\n\
+	abc.tosvg("toodt", "\
 %%fullsvg 1\n\
 %%printmargin 1.5cm\n\
 %%musicfont abc2svg")
 
 	// get the page parameters
 	user.img_out = function(str) {
-	    var pw = abc.get_fmt("pagewidth");
+	    var pw = abc.get_cfmt("pagewidth");
 
 		// page size
 		if (pw > 800) {
@@ -492,9 +488,9 @@ Abc.prototype.get_fname = function() { return parse.ctx.fname }\n\
 
 		// top and bottom margins default = 1cm
 		margins = 'fo:margin-top="' +
-			set_unit(abc.get_fmt("topmargin") || 37.8) +
+			set_unit(abc.get_cfmt("topmargin") || 37.8) +
 			'" fo:margin-bottom="' +
-			set_unit(abc.get_fmt("botmargin") || 37.8) + '"';
+			set_unit(abc.get_cfmt("botmargin") || 37.8) + '"';
 
 		// output the first generated string
 		svg_out(str);

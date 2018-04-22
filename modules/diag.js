@@ -35,11 +35,6 @@ Diag.prototype.do_diag = function(voice_tb) {
 	//export some functions/variables
 	abc.tosvg('diag', '\
 %%beginjs\n\
-Abc.prototype.add_glyph = function(k, v) { glyphs[k] = v }\n\
-Abc.prototype.deco_cnv = deco_cnv\n\
-Abc.prototype.get_cfmt = function(k) { return cfmt[k] }\n\
-Abc.prototype.get_top_v = function() { return par_sy.top_voice }\n\
-\
 var diag = {\n\
 	om: output_music,\n\
 	set_fmt: set_format\n\
