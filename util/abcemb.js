@@ -215,7 +215,8 @@ function dom_loaded() {
 				"\n...\n\n" + errtxt);
 			errtxt = ""
 		}
-		new_page += '</div>\n';
+		if (page[j] == 'X')
+			new_page += '</div>\n'
 	    } // selection
 
 		i = k
