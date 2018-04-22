@@ -7,11 +7,10 @@
 // Parameters
 //	%%diagram 1
 
-function Diag(i_abc) {
-    var	abc = i_abc
+abc2svg.diag = {
 
 // function called before tune generation
-Diag.prototype.do_diag = function(voice_tb) {
+    do_diag: function(abc, voice_tb) {
 
 	// create the decorations if not done yet
 	if (!abc.glyphs['fb']) {
@@ -469,8 +468,7 @@ M-10.2 -31h20.4"/>';
 		}
 	}
     } // do_diag()
-
-// Diagram creation
+} // diag
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -480,7 +478,7 @@ var diag = {\n\
 }\n\
 output_music = function() {\n\
 	if (cfmt.diag)\n\
-		Diag.prototype.do_diag(voice_tb)\n\
+		abc2svg.diag.do_diag(self, voice_tb)\n\
 	diag.om()\n\
 }\n\
 set_format = function(cmd, param, lock) {\n\
@@ -494,4 +492,3 @@ set_format = function(cmd, param, lock) {\n\
 style += "\\n.diag {font-family:sansserif;font-size:6px}\
 \\n.frn {font-family:sansserif;font-style:italic;font-size:7px}"\n\
 '
-} //Diag()

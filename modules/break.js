@@ -7,15 +7,11 @@
 // Parameters
 //	%%break measure_nb [":" num "/" den] [" " measure ...]*
 
-function Break(i_abc) {
-    var	abc = i_abc
+abc2svg.break = {
 
-// constants from the abc2svg core
-    var	BAR = 0,
-	BASE_LEN = 1536
-
-	// %%break measure_nb [":" num "/" den] [" " measure ...]*
-	Break.prototype.get_break = function(parm) {
+	// get the %%break parameters
+	get_break: function(abc, parm) {
+	    var	BASE_LEN = 1536		// constant from the abc2svg core
 	    var	b, c, d, sq,
 		a = parm.split(/[ ,]/);
 
@@ -46,10 +42,11 @@ function Break(i_abc) {
 					t: d[1] * BASE_LEN / d[2],
 					sq: sq})
 		}
-	} // get_break()
+	}, // get_break()
 
 	// insert the EOLs of %%break
-	Break.prototype.do_break = function() {
+	do_break: function(abc) {
+	    var BAR = 0			// constant from the abc2svg core
 	    var	i, m, t, brk, seq,
 		v = abc.get_cur_sy().top_voice,
 		s1 = abc.voice_tb[v].sym
@@ -91,8 +88,7 @@ function Break(i_abc) {
 			s.eoln = true
 		}
 	} // do_break()
-
-// Break creation
+} // break
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -102,14 +98,13 @@ var brk = {\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 6) == "break ")\n\
-		Break.prototype.get_break(text)\n\
+		abc2svg.break.get_break(self, text)\n\
 	else\n\
 		brk.psc(text)\n\
 }\n\
 set_bar_num = function() {\n\
 	brk.sbn();\n\
 	if (glovar.break)\n\
-		Break.prototype.do_break()\n\
+		abc2svg.break.do_break(self)\n\
 }\n\
 '
-} // Break()

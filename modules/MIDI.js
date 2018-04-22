@@ -10,9 +10,11 @@
 //	%%MIDI control k v
 //	%%MIDI drummap ABC_note MIDI_pitch
 
-function MIDI(i_abc) {
-    var	abc = i_abc,
-	pits = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
+abc2svg.MIDI = {
+
+    // parse %%MIDI commands
+    do_midi: function(abc, parm) {
+    var	pits = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
 	accs = new Int8Array([0, 1, 0, -1, 0, 0, 1, 0, -1, 0, -1, 0])
 
     // convert a MIDI pitch to a note
@@ -30,7 +32,7 @@ function MIDI(i_abc) {
 	if (accs[pit])
 		note.acc = accs[pit]
 	return note
-    }
+    } // tonote()
 
     // normalize a note for mapping
     function norm(p) {
@@ -47,10 +49,8 @@ function MIDI(i_abc) {
 			p += ','
 	}
 	return p
-    }
+    } // norm()
 
-    // parse %%MIDI commands
-    MIDI.prototype.do_midi = function(parm) {
 	var	n, v,
 		a = parm.split(/\s+/)
 
@@ -101,10 +101,10 @@ function MIDI(i_abc) {
 		abc.set_v_param("midictl", a[2] + ' ' + a[3])
 		break
 	}
-    } // do_midi()
+    }, // do_midi()
 
     // set the MIDI parameters in the current voice
-    MIDI.prototype.set_midi = function(a) {
+    set_midi: function(abc, a) {
     var	i, item,
 	curvoice = abc.get_curvoice()
 
@@ -127,8 +127,7 @@ function MIDI(i_abc) {
 		}
 	}
     } // set_midi()
-
-// MIDI creation
+} // MIDI
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -138,13 +137,12 @@ var midi = {\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 5) == "MIDI ")\n\
-		MIDI.prototype.do_midi(text)\n\
+		abc2svg.MIDI.do_midi(self, text)\n\
 	else\n\
 		midi.psc(text)\n\
 }\n\
 set_vp = function(a) {\n\
-	MIDI.prototype.set_midi(a);\n\
+	abc2svg.MIDI.set_midi(self, a);\n\
 	midi.svp(a)\n\
 }\n\
 '
-} //MIDI()

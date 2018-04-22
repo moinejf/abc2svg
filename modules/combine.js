@@ -7,11 +7,11 @@
 // Parameters
 //	%%voicecombine n	'n' is the combine level
 
-function Combine(abc_i) {
-    var abc = abc_i
+abc2svg.combine = {
 
-    // constants from the abc2svg core
-    var	NOTE = 8,
+    // function called at start of the generation when multi-voices
+    comb_v: function(abc) {
+    var	NOTE = 8,		// constants from the abc2svg core
 	REST = 10,
 	SL_ABOVE = 0x01,
 	SL_BELOW = 0x02,
@@ -55,7 +55,7 @@ function Combine(abc_i) {
 	 && s.notes[0].pit <= s2.notes[nhd2].pit + 1)
 		return false
 	return true
-    }
+    } // may_combine()
 
     // combine two notes
     function combine_notes(s, s2) {
@@ -84,7 +84,7 @@ function Combine(abc_i) {
 	type = s.notes[nhd].ti1
 	if ((type & 0x0f) == SL_AUTO)
 		s.notes[nhd].ti1 = SL_ABOVE | (type & ~SL_DOTTED)
-}
+} // combine_notes()
 
 // combine 2 voices
 function do_combine(s) {
@@ -121,10 +121,8 @@ function do_combine(s) {
 		if (s.in_tuplet || !may_combine(s))
 			break
 	}
-}
+} // do_combine()
 
-    // function called at start of the generation when multi-voices
-    Combine.prototype.comb_v = function() {
 	var s, s2, g, i, r
 
 	for (s = abc.get_tsfirst(); s; s = s.ts_next) {
@@ -177,10 +175,10 @@ function do_combine(s) {
 			} while (s2.type != NOTE && s2.type != REST)
 		}
 	}
-    } // comb_v()
+    }, // comb_v()
 
     // set the combine parameter in the current voice
-    Combine.prototype.set_comb = function(a) {
+    set_comb: function(abc, a) {
     var	i,
 	curvoice = abc.get_curvoice()
 
@@ -192,8 +190,7 @@ function do_combine(s) {
 		}
 	}
     } // set_comb()
-
-// Combine creation
+} // combine
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -217,11 +214,10 @@ do_pscom = function(text) {\n\
 }\n\
 set_stem_dir = function() {\n\
 	combine.set_sd();\n\
-	Combine.prototype.comb_v()\n\
+	abc2svg.combine.comb_v(self)\n\
 }\n\
 set_vp = function(a) {\n\
-	Combine.prototype.set_comb(a);\n\
+	abc2svg.combine.set_comb(self, a);\n\
 	combine.set_vp(a)\n\
 }\n\
 '
-} // Combine()

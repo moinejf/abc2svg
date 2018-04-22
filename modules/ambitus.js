@@ -7,15 +7,13 @@
 // Parameters
 //	%%ambitus 1
 
-function Ambitus(i_abc) {
-    var	abc = i_abc
+abc2svg.ambitus = {
+    do_ambitus: function(voice_tb) {
 
 // constants from the abc2svg core
     var	BASE_LEN = 1536,
 	NOTE = 8,
 	FULL = 0
-
-    Ambitus.prototype.do_ambitus = function(voice_tb) {
     var	s, v, p_v, min, max
 
 	for (v = 0; v < voice_tb.length; v++) {
@@ -51,8 +49,7 @@ function Ambitus(i_abc) {
 			}]
 	}
     } // do_ambitus()
-
-// Ambitus creation
+} // ambitus
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -83,7 +80,7 @@ draw_symbols = function(p_voice) {\n\
 }\n\
 output_music = function() {\n\
 	if (cfmt.ambitus)\n\
-		Ambitus.prototype.do_ambitus(voice_tb)\n\
+		abc2svg.ambitus.do_ambitus(voice_tb)\n\
 	ambitus.om()\n\
 }\n\
 set_format = function(cmd, param, lock) {\n\
@@ -102,4 +99,3 @@ set_width = function(s) {\n\
 	}\n\
 }\n\
 '
-} // Ambitus()

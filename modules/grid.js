@@ -8,8 +8,10 @@
 //	%%grid 1 | -1	(above the tune | below the tune)
 //	%%gridfont font_name size (default: 'serif 16')
 
-function Grid(i_abc) {
-    var	abc = i_abc
+abc2svg.grid = {
+
+// function called before tune generation
+    do_grid: function(abc, tsfirst, voice_tb) {
 
 // constants from the abc2svg core
     var	BASE_LEN = 1536,
@@ -168,8 +170,6 @@ function build_grid(chords, bars, font) {
 	return line + '</svg>'
 } // build_grid()
 
-// function called before tune generation
-Grid.prototype.do_grid = function(tsfirst, voice_tb) {
     var	s, beat, cur_beat, i, beat_i, p_voice, n, font,
 	bars = [],
 	chords = [],
@@ -269,8 +269,7 @@ Grid.prototype.do_grid = function(tsfirst, voice_tb) {
 		p_voice.sym = s
 	}
 } // do_grid()
-
-// Grid creation
+} // grid
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -280,7 +279,7 @@ var grid = {\n\
 }\n\
 output_music = function() {\n\
 	if (cfmt.grid)\n\
-		Grid.prototype.do_grid(tsfirst, voice_tb)\n\
+		abc2svg.grid.do_grid(self, tsfirst, voice_tb)\n\
 	grid.om()\n\
 }\n\
 set_format = function(cmd, param, lock) {\n\
@@ -294,4 +293,3 @@ set_format = function(cmd, param, lock) {\n\
 style += "\\\n.chmid {text-anchor:middle}";\n\
 param_set_font("gridfont", "serif 16")\n\
 '
-} //Grid()

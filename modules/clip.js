@@ -7,16 +7,11 @@
 // Parameters
 //	%%clip start_measure_nb [":" num "/" den] "-" end_measure_nb [":" num "/" den]
 
-function Clip(i_abc) {
-    var	abc = i_abc
+abc2svg.clip = {
 
-// constants from the abc2svg core
-    var	BAR = 0,
-	CLEF = 1,
-	KEY = 5,
-	METER = 6,
-	STAVES = 12,
-	BASE_LEN = 1536
+	// %%break start_measure [":" num "/" den] "-" end_measure ...
+	get_clip: function(abc, parm) {
+	    var	BASE_LEN = 1536		// constant from the abc2svg core
 
 	// get the start/stop points
 	function get_symsel(a) {
@@ -35,8 +30,6 @@ function Clip(i_abc) {
 		return {m: b[1], t: a[1] * BASE_LEN / a[2], sq: sq}
 	} // get_symsel()
 
-	// %%break start_measure [":" num "/" den] "-" end_measure ...
-	Clip.prototype.get_clip = function(parm) {
 	    var	b, c,
 		a = parm.split(/[ -]/)
 
@@ -54,7 +47,16 @@ function Clip(i_abc) {
 			return
 		}
 		abc.glovar.clip = [b, c]
-	} // get_clip()
+	}, // get_clip()
+
+	// cut the tune
+	do_clip: function(abc) {
+
+	    var	BAR = 0,		// constants from the abc2svg core
+		CLEF = 1,
+		KEY = 5,
+		METER = 6,
+		STAVES = 12
 
 	// go to a global (measure + time)
 	function go_global_time(s, sel) {
@@ -108,8 +110,6 @@ function Clip(i_abc) {
 		return s
 	}
 
-	// cut the tune
-	Clip.prototype.do_clip = function() {
 	    var	s, s2, sy, p_voice, v
 
 		// remove the beginning of the tune
@@ -181,8 +181,7 @@ function Clip(i_abc) {
 		}
 		delete s.ts_prev.ts_next
 	} // do_clip()
-
-// Clip creation
+} // clip
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -192,14 +191,13 @@ var clip = {\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 5) == "clip ")\n\
-		Clip.prototype.get_clip(text)\n\
+		abc2svg.clip.get_clip(self, text)\n\
 	else\n\
 		clip.psc(text)\n\
 }\n\
 set_bar_num = function() {\n\
 	clip.sbn();\n\
 	if (glovar.clip)\n\
-		Clip.prototype.do_clip()\n\
+		abc2svg.clip.do_clip(self)\n\
 }\n\
 '
-} // Clip()

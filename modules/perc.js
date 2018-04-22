@@ -10,9 +10,11 @@
 // a ABC note or a possibly abbreviated percussion name.
 // See https://wim.vree.org/js2/tabDrumDoc.html for more information.
 
-function Perc(i_abc) {
-    var	abc = i_abc,
-	pits = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
+abc2svg.perc = {
+
+    // parse %%percmap
+    do_perc: function(abc, parm) {
+    var	pits = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
 	accs = new Int8Array([0, 1, 0, -1, 0, 0, 1, 0, -1, 0, -1, 0])
 
 // GM drum
@@ -194,7 +196,7 @@ var prn = {
 	if (accs[pit])
 		note.acc = accs[pit]
 	return note
-    }
+    } // tonote()
 
     // normalize a note for mapping
     function norm(p) {
@@ -211,10 +213,8 @@ var prn = {
 			p += ','
 	}
 	return p
-    }
+    } // norm()
 
-    // parse %%percmap
-    Perc.prototype.do_perc = function(parm) {
     var	n, v,
 	a = parm.split(/\s+/);
 
@@ -242,10 +242,10 @@ var prn = {
 		abc.maps.MIDIdrum[n] = [null, v]
 	}
 	abc.set_v_param("perc", "MIDIdrum")
-    } // do_perc()
+    }, // do_perc()
 
     // set the MIDI parameters in the current voice
-    Perc.prototype.set_perc = function(a) {
+    set_perc: function(abc, a) {
     var	i, item,
 	curvoice = abc.get_curvoice()
 
@@ -262,8 +262,7 @@ var prn = {
 		}
 	}
     } // set_perc()
-
-// Perc creation
+} // perc
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -273,13 +272,12 @@ var perc = {\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 8) == "percmap ")\n\
-		Perc.prototype.do_perc(text)\n\
+		abc2svg.perc.do_perc(self, text)\n\
 	else\n\
 		perc.psc(text)\n\
 }\n\
 set_vp = function(a) {\n\
-	Perc.prototype.set_perc(a);\n\
+	abc2svg.perc.set_perc(self, a);\n\
 	perc.svp(a)\n\
 }\n\
 '
-} // Perc()

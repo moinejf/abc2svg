@@ -7,12 +7,11 @@
 // Parameters
 //	%%capo n	'n' is the capo fret number
 
-function Capo(abc_i) {
-    var abc_capo,
-	abc = abc_i
+abc2svg.capo = {
+   abc_capo: false,
 
 // function called when setting a chord symbol on a music element
-Capo.prototype.gch_capo = function(a_gch) {
+    gch_capo: function(abc, a_gch) {
     var	gch, gch2, i2,
 	transp = abc.get_cfmt('capo'),
 	i = 0
@@ -27,8 +26,8 @@ Capo.prototype.gch_capo = function(a_gch) {
 	gch2 = Object.create(gch);
 	gch2.capo = false;		// (would be erased when setting gch)
 	gch2.text = abc.gch_tr1(gch2.text, -transp)
-	if (!abc_capo) {		// if start of tune
-		abc_capo = true;
+	if (!abc2svg.capo.abc_capo) {		// if new tune
+		abc2svg.capo.abc_capo = true;
 		gch2.text += "  (capo: " + transp.toString() + ")"
 	}
 
@@ -38,14 +37,8 @@ Capo.prototype.gch_capo = function(a_gch) {
 
 	// set a mark in the first chord symbol for %%diagram
 	gch.capo = true
-
-} // gch_capo()
-
-Capo.prototype.capo_reset = function() {
-	abc_capo = false
-}
-
-// Capo creation
+    } // gch_capo()
+} // capo
 
 // inject code inside the core
 abc2svg.inject += '\
@@ -56,11 +49,11 @@ var capo = {\n\
 }\n\
 gch_build = function(s) {\n\
 	if (cfmt.capo && a_gch)\n\
-		Capo.prototype.gch_capo(a_gch);\n\
+		abc2svg.capo.gch_capo(self, a_gch);\n\
 	capo.gch_b(s)\n\
 }\n\
 output_music = function() {\n\
-	Capo.prototype.capo_reset();\n\
+	abc2svg.capo.abc_capo = false;\n\
 	capo.om()\n\
 }\n\
 set_format = function(cmd, param, lock) {\n\
@@ -71,4 +64,3 @@ set_format = function(cmd, param, lock) {\n\
 	capo.set_fmt(cmd, param, lock)\n\
 }\n\
 '
-} // Capo()
