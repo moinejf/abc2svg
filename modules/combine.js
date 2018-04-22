@@ -195,9 +195,8 @@ function do_combine(s) {
 
 // Combine creation
 
-	// export some functions/variables
-	abc.tosvg('combine', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var combine = {\n\
 	new_n: new_note,\n\
 	psc: do_pscom,\n\
@@ -224,7 +223,5 @@ set_vp = function(a) {\n\
 	Combine.prototype.set_comb(a);\n\
 	combine.set_vp(a)\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } // Combine()

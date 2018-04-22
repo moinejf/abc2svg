@@ -54,9 +54,8 @@ function Ambitus(i_abc) {
 
 // Ambitus creation
 
-	//export some functions/variables
-	abc.tosvg('ambitus', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var ambitus = {\n\
 	ds: draw_symbols,\n\
 	om: output_music,\n\
@@ -102,7 +101,5 @@ set_width = function(s) {\n\
 		ambitus.set_w(s)\n\
 	}\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } // Ambitus()

@@ -272,9 +272,8 @@ Grid.prototype.do_grid = function(tsfirst, voice_tb) {
 
 // Grid creation
 
-	//export some functions/variables
-	abc.tosvg('grid', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var grid = {\n\
 	om: output_music,\n\
 	set_fmt: set_format\n\
@@ -294,7 +293,5 @@ set_format = function(cmd, param, lock) {\n\
 \
 style += "\\\n.chmid {text-anchor:middle}";\n\
 param_set_font("gridfont", "serif 16")\n\
-%%endjs\n\
-')
-
+'
 } //Grid()

@@ -47,9 +47,8 @@ Capo.prototype.capo_reset = function() {
 
 // Capo creation
 
-	//export some functions/variables
-	abc.tosvg('capo', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var capo = {\n\
 	gch_b: gch_build,\n\
 	om: output_music,\n\
@@ -71,7 +70,5 @@ set_format = function(cmd, param, lock) {\n\
 	}\n\
 	capo.set_fmt(cmd, param, lock)\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } // Capo()

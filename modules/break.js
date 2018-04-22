@@ -94,9 +94,8 @@ function Break(i_abc) {
 
 // Break creation
 
-	//export some functions/variables
-	abc.tosvg('break', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var brk = {\n\
 	psc: do_pscom,\n\
 	sbn: set_bar_num\n\
@@ -112,7 +111,5 @@ set_bar_num = function() {\n\
 	if (glovar.break)\n\
 		Break.prototype.do_break()\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } // Break()

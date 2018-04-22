@@ -265,9 +265,8 @@ var prn = {
 
 // Perc creation
 
-	//export some functions/variables
-	abc.tosvg('perc', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var perc = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\
@@ -282,7 +281,5 @@ set_vp = function(a) {\n\
 	Perc.prototype.set_perc(a);\n\
 	perc.svp(a)\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } // Perc()

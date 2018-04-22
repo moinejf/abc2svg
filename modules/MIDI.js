@@ -130,9 +130,8 @@ function MIDI(i_abc) {
 
 // MIDI creation
 
-	//export some functions/variables
-	abc.tosvg('MIDI', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var midi = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\
@@ -147,7 +146,5 @@ set_vp = function(a) {\n\
 	MIDI.prototype.set_midi(a);\n\
 	midi.svp(a)\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } //MIDI()

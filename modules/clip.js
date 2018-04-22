@@ -184,9 +184,8 @@ function Clip(i_abc) {
 
 // Clip creation
 
-	//export some functions/variables
-	abc.tosvg('clip', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 var clip = {\n\
 	psc: do_pscom,\n\
 	sbn: set_bar_num\n\
@@ -202,7 +201,5 @@ set_bar_num = function() {\n\
 	if (glovar.clip)\n\
 		Clip.prototype.do_clip()\n\
 }\n\
-%%endjs\n\
-')
-
+'
 } // Clip()
