@@ -708,12 +708,8 @@ systemdict/def{currentdict 2 index 2 index put pop pop}put\n\
 
 } // Psvg()
 
-// function called on Abc creation or on module loaded
-function psvg_init(abc) {
-
-	//export some functions/variables
-	abc.tosvg('psvg', '\
-%%beginjs\n\
+// inject code inside the core
+abc2svg.inject += '\
 function svgcall(f, x, y, v1, v2) {\n\
     var	xy = psvg.getorig();\n\
 	psvg.ps_flush();\n\
@@ -737,12 +733,7 @@ Abc.prototype.psget_y = function() {\n\
 	return stv_g.started ? stv_g.dy : posy\n\
 }\n\
 \
-Abc.prototype.psvg_create = function(abc) {\n\
-	psvg = new Psvg(abc);\n\
+	psvg = new Psvg(self);\n\
 	psdeco = psvg.psdeco;\n\
 	psxygl = psvg.psxygl\n\
-}\n\
-%%endjs\n\
-');
-	abc.psvg_create(abc)
-}
+'
