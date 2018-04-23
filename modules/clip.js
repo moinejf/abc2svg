@@ -201,3 +201,6 @@ set_bar_num = function() {\n\
 		abc2svg.clip.do_clip(self)\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.clip.loaded = true

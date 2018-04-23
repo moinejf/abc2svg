@@ -221,3 +221,6 @@ set_vp = function(a) {\n\
 	combine.set_vp(a)\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.voicecombine.loaded = true

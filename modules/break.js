@@ -108,3 +108,6 @@ set_bar_num = function() {\n\
 		abc2svg.break.do_break(self)\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.break.loaded = true

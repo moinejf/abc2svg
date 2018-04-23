@@ -72,7 +72,8 @@ Abc.prototype.voice_tb = voice_tb
 }	// end of Abc()
 
 // module hooks
-abc2svg.inject = ''
+abc2svg.inject = ''	// new modules
+abc2svg.g_inject = ''	// all modules
 
 // nodejs
 if (typeof module == 'object' && typeof exports == 'object') {

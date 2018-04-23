@@ -99,3 +99,6 @@ set_width = function(s) {\n\
 	}\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.ambitus.loaded = true

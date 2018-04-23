@@ -146,3 +146,6 @@ set_vp = function(a) {\n\
 	midi.svp(a)\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.MIDI.loaded = true

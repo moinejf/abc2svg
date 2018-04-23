@@ -492,3 +492,6 @@ set_format = function(cmd, param, lock) {\n\
 style += "\\n.diag {font-family:sansserif;font-size:6px}\
 \\n.frn {font-family:sansserif;font-style:italic;font-size:7px}"\n\
 '
+
+// the module is loaded
+abc2svg.modules.diagram.loaded = true

@@ -281,3 +281,6 @@ set_vp = function(a) {\n\
 	perc.svp(a)\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.percmap.loaded = true

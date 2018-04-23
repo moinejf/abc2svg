@@ -64,3 +64,6 @@ set_format = function(cmd, param, lock) {\n\
 	capo.set_fmt(cmd, param, lock)\n\
 }\n\
 '
+
+// the module is loaded
+abc2svg.modules.capo.loaded = true

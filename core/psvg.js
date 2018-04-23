@@ -737,3 +737,6 @@ Abc.prototype.psget_y = function() {\n\
 	psdeco = psvg.psdeco;\n\
 	psxygl = psvg.psxygl\n\
 '
+
+// the module is loaded
+abc2svg.modules.beginps.loaded = true

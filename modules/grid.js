@@ -293,3 +293,6 @@ set_format = function(cmd, param, lock) {\n\
 style += "\\\n.chmid {text-anchor:middle}";\n\
 param_set_font("gridfont", "serif 16")\n\
 '
+
+// the module is loaded
+abc2svg.modules.grid.loaded = true
