@@ -19,16 +19,16 @@
 
 function Modules() {
     var modules = {
-		ambitus: { fn: 'ambitus-1.js', init: 'Ambitus' },
-		beginps: { fn: 'psvg-1.js', init: 'psvg_init' },
-		break: { fn: 'break-1.js', init: 'Break' },
-		capo: { fn: 'capo-1.js', init: 'Capo' },
-		clip: { fn: 'clip-1.js', init: 'Clip' },
-		voicecombine: { fn: 'combine-1.js', init: 'Combine' },
-		diagram: { fn: 'diag-1.js', init: 'Diag' },
-		grid: { fn: 'grid-1.js', init: 'Grid' },
-		MIDI: { fn: 'MIDI-1.js', init: 'MIDI' },
-		percmap: { fn: 'perc-1.js', init: 'Perc' }
+		ambitus: { fn: 'ambitus-1.js' },
+		beginps: { fn: 'psvg-1.js' },
+		break: { fn: 'break-1.js' },
+		capo: { fn: 'capo-1.js' },
+		clip: { fn: 'clip-1.js' },
+		voicecombine: { fn: 'combine-1.js' },
+		diagram: { fn: 'diag-1.js' },
+		grid: { fn: 'grid-1.js' },
+		MIDI: { fn: 'MIDI-1.js' },
+		percmap: { fn: 'perc-1.js' }
 	},
 	all_m = /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap/g,
 	nreq = 0,
@@ -83,29 +83,11 @@ function Modules() {
 		}
 		if (relay)		// web
 			return nreq == nreq_i;
-		if (abc)
-			init(abc)	// batch
 		return true
 	}
 
-	// initialize all the modules
-	// This function is called
-	// - from the Abc instance on object creation
-	// - from modules.load when the Abc instance has already been created
-	function init(abc) {
-		for (var i in modules) {
-			var m = modules[i]
-			if (eval('typeof ' + m.init) != "function"
-			 || m.loaded === abc)
-				continue
-			m.loaded = abc;
-			eval(m.init + '(abc)')
-		}
-	}
-
 	return {
-		load: load,
-		init: init
+		load: load
 	}
 }
 

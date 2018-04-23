@@ -69,9 +69,6 @@ Abc.prototype.voice_tb = voice_tb
 
     var	self = this
 
-	if (modules)
-		modules.init(this)
-
 }	// end of Abc()
 
 // module hooks
