@@ -17,8 +17,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-function Modules() {
-    var modules = {
+abc2svg.modules = {
 		ambitus: { fn: 'ambitus-1.js' },
 		beginps: { fn: 'psvg-1.js' },
 		break: { fn: 'break-1.js' },
@@ -28,29 +27,27 @@ function Modules() {
 		diagram: { fn: 'diag-1.js' },
 		grid: { fn: 'grid-1.js' },
 		MIDI: { fn: 'MIDI-1.js' },
-		percmap: { fn: 'perc-1.js' }
-	},
-	all_m = /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap/g,
-	nreq = 0,
-	cbf					// callback function
+		percmap: { fn: 'perc-1.js' },
+	all_m: /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap/g,
+	nreq: 0,
 
 	// scan the file and find the required modules
 	// @file: ABC file
-	// @abc: Abc instance - if undefined = web, otherwise = batch
+	// @abc: unused
 	// @relay: when web, callback function for continuing the treatment
 	// return true when all modules are loaded
-	function load(file, abc, relay) {
+	load: function(file, abc, relay) {
 
 		// test if some keyword in the file
-	    var	m, r,nreq_i,
-		all = file.match(all_m)
+	    var	m, r, nreq_i,
+		all = file.match(this.all_m)
 
 		if (!all)
 			return true;
-		nreq_i = nreq;
-		cbf = relay			// (only one callback function)
+		nreq_i = this.nreq;
+		this.cbf = relay		// (only one callback function)
 		for (var i = 0; i < all.length; i++) {
-			m = modules[all[i]]
+			m = this[all[i]]
 			if (m.loaded)
 				continue
 
@@ -60,38 +57,32 @@ function Modules() {
 				continue
 
 			m.loaded = true
-			if (eval('typeof ' + m.init) == "function")
-				continue		// already loaded
 
 			// load the module
 			if (!relay) {			// batch
 				loadRelativeToScript(m.fn)
 			} else {			// web
-				nreq++;
+				this.nreq++;
 				loadjs(m.fn,
 				    function() {	// if success
-					nreq--;
-					if (nreq == 0)
-						cbf()},
+					if (--this.nreq == 0)
+						this.cbf()
+				    },
 				    function() {	// if error
 					user.errmsg('error loading ' + m.fn);
-					nreq--
-					if (nreq == 0)
-						cbf()
+					if (--this.nreq == 0)
+						this.cbf()
 				    })
 			}
 		}
 		if (relay)		// web
-			return nreq == nreq_i;
+			return this.nreq == nreq_i;
 		return true
 	}
+} // modules
 
-	return {
-		load: load
-	}
-}
-
-var modules = Modules()
+// compatibility
+var modules = abc2svg.modules
 
 // nodejs
 if (typeof module == 'object' && typeof exports == 'object') {
