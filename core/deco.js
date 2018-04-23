@@ -1169,11 +1169,12 @@ function draw_deco_near() {
 			case 1:
 			case 3:
 			case 4:
+			case 8:			// gliss
 				break
 			default:
-			case 2:			// arpeggio
-			case 5:			// trill
-			case 7:			// d_cresc
+//			case 2:			// arpeggio
+//			case 5:			// trill
+//			case 7:			// d_cresc
 				error(1, null, "Cannot have !$1! on a head", dd.name)
 				continue
 			case 9:			// head replacement
