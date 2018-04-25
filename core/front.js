@@ -232,10 +232,12 @@ function tosvg(in_fname,		// file name
 
 	// inject the module hooks
 	if (abc2svg.inject || abc2svg.g_inject) {
-		if (abc2svg.inject && mod_init) {	// new modules
+		if (mod_init) {				// new modules
+		    if (abc2svg.inject) {
 			eval(abc2svg.inject);
 			abc2svg.g_inject += abc2svg.inject;
 			abc2svg.inject = ''
+		    }
 		} else {				// all modules
 			if (abc2svg.inject) {
 				abc2svg.g_inject += abc2svg.inject;
