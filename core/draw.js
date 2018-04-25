@@ -995,7 +995,7 @@ function draw_bar(s, bot, h) {
 		case ":":
 			x -= 2;
 			set_sscale(st);
-			xygl(x + 1, staff_tb[st].y, "rdots")
+			xygl(x + 1, bot, "rdots")
 			break
 		}
 		x -= 3
