@@ -18,7 +18,7 @@
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
 // start of the Abc object
-function Abc(user) {
+abc2svg.Abc = function(user) {
 	"use strict";
 
 	// mask some unsafe functions
