@@ -1175,6 +1175,8 @@ function new_bar() {
 
 	// check if repeat bar
 	if (c > '0' && c <= '9') {
+		if (bar_type.slice(-1) == '[')
+			bar_type = bar_type.slice(0, -1);
 		s.text = c
 		while (1) {
 			c = line.next_char()
