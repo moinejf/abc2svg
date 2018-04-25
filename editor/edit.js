@@ -234,14 +234,14 @@ function render2() {
 	content = elt_ref.source.value
 
 	// load the required modules
-	if (!modules.load(content + elt_ref.src1.value,
+	if (!abc2svg.modules.load(content + elt_ref.src1.value,
 			null, render2))
 		return
 
 	user.img_out = user.my_img_out;
 	user.get_abcmodel = null;
 
-	abc = new Abc(user);
+	abc = new abc2svg.Abc(user);
 	abc_images = '';
 	abc.tosvg('edit', '%%bgcolor white');
 
@@ -580,7 +580,7 @@ function play_tune() {
 		user.img_out = null	// get the schema and stop SVG generation
 		user.get_abcmodel = abcplay.add	// inject the model in the play engine
 
-		var abc = new Abc(user);
+		var abc = new abc2svg.Abc(user);
 
 		abcplay.clear();
 		abc.tosvg("play", "%%play")
@@ -609,8 +609,7 @@ function play_tune() {
 function edit_init() {
 
 	// loop until abc2svg is loaded
-	if (typeof abc2svg != "object"
-	 || !abc2svg.version) {
+	if (typeof abc2svg != "object") {
 		setTimeout(edit_init, 500)
 		return
 	}

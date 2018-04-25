@@ -94,7 +94,7 @@ function playseq(seq) {
 	}
 	playing = true
 	if (!a_pe[seq]) {		// if no playing event
-		var abc = new Abc(user);
+		var abc = new abc2svg.Abc(user);
 
 		abcplay.clear();
 		abc.tosvg("play", "%%play")
@@ -135,14 +135,15 @@ function loadjs(fn, relay, onerror) {
 
 // function called when the page is loaded
 function dom_loaded() {
-	if (typeof Abc != "function") {		// wait for the abc2svg core
+	if (typeof abc2svg != "object") {	// wait for the abc2svg core
 		setTimeout(dom_loaded, 500)
 		return
 	}
+
 	page = document.body.innerHTML;
 
 	// load the required modules
-	if (!modules.load(page, null, dom_loaded))
+	if (!abc2svg.modules.load(page, null, dom_loaded))
 		return
 
 	// search the ABC tunes,
@@ -152,7 +153,8 @@ function dom_loaded() {
 		re = /\n%abc|\nX:/g,
 		re_stop = /\nX:|\n<|\n%.begin/g,
 		select = window.location.hash.slice(1)
-	abc = new Abc(user)
+
+	abc = new abc2svg.Abc(user)
 
 	// check if a selection
 	if (select) {

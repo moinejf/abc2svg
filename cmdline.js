@@ -38,7 +38,7 @@ var user = {
 	else
 		user.errmsg = function(msg, l, c) { user.errtxt += msg + '\n' }
 
-var	abc = new Abc(user)		// (global for 'toxxx.js')
+var	abc = new abc2svg.Abc(user)		// (global for 'toxxx.js')
 
 // treat a file
 function do_file(fn) {
@@ -60,8 +60,7 @@ function do_file(fn) {
 //		file = utf_convert(file)
 
 	// load the required modules
-	if (modules)
-		modules.load(file, abc)
+	abc2svg.modules.load(file, abc)
 
 	// generate
 	try {
@@ -91,8 +90,7 @@ function abc_cmd(cmd, args) {
 			if (arg[1] == "-") {
 				parm = args.shift();
 				parm = arg.replace('--', 'I:') + " " + parm + "\n"
-				if (modules)
-					modules.load(parm, abc);
+				abc2svg.modules.load(parm, abc);
 				abc.tosvg(cmd, parm)
 			}
 		} else {

@@ -79,10 +79,15 @@ function loadjs(fn, relay, onerror) {
 
 // function called when the page is loaded
 function dom_loaded() {
+	if (typeof abc2svg != "object") {	// wait for the abc2svg core
+		setTimeout(dom_loaded, 500)
+		return
+	}
+
 	var page = document.body.innerHTML
 
 	// load the required modules
-	if (!modules.load(page, null, dom_loaded))
+	if (!abc2svg.modules.load(page, null, dom_loaded))
 		return
 
 	// search the ABC tunes and add their rendering as SVG images
@@ -90,8 +95,8 @@ function dom_loaded() {
 		re = /\n%abc|\nX:/g,		// start on "%abc" or "X:"
 		re_stop = /\n<|\n%.begin/g;	// stop on "<" and skip "%%begin"
 
-	abc = new Abc(user);
-	abc.tosvg('abcexample', '%%bgcolor white\n\
+	abc = new abc2svg.Abc(user);
+	abc.tosvg('abcdoc', '%%bgcolor white\n\
 %%rightmargin 0.8cm\n\
 %%leftmargin 0.8cm\n\
 %%topspace 0')
