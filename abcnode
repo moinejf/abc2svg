@@ -8,10 +8,11 @@ case $1 in
 		cat $1 >> /tmp/toto.js
 		shift
 		;;
-	*)
-		cat ${progdir}/toxhtml.js >> /tmp/toto.js
-		;;
 esac
+if ! grep 'function abc_init' modules/grid2.js > /dev/null; then
+	cat ${progdir}/toxhtml.js >> /tmp/toto.js
+fi
+
 cat <<EOF >> /tmp/toto.js
     var	progdir='${progdir}/'
 
@@ -29,9 +30,18 @@ function readFile(fname) {
 	return fs.readFileSync(fname).toString()
 }
 
-function loadRelativeToScript(script) {
-	var geval = eval;
-	geval(readFile(progdir + script))
+abc2svg.loadjs = function(fn, relay, onerror) {
+	try {
+		var geval = eval;
+		geval(readFile(progdir + fn))
+		if (relay)
+			relay()
+	} catch(e) {
+		if (onerror)
+			onerror()
+		else
+			printErr('Cannot read file ' + fn)
+	}
 }
 
 function quit() {

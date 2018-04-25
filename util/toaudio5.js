@@ -194,7 +194,7 @@ function Audio5(i_conf) {
 	// load an instrument (.js file)
 	function load_instr(instr) {
 		w_instr++;
-		loadjs(conf.sfu + '/' + instr + '.js',
+		abc2svg.loadjs(conf.sfu + '/' + instr + '.js',
 			function() {
 			    var	parser = new sf2.Parser(b64dcod(abcsf2[instr]));
 				parser.parse();

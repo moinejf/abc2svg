@@ -113,31 +113,31 @@ function playseq(seq) {
 	abcplay.play(0, 100000, a_pe[seq])
 }
 
-// load a javascript file
-    var	jsdir = document.currentScript ?
+// function called when the page is loaded
+function dom_loaded() {
+	if (typeof abc2svg != "object") {	// wait for the abc2svg core
+		setTimeout(dom_loaded, 500)
+		return
+	}
+
+// functions to load javascript files
+	abc2svg.jsdir = document.currentScript ?
 		document.currentScript.src.match(/.*\//) :
 		(function() {
 			var scrs = document.getElementsByTagName('script');
 			return scrs[scrs.length - 1].src.match(/.*\//) || ''
 		})()
 
-function loadjs(fn, relay, onerror) {
-	var s = document.createElement('script');
-	s.src = jsdir + fn;
-	s.type = 'text/javascript'
-	if (relay)
-		s.onload = relay;
-	s.onerror = onerror || function() {
-		alert('error loading ' + fn)
-	}
-	document.head.appendChild(s)
-}
-
-// function called when the page is loaded
-function dom_loaded() {
-	if (typeof abc2svg != "object") {	// wait for the abc2svg core
-		setTimeout(dom_loaded, 500)
-		return
+	abc2svg.loadjs = function(fn, relay, onerror) {
+		var s = document.createElement('script');
+		s.src = abc2svg.jsdir + fn;
+		s.type = 'text/javascript'
+		if (relay)
+			s.onload = relay;
+		s.onerror = onerror || function() {
+			alert('error loading ' + fn)
+		}
+		document.head.appendChild(s)
 	}
 
 	page = document.body.innerHTML;

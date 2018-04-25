@@ -20,18 +20,12 @@ function readFile(fname) {
 	return fs.readFileSync(fname).toString()
 }
 
-function loadRelativeToScript(script) {
-	var geval = eval;
-	geval(readFile(__dirname + sep + script))
-}
-
 function quit() {
 	process.exit(1)
 }
 
 global.print = print;
 global.printErr = printErr;
-global.loadRelativeToScript = loadRelativeToScript;
 global.readFile = readFile;
 global.quit = quit;
 
@@ -53,6 +47,20 @@ var m = require("abc2svg/abc2svg-1");
 global.abc2svg = m.abc2svg;
 global.Abc = m.Abc;
 global.modules = m.modules;
+
+abc2svg.loadjs = function(fn, relay, onerror) {
+	try {
+		var geval = eval;
+		geval(readFile(__dirname + sep + fn))
+		if (relay)
+			relay()
+	} catch(e) {
+		if (onerror)
+			onerror()
+		else
+			printErr('Cannot read file ' + fn)
+	}
+}
 
 // load the command line
 m = require("abc2svg/cmdline");

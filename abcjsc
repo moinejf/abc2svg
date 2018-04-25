@@ -21,18 +21,29 @@ exec jsc-1 -e "var progdir='${progdir}/'
 //	return fout
 //}
 
-function loadRelativeToScript(script) {
-	load(progdir + script)
+load(progdir + 'abc2svg-1.js')
+
+abc2svg.loadjs = function(fn, relay, onerror) {
+	try {
+		load(progdir + fn)
+		if (relay)
+			relay()
+	} catch(e) {
+		if (onerror)
+			onerror()
+		else
+			print('Cannot read file ' + fn)
+	}
 }
 
-load(progdir + 'abc2svg-1.js')
 load(progdir + 'cmdline.js')
 
 function main(args) {
 	if (/\.js$/.test(args[0])) {
 		load(args[0])
 		args.shift()
-	} else {
+	}
+	if (typeof(abc_init) != 'function')
 		load(progdir + 'toxhtml.js')
 	}
 	if (!args[0]) {

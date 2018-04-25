@@ -8,6 +8,19 @@ function readFile(fname) {
 loadRelativeToScript("abc2svg-1.js")
 loadRelativeToScript("cmdline.js")
 
+abc2svg.loadjs = function(fn, relay, onerror) {
+	try {
+		loadRelativeToScript(fn)
+		if (relay)
+			relay()
+	} catch(e) {
+		if (onerror)
+			onerror()
+		else
+			printErr('Cannot read file ' + fn)
+	}
+} // loadjs()
+
 // main
 	var	args = scriptArgs
 
