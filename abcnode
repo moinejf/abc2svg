@@ -9,7 +9,7 @@ case $1 in
 		shift
 		;;
 esac
-if ! grep 'function abc_init' modules/grid2.js > /dev/null; then
+if ! grep 'function abc_init' $1 > /dev/null; then
 	cat ${progdir}/toxhtml.js >> /tmp/toto.js
 fi
 

@@ -46,7 +46,6 @@ Arguments:\n\
 var m = require("abc2svg/abc2svg-1");
 global.abc2svg = m.abc2svg;
 global.Abc = m.Abc;
-global.modules = m.modules;
 
 abc2svg.loadjs = function(fn, relay, onerror) {
 	try {

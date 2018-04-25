@@ -77,11 +77,3 @@ abc2svg.modules = {
 		return true
 	}
 } // modules
-
-// compatibility
-var modules = abc2svg.modules
-
-// nodejs
-if (typeof module == 'object' && typeof exports == 'object') {
-	exports.modules = modules
-}
