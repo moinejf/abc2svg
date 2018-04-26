@@ -53,9 +53,15 @@ global.abc2svg = abc2svg
 // main
 	var args = process.argv
 	if (!args[2]) {
-		abc2svg.print("abcnode-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
-			"	ABC to SVG translator\n" +
-			"	Usage: abcnode [options] ABC_file");
+		abc2svg.print('ABC translator with nodeJS\
+ and abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
+Usage:\n\
+  abcnode [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
+Arguments:\n\
+  script.js  generation script to load - default: toxhtml.js (XHTML+SVG)\n\
+  g_options  global ABC options\n\
+  ABC_file   ABC file\n\
+  f_options  file options');
 		abc2svg.quit(1)
 	}
 	args.shift()

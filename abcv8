@@ -46,7 +46,7 @@ load(progdir + 'cmdline.js')
 Usage:\n\
   abcv8 [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
 Arguments:\n\
-  script.js  script to load - default: tosvg.js (SVG generation)\n\
+  script.js  generation script to load - default: toxhtml.js (XHTML+SVG)\n\
   g_options  global ABC options\n\
   ABC_file   ABC file\n\
   f_options  file options')
