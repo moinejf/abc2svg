@@ -17,7 +17,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-abc2svg.nreq = 0
+abc2svg.nreq = 0;
+abc2svg.loadjs = function(fn, onsuccess, onerror) {
+	if (onerror)
+		onerror()
+}
+
 abc2svg.modules = {
 		ambitus: { fn: 'ambitus-1.js' },
 		beginps: { fn: 'psvg-1.js' },
