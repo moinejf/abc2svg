@@ -32,7 +32,13 @@ window.onerror = function(msg, url, line) {
 
 var	errtxt = '',
 	new_page = '',
-	abc
+	abc,
+	jsdir = document.currentScript ?
+		document.currentScript.src.match(/.*\//) :
+		(function() {
+			var scrs = document.getElementsByTagName('script');
+			return scrs[scrs.length - 1].src.match(/.*\//) || ''
+		})()
 
 // -- abc2svg init argument
 var user = {
@@ -59,22 +65,18 @@ function clean_txt(txt) {
 
 // function called when the page is loaded
 function dom_loaded() {
-	if (typeof abc2svg != "object") {	// wait for the abc2svg core
+
+	// loop until abc2svg is fully loaded
+	if (typeof abc2svg != "object"
+	 || !abc2svg.modules) {
 		setTimeout(dom_loaded, 500)
 		return
 	}
 
-// functions to load javascript files
-	abc2svg.jsdir = document.currentScript ?
-		document.currentScript.src.match(/.*\//) :
-		(function() {
-			var scrs = document.getElementsByTagName('script');
-			return scrs[scrs.length - 1].src.match(/.*\//) || ''
-		})()
-
+// function to load javascript files
 	abc2svg.loadjs = function(fn, relay, onerror) {
 		var s = document.createElement('script');
-		s.src = abc2svg.jsdir + fn;
+		s.src = jsdir + fn;
 		s.type = 'text/javascript'
 		if (relay)
 			s.onload = relay;

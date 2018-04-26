@@ -47,7 +47,13 @@ var	abc_images,			// image buffer
 		load: 'Please, load the included file ',
 		play: 'Play',
 		stop: 'Stop'
-	}
+	},
+	jsdir = document.currentScript ?
+		document.currentScript.src.match(/.*\//) :
+		(function() {
+			var scrs = document.getElementsByTagName('script');
+			return scrs[scrs.length - 1].src.match(/.*\//) || ''
+		})()
 
 // -- Abc create argument
 var user = {
@@ -130,8 +136,8 @@ function clean_txt(txt) {
 
 // load the language files ('edit-lang.js' and 'err-lang.js')
 function loadlang(lang, no_memo) {
-	loadjs('edit-' + lang + '.js', function() { loadtxt() });
-	loadjs('err-' + lang + '.js')
+	abc2svg.loadjs('edit-' + lang + '.js', function() { loadtxt() });
+	abc2svg.loadjs('err-' + lang + '.js')
 	if (!no_memo)
 		storage(true, "lang", lang == "en" ? 0 : lang)
 }
@@ -588,23 +594,17 @@ function play_tune() {
 // set the version and initialize the playing engine
 function edit_init() {
 
-	// loop until abc2svg is loaded
-	if (typeof abc2svg != "object") {
+	// loop until abc2svg is fully loaded
+	if (typeof abc2svg != "object"
+	 || !abc2svg.modules) {
 		setTimeout(edit_init, 500)
 		return
 	}
 
-// functions to load javascript files
-	abc2svg.jsdir = document.currentScript ?
-		document.currentScript.src.match(/.*\//) :
-		(function() {
-			var scrs = document.getElementsByTagName('script');
-			return scrs[scrs.length - 1].src.match(/.*\//) || ''
-		})()
-
+// function to load javascript files
 	abc2svg.loadjs = function(fn, relay, onerror) {
 		var s = document.createElement('script');
-		s.src = abc2svg.jsdir + fn;
+		s.src = jsdir + fn;
 		s.type = 'text/javascript'
 		if (relay)
 			s.onload = relay;
@@ -659,7 +659,7 @@ function edit_init() {
 	// if playing is possible, load the playing script
 	if (window.AudioContext || window.webkitAudioContext
 	 || navigator.requestMIDIAccess) {
-		loadjs("play-@MAJOR@.js", function() {
+		abc2svg.loadjs("play-@MAJOR@.js", function() {
 			abcplay = AbcPlay({
 					onend: endplay,
 					onnote:notehlight,
