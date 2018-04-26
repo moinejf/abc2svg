@@ -20,7 +20,7 @@
 // user definitions
 var user = {
 	read_file: function(fn) {	// include a file (%%abc-include)
-		var	file = readFile(fn),
+	    var	file = abc2svg.readFile(fn),
 		i = file.indexOf('\r')
 
 		if (i < 0)
@@ -33,8 +33,8 @@ var user = {
 }
 
 	// print or store the error messages
-	if (typeof printErr == 'function')
-		user.errmsg = function(msg, l, c) { printErr(msg) }
+	if (typeof abc2svg.printErr == 'function')
+		user.errmsg = function(msg, l, c) { abc2svg.printErr(msg) }
 	else
 		user.errmsg = function(msg, l, c) { user.errtxt += msg + '\n' }
 
@@ -66,7 +66,7 @@ function do_file(fn) {
 	try {
 		abc.tosvg(fn, file)
 	} catch (e) {
-		abort(e)
+		abc2svg.abort(e)
 	}
 } // do_file()
 
@@ -81,7 +81,7 @@ function abc_cmd(cmd, args) {
 	}
 
 	// initialize the backend
-	abc_init(args)
+	abc2svg.abc_init(args)
 	while (1) {
 		arg = args.shift()
 		if (!arg)
@@ -104,7 +104,7 @@ function abc_cmd(cmd, args) {
 	if (fn)
 		do_file(fn);
 
-	abc_end()
+	abc2svg.abc_end()
 }
 
 // nodejs

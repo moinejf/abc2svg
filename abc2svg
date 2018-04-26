@@ -5,32 +5,8 @@
 // define the system functions
     var	sep = require('path').sep
 
-// interpreter specific functions
-function print(str) {
-	process.stdout.write(str + '\n')
-}
-
-function printErr(str) {
-	process.stderr.write(str + '\n')
-}
-
-function readFile(fname) {
-    var	fs = require("fs")
-
-	return fs.readFileSync(fname).toString()
-}
-
-function quit() {
-	process.exit(1)
-}
-
-global.print = print;
-global.printErr = printErr;
-global.readFile = readFile;
-global.quit = quit;
-
 function usage() {
-	printErr('ABC translator with Node.js\
+	abc2svg.printErr('ABC translator with Node.js\
  and abc2svg-' + abc2svg.version + ' ' + abc2svg.vdate + '\n\
 Usage:\n\
   abc2svg [script.js] [g_options] ABC_file [f_options] [ABC_file [f_options]]*\n\
@@ -39,7 +15,7 @@ Arguments:\n\
   g_options  global ABC options\n\
   ABC_file   ABC file\n\
   f_options  file options')
-		quit()
+	abc2svg.quit()
 }
 
 // load the abc2svg core
@@ -47,10 +23,26 @@ var m = require("abc2svg/abc2svg-1");
 global.abc2svg = m.abc2svg;
 global.Abc = m.Abc;
 
+// interpreter specific functions
+abc2svg.print = function(str) {
+	process.stdout.write(str + '\n')
+}
+abc2svg.printErr = function(str) {
+	process.stderr.write(str + '\n')
+}
+abc2svg.quit = function() {
+	process.exit(1)
+}
+abc2svg.readFile = function(fname) {
+    var	fs = require("fs")
+
+	return fs.readFileSync(fname).toString()
+}
+
 abc2svg.loadjs = function(fn, relay, onerror) {
 	try {
 		var geval = eval;
-		geval(readFile(__dirname + sep + fn))
+		geval(abc2svg.readFile(__dirname + sep + fn))
 		if (relay)
 			relay()
 	} catch(e) {
@@ -77,20 +69,13 @@ args.shift()
 // if the first argument is a script, load it
 if (/\.js$/.test(args[0])) {
     var fn = args[0][0] == '/' ? args[0] : (__dirname + '/' + args[0]),
-	f = readFile(fn);
+	f = abc2svg.readFile(fn);
 	eval(f);
 	args.shift()
-	global.abort = abort;
-	global.abc_init = abc_init;
-	global.abc_end = abc_end
 }
 
 // if no rendering engine, load xhtml
-if (typeof(abc_init) != 'function') {
-	m = require("abc2svg/toxhtml");
-	global.abort = m.abort;
-	global.abc_init = m.abc_init;
-	global.abc_end = m.abc_end
-}
+if (typeof(abc2svg.abc_init) != 'function')
+	require("abc2svg/toxhtml");
 
 abc_cmd("nodeJS", args)

@@ -334,15 +334,15 @@ function odt_out() {
 		})
 }
 
-function abort(e) {
+abc2svg.abort = function(e) {
 	abc.blk_flush();
-	if (typeof printErr == 'function')
-		printErr(e.message + "\n*** Abort ***\n" + e.stack)
+	if (typeof .abc2svgprintErr == 'function')
+		abc2svg.printErr(e.message + "\n*** Abort ***\n" + e.stack)
 	else
 		content += "<text:p>" + e.message +
 			"\n*** Abort ***\n" + e.stack + "</text:p>\n";
 	odt_out();
-	quit()
+	abc2svg.quit()
 }
 
 // convert a CSS font definition (in pixels) to ODT (in points)
@@ -453,7 +453,7 @@ office:string-value="' +
 }
 
 // entry point from cmdline
-function abc_init(args) {
+abc2svg.abc_init = function(args) {
 	console.log('ODT generation started');
 
 	get_args(args);
@@ -502,13 +502,6 @@ function abc_init(args) {
 	user.page_format = true
 }
 
-function abc_end() {
+abc2svg.abc_end = function() {
 	odt_out()
-}
-
-// nodejs
-if (typeof module == 'object' && typeof exports == 'object') {
-	exports.abort = abort;
-	exports.abc_init = abc_init;
-	exports.abc_end = abc_end
 }

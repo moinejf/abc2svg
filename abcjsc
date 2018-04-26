@@ -23,6 +23,16 @@ exec jsc-1 -e "var progdir='${progdir}/'
 
 load(progdir + 'abc2svg-1.js')
 
+// interpreter specific functions
+abc2svg.print = function(str) {
+	print(str)
+}
+abc2svg.quit = function() {
+	quit(1)
+}
+abc2svg.readFile = function(fname) {
+	return read(fname)
+}
 abc2svg.loadjs = function(fn, relay, onerror) {
 	try {
 		load(progdir + fn)
@@ -43,7 +53,7 @@ function main(args) {
 		load(args[0])
 		args.shift()
 	}
-	if (typeof(abc_init) != 'function')
+	if (typeof(abc2svg.abc_init) != 'function')
 		load(progdir + 'toxhtml.js')
 	}
 	if (!args[0]) {

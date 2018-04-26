@@ -2,12 +2,22 @@
 // abc2svg with js24 (Mozilla JavaScript shell - Spidermonkey
 //		packages: debian: libmozjs-24-bin, voidlinux: mozjs24)
 
-function readFile(fname) {
-	return read(fname)
-}
 loadRelativeToScript("abc2svg-1.js")
 loadRelativeToScript("cmdline.js")
 
+// interpreter specific functions
+abc2svg.print = function(str) {
+	print(str)
+}
+abc2svg.printErr = function(str) {
+	printErr(str)
+}
+abc2svg.quit = function() {
+	quit(1)
+}
+abc2svg.readFile = function(fname) {
+	return read(fname)
+}
 abc2svg.loadjs = function(fn, relay, onerror) {
 	try {
 		loadRelativeToScript(fn)
@@ -28,7 +38,7 @@ abc2svg.loadjs = function(fn, relay, onerror) {
 		load(args[0])
 		args.shift()
 	}
-	if (typeof abc_init != 'function')
+	if (typeof abc2svg.abc_init != 'function')
 		loadRelativeToScript("toxhtml.js")
 	if (!args[0]) {
 		printErr('ABC translator with js24 (SpiderMonkey)\

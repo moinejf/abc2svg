@@ -29,7 +29,7 @@ function lead(tsfirst, voice_tb, music_types, info) {
 		} else {
 			beat = BASE_LEN / s.a_meter[0].bot[0] |0
 			if (isNaN(beat)) {
-				print('** Cannot get the beat')
+				abc2svg.print('** Cannot get the beat')
 				return
 			}
 			if (s.a_meter[0].bot[0] == 8
@@ -38,7 +38,7 @@ function lead(tsfirst, voice_tb, music_types, info) {
 		}
 	} // get_beat()
 
-	print('-- ' + info.T + ' --');
+	abc2svg.print('-- ' + info.T + ' --');
 
 	// get the beat
 	get_beat(voice_tb[0].meter)
@@ -84,20 +84,20 @@ function lead(tsfirst, voice_tb, music_types, info) {
 			break
 		}
 	}
-	print(line)
+	abc2svg.print(line)
 }
 
 // -- local functions
-function abort(e) {
-	abc_end()
-	print(e.message + "\n*** Abort ***\n" + e.stack);
-	quit()
+abc2svg.abort = function(e) {
+	abc2svg.abc_end()
+	abc2svg.print(e.message + "\n*** Abort ***\n" + e.stack);
+	abc2svg.quit()
 }
 
-function abc_init() {
+abc2svg.abc_init = function() {
 	user.get_abcmodel = lead
 }
-function abc_end() {
+abc2svg.abc_end = function() {
 	if (user.errtxt)
-		print("Errors:\n" + user.errtxt)
+		abc2svg.print("Errors:\n" + user.errtxt)
 }

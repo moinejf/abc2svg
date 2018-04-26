@@ -9,22 +9,24 @@ case $1 in
 		shift
 		;;
 esac
-if ! grep 'function abc_init' $1 > /dev/null; then
+if ! grep 'abc2svg.abc_init =' $1 > /dev/null; then
 	cat ${progdir}/toxhtml.js >> /tmp/toto.js
 fi
 
 cat <<EOF >> /tmp/toto.js
     var	progdir='${progdir}/'
 
-function print(str) {
+// interpreter specific functions
+abc2svg.print = function(str) {
 	process.stdout.write(str + '\n')
 }
-
-function printErr(str) {
+abc2svg.printErr = function(str) {
 	process.stderr.write(str + '\n')
 }
-
-function readFile(fname) {
+abc2svg.quit = function() {
+	process.exit(1)
+}
+abc2svg.readFile = function(fname) {
     var	fs = require("fs");
 
 	return fs.readFileSync(fname).toString()
@@ -33,19 +35,15 @@ function readFile(fname) {
 abc2svg.loadjs = function(fn, relay, onerror) {
 	try {
 		var geval = eval;
-		geval(readFile(progdir + fn))
+		geval(abc2svg.readFile(progdir + fn))
 		if (relay)
 			relay()
 	} catch(e) {
 		if (onerror)
 			onerror()
 		else
-			printErr('Cannot read file ' + fn)
+			abc2svg.printErr('Cannot read file ' + fn)
 	}
-}
-
-function quit() {
-	process.exit(1)
 }
 
 // (this file is wrapped)
@@ -55,10 +53,10 @@ global.abc2svg = abc2svg
 // main
 	var args = process.argv
 	if (!args[2]) {
-		print("abcnode-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
+		abc2svg.print("abcnode-" + abc2svg.version + " " + abc2svg.vdate + "\n" +
 			"	ABC to SVG translator\n" +
 			"	Usage: abcnode [options] ABC_file");
-		quit(1)
+		abc2svg.quit(1)
 	}
 	args.shift()
 	args.shift()

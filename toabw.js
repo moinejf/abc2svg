@@ -233,14 +233,14 @@ function clean_txt(txt) {
 	})
 }
 
-function abort(e) {
+abc2svg.abort = function(e) {
 	abc.blk_flush();
-	if (typeof printErr == 'function')
-		printErr(e.message + "\n*** Abort ***\n" + e.stack)
+	if (typeof abc2svg.printErr == 'function')
+		abc2svg.printErr(e.message + "\n*** Abort ***\n" + e.stack)
 	else
 		section += "<p>" + e.message + "\n*** Abort ***\n" + e.stack + "</p>\n";
-	abc_end();
-	quit()
+	abc2svg.abc_end();
+	abc2svg.quit()
 }
 
 function svg_out(str) {
@@ -305,7 +305,7 @@ function svg_out(str) {
 }
 
 // entry point from cmdline
-function abc_init() {
+abc2svg.abc_init = function() {
 
 	// get the page parameters
 	user.img_out = function(str) {
@@ -333,15 +333,8 @@ function abc_init() {
 %%musicfont abc2svg")
 }
 
-function abc_end() {
+abc2svg.abc_end = function() {
 	if (user.errtxt)
 		section += "<p>" + clean_txt(user.errtxt) + "</p>\n";
 	abw_out()
-}
-
-// nodejs
-if (typeof module == 'object' && typeof exports == 'object') {
-	exports.abort = abort;
-	exports.abc_init = abc_init;
-	exports.abc_end = abc_end
 }

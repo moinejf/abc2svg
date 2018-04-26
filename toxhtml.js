@@ -33,16 +33,16 @@ function clean_txt(txt) {
 	})
 }
 
-function abort(e) {
+abc2svg.abort = function(e) {
 	if (!init_done)				// if empty document
 		user.img_out('')
 	abc.blk_flush();
-	if (typeof printErr == 'function')
-		printErr(e.message + "\n*** Abort ***\n" + e.stack)
+	if (typeof abc2svg.printErr == 'function')
+		abc2svg.printErr(e.message + "\n*** Abort ***\n" + e.stack)
 	else
-		print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
-	abc_end();
-	quit()
+		abc2svg.print("<pre>" + e.message + "\n*** Abort ***\n" + e.stack + "</pre>");
+	abc2svg.abc_end();
+	abc2svg.quit()
 }
 
 function get_date() {
@@ -272,7 +272,7 @@ function write_text(text, action) {
 }
 
 // entry point from cmdline
-function abc_init() {
+abc2svg.abc_init = function() {
 
 	// output a header or footer
 	function gen_hf(type, str) {
@@ -290,7 +290,8 @@ function abc_init() {
 			} else {
 				page = ''
 			}
-			print('<div class="' + type + ' ' + lcr[i] + page + '">' +
+			abc2svg.print('<div class="' + type + ' ' + lcr[i] + page +
+				'">' +
 				str + '</div>')
 		}
 	}
@@ -339,7 +340,7 @@ function abc_init() {
 	div.right {text-align: right}\n\
 }';
 
-		print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
+		abc2svg.print('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\n\
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">\n\
 <html xmlns="http://www.w3.org/1999/xhtml">\n\
 <head>\n\
@@ -363,31 +364,24 @@ p span {line-height:' + ((abc.get_cfmt("lineskipfac") * 100) | 0).toString() + '
 			gen_hf("footer", footer);
 
 		// output the first generated string
-		print(str);
+		abc2svg.print(str);
 		init_done = true;
 
 		// change the output function
-		user.img_out = function(str) { print(str) }
+		user.img_out = function(str) { abc2svg.print(str) }
 	}
 
 	wto = abc.set_xhtml(write_text)		// switch write_text()
 }
 
-function abc_end() {
+abc2svg.abc_end = function() {
     var	font_style = abc.get_font_style()
 
 	if (!init_done)				// if empty document
 		user.img_out('')
 	if (user.errtxt)
-		print("<pre>" + clean_txt(user.errtxt) + "</pre>")
+		abc2svg.print("<pre>" + clean_txt(user.errtxt) + "</pre>")
 	if (font_style)				// if some %%text at the end
-		print('<style type="text/css">' + font_style + '\n</style>');
-	print("</body>\n</html>")
-}
-
-// nodejs
-if (typeof module == 'object' && typeof exports == 'object') {
-	exports.abort = abort;
-	exports.abc_init = abc_init;
-	exports.abc_end = abc_end;
+		abc2svg.print('<style type="text/css">' + font_style + '\n</style>');
+	abc2svg.print("</body>\n</html>")
 }
