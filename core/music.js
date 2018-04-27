@@ -1556,8 +1556,15 @@ function set_lines(	s,		/* first symbol */
 			}
 
 			// cut on the bar closest to the middle
-			if (!s3 || xmid - s3.x > s.x - xmid)
+			if (!s3 || s.x < xmid) {
 				s3 = s
+				continue
+			}
+			if (s3 > xmid)
+				break
+			if (xmid - s3.x < s.x - xmid)
+				break
+			s3 = s
 			break
 		}
 
@@ -1592,8 +1599,15 @@ function set_lines(	s,		/* first symbol */
 					s3 = s
 					continue
 				}
-				if (!s3 || xmid - s3.x > s.x - xmid)
+				if (!s3 || s.x < xmid) {
 					s3 = s
+					continue
+				}
+				if (s3 > xmid)
+					break
+				if (xmid - s3.x < s.x - xmid)
+					break
+				s3 = s
 				break
 			}
 			if (s3) {
@@ -1609,12 +1623,15 @@ function set_lines(	s,		/* first symbol */
 				x = s.x
 				if (!x)
 					continue
-				if (x < xmid) {
+				if (s.x < xmid) {
 					s3 = s
 					continue
 				}
-				if (xmid - s3.x > s.x - xmid)
-					s3 = s
+				if (s3 > xmid)
+					break
+				if (xmid - s3.x < s.x - xmid)
+					break
+				s3 = s
 				break
 			}
 			s = s3
