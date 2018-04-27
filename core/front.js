@@ -234,7 +234,7 @@ function tosvg(in_fname,		// file name
 	if (abc2svg.inject || abc2svg.g_inject) {
 		if (mod_init) {				// new modules
 		    if (abc2svg.inject) {
-			eval(abc2svg.inject);
+			js_inject(abc2svg.inject);
 			abc2svg.g_inject += abc2svg.inject;
 			abc2svg.inject = ''
 		    }
@@ -243,7 +243,7 @@ function tosvg(in_fname,		// file name
 				abc2svg.g_inject += abc2svg.inject;
 				abc2svg.inject = ''
 			}
-			eval(abc2svg.g_inject);
+			js_inject(abc2svg.g_inject);
 			mod_init = true
 		}
 	}
