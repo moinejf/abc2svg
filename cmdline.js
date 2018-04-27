@@ -60,7 +60,7 @@ function do_file(fn) {
 //		file = utf_convert(file)
 
 	// load the required modules
-	abc2svg.modules.load(file, abc)
+	abc2svg.modules.load(file)
 
 	// generate
 	try {
@@ -90,7 +90,7 @@ function abc_cmd(cmd, args) {
 			if (arg[1] == "-") {
 				parm = args.shift();
 				parm = arg.replace('--', 'I:') + " " + parm + "\n"
-				abc2svg.modules.load(parm, abc);
+				abc2svg.modules.load(parm);
 				abc.tosvg(cmd, parm)
 			}
 		} else {

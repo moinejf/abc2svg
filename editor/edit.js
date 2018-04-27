@@ -220,8 +220,7 @@ function render2() {
 	content = elt_ref.source.value
 
 	// load the required modules
-	if (!abc2svg.modules.load(content + elt_ref.src1.value,
-			null, render2))
+	if (!abc2svg.modules.load(content + elt_ref.src1.value, render2))
 		return
 
 	user.img_out = user.my_img_out;

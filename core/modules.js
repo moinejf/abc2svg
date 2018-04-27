@@ -38,10 +38,9 @@ abc2svg.modules = {
 
 	// scan the file and find the required modules
 	// @file: ABC file
-	// @abc: unused
 	// @relay: when web, callback function for continuing the treatment
 	// return true when all modules are loaded
-	load: function(file, abc, relay) {
+	load: function(file, relay) {
 
 		// test if some keyword in the file
 	    var	m, r, nreq_i,

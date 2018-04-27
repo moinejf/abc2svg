@@ -148,7 +148,7 @@ function dom_loaded() {
 	page = document.body.innerHTML;
 
 	// load the required modules
-	if (!abc2svg.modules.load(page, null, dom_loaded))
+	if (!abc2svg.modules.load(page, dom_loaded))
 		return
 
 	// search the ABC tunes,
