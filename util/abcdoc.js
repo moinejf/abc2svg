@@ -76,7 +76,10 @@ function dom_loaded() {
 // function to load javascript files
 	abc2svg.loadjs = function(fn, relay, onerror) {
 		var s = document.createElement('script');
-		s.src = jsdir + fn;
+		if (/:\/\//.test(fn))
+			s.src = fn		// absolute URL
+		else
+			s.src = jsdir + fn;
 		s.type = 'text/javascript'
 		if (relay)
 			s.onload = relay;
