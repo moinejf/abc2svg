@@ -17,7 +17,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-abc2svg.nreq = 0;
 abc2svg.loadjs = function(fn, onsuccess, onerror) {
 	if (onerror)
 		onerror()
@@ -35,6 +34,7 @@ abc2svg.modules = {
 		MIDI: { fn: 'MIDI-1.js' },
 		percmap: { fn: 'perc-1.js' },
 	all_m: /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap/g,
+	nreq: 0,
 
 	// scan the file and find the required modules
 	// @file: ABC file
@@ -48,8 +48,8 @@ abc2svg.modules = {
 
 		if (!all)
 			return true;
-		nreq_i = abc2svg.nreq;
-		abc2svg.cbf = relay ||		// (only one callback function)
+		nreq_i = this.nreq;
+		this.cbf = relay ||		// (only one callback function)
 			function(){}
 		for (var i = 0; i < all.length; i++) {
 			m = abc2svg.modules[all[i]]
@@ -64,20 +64,20 @@ abc2svg.modules = {
 			m.loaded = true
 
 			// load the module
-				abc2svg.nreq++;
+				this.nreq++;
 				abc2svg.loadjs(m.fn,
 				    function() {	// if success
-					if (--abc2svg.nreq == 0)
-						abc2svg.cbf()
+					if (--abc2svg.modules.nreq == 0)
+						abc2svg.modules.cbf()
 				    },
 				    function() {	// if error
 					user.errmsg('error loading ' + m.fn);
-					if (--abc2svg.nreq == 0)
-						abc2svg.cbf()
+					if (--abc2svg.modules.nreq == 0)
+						abc2svg.modules.cbf()
 				    })
 		}
 		if (relay)		// web
-			return abc2svg.nreq == nreq_i;
+			return this.nreq == nreq_i;
 		return true
 	}
 } // modules
