@@ -33,7 +33,7 @@ var decos = {
 	lowermordent: "3 lmrd 10 5 5",
 	coda: "3 coda 24 10 10",
 	uppermordent: "3 umrd 10 5 5",
-	segno: "3 sgno 20 8 8",
+	segno: "3 sgno 22 8 8",
 	trill: "3 trl 14 5 5",
 	upbow: "3 upb 10 5 5",
 	downbow: "3 dnb 9 5 5",
