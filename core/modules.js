@@ -76,8 +76,6 @@ abc2svg.modules = {
 						abc2svg.modules.cbf()
 				    })
 		}
-		if (relay)		// web
-			return this.nreq == nreq_i;
-		return true
+		return this.nreq == nreq_i
 	}
 } // modules
