@@ -2423,10 +2423,24 @@ if (st > nst) {
 		for ( ; s != u; s = s.ts_next) {
 			if (s.multi)
 				continue
-			if (s.type != NOTE
-			 && s.type != REST
-			 && s.type != GRACE)
+			switch (s.type) {
+			default:
 				continue
+			case REST:
+				// handle %%voicecombine 0
+				if ((s.combine != undefined && s.combine < 0)
+				 || !s.ts_next || s.ts_next.type != REST
+				 || s.time != s.ts_next.time
+				 || s.dur != s.ts_next.dur
+				 || s.invis)
+					break
+				unlksym(s.ts_next)
+				break
+			case NOTE:
+			case GRACE:
+				break
+			}
+
 			st = s.st;
 			v = s.v;
 			v_st = v_st_tb[v];
