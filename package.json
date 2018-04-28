@@ -5,9 +5,6 @@
   "devDependencies": {
     "uglify-js": "^2.5.0"
   },
-  "directories": {
-    "doc": "doc"
-  },
   "files": [
     "COPYING",
     "COPYING.LESSER",
