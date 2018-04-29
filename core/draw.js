@@ -3119,10 +3119,10 @@ function draw_sym_near() {
 				dx = -8;
 				w = s.beam_end ? 11 : 16
 			}
-			y_set(s.st, true, s.x + dx, w, s.ymx + 2);
-			y_set(s.st, false, s.x - s.wl, s.wl + s.wr, s.ymn - 2)
+			y_set(s.st, true, s.x + dx, w, s.ymx);
+			y_set(s.st, false, s.x - s.wl, s.wl + s.wr, s.ymn)
 		} else {
-			y_set(s.st, true, s.x - s.wl, s.wl + s.wr, s.ymx + 2);
+			y_set(s.st, true, s.x - s.wl, s.wl + s.wr, s.ymx);
 			if (s.beam_st) {
 				dx = -6;
 				w = s.beam_end ? 4 : 10
@@ -3130,7 +3130,8 @@ function draw_sym_near() {
 				dx = -8;
 				w = s.beam_end ? 5 : 16
 			}
-			y_set(s.st, false, s.x + dx, w, s.ymn - 2)
+			dx += s.notes[0].shhd;
+			y_set(s.st, false, s.x + dx, w, s.ymn)
 		}
 
 		/* have room for the accidentals */
