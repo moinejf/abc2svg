@@ -202,13 +202,9 @@ function do_include(fn) {
 		syntax(1, "Cannot read file '$1'", fn)
 		return
 	}
-	if (fn.slice(-3) == '.js') {
-		js_inject(file)
-	} else {
-		parse_sav = clone(parse);
-		tosvg(fn, file);
-		parse = parse_sav
-	}
+	parse_sav = clone(parse);
+	tosvg(fn, file);
+	parse = parse_sav;
 	include--
 }
 
@@ -395,14 +391,8 @@ function tosvg(in_fname,		// file name
 				continue
 			case "abc-include":
 				ext = a[1].match(/.*\.(.*)/)
-				if (!ext)
-					continue
-				switch (ext[1]) {
-				case "abc":
-				case "js":
+				if (ext && ext[1] == "abc")
 					do_include(a[1])
-					break
-				}
 				continue
 			}
 
