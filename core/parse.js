@@ -1916,7 +1916,7 @@ function new_note(grace, tp_fact) {
 			// when in chord, get the slurs and decorations
 			if (in_chord) {
 				while (1) {
-					if (!c || c == '%')
+					if (!c)
 						break
 					i = c.charCodeAt(0);
 					if (i >= 128) {
@@ -1939,7 +1939,7 @@ function new_note(grace, tp_fact) {
 							dcn = ""
 							while (1) {
 								c = line.next_char()
-								if (!c || c == '%') {
+								if (!c) {
 									syntax(1, "No end of decoration")
 									return //null
 								}
@@ -2279,7 +2279,7 @@ function parse_music_line() {
 
 		while (1) {
 			c = line.char()
-			if (!c || c == '%')
+			if (!c)
 				break
 
 			// special case for '.' (dot)
@@ -2439,8 +2439,6 @@ function parse_music_line() {
 					i = line.index		// in case no deco end
 					while (1) {
 						c = line.next_char()
-						if (c == '%')
-							c = 0
 						if (!c)
 							break
 						if (c == '!')
@@ -2493,7 +2491,6 @@ function parse_music_line() {
 					continue
 				}
 				if (line.buffer[line.index + 2] == ':') {
-//fixme: KO if no end of info and '%' followed by ']'
 					i = line.buffer.indexOf(']', line.index + 1)
 					if (i < 0) {
 						syntax(1, "Lack of ']'")
@@ -2658,23 +2655,11 @@ function parse_music_line() {
 				a_dcn = a_dcn_sav
 				break
 			case "\\":
-				for (i = line.index + 1; ; i++) { // check if some comment
-					switch (line.buffer[i]) {
-					case ' ':
-					case '\t':
-						continue
-					case '%':
-						line.index = line.buffer.length
-						// fall thru
-					case undefined:
-						c = undefined;
-						no_eol = true
-						break
-					}
+				c = line.buffer[line.index + 1]
+				if (!c) {
+					no_eol = true
 					break
 				}
-				if (!c)
-					break
 				// fall thru
 			default:
 				syntax(1, "Bad character '$1'", c)

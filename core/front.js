@@ -506,7 +506,7 @@ function tosvg(in_fname,		// file name
 			last_info = undefined;
 			if (parse.state < 2)
 				continue
-			parse.line.buffer = file.slice(bol, eol);
+			parse.line.buffer = uncomment(file.slice(bol, eol), true);
 			parse_music_line()
 			continue
 		}
@@ -626,7 +626,7 @@ function tosvg(in_fname,		// file name
 		case '|':			// "|:" starts a music line
 			if (parse.state < 2)
 				continue
-			parse.line.buffer = file.slice(bol, eol);
+			parse.line.buffer = uncomment(file.slice(bol, eol), true);
 			parse_music_line()
 			continue
 		default:
