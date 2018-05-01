@@ -1,9 +1,15 @@
 ## abc2svg
 
-**abc2svg** is a rewrite of [abcm2ps](http://moinejf.free.fr/) into Javascript.
+**abc2svg** is a set of tools written in Javascript and based on
+[abcm2ps](https://github.com/leesavide/abcm2ps).
 
 It permits to edit, display, print and play music from files written in
 [ABC](http://abcnotation.com/).
+
+Its specific features are described (with abc2svg!) in the document
+[abcm2ps/abc2svg features](http://moinejf.free.fr/abcm2ps-doc/features.xhtml)
+and the parameters in
+[abcm2ps/abc2svg parameters](http://moinejf.free.fr/abcm2ps-doc/index.html).
 
 ### Web usage
 
@@ -21,19 +27,21 @@ These files are:
   where ABC rendering is needed (in `<script src=` tags).
 
 - `abcemb-1.js`
-  This script is to be used in (X)HTML pages with the core.  
+  This script is to be used with the core in (X)HTML files.  
   It replaces the ABC sequences by SVG images of the music
   (the ABC sequences start on `X:` or `%abc` at start of line,
   and stop on any ML tag).  
   See the
   [%%beginml documentation](http://moinejf.free.fr/abcm2ps-doc/beginml.xhtml)
-  for an example.
+  for an example.   
+  When the URL of the (X)HTML file ends with '#' followed by a string,
+  only the tunes containing this string are displayed.
 
 - `abcdoc-1.js`
   This script is also to be used in (X)HTML pages with the core.  
   Mainly used for ABC documentation, it lets the ABC source sequences
   in the page before the SVG images.  
-  See the
+  See the source of
   [abcm2ps/abc2svg features](http://moinejf.free.fr/abcm2ps-doc/features.xhtml)
   for an example.
 
@@ -72,7 +80,7 @@ javascript:(function(){d=document;b=d.body;b.innerHTML="\n%25abc-2.2\n%25<!--\n"
   in the ABC file before rendering (see
   http://moinejf.free.fr/abcm2ps-doc/fullsvg.xhtml for more information).
 
-- Playing uses HTML5 audio.
+- Playing uses the HTML5 audio and/or midi APIs.
 
 - With the editor, if you want to render ABC files
   which contain `%%abc-include`, you must:
@@ -105,15 +113,17 @@ command line (batch) programs `abc2svg` and `abc2odt`.
 
 These ones may be used as **abcm2ps** to generate XHTML or ODT files.   
 
-`abc2svg` writes to standard output:
+`abc2svg` writes to standard output:   
+
 ```
     abc2svg mytunes.abc > Out.xhtml
 ```
 
 `abc2odt` output is `abc.odt` or the file specified
-by the command line argument `-o`:
+by the command line argument `-o`:   
+
 ```
-	abc2odt my_file.abc -o my_file.odt
+    abc2odt my_file.abc -o my_file.odt
 ```
 
 ### Build
@@ -122,9 +132,11 @@ If you want to build the **abc2svg** scripts in your machine,
 you must first get the files
 from [github](https://github.com/moinejf/abc2svg),
 either as a `tar.gz` or `.zip` file, or by cloning the repository:
+
 ```
     git clone http://github.com/moinejf/abc2svg
 ```
+
 (you may use `--depth=1` if you don't want the full `git` history)
 
 Then, building is done using the tool [ninja](https://ninja-build.org/)
@@ -171,7 +183,7 @@ This output may be modified by backend scripts. These ones must appear
 just after the command.   
 There are:
 
-- `toabc.js`
+- `toabc.js`   
   This script outputs back the (selected) ABC tunes of the ABC source file.   
   Transposition is applied.   
   The resulting file does not contain the formatting parameters.
@@ -181,7 +193,7 @@ There are:
 	abcjs24 toabc.js my_file.abc --select X:2 > tune_2.abc
 ```
 
-- `toabw.js`
+- `toabw.js`   
   This script outputs a Abiword file (ABW+SVG) which may be read by some
   word processors (abiword, libreoffice...) and converted to many other
   formats by the batch function of abiword.   
@@ -193,7 +205,7 @@ There are:
 	abcv8 toabw.js my_file.abc > my_file.abw
 ```
 
-- `toodt.js`
+- `toodt.js`   
   This script creates an Open Document (ODT+SVG) which may be read by most
   word processors (abiword, libreoffice...).   
   It runs only with the npm script `abc2svg` and asks for the npm module
