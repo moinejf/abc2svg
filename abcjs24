@@ -3,7 +3,6 @@
 //		packages: debian: libmozjs-24-bin, voidlinux: mozjs24)
 
 loadRelativeToScript("abc2svg-1.js")
-loadRelativeToScript("cmdline.js")
 
 // interpreter specific functions
 abc2svg.print = function(str) {
@@ -12,6 +11,7 @@ abc2svg.print = function(str) {
 abc2svg.printErr = function(str) {
 	printErr(str)
 }
+
 abc2svg.quit = function() {
 	quit(1)
 }
@@ -30,6 +30,8 @@ abc2svg.loadjs = function(fn, relay, onerror) {
 			printErr('Cannot read file ' + fn)
 	}
 } // loadjs()
+
+loadRelativeToScript("cmdline.js")
 
 // main
 	var	args = scriptArgs
