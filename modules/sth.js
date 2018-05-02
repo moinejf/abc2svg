@@ -92,6 +92,7 @@ new_note = function(grace, tp_fact) {\n\
 		s.sth = curvoice.sth;\n\
 		curvoice.sth = null\n\
 	}\n\
+	return s\n\
 }\n\
 set_format = function(cmd, param, lock) {\n\
 	if (cmd == "sth") {\n\
