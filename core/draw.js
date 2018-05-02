@@ -410,8 +410,8 @@ function calculate_beam(bm, s1) {
 				 && s.ts_prev.ymn < s.ymx
 				 && s.ts_prev.x == s.x
 				 && s.notes[0].shhd == 0) {
-					s.ts_prev.x -= 5;	/* fix stem clash */
-					s.ts_prev.xs -= 5
+					s.ts_prev.x -= 3;	/* fix stem clash */
+					s.ts_prev.xs -= 3
 				}
 			} else {
 				s.ymn = s.ys - 2.5
