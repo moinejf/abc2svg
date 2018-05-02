@@ -232,9 +232,9 @@ var	note_names = "CDEFGAB",
 			}
 //			if (p[ip] == '=')
 //				ip++
-			i3 = (note_pit[n] + a + i2 + 12) % 12;
-			i4 = pit_note[i3];
-			i1 = pit_acc[i3];
+			i3 = cde2fcg[n] + i2 + a * 7;
+			i4 = cgd2cde[(i3 + 16 * 7) % 7];	// note
+			i1 = ((((i3 + 22) / 7) | 0) + 159) % 5;	// accidental
 			new_txt = (latin ? latin_names[i4] : note_names[i4]) +
 					acc_name[i1]
 		} else {
@@ -274,7 +274,7 @@ var	note_names = "CDEFGAB",
 function gch_transp(s) {
 	var	gch, p, j,
 		i = 0,
-		i2 = ((curvoice.ckey.k_sf - curvoice.okey.k_sf + 12) * 7) % 12
+		i2 = curvoice.ckey.k_sf - curvoice.okey.k_sf
 
 	while (1) {
 		gch = s.a_gch[i++]

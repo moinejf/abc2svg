@@ -25,7 +25,8 @@ abc2svg.capo = {
 	}
 	gch2 = Object.create(gch);
 	gch2.capo = false;		// (would be erased when setting gch)
-	gch2.text = abc.gch_tr1(gch2.text, -transp)
+	gch2.text = abc.gch_tr1(gch2.text,
+			[0, 5, -2, 3, -4, 1, -6, -1, 4, -3, 2, -5][transp % 12])
 	if (!abc2svg.capo.abc_capo) {		// if new tune
 		abc2svg.capo.abc_capo = true;
 		gch2.text += "  (capo: " + transp.toString() + ")"
