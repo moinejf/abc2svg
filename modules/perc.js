@@ -216,6 +216,7 @@ var prn = {
     } // norm()
 
     var	n, v,
+	maps = abc.get_maps(),
 	a = parm.split(/\s+/);
 
 	n = norm(a[1])
@@ -226,20 +227,20 @@ var prn = {
 	if (abc.get_cfmt("sound") != "play") {		// !play
 		if (!a[3])
 			return
-		if (!abc.maps.MIDIdrum)
-			abc.maps.MIDIdrum = {}
+		if (!maps.MIDIdrum)
+			maps.MIDIdrum = {}
 		v = tonote(n)
 		delete v.acc
-		abc.maps.MIDIdrum[n] = [[a[3]], v]
+		maps.MIDIdrum[n] = [[a[3]], v]
 	} else {					// play
 		v = tonote(a[2])
 		if (!v) {
 			abc.syntax(1, abc.err_bad_val_s, "%%percmap")
 			return
 		}
-		if (!abc.maps.MIDIdrum)
-			abc.maps.MIDIdrum = {}
-		abc.maps.MIDIdrum[n] = [null, v]
+		if (!maps.MIDIdrum)
+			maps.MIDIdrum = {}
+		maps.MIDIdrum[n] = [null, v]
 	}
 	abc.set_v_param("perc", "MIDIdrum")
     }, // do_perc()
@@ -266,6 +267,7 @@ var prn = {
 
 // inject code inside the core
 abc2svg.inject += '\
+Abc.prototype.get_maps = function maps() { return maps }
 var perc = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\

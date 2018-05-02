@@ -52,6 +52,7 @@ abc2svg.MIDI = {
     } // norm()
 
 	var	n, v,
+	maps = abc.get_maps(),
 		a = parm.split(/\s+/)
 
 	switch (a[1]) {
@@ -70,9 +71,9 @@ abc2svg.MIDI = {
 			abc.syntax(1, abc.err_bad_val_s, "%%MIDI drummap")
 			break
 		}
-		if (!abc.maps.MIDIdrum)
-			abc.maps.MIDIdrum = {}
-		abc.maps.MIDIdrum[n] = [null, v];
+		if (!maps.MIDIdrum)
+			maps.MIDIdrum = {}
+		maps.MIDIdrum[n] = [null, v];
 		abc.set_v_param("mididrum", "MIDIdrum")
 		break
 	case "program":
@@ -131,6 +132,7 @@ abc2svg.MIDI = {
 
 // inject code inside the core
 abc2svg.inject += '\
+Abc.prototype.get_maps = function maps() { return maps }
 var midi = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\

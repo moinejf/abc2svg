@@ -10,12 +10,12 @@
 abc2svg.break = {
 
 	// get the %%break parameters
-	get_break: function(abc, parm) {
+	get_break: function(abc, abcbrk, parm) {
 	    var	BASE_LEN = 1536		// constant from the abc2svg core
 	    var	b, c, d, sq,
 		a = parm.split(/[ ,]/);
 
-		abc.glovar.break = []
+		abcbrk.break = []
 		for (n = 1; n < a.length; n++) {
 			b = a[n];
 			c = b.match(/(\d)([a-z]?)(:\d\/\d)?/)
@@ -26,7 +26,7 @@ abc2svg.break = {
 			if (c[2])
 				sq = c[2].charCodeAt(0) - 0x61
 			if (!c[3]) {
-				abc.glovar.break.push({	// on measure bar
+				abcbrk.break.push({	// on measure bar
 						m: c[1],
 						t: 0,
 						sq: sq})
@@ -37,7 +37,7 @@ abc2svg.break = {
 				abc.syntax(1, "Bad denominator in %%break")
 				continue
 			}
-			abc.glovar.break.push({
+			abcbrk.break.push({
 					m: c[1],
 					t: d[1] * BASE_LEN / d[2],
 					sq: sq})
@@ -45,14 +45,14 @@ abc2svg.break = {
 	}, // get_break()
 
 	// insert the EOLs of %%break
-	do_break: function(abc) {
+	do_break: function(abc, abcbrk, voice_tb) {
 	    var BAR = 0			// constant from the abc2svg core
 	    var	i, m, t, brk, seq,
 		v = abc.get_cur_sy().top_voice,
-		s1 = abc.voice_tb[v].sym
+		s1 = voice_tb[v].sym
 
-		for (i = 0; i < abc.glovar.break.length; i++) {
-			brk = abc.glovar.break[i];
+		for (i = 0; i < abcbrk.break.length; i++) {
+			brk = abcbrk.break[i];
 			m = brk.m
 			for (s = s1; s; s = s.next) {
 				if (s.type == BAR && s.bar_num == m)
@@ -98,14 +98,14 @@ var brk = {\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 6) == "break ")\n\
-		abc2svg.break.get_break(self, text)\n\
+		abc2svg.break.get_break(self, brk, text)\n\
 	else\n\
 		brk.psc(text)\n\
 }\n\
 set_bar_num = function() {\n\
 	brk.sbn();\n\
-	if (glovar.break)\n\
-		abc2svg.break.do_break(self)\n\
+	if (brk.break)\n\
+		abc2svg.break.do_break(self, brk, voice_tb)\n\
 }\n\
 '
 

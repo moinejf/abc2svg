@@ -10,7 +10,7 @@
 abc2svg.clip = {
 
 	// %%break start_measure [":" num "/" den] "-" end_measure ...
-	get_clip: function(abc, parm) {
+	get_clip: function(abc, abcclip, parm) {
 	    var	BASE_LEN = 1536		// constant from the abc2svg core
 
 	// get the start/stop points
@@ -46,11 +46,11 @@ abc2svg.clip = {
 			abc.syntax(1, abc.err_bad_val_s, "%%clip")
 			return
 		}
-		abc.glovar.clip = [b, c]
+		abcclip.clip = [b, c]
 	}, // get_clip()
 
 	// cut the tune
-	do_clip: function(abc) {
+	do_clip: function(abc, abcclip, voice_tb) {
 
 	    var	BAR = 0,		// constants from the abc2svg core
 		CLEF = 1,
@@ -69,7 +69,7 @@ abc2svg.clip = {
 					 && s2.time != 0)
 						break
 				}
-				if (s2.time < abc.voice_tb[abc.get_cur_sy().top_voice].
+				if (s2.time < voice_tb[abc.get_cur_sy().top_voice].
 								meter.wmeasure)
 					s = s2
 			}
@@ -114,9 +114,9 @@ abc2svg.clip = {
 
 		// remove the beginning of the tune
 		s = abc.get_tsfirst()
-		if (abc.glovar.clip[0].m > 0
-		 || abc.glovar.clip[0].t > 0) {
-			s = go_global_time(s, abc.glovar.clip[0])
+		if (abcclip.clip[0].m > 0
+		 || abcclip.clip[0].t > 0) {
+			s = go_global_time(s, abcclip.clip[0])
 			if (!s) {
 				abc.set_tsfirst(null)
 				return
@@ -141,8 +141,8 @@ abc2svg.clip = {
 					break
 				}
 			}
-			for (v = 0; v < abc.voice_tb.length; v++) {
-				p_voice = abc.voice_tb[v]
+			for (v = 0; v < voice_tb.length; v++) {
+				p_voice = voice_tb[v]
 				for (s2 = s; s2; s2 = s2.ts_next) {
 					if (s2.v == v) {
 						delete s2.prev
@@ -156,7 +156,7 @@ abc2svg.clip = {
 		}
 
 		/* remove the end of the tune */
-		s = go_global_time(s, abc.glovar.clip[1])
+		s = go_global_time(s, abcclip.clip[1])
 		if (!s)
 			return
 
@@ -168,8 +168,8 @@ abc2svg.clip = {
 		} while (!s.seqst)
 
 		/* cut the voices */
-		for (v = 0; v < abc.voice_tb.length; v++) {
-			p_voice = abc.voice_tb[v]
+		for (v = 0; v < voice_tb.length; v++) {
+			p_voice = voice_tb[v]
 			for (s2 = s.ts_prev; s2; s2 = s2.ts_prev) {
 				if (s2.v == v) {
 					delete s2.next
@@ -191,14 +191,14 @@ var clip = {\n\
 }\n\
 do_pscom = function(text) {\n\
 	if (text.slice(0, 5) == "clip ")\n\
-		abc2svg.clip.get_clip(self, text)\n\
+		abc2svg.clip.get_clip(self, clip, text)\n\
 	else\n\
 		clip.psc(text)\n\
 }\n\
 set_bar_num = function() {\n\
 	clip.sbn();\n\
-	if (glovar.clip)\n\
-		abc2svg.clip.do_clip(self)\n\
+	if (clip.clip)\n\
+		abc2svg.clip.do_clip(self, clip, voice_tb)\n\
 }\n\
 '
 
