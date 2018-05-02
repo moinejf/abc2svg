@@ -59,7 +59,7 @@ abc2svg.modules = {
 				continue
 
 			// check if really a command
-			r = new RegExp('(^|\\n)(%.|I:) *' + all[i] + '\\s')
+			r = new RegExp('(^|\\n)(%.|I:|\\[) *' + all[i] + '\\s')
 			if (!r.test(file))
 				continue
 
