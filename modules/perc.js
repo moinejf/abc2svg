@@ -267,7 +267,7 @@ var prn = {
 
 // inject code inside the core
 abc2svg.inject += '\
-Abc.prototype.get_maps = function maps() { return maps }
+Abc.prototype.get_maps = function maps() { return maps }\n\
 var perc = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\
