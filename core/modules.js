@@ -33,7 +33,9 @@ abc2svg.modules = {
 		grid: { fn: 'grid-1.js' },
 		MIDI: { fn: 'MIDI-1.js' },
 		percmap: { fn: 'perc-1.js' },
-	all_m: /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap/g,
+	sth: { fn: 'sth-1.js' },
+	all_m:
+/ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap|sth/g,
 	nreq: 0,
 
 	// scan the file and find the required modules
