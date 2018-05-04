@@ -336,7 +336,7 @@ function odt_out() {
 
 abc2svg.abort = function(e) {
 	abc.blk_flush();
-	if (typeof .abc2svgprintErr == 'function')
+	if (typeof abc2svg.printErr == 'function')
 		abc2svg.printErr(e.message + "\n*** Abort ***\n" + e.stack)
 	else
 		content += "<text:p>" + e.message +
