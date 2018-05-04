@@ -55,8 +55,15 @@ abc2svg.sth = {
 			h = sth_a.shift()
 			if (h == '*')
 				continue	// no change
+			if (h == '|') {		// skip to the next measure bar
+				for (s = s.next; s; s = s.next) {
+					if (s.bar_type)
+						break
+				}
+				continue
+			}
 			h = Number(h)
-			if (isNaN(h))
+			if (isNaN(h) || !h)
 				continue	// fixme: error
 			if (s.stem >= 0) {
 				s.ys = s.y + h;
@@ -99,7 +106,7 @@ set_format = function(cmd, param, lock) {\n\
 		if (parse.state == 2)\n\
 			goto_tune()\n\
 		if (curvoice)\n\
-			curvoice.sth = param.split(/[ \t-]+/)\n\
+			curvoice.sth = param.split(/[ \t;-]+/)\n\
 		return\n\
 	}\n\
 	sth.set_fmt(cmd, param, lock)\n\
