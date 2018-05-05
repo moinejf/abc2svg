@@ -770,31 +770,40 @@ function draw_acc(x, y, acc,
 
 // draw helper lines between yl and yu
 //fixme: double lines when needed for different voices
-//fixme: no helper inside staff when holes
 function draw_hl(x, yl, yu, st, hltype) {
-	var	i,
-		p_staff = staff_tb[st],
-		staffb = p_staff.y,
-//		stafflines = p_staff.stafflines,
-		top = (p_staff.stafflines.length - 1) * 6;
+    var	i, j,
+	p_staff = staff_tb[st],
+	staffb = p_staff.y,
+	stafflines = p_staff.stafflines,
+	top = (stafflines.length - 1) * 6,
+	bot = p_staff.botline
 
-//	if (top - p_staff.botline < 4)
-//		return			// no helper lines when staff < 4 lines
+	// no helper if no line
+	if (!/[\[|]/.test(stafflines))
+		return
 
-	yl = Math.ceil(yl / 6) * 6
-	for (; yl < p_staff.botline; yl += 6)
-		xygl(x, staffb + yl, hltype);
-	yu -= yu % 6
+	if (yl % 6)
+		yl += 3
+	if (yu % 6)
+		yu -= 3
+	if (stafflines.indexOf('-') >= 0	// if forced helper lines ('-')
+	 && ((yl > bot && yl < top) || (yu > bot && yu < top)
+	  || (yl <= bot && yu >= top))) {
+		i = yl;
+		j = yu
+		while (i > bot && stafflines[i / 6] == '-')
+			i -= 6
+		while (j < top && stafflines[j / 6] == '-')
+			j += 6
+		for ( ; i < j; i += 6) {
+			if (stafflines[i / 6] == '-')
+				xygl(x, staffb + i, hltype)	// hole
+		}
+	}
+	for (; yl < bot; yl += 6)
+		xygl(x, staffb + yl, hltype)
 	for (; yu > top; yu -= 6)
 		xygl(x, staffb + yu, hltype)
-//	if (yl > top)
-//		yl = top
-//	if (yu < p_staff.botline)
-//		yu = p_staff.botline;
-//	for (; yl <= yu; yl += 6) {
-//		if (stafflines[yl / 6] != '|')
-//			xygl(x, staffb + yl, hltype)	// hole
-//	}
 }
 
 /* -- draw a key signature -- */
@@ -3483,6 +3492,7 @@ function draw_systems(indent) {
 			for (; i < l; i++, y -= 6, dy -= 6) {
 				switch (stafflines[i]) {
 				case '.':
+				case '-':
 					continue
 				case ty:
 					ln += 'm-' + ws.toFixed(2) +
