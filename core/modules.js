@@ -52,7 +52,7 @@ abc2svg.modules = {
 			if (typeof printErr == 'function')
 				return printErr
 			if (typeof alert == 'function')
-				return alert
+				return function(m) { alert(m) }
 			if (typeof console == 'object')
 				return console.log
 			return function(){}
