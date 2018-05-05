@@ -40,9 +40,23 @@ abc2svg.modules = {
 
 	// scan the file and find the required modules
 	// @file: ABC file
-	// @relay: when web, callback function for continuing the treatment
+	// @relay: (optional) callback function for continuing the treatment
+	// @errmsg: (optional) function to display an error message if any
+	//	This function gets one argument: the message
 	// return true when all modules are loaded
-	load: function(file, relay) {
+	load: function(file, relay, errmsg) {
+
+		function get_errmsg() {
+			if (typeof user == 'object' && user.errmsg)
+				return user.errmsg
+			if (typeof printErr == 'function')
+				return printErr
+			if (typeof alert == 'function')
+				return alert
+			if (typeof console == 'object')
+				return console.log
+			return function(){}
+		}
 
 		// test if some keyword in the file
 	    var	m, r, nreq_i,
@@ -53,6 +67,8 @@ abc2svg.modules = {
 		nreq_i = this.nreq;
 		this.cbf = relay ||		// (only one callback function)
 			function(){}
+		this.errmsg = errmsg || get_errmsg()
+
 		for (var i = 0; i < all.length; i++) {
 			m = abc2svg.modules[all[i]]
 			if (m.loaded)
@@ -73,7 +89,7 @@ abc2svg.modules = {
 						abc2svg.modules.cbf()
 				    },
 				    function() {	// if error
-					user.errmsg('error loading ' + m.fn);
+					abc2svg.modules.errmsg('error loading ' + m.fn);
 					if (--abc2svg.modules.nreq == 0)
 						abc2svg.modules.cbf()
 				    })
