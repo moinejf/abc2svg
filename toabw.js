@@ -94,7 +94,7 @@ function header_footer(str) {
 		case 'I':
 			c = str[++i]
 		case 'T':
-			t = abc.get_info(c)
+			t = abc.info()[c]
 			if (t)
 				r[j] += t.split('\n', 1)[0]
 			break
@@ -244,7 +244,9 @@ abc2svg.abort = function(e) {
 }
 
 function svg_out(str) {
-    var	r, w, h
+    var	r, w, h,
+	cfmt = abc.cfmt()
+
 	switch (str.slice(0, 4)) {
 	case '<svg':
 		r = str.slice(0, 200).match(/.*width="(.*?)px" height="(.*?)px"/);
@@ -263,11 +265,11 @@ function svg_out(str) {
 
 		// get the first header/footer
 		if (header == undefined) {
-			r = abc.get_cfmt("header");
+			r = cfmt.header;
 			header = r ? gen_hf("header", r) : ''
 		}
 		if (footer == undefined) {
-			r = abc.get_cfmt("footer");
+			r = cfmt.footer;
 			footer = r ? gen_hf("footer", r) : ''
 		}
 		break
@@ -309,14 +311,15 @@ abc2svg.abc_init = function() {
 
 	// get the page parameters
 	user.img_out = function(str) {
-	    var pw = abc.get_cfmt("pagewidth");
+	    var cfmt = abc.cfmt(),
+		pw = cfmt.pagewidth;
 
 		page_type = pw > 800 ? 'Letter' : 'A4';
 		page_size = pw > 800 ?
 				'width="8.50" height="11.00" units="in"' :
 				'width="210.00" height="297.00" units="mm"';
-		topmargin = set_unit(abc.get_cfmt("topmargin") || 37.8);
-		botmargin = set_unit(abc.get_cfmt("botmargin") || 37.8);
+		topmargin = set_unit(cfmt.topmargin || 37.8);
+		botmargin = set_unit(cfmt.botmargin || 37.8);
 
 		// output the first generated string
 		svg_out(str);

@@ -91,7 +91,7 @@ function header_footer(str) {
 		case 'I':
 			c = str[++i]
 		case 'T':
-			t = abc.get_info(c)
+			t = abc.info()[c]
 			if (t)
 				r[j] += t.split('\n', 1)[0]
 			break
@@ -109,33 +109,34 @@ function header_footer(str) {
 // set a paragraph style
 function set_pstyle() {
     var	nml, nmr, nlkf, npkf, npw,
+	cfmt = abc.cfmt(),
 	psty = '';
 
-	nml = abc.get_cfmt("leftmargin");
+	nml = cfmt.leftmargin;
 	if (nml != ml) {
 		if (ml == undefined)
 			ml = nml;
 		psty += 'margin-left:' + nml.toFixed(2) + 'px;'
 	}
-	nmr = abc.get_cfmt("rightmargin");
+	nmr = cfmt.rightmargin;
 	if (nmr != mr) {
 		if (mr == undefined)
 			mr = nmr;
 		psty += 'margin-right:' + nmr.toFixed(2) + 'px;'
 	}
-	nlkf = abc.get_cfmt("lineskipfac");
+	nlkf = cfmt.lineskipfac;
 	if (nlkf != lkf) {
 		if (lkf == undefined)
 			lkf = nlkf;
 		psty += 'line-height:' + ((nlkf * 100) | 0).toString() + '%;'
 	}
-	npkf = abc.get_cfmt("parskipfac");
+	npkf = cfmt.parskipfac;
 	if (npkf != pkf) {
 		if (pkf == undefined)
 			pkf = npkf;
 		psty += 'margin-bottom:' + npkf.toFixed(2) + 'em;'
 	}
-	npw = abc.get_cfmt("pagewidth")
+	npw = cfmt.pagewidth
 	if (npw != pw || nml != ml || nmr != mr) {
 		if (pw == undefined)
 			pw = npw;
@@ -147,7 +148,8 @@ function set_pstyle() {
 
 function para_start(action, skip) {
     var	r,
-	sc = abc.get_cfmt("scale"),
+	cfmt = abc.cfmt(),
+	sc = cfmt.scale,
 	newpage = abc.get_newpage() ? 'newpage ' : '',
 	sty = '<p class="' + newpage,
 	psty = set_pstyle()
@@ -273,6 +275,7 @@ function write_text(text, action) {
 
 // entry point from cmdline
 abc2svg.abc_init = function() {
+    var cfmt = abc.cfmt()
 
 	// output a header or footer
 	function gen_hf(type, str) {
@@ -300,10 +303,10 @@ abc2svg.abc_init = function() {
 
 	// output the xhtml header
 	user.img_out = function(str) {
-		var	header = abc.get_cfmt("header"),
-			footer = abc.get_cfmt("footer"),
-			topmargin = abc.get_cfmt("topmargin") || "1cm",
-			botmargin = abc.get_cfmt("botmargin") || "1cm",
+		var	header = cfmt.header,
+			footer = cfmt.footer,
+			topmargin = cfmt.topmargin || "1cm",
+			botmargin = cfmt.botmargin || "1cm",
 			media_s = '@media print {\n\
 	body {margin:0; padding:0; border:0}\n\
 	.newpage {page-break-before: always}\n\
@@ -323,13 +326,13 @@ abc2svg.abc_init = function() {
 		position: fixed;\n\
 		top: 0pt;\n\
 		width: 100%;\n\
-		' + abc.style_font(abc.get_cfmt("headerfont")) + '\n\
+		' + abc.style_font(cfmt.headerfont) + '\n\
 	}\n\
 	div.footer {\n\
 		position: fixed;\n\
 		bottom: 0pt;\n\
 		width: 100%;\n\
-		' + abc.style_font(abc.get_cfmt("footerfont")) + '\n\
+		' + abc.style_font(cfmt.footerfont) + '\n\
 	}\n\
 	div.page:after {\n\
 		counter-increment: page;\n\
@@ -349,9 +352,9 @@ abc2svg.abc_init = function() {
 <!-- CreationDate: ' + get_date() + '-->\n\
 <style type="text/css">\n\
 svg {display:block}\n\
-body {width:' + abc.get_cfmt("pagewidth").toFixed(0) +'px}\n\
+body {width:' + cfmt.pagewidth.toFixed(0) +'px}\n\
 p {' + set_pstyle() + 'margin-top:0}\n\
-p span {line-height:' + ((abc.get_cfmt("lineskipfac") * 100) | 0).toString() + '%}\n' +
+p span {line-height:' + ((cfmt.lineskipfac * 100) | 0).toString() + '%}\n' +
 			((header || footer) ? media_f : media_s) + '\n\
 @page{margin:' + topmargin + ' 0 ' + botmargin + ' 0}\n\
 </style>\n\

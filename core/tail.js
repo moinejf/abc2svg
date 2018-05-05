@@ -25,18 +25,17 @@ function psxygl() { return false }
 	init_tune()
 
 // export for modules
+Abc.prototype.cfmt = function() { return cfmt };
 Abc.prototype.clone = clone;
 Abc.prototype.deco_cnv = deco_cnv;
 Abc.prototype.err_bad_val_s = err_bad_val_s;
 Abc.prototype.font_class = font_class;
 Abc.prototype.gch_tr1 = gch_tr1;
-Abc.prototype.get_cfmt = function(k) { return cfmt[k] };
 Abc.prototype.get_cur_sy = function() { return cur_sy };
 Abc.prototype.get_curvoice = function() { return curvoice };
 Abc.prototype.get_fname = function() { return parse.ctx.fname };
 Abc.prototype.get_font = get_font;
 Abc.prototype.get_font_style = function() { return font_style };
-Abc.prototype.get_info = function(k) { return info[k] };
 Abc.prototype.get_img = function() { return img };
 Abc.prototype.get_multi = function() { return multicol };
 Abc.prototype.get_newpage = function() {
@@ -48,6 +47,7 @@ Abc.prototype.get_newpage = function() {
 Abc.prototype.get_posy = function() { var t = posy; posy = 0; return t };
 Abc.prototype.get_top_v = function() { return par_sy.top_voice };
 Abc.prototype.get_tsfirst = function() { return tsfirst };
+Abc.prototype.info = function() { return info };
 Abc.prototype.set_font = set_font;
 Abc.prototype.set_tsfirst = function(s) { tsfirst = s };
 Abc.prototype.set_v_param = set_v_param;

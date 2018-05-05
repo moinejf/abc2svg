@@ -116,7 +116,7 @@ function gen_hf(type, stype, str) {
 		case 'I':
 			c = str[++i]
 		case 'T':
-			t = abc.get_info(c)
+			t = abc.info()[c]
 			if (t) {
 				t_info = '\
   <text:variable-decls>\n\
@@ -348,7 +348,7 @@ abc2svg.abort = function(e) {
 // convert a CSS font definition (in pixels) to ODT (in points)
 function def_font(font) {
     var	ws = '',
-	css_font = abc.style_font(abc.get_cfmt(font)),
+	css_font = abc.style_font(abc.cfmt()[font]),
 	r = css_font.match(/font-family:(.+?); (.*)font-size:(.+)px/)
 
 // r[2] may be empty or
@@ -361,19 +361,20 @@ function def_font(font) {
 }
 
 function svg_out(str) {
-    var	img, r, w, h
+    var	img, r, w, h,
+	cfmt = abc.cfmt()
 
 	switch (str.slice(0, 4)) {
 	case '<svg':
 
 		// get the first header/footer
 		if (header == undefined) {
-			r = abc.get_cfmt("header");
+			r = cfmt.header;
 			header = r ? gen_hf("header", "Header", r) : '';
 			headerfont = def_font("headerfont")
 		}
 		if (footer == undefined) {
-			r = abc.get_cfmt("footer");
+			r = cfmt.footer;
 			footer = r ? gen_hf("footer", "Footer", r) : '';
 			footerfont = def_font("footerfont")
 		}
@@ -437,7 +438,7 @@ function svg_out(str) {
 
 	// if header/footer with $T, define the variable
 	if (t_info && in_p) {
-	    var	title2 = abc.get_info('T')
+	    var	title2 = abc.info().T
 
 		if (title2)			// extract the main title
 			title2 = title2.split('\n', 1)[0]
@@ -471,7 +472,8 @@ abc2svg.abc_init = function(args) {
 
 	// get the page parameters
 	user.img_out = function(str) {
-	    var pw = abc.get_cfmt("pagewidth");
+	    var cfmt = abc.cfmt(),
+		pw = cfmt.pagewidth;
 
 		// page size
 		if (pw > 800) {
@@ -488,9 +490,9 @@ abc2svg.abc_init = function(args) {
 
 		// top and bottom margins default = 1cm
 		margins = 'fo:margin-top="' +
-			set_unit(abc.get_cfmt("topmargin") || 37.8) +
+			set_unit(cfmt.topmargin || 37.8) +
 			'" fo:margin-bottom="' +
-			set_unit(abc.get_cfmt("botmargin") || 37.8) + '"';
+			set_unit(cfmt.botmargin || 37.8) + '"';
 
 		// output the first generated string
 		svg_out(str);

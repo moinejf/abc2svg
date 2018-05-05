@@ -62,7 +62,7 @@ abc2svg.MIDI = {
 		abc.set_v_param("midictl", "0 1") // channel 10 is bank 128 program 0
 		break
 	case "drummap":
-		if (abc.get_cfmt("sound") != "play")
+		if (abc.cfmt().sound != "play")
 			break
 //fixme: should have a 'MIDIdrum' per voice?
 		n = norm(a[2]);

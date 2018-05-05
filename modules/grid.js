@@ -21,7 +21,8 @@ abc2svg.grid = {
 	REST = 10,
 	BLOCK = 16
 
-    var	img, font_cl, cls
+    var	img, font_cl, cls,
+	cfmt = abc.cfmt()
 
 function get_beat(s) {
     var	beat = BASE_LEN / 4
@@ -101,12 +102,12 @@ function build_grid(chords, bars, font) {
 	xmlns:xlink="http://www.w3.org/1999/xlink"\n\
 	color="black" width="' + img.width.toFixed(0) +
 			'px" height="' + (hr * nr + 6).toFixed(0) + 'px"'
-	i = abc.get_cfmt("bgcolor")
+	i = cfmt.bgcolor
 	if (i)
 		line += ' style="background-color: ' + i + '"';
 	line += '>\n'
 
-	if (abc.get_cfmt('fullsvg')) {
+	if (cfmt.fullsvg) {
 		line += '<style type="text/css">\n\
 .stroke {stroke: currentColor; fill: none}\n\
 .chmid {text-anchor:middle}\n\
@@ -250,7 +251,7 @@ function build_grid(chords, bars, font) {
 	}
 
 	// and insert it in the tune
-	if (abc.get_cfmt('grid') < 0) {	// below
+	if (cfmt.grid < 0) {		// below
 		for (var s2 = tsfirst; s2.ts_next; s2 = s2.ts_next)
 			;
 		s.time = s2.time;

@@ -224,7 +224,7 @@ var prn = {
 		abc.syntax(1, abc.err_bad_val_s, "%%percmap")
 		return
 	}
-	if (abc.get_cfmt("sound") != "play") {		// !play
+	if (abc.cfmt().sound != "play") {		// !play
 		if (!a[3])
 			return
 		if (!maps.MIDIdrum)

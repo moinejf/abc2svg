@@ -13,7 +13,8 @@ abc2svg.capo = {
 // function called when setting a chord symbol on a music element
     gch_capo: function(abc, a_gch) {
     var	gch, gch2, i2,
-	transp = abc.get_cfmt('capo'),
+	cfmt = abc.cfmt(),
+	transp = cfmt.capo,
 	i = 0
 
 	while (1) {
@@ -32,8 +33,7 @@ abc2svg.capo = {
 		gch2.text += "  (capo: " + transp.toString() + ")"
 	}
 
-	gch2.font = abc.get_font(abc.get_cfmt("capofont") ?
-					"capo" : "annotation")
+	gch2.font = abc.get_font(cfmt.capofont ? "capo" : "annotation")
 	a_gch.splice(i, 0, gch2)
 
 	// set a mark in the first chord symbol for %%diagram
