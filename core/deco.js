@@ -1364,9 +1364,9 @@ function draw_deco_note() {
 }
 
 // -- define the music elements tied to the staff --
-//	- repeat brackets
 //	- decoration tied to the staves
 //	- chord symbols
+//	- repeat brackets
 /* (the staves are not yet defined) */
 /* (unscaled delayed output) */
 function draw_deco_staff() {
@@ -1490,14 +1490,6 @@ function draw_deco_staff() {
 		}
 	} // draw_repbra()
 
-	/* draw the repeat brackets */
-	for (v = 0; v < voice_tb.length; v++) {
-		p_voice = voice_tb[v]
-		if (p_voice.second || !p_voice.sym)
-			continue
-		draw_repbra(p_voice)
-	}
-
 	/* create the decorations tied to the staves */
 	for (i = 0; i <= nstaff; i++)
 		minmax[i] = {
@@ -1601,6 +1593,13 @@ function draw_deco_staff() {
 		}
 	}
 
+	/* draw the repeat brackets */
+	for (v = 0; v < voice_tb.length; v++) {
+		p_voice = voice_tb[v]
+		if (p_voice.second || !p_voice.sym)
+			continue
+		draw_repbra(p_voice)
+	}
 }
 
 /* -- draw the measure bar numbers -- */
