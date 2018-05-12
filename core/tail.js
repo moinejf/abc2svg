@@ -62,6 +62,43 @@ Abc.prototype.svg_flush = svg_flush;
 Abc.prototype.syntax = syntax;
 Abc.prototype.unlksym = unlksym;
 
+    var	hook_init		// set after setting the first module hooks
+
+    // export functions and/or set module hooks
+    function set_hooks() {
+    var	h = abc2svg.modules.hooks,
+	gh = abc2svg.modules.g_hooks
+
+	function set_hs(hs) {
+	    var	of, h
+		for (var k = 0; k < hs.length; k++) {
+			h = hs[k]
+			if (typeof h == "string") {
+				if (!Abc.prototype[h])
+					eval("Abc.prototype." + h + "=" + h)
+			} else {
+				eval("of=" + h[0] + ";" +
+					h[0] + "=" + h[1] + ".bind(self,of)")
+			}
+		}
+	} // set_hs()
+
+	if (hook_init) {			// if new modules
+		if (h.length) {
+			set_hs(h);
+			gh.push.apply(gh, h);
+			abc2svg.modules.hooks = []
+		}
+	} else {				// all modules
+		if (h.length) {
+			gh.push.apply(gh, h);
+			abc2svg.modules.hooks = []
+		}
+		set_hs(gh);
+		hook_init = true
+	}
+    } // set_hooks()
+
     var	self = this
 
 }	// end of Abc()

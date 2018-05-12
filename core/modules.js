@@ -37,6 +37,8 @@ abc2svg.modules = {
 	all_m:
 /ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap|sth/g,
 	nreq: 0,
+	hooks: [],
+	g_hooks: [],
 
 	// scan the file and find the required modules
 	// @file: ABC file

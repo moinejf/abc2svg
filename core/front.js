@@ -296,6 +296,11 @@ function tosvg(in_fname,		// file name
 		set_page();
 	} // end_tune()
 
+	// export functions and/or set module hooks
+	if (abc2svg.modules
+	 && (abc2svg.modules.hooks.length || abc2svg.modules.g_hooks.length))
+		set_hooks()
+
 	// initialize
 	parse.file = file;		// used for errors
 	parse.ctx = {
