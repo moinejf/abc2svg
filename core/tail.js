@@ -24,13 +24,13 @@ function psxygl() { return false }
 	font_init();
 	init_tune()
 
-// export for modules
+// Abc functions used by the modules
 Abc.prototype.cfmt = function() { return cfmt };
 Abc.prototype.clone = clone;
 Abc.prototype.deco_cnv = deco_cnv;
 Abc.prototype.err_bad_val_s = err_bad_val_s;
 Abc.prototype.font_class = font_class;
-Abc.prototype.gch_tr1 = gch_tr1;
+Abc.prototype.get_a_gch = function() { return a_gch };
 Abc.prototype.get_cur_sy = function() { return cur_sy };
 Abc.prototype.get_curvoice = function() { return curvoice };
 Abc.prototype.get_fname = function() { return parse.ctx.fname };

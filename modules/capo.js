@@ -8,12 +8,11 @@
 //	%%capo n	'n' is the capo fret number
 
 abc2svg.capo = {
-   abc_capo: false,
 
 // function called when setting a chord symbol on a music element
-    gch_capo: function(abc, a_gch) {
+    gch_capo: function(a_gch) {
     var	gch, gch2, i2,
-	cfmt = abc.cfmt(),
+	cfmt = this.cfmt(),
 	transp = cfmt.capo,
 	i = 0
 
@@ -26,45 +25,51 @@ abc2svg.capo = {
 	}
 	gch2 = Object.create(gch);
 	gch2.capo = false;		// (would be erased when setting gch)
-	gch2.text = abc.gch_tr1(gch2.text,
+	gch2.text = this.gch_tr1(gch2.text,
 			[0, 5, -2, 3, -4, 1, -6, -1, 4, -3, 2, -5][transp % 12])
-	if (!abc2svg.capo.abc_capo) {		// if new tune
-		abc2svg.capo.abc_capo = true;
+	if (!this.capo_first) {			// if new tune
+		this.capo_first = true;
 		gch2.text += "  (capo: " + transp.toString() + ")"
 	}
 
-	gch2.font = abc.get_font(cfmt.capofont ? "capo" : "annotation")
+	gch2.font = this.get_font(cfmt.capofont ? "capo" : "annotation");
 	a_gch.splice(i, 0, gch2)
 
 	// set a mark in the first chord symbol for %%diagram
 	gch.capo = true
-    } // gch_capo()
+    }, // gch_capo()
+
+    gch_build: function(of, s) {
+    var	a_gch = this.get_a_gch()
+	if (this.cfmt().capo && a_gch)
+		abc2svg.capo.gch_capo.call(this, a_gch);
+	of(s)
+    },
+
+    output_music: function(of) {
+	this.capo_first = false;
+	of()
+    },
+
+    set_fmt: function(of, cmd, param, lock) {
+	if (cmd == "capo") {
+		this.cfmt().capo = param
+		return
+	}
+	of(cmd, param, lock)
+    }
+
 } // capo
 
-// inject code inside the core
-abc2svg.inject += '\
-var capo = {\n\
-	gch_b: gch_build,\n\
-	om: output_music,\n\
-	set_fmt: set_format\n\
-}\n\
-gch_build = function(s) {\n\
-	if (cfmt.capo && a_gch)\n\
-		abc2svg.capo.gch_capo(self, a_gch);\n\
-	capo.gch_b(s)\n\
-}\n\
-output_music = function() {\n\
-	abc2svg.capo.abc_capo = false;\n\
-	capo.om()\n\
-}\n\
-set_format = function(cmd, param, lock) {\n\
-	if (cmd == "capo") {\n\
-		cfmt.capo = param\n\
-		return\n\
-	}\n\
-	capo.set_fmt(cmd, param, lock)\n\
-}\n\
-'
+
+abc2svg.modules.hooks.push(
+// export
+	"gch_tr1",
+// hooks
+	[ "set_format", "abc2svg.capo.set_fmt" ],
+	[ "gch_build", "abc2svg.capo.gch_build" ],
+	[ "output_music", "abc2svg.capo.output_music" ]
+)
 
 // the module is loaded
 abc2svg.modules.capo.loaded = true
