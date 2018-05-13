@@ -8,13 +8,14 @@
 //	%%ambitus 1
 
 abc2svg.ambitus = {
-    do_ambitus: function(voice_tb) {
+    do_ambitus: function() {
 
 // constants from the abc2svg core
     var	BASE_LEN = 1536,
 	NOTE = 8,
 	FULL = 0
-    var	s, v, p_v, min, max
+    var	s, v, p_v, min, max,
+	voice_tb = this.get_voice_tb()
 
 	for (v = 0; v < voice_tb.length; v++) {
 		p_v = voice_tb[v];
@@ -48,57 +49,66 @@ abc2svg.ambitus = {
 				shhd: 0
 			}]
 	}
-    } // do_ambitus()
+    }, // do_ambitus()
+
+    draw_symbols: function(of, p_voice) {
+// constants from the abc2svg core
+    var	d,
+	delta_tb = this.get_delta_tb(),
+	staff_tb = this.get_staff_tb(),
+	s = p_voice.sym
+
+	if (s.clef_type != undefined && s.nhd > 0) {
+		d = delta_tb[s.clef_type] + s.clef_line * 2;
+		s.notes[0].pit += d;
+		s.notes[1].pit += d;
+		s.x -= 26;
+		this.draw_note(s)
+		if (s.notes[1].pit - s.notes[0].pit > 4) {
+			this.xypath(s.x, 3 * (s.notes[1].pit - 18) + staff_tb[s.st].y);
+			this.out_svg('v' +
+				((s.notes[1].pit - s.notes[0].pit) * 3).toFixed(2) +
+				'" stroke-width=".6"/>\n');
+		}
+		s.x += 26;
+		p_voice.clef.nhd = 0
+	}
+	of(p_voice)
+    }, // draw_symbols()
+
+    output_music: function(of) {
+	if (this.cfmt().ambitus)
+		abc2svg.ambitus.do_ambitus.call(this)
+	of()
+    },
+
+    set_fmt: function(of, cmd, param, lock) {
+	if (cmd == "ambitus") {
+		this.cfmt().ambitus = param
+		return
+	}
+	of(cmd, param, lock)
+    },
+
+    set_width: function(of, s) {
+	if (s.clef_type != undefined && s.nhd > 0) {
+		s.wl = 40;
+		s.wr = 12
+	} else {
+		of(s)
+	}
+    }
 } // ambitus
 
-// inject code inside the core
-abc2svg.inject += '\
-var ambitus = {\n\
-	ds: draw_symbols,\n\
-	om: output_music,\n\
-	set_fmt: set_format,\n\
-	set_w: set_width\n\
-}\n\
-draw_symbols = function(p_voice) {\n\
-    var	d, s = p_voice.sym\n\
-	if (s.type == CLEF && s.nhd > 0) {\n\
-		d = delta_tb[s.clef_type] + s.clef_line * 2;\n\
-		s.notes[0].pit += d;\n\
-		s.notes[1].pit += d;\n\
-		s.x -= 26;\n\
-		draw_note(s);\n\
-		if (s.notes[1].pit - s.notes[0].pit > 4) {\n\
-			xypath(s.x, 3 * (s.notes[1].pit - 18) + staff_tb[s.st].y);\n\
-			output.push("v" +\n\
-				((s.notes[1].pit - s.notes[0].pit) * 3).toFixed(2) +\n\
-				\'" stroke-width=".6"/>\\\n\');\n\
-		}\n\
-		s.x += 26;\n\
-		p_voice.clef.nhd = 0\n\
-	}\n\
-	ambitus.ds(p_voice)\n\
-}\n\
-output_music = function() {\n\
-	if (cfmt.ambitus)\n\
-		abc2svg.ambitus.do_ambitus(voice_tb)\n\
-	ambitus.om()\n\
-}\n\
-set_format = function(cmd, param, lock) {\n\
-	if (cmd == "ambitus") {\n\
-		cfmt.ambitus = param\n\
-		return\n\
-	}\n\
-	ambitus.set_fmt(cmd, param, lock)\n\
-}\n\
-set_width = function(s) {\n\
-	if (s.type == CLEF && s.nhd > 0) {\n\
-		s.wl = 40;\n\
-		s.wr = 12\n\
-	} else {\n\
-		ambitus.set_w(s)\n\
-	}\n\
-}\n\
-'
+abc2svg.modules.hooks.push(
+// export
+	"draw_note",
+// hooks
+	[ "draw_symbols", "abc2svg.ambitus.draw_symbols" ],
+	[ "output_music", "abc2svg.ambitus.output_music" ],
+	[ "set_format", "abc2svg.ambitus.set_fmt" ],
+	[ "set_width", "abc2svg.ambitus.set_width" ]
+)
 
 // the module is loaded
 abc2svg.modules.ambitus.loaded = true

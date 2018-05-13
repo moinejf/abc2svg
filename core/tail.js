@@ -33,6 +33,7 @@ Abc.prototype.font_class = font_class;
 Abc.prototype.get_a_gch = function() { return a_gch };
 Abc.prototype.get_cur_sy = function() { return cur_sy };
 Abc.prototype.get_curvoice = function() { return curvoice };
+Abc.prototype.get_delta_tb = function() { return delta_tb };
 Abc.prototype.get_fname = function() { return parse.ctx.fname };
 Abc.prototype.get_font = get_font;
 Abc.prototype.get_font_style = function() { return font_style };
@@ -45,6 +46,7 @@ Abc.prototype.get_newpage = function() {
 	}
 };
 Abc.prototype.get_posy = function() { var t = posy; posy = 0; return t };
+Abc.prototype.get_staff_tb = function() { return staff_tb };
 Abc.prototype.get_top_v = function() { return par_sy.top_voice };
 Abc.prototype.get_tsfirst = function() { return tsfirst };
 Abc.prototype.get_voice_tb = function() { return voice_tb };
