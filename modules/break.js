@@ -10,23 +10,24 @@
 abc2svg.break = {
 
 	// get the %%break parameters
-	get_break: function(abc, abcbrk, parm) {
+	get_break: function(parm) {
 	    var	BASE_LEN = 1536		// constant from the abc2svg core
 	    var	b, c, d, sq,
 		a = parm.split(/[ ,]/);
 
-		abcbrk.break = []
+		if (!this.break)
+			this.break = []
 		for (n = 1; n < a.length; n++) {
 			b = a[n];
 			c = b.match(/(\d)([a-z]?)(:\d\/\d)?/)
 			if (!c) {
-				abc.syntax(1, err_bad_val_s, "%%break")
+				this.syntax(1, err_bad_val_s, "%%break")
 				continue
 			}
 			if (c[2])
 				sq = c[2].charCodeAt(0) - 0x61
 			if (!c[3]) {
-				abcbrk.break.push({	// on measure bar
+				this.break.push({	// on measure bar
 						m: c[1],
 						t: 0,
 						sq: sq})
@@ -34,10 +35,10 @@ abc2svg.break = {
 			}
 			d = c[3].match(/:(\d)\/(\d)/)
 			if (!d || d[2] < 1) {
-				abc.syntax(1, "Bad denominator in %%break")
+				this.syntax(1, "Bad denominator in %%break")
 				continue
 			}
-			abcbrk.break.push({
+			this.break.push({
 					m: c[1],
 					t: d[1] * BASE_LEN / d[2],
 					sq: sq})
@@ -45,17 +46,17 @@ abc2svg.break = {
 	}, // get_break()
 
 	// insert the EOLs of %%break
-	do_break: function(abc, abcbrk, voice_tb) {
-	    var BAR = 0			// constant from the abc2svg core
+	do_break: function() {
 	    var	i, m, t, brk, seq,
-		v = abc.get_cur_sy().top_voice,
+		voice_tb = this.get_voice_tb()
+		v = this.get_cur_sy().top_voice,
 		s1 = voice_tb[v].sym
 
-		for (i = 0; i < abcbrk.break.length; i++) {
-			brk = abcbrk.break[i];
+		for (i = 0; i < this.break.length; i++) {
+			brk = this.break[i];
 			m = brk.m
 			for (s = s1; s; s = s.next) {
-				if (s.type == BAR && s.bar_num == m)
+				if (s.bar_type && s.bar_num == m)
 					break
 			}
 			if (!s)
@@ -64,7 +65,7 @@ abc2svg.break = {
 			if (brk.sq) {
 				seq = brk.sq
 				for (s = s.ts_next; s; s = s.ts_next) {
-					if (s.type == BAR
+					if (s.bar_type
 					 && s.bar_num == m) {
 						if (--seq == 0)
 							break
@@ -87,27 +88,28 @@ abc2svg.break = {
 			}
 			s.eoln = true
 		}
-	} // do_break()
+	}, // do_break()
+
+    do_pscom: function (of, text) {
+	if (text.slice(0, 6) == "break ")
+		abc2svg.break.get_break.call(this, text)
+	else
+		of(text)
+    },
+
+    set_bar_num: function(of) {
+	of()
+	if (this.break)
+		abc2svg.break.do_break.call(this)
+    }
 } // break
 
-// inject code inside the core
-abc2svg.inject += '\
-var brk = {\n\
-	psc: do_pscom,\n\
-	sbn: set_bar_num\n\
-}\n\
-do_pscom = function(text) {\n\
-	if (text.slice(0, 6) == "break ")\n\
-		abc2svg.break.get_break(self, brk, text)\n\
-	else\n\
-		brk.psc(text)\n\
-}\n\
-set_bar_num = function() {\n\
-	brk.sbn();\n\
-	if (brk.break)\n\
-		abc2svg.break.do_break(self, brk, voice_tb)\n\
-}\n\
-'
+abc2svg.modules.hooks.push(
+// export
+// hooks
+	[ "do_pscom", "abc2svg.break.do_pscom" ],
+	[ "set_bar_num", "abc2svg.break.set_bar_num" ]
+);
 
 // the module is loaded
 abc2svg.modules.break.loaded = true
