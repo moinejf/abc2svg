@@ -10,7 +10,7 @@
 abc2svg.combine = {
 
     // function called at start of the generation when multi-voices
-    comb_v: function(abc) {
+    comb_v: function() {
     var	NOTE = 8,		// constants from the abc2svg core
 	REST = 10,
 	SL_ABOVE = 0x01,
@@ -63,7 +63,7 @@ abc2svg.combine = {
 
 	s.notes = s.notes.concat(s2.notes);
 	s.nhd = nhd = s.notes.length - 1;
-	abc.sort_pitch(s)		// sort the notes by pitch
+	this.sort_pitch(s)		// sort the notes by pitch
 
 	if (s.combine >= 3) {		// remove unison heads
 		for (m = nhd; m > 0; m--) {
@@ -104,7 +104,7 @@ function do_combine(s) {
 			 && !s2.invis)
 				delete s.invis
 		} else {
-			combine_notes(s, s2)
+			combine_notes.call(this, s, s2)
 		}
 
 		if (s2.a_gch)
@@ -115,23 +115,23 @@ function do_combine(s) {
 			else
 				s.a_dd = s.a_dd.concat(s2.a_dd)
 		}
-		abc.unlksym(s2)			// remove the next symbol
+		this.unlksym(s2)			// remove the next symbol
 
 		// there may be more voices
-		if (s.in_tuplet || !may_combine(s))
+		if (s.in_tuplet || !may_combine.call(this, s))
 			break
 	}
 } // do_combine()
 
 	var s, s2, g, i, r
 
-	for (s = abc.get_tsfirst(); s; s = s.ts_next) {
+	for (s = this.get_tsfirst(); s; s = s.ts_next) {
 		switch (s.type) {
 		case REST:
 			if (s.combine == undefined || s.combine < 0)
 				continue
-			if (may_combine(s))
-				do_combine(s)
+			if (may_combine.call(this, s))
+				do_combine.call(this, s)
 			continue
 		default:
 			continue
@@ -144,14 +144,14 @@ function do_combine(s) {
 		if (!s.beam_st)
 			continue
 		if (s.beam_end) {
-			if (may_combine(s))
-				do_combine(s)
+			if (may_combine.call(this, s))
+				do_combine.call(this, s)
 			continue
 		}
 
 		s2 = s
 		while (1) {
-			if (!may_combine(s2)) {
+			if (!may_combine.call(this, s2)) {
 				s2 = null
 				break
 			}
@@ -166,7 +166,7 @@ function do_combine(s) {
 			continue
 		s2 = s
 		while (1) {
-			do_combine(s2)
+			do_combine.call(this, s2)
 //fixme: may have rests in beam
 			if (s2.beam_end)
 				break
@@ -177,50 +177,49 @@ function do_combine(s) {
 	}
     }, // comb_v()
 
+    do_pscom: function(of, text) {
+	if (text.slice(0, 13) == "voicecombine ")
+		this.set_v_param("combine", text.split(/[ \t]/)[1])
+	else
+		of(text)
+    },
+
+    new_note: function(of, gr, tp) {
+    var curvoice = this.get_curvoice()
+    var s = of(gr, tp)
+	if (s && s.notes && curvoice.combine != undefined)
+		s.combine = curvoice.combine
+	return s
+    },
+
+    set_stem_dir: function(of) {
+	of();
+	abc2svg.combine.comb_v.call(this)
+    },
+
     // set the combine parameter in the current voice
-    set_comb: function(abc, a) {
+    set_vp: function(of, a) {
     var	i,
-	curvoice = abc.get_curvoice()
+	curvoice = this.get_curvoice()
 
 	for (i = 0; i < a.length; i++) {
-		switch (a[i]) {
-		case "combine=":			// %%voicecombine
+		if (a[i] == "combine=") {	// %%voicecombine
 			curvoice.combine = a[i + 1]
 			break
 		}
 	}
-    } // set_comb()
+	of(a)
+    }
 } // combine
 
-// inject code inside the core
-abc2svg.inject += '\
-var combine = {\n\
-	new_n: new_note,\n\
-	psc: do_pscom,\n\
-	set_sd: set_stem_dir,\n\
-	set_vp: set_vp\n\
-}\n\
-new_note = function(gr, tp) {\n\
-	var s = combine.new_n(gr, tp)\n\
-	if (s && s.notes && curvoice.combine != undefined)\n\
-		s.combine = curvoice.combine\n\
-	return s\n\
-}\n\
-do_pscom = function(text) {\n\
-	if (text.slice(0, 13) == "voicecombine ")\n\
-		set_v_param("combine", text.split(/[ \t]/)[1])\n\
-	else\n\
-		combine.psc(text)\n\
-}\n\
-set_stem_dir = function() {\n\
-	combine.set_sd();\n\
-	abc2svg.combine.comb_v(self)\n\
-}\n\
-set_vp = function(a) {\n\
-	abc2svg.combine.set_comb(self, a);\n\
-	combine.set_vp(a)\n\
-}\n\
-'
+abc2svg.modules.hooks.push(
+// export
+// hooks
+	[ "do_pscom", "abc2svg.combine.do_pscom" ],
+	[ "new_note", "abc2svg.combine.new_note" ],
+	[ "set_stem_dir", "abc2svg.combine.set_stem_dir" ],
+	[ "set_vp", "abc2svg.combine.set_vp" ]
+);
 
 // the module is loaded
 abc2svg.modules.voicecombine.loaded = true
