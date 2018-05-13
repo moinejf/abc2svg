@@ -9,9 +9,8 @@
 
 abc2svg.clip = {
 
-	// %%break start_measure [":" num "/" den] "-" end_measure ...
-	get_clip: function(abc, abcclip, parm) {
-	    var	BASE_LEN = 1536		// constant from the abc2svg core
+    get_clip: function(parm) {
+    var	BASE_LEN = 1536		// constant from the abc2svg core
 
 	// get the start/stop points
 	function get_symsel(a) {
@@ -34,7 +33,7 @@ abc2svg.clip = {
 		a = parm.split(/[ -]/)
 
 		if (a.length != 3) {
-			abc.syntax(1, abc.err_bad_val_s, "%%clip")
+			this.syntax(1, this.err_bad_val_s, "%%clip")
 			return
 		}
 		if (!a[1])
@@ -43,20 +42,20 @@ abc2svg.clip = {
 			b = get_symsel(a[1]);
 		c = get_symsel(a[2])
 		if (!b || !c) {
-			abc.syntax(1, abc.err_bad_val_s, "%%clip")
+			this.syntax(1, this.err_bad_val_s, "%%clip")
 			return
 		}
-		abcclip.clip = [b, c]
-	}, // get_clip()
+		this.clip = [b, c]
+    }, // get_clip()
 
-	// cut the tune
-	do_clip: function(abc, abcclip, voice_tb) {
-
-	    var	BAR = 0,		// constants from the abc2svg core
-		CLEF = 1,
-		KEY = 5,
-		METER = 6,
-		STAVES = 12
+    // cut the tune
+    do_clip: function() {
+    var	BAR = 0,		// constants from the abc2svg core
+	CLEF = 1,
+	KEY = 5,
+	METER = 6,
+	STAVES = 12
+    var	voice_tb = this.get_voice_tb()
 
 	// go to a global (measure + time)
 	function go_global_time(s, sel) {
@@ -69,7 +68,7 @@ abc2svg.clip = {
 					 && s2.time != 0)
 						break
 				}
-				if (s2.time < voice_tb[abc.get_cur_sy().top_voice].
+				if (s2.time < voice_tb[this.get_cur_sy().top_voice].
 								meter.wmeasure)
 					s = s2
 			}
@@ -113,31 +112,31 @@ abc2svg.clip = {
 	    var	s, s2, sy, p_voice, v
 
 		// remove the beginning of the tune
-		s = abc.get_tsfirst()
-		if (abcclip.clip[0].m > 0
-		 || abcclip.clip[0].t > 0) {
-			s = go_global_time(s, abcclip.clip[0])
+		s = this.get_tsfirst()
+		if (this.clip[0].m > 0
+		 || this.clip[0].t > 0) {
+			s = go_global_time(s, this.clip[0])
 			if (!s) {
-				abc.set_tsfirst(null)
+				this.set_tsfirst(null)
 				return
 			}
 
 			// update the start of voices
-			sy = abc.get_cur_sy()
-			for (s2 = abc.get_tsfirst(); s2 != s; s2 = s2.ts_next) {
+			sy = this.get_cur_sy()
+			for (s2 = this.get_tsfirst(); s2 != s; s2 = s2.ts_next) {
 				switch (s2.type) {
 				case CLEF:
 					s2.p_v.clef = s2
 					break
 				case KEY:
-					s2.p_v.key = abc.clone(s2.as.u.key)
+					s2.p_v.key = this.clone(s2.as.u.key)
 					break
 				case METER:
-					s2.p_v.meter = abc.clone(s2.as.u.meter)
+					s2.p_v.meter = this.clone(s2.as.u.meter)
 					break
 				case STAVES:
 					sy = s2.sy;
-					abc.set_cur_sy(sy)
+					this.set_cur_sy(sy)
 					break
 				}
 			}
@@ -151,12 +150,12 @@ abc2svg.clip = {
 				}
 				p_voice.sym = s2
 			}
-			abc.set_tsfirst(s)
+			this.set_tsfirst(s)
 			delete s.ts_prev
 		}
 
 		/* remove the end of the tune */
-		s = go_global_time(s, abcclip.clip[1])
+		s = go_global_time(s, this.clip[1])
 		if (!s)
 			return
 
@@ -180,27 +179,28 @@ abc2svg.clip = {
 				p_voice.sym = null
 		}
 		delete s.ts_prev.ts_next
-	} // do_clip()
+	}, // do_clip()
+
+    do_pscom: function (of, text) {
+	if (text.slice(0, 5) == "clip ")
+		abc2svg.clip.get_clip.call(this, text)
+	else
+		of(text)
+    },
+
+    set_bar_num: function(of) {
+	of()
+	if (this.clip)
+		abc2svg.clip.do_clip.call(this)
+    }
 } // clip
 
-// inject code inside the core
-abc2svg.inject += '\
-var clip = {\n\
-	psc: do_pscom,\n\
-	sbn: set_bar_num\n\
-}\n\
-do_pscom = function(text) {\n\
-	if (text.slice(0, 5) == "clip ")\n\
-		abc2svg.clip.get_clip(self, clip, text)\n\
-	else\n\
-		clip.psc(text)\n\
-}\n\
-set_bar_num = function() {\n\
-	clip.sbn();\n\
-	if (clip.clip)\n\
-		abc2svg.clip.do_clip(self, clip, voice_tb)\n\
-}\n\
-'
+abc2svg.modules.hooks.push(
+// export
+// hooks
+	[ "do_pscom", "abc2svg.clip.do_pscom" ],
+	[ "set_bar_num", "abc2svg.clip.set_bar_num" ]
+);
 
 // the module is loaded
 abc2svg.modules.clip.loaded = true
