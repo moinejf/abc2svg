@@ -10,15 +10,20 @@
 abc2svg.diag = {
 
 // function called before tune generation
-    do_diag: function(abc, voice_tb) {
-    var	glyphs = abc.get_glyphs()
+    do_diag: function() {
+    var	glyphs = this.get_glyphs(),
+	voice_tb = this.get_voice_tb()
 
 	// create the decorations if not done yet
 	if (!glyphs['fb']) {
 	    var	i, j, d,
-		decos = abc.get_decos();
+		decos = this.get_decos();
 		ns = "CDEFGAB",
 		ms = ["", "m", "7", "m7", "maj7", "sus4"]
+
+		this.add_style("\
+\n.diag {font:6px sans-serif}\
+\n.frn {font:italic 7px sans-serif}")
 
 		for (i = 0; i < ns.length; i++) {
 			for (j = 0; j < ms.length; j++) {
@@ -466,36 +471,33 @@ M-10.2 -31h20.4"/>';
 			t = gch.otext || gch.text
 
 			// insert the diagram as a decoration
-			abc.deco_cnv(t.split(/[ \t/]/, 1), s, null)
+			this.deco_cnv(t.split(/[ \t/]/, 1), s, null)
 		}
 	}
-    } // do_diag()
+    }, // do_diag()
+
+    output_music: function(of) {
+	if (this.cfmt().diag)
+		abc2svg.diag.do_diag.call(this)
+	of()
+    },
+
+    set_fmt: function(of, cmd, param, lock) {
+	if (cmd == "diagram") {
+		this.cfmt().diag = param
+		return
+	}
+	of(cmd, param, lock)
+    }
 } // diag
 
-// inject code inside the core
-abc2svg.inject += '\
-Abc.prototype.get_decos = function() { return decos }\n\
-Abc.prototype.get_glyphs = function() { return glyphs }\n\
-var diag = {\n\
-	om: output_music,\n\
-	set_fmt: set_format\n\
-}\n\
-output_music = function() {\n\
-	if (cfmt.diag)\n\
-		abc2svg.diag.do_diag(self, voice_tb)\n\
-	diag.om()\n\
-}\n\
-set_format = function(cmd, param, lock) {\n\
-	if (cmd == "diagram") {\n\
-		cfmt.diag = param\n\
-		return\n\
-	}\n\
-	diag.set_fmt(cmd, param, lock)\n\
-}\n\
-\
-style += "\\n.diag {font-family:sansserif;font-size:6px}\
-\\n.frn {font-family:sansserif;font-style:italic;font-size:7px}"\n\
-'
+abc2svg.modules.hooks.push(
+// export
+	"param_set_font",
+// hooks
+	[ "output_music", "abc2svg.diag.output_music" ],
+	[ "set_format", "abc2svg.diag.set_fmt" ]
+);
 
 // the module is loaded
 abc2svg.modules.diagram.loaded = true

@@ -25,6 +25,7 @@ function psxygl() { return false }
 	init_tune()
 
 // Abc functions used by the modules
+Abc.prototype.add_style = function(s) { style += s };
 Abc.prototype.cfmt = function() { return cfmt };
 Abc.prototype.clone = clone;
 Abc.prototype.deco_cnv = deco_cnv;
