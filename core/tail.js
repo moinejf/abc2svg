@@ -47,6 +47,7 @@ Abc.prototype.get_newpage = function() {
 Abc.prototype.get_posy = function() { var t = posy; posy = 0; return t };
 Abc.prototype.get_top_v = function() { return par_sy.top_voice };
 Abc.prototype.get_tsfirst = function() { return tsfirst };
+Abc.prototype.get_voice_tb = function() { return voice_tb };
 Abc.prototype.info = function() { return info };
 Abc.prototype.set_font = set_font;
 Abc.prototype.set_tsfirst = function(s) { tsfirst = s };

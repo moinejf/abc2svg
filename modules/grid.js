@@ -11,7 +11,9 @@
 abc2svg.grid = {
 
 // function called before tune generation
-    do_grid: function(abc, tsfirst, voice_tb) {
+    do_grid: function() {
+    var	tsfirst = this.get_tsfirst(),
+	voice_tb = this.get_voice_tb()
 
 // constants from the abc2svg core
     var	BASE_LEN = 1536,
@@ -22,7 +24,7 @@ abc2svg.grid = {
 	BLOCK = 16
 
     var	img, font_cl, cls,
-	cfmt = abc.cfmt()
+	cfmt = this.cfmt()
 
 function get_beat(s) {
     var	beat = BASE_LEN / 4
@@ -30,10 +32,6 @@ function get_beat(s) {
 	if (!s.a_meter[0] || s.a_meter[0].top[0] == 'C' || !s.a_meter[0].bot)
 		return beat;
 	beat = BASE_LEN / s.a_meter[0].bot[0] |0
-	if (isNaN(beat)) {
-		abc.syntax(1, '** Cannot get the beat')
-		return BASE_LEN / 4
-	}
 	if (s.a_meter[0].bot[0] == 8
 	 && s.a_meter[0].top[0] % 3 == 0)
 		beat = BASE_LEN / 8 * 3
@@ -83,7 +81,7 @@ function build_grid(chords, bars, font) {
 			cell += '  '
 		if (bar2 && bar2[0] == ':')
 			cell += '  ';
-		w = abc.strwh(cell)[0]
+		w = this.strwh(cell)[0]
 		if (w > wmx)
 			wmx = w
 	}
@@ -105,15 +103,14 @@ function build_grid(chords, bars, font) {
 	i = cfmt.bgcolor
 	if (i)
 		line += ' style="background-color: ' + i + '"';
-	line += '>\n'
+	line += '>\n<style type="text/css">\n\
+.mid {text-anchor:middle}\n'
 
-	if (cfmt.fullsvg) {
-		line += '<style type="text/css">\n\
+	if (cfmt.fullsvg)
+		line += '\
 .stroke {stroke: currentColor; fill: none}\n\
-.chmid {text-anchor:middle}\n\
-.' + font_cl + ' {' + abc.style_font(font.name + '.' + font.size) +  '}\n\
-</style>\n'
-	}
+.' + font_cl + ' {' + this.style_font(font.name + '.' + font.size) +  '}\n'
+	line += '</style>\n'
 
 	// draw the lines
 	line += '<path class="stroke" d="\n';
@@ -176,7 +173,7 @@ function build_grid(chords, bars, font) {
 	chords = [],
 	chord = []
 
-	img = abc.get_img();
+	img = this.get_img();
 
 	// get the beat
 	beat = get_beat(voice_tb[0].meter);
@@ -233,13 +230,15 @@ function build_grid(chords, bars, font) {
 	}
 
 	// set the text style
-	font = abc.get_font('grid');
-	font_cl = abc.font_class(font)
-	cls = font_cl + ' chmid';
-	abc.set_font('grid');		// (for strwh())
+	if (!this.cfmt().gridfont)
+		this.param_set_font("gridfont", "serif 16");
+	font = this.get_font('grid');
+	font_cl = this.font_class(font)
+	cls = font_cl + " mid";
+	this.set_font('grid');		// (for strwh())
 
 	// create the grid
-	p_voice = voice_tb[abc.get_top_v()]
+	p_voice = voice_tb[this.get_top_v()]
 	s = {
 		type: BLOCK,
 		subtype: 'ml',
@@ -247,7 +246,7 @@ function build_grid(chords, bars, font) {
 		time: 0,
 		p_v: p_voice,
 		v: p_voice.v,
-		text: build_grid(chords, bars, font)
+		text: build_grid.call(this, chords, bars, font)
 	}
 
 	// and insert it in the tune
@@ -265,35 +264,34 @@ function build_grid(chords, bars, font) {
 		s.ts_next = tsfirst;
 		tsfirst.ts_prev = s;
 		tsfirst = s;
-		abc.set_tsfirst(s);
+		this.set_tsfirst(s);
 		p_voice.sym.prev = s;
 		p_voice.sym = s
 	}
-} // do_grid()
+    }, // do_grid()
+
+    output_music: function(of) {
+	if (this.cfmt().grid)
+		abc2svg.grid.do_grid.call(this);
+	of()
+    },
+
+    set_fmt: function(of, cmd, param, lock) {
+	if (cmd == "grid") {
+		this.cfmt().grid = param
+		return
+	}
+	of(cmd, param, lock)
+    }
 } // grid
 
-// inject code inside the core
-abc2svg.inject += '\
-var grid = {\n\
-	om: output_music,\n\
-	set_fmt: set_format\n\
-}\n\
-output_music = function() {\n\
-	if (cfmt.grid)\n\
-		abc2svg.grid.do_grid(self, tsfirst, voice_tb)\n\
-	grid.om()\n\
-}\n\
-set_format = function(cmd, param, lock) {\n\
-	if (cmd == "grid") {\n\
-		cfmt.grid = param\n\
-		return\n\
-	}\n\
-	grid.set_fmt(cmd, param, lock)\n\
-}\n\
-\
-style += "\\\n.chmid {text-anchor:middle}";\n\
-param_set_font("gridfont", "serif 16")\n\
-'
+abc2svg.modules.hooks.push(
+// export
+	"param_set_font",
+// hooks
+	[ "output_music", "abc2svg.grid.output_music" ],
+	[ "set_format", "abc2svg.grid.set_fmt" ]
+)
 
 // the module is loaded
 abc2svg.modules.grid.loaded = true
