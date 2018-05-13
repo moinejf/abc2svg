@@ -13,8 +13,8 @@
 abc2svg.sth = {
 
 // function called after beam calculation
-    recal_beam: function(abc, bm, s) {
-    var staff_tb = abc.get_st_tb(),
+    recal_beam: function(bm, s) {
+    var staff_tb = this.get_staff_tb(),
 	st = s.st,
 	s2 = bm.s2
 	if (s.sth)
@@ -36,8 +36,10 @@ abc2svg.sth = {
     },
 
 // function called after the stem heights have been computed
-    set_sth: function(abc, voice_tb) {
-    var s, h, v, sth_a, p_voice
+    set_sth: function() {
+    var s, h, v, sth_a, p_voice,
+	voice_tb = this.get_voice_tb()
+
 	for (v = 0; v < voice_tb.length; v++) {
 		p_voice = voice_tb[v]
 		if (p_voice.sth != null)	// if no stem length in this voice
@@ -75,47 +77,54 @@ abc2svg.sth = {
 			s.sth = s.ys
 		}
 	}
+    }, // set_sth()
+
+    calculate_beam: function(of, bm, s1) {
+    var	done = of(bm, s1)
+	if (done && bm.s2 && s1.sth)
+		abc2svg.sth.recal_beam.call(this, bm, s1)
+	return done
+    },
+
+    new_note: function(of, grace, tp_fact) {
+    var	NOTE = 8		// constant from the abc2svg core
+    var	s = of(grace, tp_fact),
+	curvoice = this.get_curvoice()
+	if (curvoice.sth && s && s.type == NOTE) {
+		s.sth = curvoice.sth;
+		curvoice.sth = null
+	}
+	return s
+    },
+
+    set_format: function(of, cmd, param, lock) {
+	if (cmd == "sth") {
+	    var	curvoice = this.get_curvoice()
+		if (parse.state == 2)
+			this.goto_tune()
+		if (curvoice)
+			curvoice.sth = param.split(/[ \t;-]+/)
+		return
+	}
+	of(cmd, param, lock)
+    },
+
+    set_stems: function(of) {
+	of();
+	abc2svg.sth.set_sth.call(this)
     }
+
 } // sth
 
-// inject code inside the core
-abc2svg.inject += '\
-Abc.prototype.get_st_tb = function() {return staff_tb}\n\
-var sth = {\n\
-	cb: calculate_beam,\n\
-	nn: new_note,\n\
-	set_fmt: set_format,\n\
-	set_st: set_stems\n\
-}\n\
-calculate_beam = function(bm, s1) {\n\
-    var	done = sth.cb(bm, s1)\n\
-	if (done && bm.s2 && s1.sth)\n\
-		abc2svg.sth.recal_beam(self, bm, s1)\n\
-	return done\n\
-}\n\
-new_note = function(grace, tp_fact) {\n\
-   var	s = sth.nn(grace, tp_fact)\n\
-	if (curvoice.sth && s && s.type == NOTE) {\n\
-		s.sth = curvoice.sth;\n\
-		curvoice.sth = null\n\
-	}\n\
-	return s\n\
-}\n\
-set_format = function(cmd, param, lock) {\n\
-	if (cmd == "sth") {\n\
-		if (parse.state == 2)\n\
-			goto_tune()\n\
-		if (curvoice)\n\
-			curvoice.sth = param.split(/[ \t;-]+/)\n\
-		return\n\
-	}\n\
-	sth.set_fmt(cmd, param, lock)\n\
-}\n\
-set_stems = function() {\n\
-	sth.set_st();\n\
-	abc2svg.sth.set_sth(self, voice_tb)\n\
-}\n\
-';
+abc2svg.modules.hooks.push(
+// export
+	"goto_tune",
+// hooks
+	[ "calculate_beam", "abc2svg.sth.calculate_beam" ],
+	[ "new_note", "abc2svg.sth.new_note" ],
+	[ "set_format", "abc2svg.sth.set_format" ],
+	[ "set_stems", "abc2svg.sth.set_stems" ]
+);
 
 // the module is loaded
 abc2svg.modules.sth.loaded = true
