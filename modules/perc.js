@@ -201,10 +201,8 @@ var prn = {
     // normalize a note for mapping
     function norm(p) {
     var	a = p.match(/^([_^]*)([A-Ga-g])([,']*)$/)	// '
-	if (!a) {
-		abc.syntax()
+	if (!a)
 		return
-	}
 	if (p.match(/[A-Z]/)) {
 		p = p.toLowerCase();
 		if (p.indexOf("'") > 0)
@@ -230,6 +228,10 @@ var prn = {
 		if (!maps.MIDIdrum)
 			maps.MIDIdrum = {}
 		v = tonote(n)
+		if (!v) {
+			abc.syntax(1, abc.err_bad_val_s, "%%percmap")
+			return
+		}
 		delete v.acc
 		maps.MIDIdrum[n] = [[a[3]], v]
 	} else {					// play
@@ -267,7 +269,7 @@ var prn = {
 
 // inject code inside the core
 abc2svg.inject += '\
-Abc.prototype.get_maps = function maps() { return maps }\n\
+Abc.prototype.get_maps = function() { return maps }\n\
 var perc = {\n\
 	psc: do_pscom,\n\
 	svp: set_vp\n\
