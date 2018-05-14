@@ -13,7 +13,7 @@
 abc2svg.MIDI = {
 
     // parse %%MIDI commands
-    do_midi: function(abc, parm) {
+    do_midi: function(parm) {
     var	pits = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
 	accs = new Int8Array([0, 1, 0, -1, 0, 0, 1, 0, -1, 0, -1, 0])
 
@@ -37,10 +37,8 @@ abc2svg.MIDI = {
     // normalize a note for mapping
     function norm(p) {
     var	a = p.match(/^([_^]*)([A-Ga-g])([,']*)$/)	// '
-	if (!a) {
-		abc.syntax()
+	if (!a)
 		return
-	}
 	if (p.match(/[A-Z]/)) {
 		p = p.toLowerCase();
 		if (p.indexOf("'") > 0)
@@ -52,29 +50,29 @@ abc2svg.MIDI = {
     } // norm()
 
 	var	n, v,
-	maps = abc.get_maps(),
+	maps = this.get_maps(),
 		a = parm.split(/\s+/)
 
 	switch (a[1]) {
 	case "channel":
 		if (a[2] != "10")
 			break
-		abc.set_v_param("midictl", "0 1") // channel 10 is bank 128 program 0
+		this.set_v_param("midictl", "0 1") // channel 10 is bank 128 program 0
 		break
 	case "drummap":
-		if (abc.cfmt().sound != "play")
+		if (this.cfmt().sound != "play")
 			break
 //fixme: should have a 'MIDIdrum' per voice?
 		n = norm(a[2]);
 		v = tonote(a[3]);
 		if (!n || !v) {
-			abc.syntax(1, abc.err_bad_val_s, "%%MIDI drummap")
+			this.syntax(1, abc.err_bad_val_s, "%%MIDI drummap")
 			break
 		}
 		if (!maps.MIDIdrum)
 			maps.MIDIdrum = {}
 		maps.MIDIdrum[n] = [null, v];
-		abc.set_v_param("mididrum", "MIDIdrum")
+		this.set_v_param("mididrum", "MIDIdrum")
 		break
 	case "program":
 		if (a[3] != undefined)	// the channel is unused
@@ -83,31 +81,31 @@ abc2svg.MIDI = {
 			v = a[2];
 		v = parseInt(v)
 		if (isNaN(v) || v < 0 || v > 127) {
-			abc.syntax(1, "Bad program in %%MIDI")
+			this.syntax(1, "Bad program in %%MIDI")
 			return
 		}
-		abc.set_v_param("instr", v)
+		this.set_v_param("instr", v)
 		break
 	case "control":
 		n = parseInt(a[2])
 		if (isNaN(n) || n < 0 || n > 127) {
-			abc.syntax(1, "Bad controller number in %%MIDI")
+			this.syntax(1, "Bad controller number in %%MIDI")
 			return
 		}
 		v = parseInt(a[3])
 		if (isNaN(v) || v < 0 || v > 127) {
-			abc.syntax(1, "Bad controller value in %%MIDI")
+			this.syntax(1, "Bad controller value in %%MIDI")
 			return
 		}
-		abc.set_v_param("midictl", a[2] + ' ' + a[3])
+		this.set_v_param("midictl", a[2] + ' ' + a[3])
 		break
 	}
     }, // do_midi()
 
     // set the MIDI parameters in the current voice
-    set_midi: function(abc, a) {
+    set_midi: function(a) {
     var	i, item,
-	curvoice = abc.get_curvoice()
+	curvoice = this.get_curvoice()
 
 	for (i = 0; i < a.length; i++) {
 		switch (a[i]) {
@@ -127,27 +125,27 @@ abc2svg.MIDI = {
 			break
 		}
 	}
-    } // set_midi()
+    }, // set_midi()
+
+    do_pscom: function(of, text) {
+	if (text.slice(0, 5) == "MIDI ")
+		abc2svg.MIDI.do_midi.call(this, text)
+	else
+		of(text)
+    },
+
+    set_vp: function(of, a) {
+	abc2svg.MIDI.set_midi.call(this, a);
+	of(a)
+    }
 } // MIDI
 
-// inject code inside the core
-abc2svg.inject += '\
-Abc.prototype.get_maps = function maps() { return maps }\n\
-var midi = {\n\
-	psc: do_pscom,\n\
-	svp: set_vp\n\
-}\n\
-do_pscom = function(text) {\n\
-	if (text.slice(0, 5) == "MIDI ")\n\
-		abc2svg.MIDI.do_midi(self, text)\n\
-	else\n\
-		midi.psc(text)\n\
-}\n\
-set_vp = function(a) {\n\
-	abc2svg.MIDI.set_midi(self, a);\n\
-	midi.svp(a)\n\
-}\n\
-'
+abc2svg.modules.hooks.push(
+// export
+// hooks
+	[ "do_pscom", "abc2svg.MIDI.do_pscom" ],
+	[ "set_vp", "abc2svg.MIDI.set_vp" ]
+);
 
 // the module is loaded
 abc2svg.modules.MIDI.loaded = true
