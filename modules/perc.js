@@ -13,7 +13,7 @@
 abc2svg.perc = {
 
     // parse %%percmap
-    do_perc: function(abc, parm) {
+    do_perc: function(parm) {
     var	pits = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
 	accs = new Int8Array([0, 1, 0, -1, 0, 0, 1, 0, -1, 0, -1, 0])
 
@@ -214,22 +214,22 @@ var prn = {
     } // norm()
 
     var	n, v,
-	maps = abc.get_maps(),
+	maps = this.get_maps(),
 	a = parm.split(/\s+/);
 
 	n = norm(a[1])
 	if (!n) {
-		abc.syntax(1, abc.err_bad_val_s, "%%percmap")
+		this.syntax(1, abc.err_bad_val_s, "%%percmap")
 		return
 	}
-	if (abc.cfmt().sound != "play") {		// !play
+	if (this.cfmt().sound != "play") {		// !play
 		if (!a[3])
 			return
 		if (!maps.MIDIdrum)
 			maps.MIDIdrum = {}
 		v = tonote(n)
 		if (!v) {
-			abc.syntax(1, abc.err_bad_val_s, "%%percmap")
+			this.syntax(1, abc.err_bad_val_s, "%%percmap")
 			return
 		}
 		delete v.acc
@@ -237,20 +237,20 @@ var prn = {
 	} else {					// play
 		v = tonote(a[2])
 		if (!v) {
-			abc.syntax(1, abc.err_bad_val_s, "%%percmap")
+			this.syntax(1, abc.err_bad_val_s, "%%percmap")
 			return
 		}
 		if (!maps.MIDIdrum)
 			maps.MIDIdrum = {}
 		maps.MIDIdrum[n] = [null, v]
 	}
-	abc.set_v_param("perc", "MIDIdrum")
+	this.set_v_param("perc", "MIDIdrum")
     }, // do_perc()
 
     // set the MIDI parameters in the current voice
-    set_perc: function(abc, a) {
+    set_perc: function(a) {
     var	i, item,
-	curvoice = abc.get_curvoice()
+	curvoice = this.get_curvoice()
 
 	for (i = 0; i < a.length; i++) {
 		switch (a[i]) {
@@ -264,27 +264,27 @@ var prn = {
 			break
 		}
 	}
-    } // set_perc()
+    }, // set_perc()
+
+    do_pscom: function(of, text) {
+	if (text.slice(0, 8) == "percmap ")
+		abc2svg.perc.do_perc.call(this, text)
+	else
+		of(text)
+    },
+
+    set_vp: function(of, a) {
+	abc2svg.perc.set_perc.call(this, a);
+	of(a)
+    }
 } // perc
 
-// inject code inside the core
-abc2svg.inject += '\
-Abc.prototype.get_maps = function() { return maps }\n\
-var perc = {\n\
-	psc: do_pscom,\n\
-	svp: set_vp\n\
-}\n\
-do_pscom = function(text) {\n\
-	if (text.slice(0, 8) == "percmap ")\n\
-		abc2svg.perc.do_perc(self, text)\n\
-	else\n\
-		perc.psc(text)\n\
-}\n\
-set_vp = function(a) {\n\
-	abc2svg.perc.set_perc(self, a);\n\
-	perc.svp(a)\n\
-}\n\
-'
+abc2svg.modules.hooks.push(
+// export
+// hooks
+	[ "do_pscom", "abc2svg.perc.do_pscom" ],
+	[ "set_vp", "abc2svg.perc.set_vp" ]
+);
 
 // the module is loaded
 abc2svg.modules.percmap.loaded = true

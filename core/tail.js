@@ -41,6 +41,7 @@ Abc.prototype.get_font = get_font;
 Abc.prototype.get_font_style = function() { return font_style };
 Abc.prototype.get_glyphs = function() { return glyphs };
 Abc.prototype.get_img = function() { return img };
+Abc.prototype.get_maps = function() { return maps };
 Abc.prototype.get_multi = function() { return multicol };
 Abc.prototype.get_newpage = function() {
 	if (block.newpage) {
