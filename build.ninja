@@ -91,7 +91,7 @@ build diag-$MAJOR.js: jscu modules/diag.js | package.json
 build grid-$MAJOR.js: jscu modules/grid.js | package.json
 build MIDI-$MAJOR.js: jscu modules/MIDI.js | package.json
 build perc-$MAJOR.js: jscu modules/perc.js | package.json
-build psvg-$MAJOR.js: jscu core/wps.js core/psvg.js | package.json
+build psvg-$MAJOR.js: jscu modules/wps.js modules/psvg.js | package.json
 build sth-$MAJOR.js: jscu modules/sth.js | package.json
 
 build edit-$MAJOR.css: cp editor/edit.css
