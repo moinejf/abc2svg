@@ -47,7 +47,7 @@ function Psvg(abcobj_r) {
 	path;
 
 // function called from Abc
-    Psvg.prototype.getorig = function() {
+    function getorig() {
 	setg(0);
 	return [gcur.xoffs - gcur.xorig, gcur.yoffs - gcur.yorig]
     }
@@ -499,13 +499,39 @@ function Psvg(abcobj_r) {
     }
 
 // abcm2ps functions
-    Psvg.prototype.arp = function(val, x, y) { abcobj.arpps(val, x, y) }
-    Psvg.prototype.ltr = function(val, x, y) { abcobj.ltrps(val, x, y) }
-    Psvg.prototype.xygl = function(x, y, gl) { abcobj.xyglps(x, y, gl) }
-    Psvg.prototype.xygls = function(str, x, y, gl) { abcobj.xyglsps(str, x, y, gl) }
-    Psvg.prototype.xyglv = function(val, x, y, gl) { abcobj.xyglvps(val, x, y, gl) }
-    Psvg.prototype.y0 = function(y) { return abcobj.get_y(0, y) }
-    Psvg.prototype.y1 = function(y) { return abcobj.get_y(1, y) }
+    Psvg.prototype.arp = function(val, x, y) {
+    var	xy = getorig();
+	ps_flush();
+	abcobj.out_arp((x + xy[0]) * abcobj.stv_g().scale, y - xy[1], val)
+    }
+    Psvg.prototype.ltr = function(val, x, y) {
+    var	xy = getorig();
+	ps_flush();
+	abcobj.out_ltr((x + xy[0]) * abcobj.stv_g().scale, y - xy[1], val)
+    }
+    Psvg.prototype.xygl = function(x, y, gl) {
+    var	xy = getorig();
+	ps_flush();
+	abcobj.xygl((x + xy[0]) * abcobj.stv_g().scale, y - xy[1], gl)
+    }
+    Psvg.prototype.xygls = function(str, x, y, gl) {
+    var	xy = getorig();
+	ps_flush();
+	abcobj.out_deco_str((x + xy[0]) * abcobj.stv_g().scale, y - xy[1], gl, str)
+    }
+    Psvg.prototype.xyglv = function(val, x, y, gl) {
+    var	xy = getorig();
+	ps_flush();
+	abcobj.out_deco_val((x + xy[0]) * abcobj.stv_g().scale, y - xy[1], gl, val)
+    }
+    Psvg.prototype.y0 = function(y) {
+    var	staff_tb = abcobj.get_staff_tb()
+	return y + staff_tb[0].y
+    }
+    Psvg.prototype.y1 = function(y) {
+    var	staff_tb = abcobj.get_staff_tb()
+	return y + staff_tb[1].y
+    }
 
 // flush the PS buffer
 function ps_flush(g0) {
@@ -527,12 +553,12 @@ Psvg.prototype.ps_eval = function(txt) {
 // ------ output builtin decorations
 // common part
 function pscall(f, x, y, script) {
-	gcur.xorig = gcur.xoffs = abcobj.psget_x();
-	gcur.yorig = gcur.yoffs = abcobj.psget_y();
+	gcur.xorig = gcur.xoffs = abcobj.sx(0);
+	gcur.yorig = gcur.yoffs = abcobj.sy(0);
 	gcur.cx = 0;
 	gcur.cy = 0;
 	wps.parse(script +
-		(x / abcobj.stv_g.scale).toFixed(2) + ' ' + y.toFixed(2) + ' ' + f);
+		(x / abcobj.stv_g().scale).toFixed(2) + ' ' + y.toFixed(2) + ' ' + f);
 	ps_flush(true)			// + setg(0)
 	return true
 }
@@ -541,7 +567,8 @@ function pscall(f, x, y, script) {
 Psvg.prototype.psdeco = function(f, x, y, de) {
 	var	dd, de2, script, defl,
 		Os = wps.parse('/' + f + ' where'),
-		A = Os.pop()
+		A = Os.pop(),
+	staff_tb = abcobj.get_staff_tb()
 
 	if (!A)
 		return false;
@@ -559,7 +586,7 @@ Psvg.prototype.psdeco = function(f, x, y, de) {
 		script += x.toFixed(2) + ' ' + y.toFixed(2) + ' ';
 		de2 = de.start;
 		x = de2.x;
-		y = abcobj.get_y(de2.st, de2.y)
+		y = de2.y + staff_tb[de2.st].y
 		if (x > de.x - 20)
 			x = de.x - 20
 	}
@@ -574,13 +601,19 @@ Psvg.prototype.psdeco = function(f, x, y, de) {
 }
 
 // try to generate a glyph by PS
-Psvg.prototype.psxygl = function(x, y, gl){
+Psvg.prototype.psxygl = function(x, y, gl) {
 	var	Os = wps.parse('/' + gl + ' where'),
 		A = Os.pop()
 	if (!A)
 		return false
 	Os.pop()
 	return pscall(gl, x, y, 'dlw ')
+}
+
+Psvg.prototype.svgcall = function(f, x, y, v1, v2) {
+    var	xy = getorig();
+	ps_flush();
+	f((x + xy[0]) * abcobj.stv_g().scale, y - xy[1], v1, v2)
 }
 
 //  initialize the PostScript functions
@@ -708,35 +741,38 @@ systemdict/def{currentdict 2 index 2 index put pop pop}put\n\
 
 } // Psvg()
 
-// inject code inside the core
-abc2svg.inject += '\
-function svgcall(f, x, y, v1, v2) {\n\
-    var	xy = psvg.getorig();\n\
-	psvg.ps_flush();\n\
-	f((x + xy[0]) * stv_g.scale, y - xy[1], v1, v2)\n\
-}\n\
-Abc.prototype.arpps = function(val, x, y) { svgcall(out_arp, x, y, val) }\n\
-Abc.prototype.ltrps = function(val, x, y) { svgcall(out_ltr, x, y, val) }\n\
-Abc.prototype.xyglsps = function (str, x, y, gl) {\n\
-	svgcall(out_deco_str, x, y, gl, str)\n\
-}\n\
-Abc.prototype.xyglvps = function(val, x, y, gl) {\n\
-	svgcall(out_deco_val, x, y, gl, val)\n\
-}\n\
-Abc.prototype.xyglps = function(x, y, gl) { svgcall(xygl, x, y, gl) }\n\
-Abc.prototype.get_y = function(st, y) { return y + staff_tb[st].y }\n\
-Abc.prototype.stv_g = stv_g\n\
-Abc.prototype.psget_x = function() {\n\
-	return posx / stv_g.scale\n\
-}\n\
-Abc.prototype.psget_y = function() {\n\
-	return stv_g.started ? stv_g.dy : posy\n\
-}\n\
-\
-	psvg = new Psvg(self);\n\
-	psdeco = psvg.psdeco;\n\
-	psxygl = psvg.psxygl\n\
-'
+abc2svg.modules.psvg = {
+	do_begin_end: function(of, type, opt, text) {
+		if (type != "ps") {
+			of(type, opt, text)
+			return
+		}
+		if (opt == 'nosvg')
+			return
+		if (!this.psvg)
+			this.psvg = new Psvg(this);
+		this.psvg.ps_eval.call(this.psvg, text)
+	},
+	psdeco: function(of, f, x, y, de) {
+		return this.psvg.psdeco.call(this.psvg, f, x, y, de)
+	},
+	psxygl: function(of, x, y, gl) {
+		return this.psvg.psxygl.call(this.psvg, x, y, gl)
+	}
+}
+
+abc2svg.modules.hooks.push(
+// export
+	"out_arp",
+	"out_deco_str",
+	"out_deco_val",
+	"out_ltr",
+	"xygl",
+// hooks
+	[ "do_begin_end", "abc2svg.modules.psvg.do_begin_end" ],
+	[ "psdeco", "abc2svg.modules.psvg.psdeco" ],
+	[ "psxygl", "abc2svg.modules.psvg.psxygl" ]
+);
 
 // the module is loaded
 abc2svg.modules.beginps.loaded = true

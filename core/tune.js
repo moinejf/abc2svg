@@ -1157,11 +1157,6 @@ function do_begin_end(type,
 	var i, j, action, s
 
 	switch (type) {
-	default:
-//	case "ps":
-		if (opt != 'nosvg' && psvg)
-			psvg.ps_eval(text)
-		break
 	case "js":
 		js_inject(text)
 		break
