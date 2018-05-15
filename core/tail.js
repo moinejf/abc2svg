@@ -111,10 +111,6 @@ Abc.prototype.unlksym = unlksym;
 
 }	// end of Abc()
 
-// module hooks
-abc2svg.inject = ''	// new modules
-abc2svg.g_inject = ''	// all modules
-
 // compatibility
 var Abc = abc2svg.Abc
 
