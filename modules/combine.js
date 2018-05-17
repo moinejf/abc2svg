@@ -214,6 +214,9 @@ function do_combine(s) {
 
 abc2svg.modules.hooks.push(
 // export
+	"set_v_param",
+	"sort_pitch",
+	"unlksym",
 // hooks
 	[ "do_pscom", "abc2svg.combine.do_pscom" ],
 	[ "new_note", "abc2svg.combine.new_note" ],

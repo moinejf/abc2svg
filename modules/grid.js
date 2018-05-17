@@ -287,7 +287,11 @@ function build_grid(chords, bars, font) {
 
 abc2svg.modules.hooks.push(
 // export
+	"font_class",
+	"get_font",
 	"param_set_font",
+	"set_font",
+	"strwh",
 // hooks
 	[ "output_music", "abc2svg.grid.output_music" ],
 	[ "set_format", "abc2svg.grid.set_fmt" ]

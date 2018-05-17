@@ -106,6 +106,8 @@ abc2svg.break = {
 
 abc2svg.modules.hooks.push(
 // export
+	"err_bad_val_s",
+	"syntax",
 // hooks
 	[ "do_pscom", "abc2svg.break.do_pscom" ],
 	[ "set_bar_num", "abc2svg.break.set_bar_num" ]

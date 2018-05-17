@@ -142,6 +142,9 @@ abc2svg.MIDI = {
 
 abc2svg.modules.hooks.push(
 // export
+	"err_bad_val_s",
+	"set_v_param",
+	"syntax",
 // hooks
 	[ "do_pscom", "abc2svg.MIDI.do_pscom" ],
 	[ "set_vp", "abc2svg.MIDI.set_vp" ]

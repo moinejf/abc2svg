@@ -197,6 +197,9 @@ abc2svg.clip = {
 
 abc2svg.modules.hooks.push(
 // export
+	"clone",
+	"err_bad_val_s",
+	"syntax",
 // hooks
 	[ "do_pscom", "abc2svg.clip.do_pscom" ],
 	[ "set_bar_num", "abc2svg.clip.set_bar_num" ]

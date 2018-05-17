@@ -65,6 +65,7 @@ abc2svg.capo = {
 abc2svg.modules.hooks.push(
 // export
 	"gch_tr1",
+	"get_font",
 // hooks
 	[ "set_format", "abc2svg.capo.set_fmt" ],
 	[ "gch_build", "abc2svg.capo.gch_build" ],

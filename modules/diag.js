@@ -493,7 +493,7 @@ M-10.2 -31h20.4"/>';
 
 abc2svg.modules.hooks.push(
 // export
-	"param_set_font",
+	"deco_cnv",
 // hooks
 	[ "output_music", "abc2svg.diag.output_music" ],
 	[ "set_format", "abc2svg.diag.set_fmt" ]

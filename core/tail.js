@@ -27,10 +27,6 @@ function psxygl() { return false }
 // Abc functions used by the modules
 Abc.prototype.add_style = function(s) { style += s };
 Abc.prototype.cfmt = function() { return cfmt };
-Abc.prototype.clone = clone;
-Abc.prototype.deco_cnv = deco_cnv;
-Abc.prototype.err_bad_val_s = err_bad_val_s;
-Abc.prototype.font_class = font_class;
 Abc.prototype.get_a_gch = function() { return a_gch };
 Abc.prototype.get_cur_sy = function() { return cur_sy };
 Abc.prototype.get_curvoice = function() { return curvoice };
@@ -55,20 +51,15 @@ Abc.prototype.get_top_v = function() { return par_sy.top_voice };
 Abc.prototype.get_tsfirst = function() { return tsfirst };
 Abc.prototype.get_voice_tb = function() { return voice_tb };
 Abc.prototype.info = function() { return info };
-Abc.prototype.set_font = set_font;
 Abc.prototype.set_tsfirst = function(s) { tsfirst = s };
-Abc.prototype.set_v_param = set_v_param;
 Abc.prototype.set_xhtml = function(wt) {
     var wto = write_text;
 	write_text = wt
 	return wto
 };
 Abc.prototype.sort_pitch = sort_pitch;
-Abc.prototype.strwh = strwh;
 Abc.prototype.stv_g = function() { return stv_g };
 Abc.prototype.svg_flush = svg_flush;
-Abc.prototype.syntax = syntax;
-Abc.prototype.unlksym = unlksym;
 
     var	hook_init		// set after setting the first module hooks
 
