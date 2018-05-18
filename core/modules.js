@@ -31,11 +31,12 @@ abc2svg.modules = {
 		voicecombine: { fn: 'combine-1.js' },
 		diagram: { fn: 'diag-1.js' },
 		grid: { fn: 'grid-1.js' },
+		grid2: { fn: 'grid2-1.js' },
 		MIDI: { fn: 'MIDI-1.js' },
 		percmap: { fn: 'perc-1.js' },
 	sth: { fn: 'sth-1.js' },
-	all_m:
-/ambitus|beginps|break|capo|clip|voicecombine|diagram|grid|MIDI|percmap|sth/g,
+	all_m: new RegExp("ambitus|beginps|break|capo|clip|voicecombine|diagram|\
+grid2|grid|MIDI|percmap|sth", 'g'),
 	nreq: 0,
 	hooks: [],
 	g_hooks: [],
