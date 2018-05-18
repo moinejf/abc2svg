@@ -283,7 +283,7 @@ function ly_width(s, wlw) {
 				sz = cwid('(') * swfac
 			} else {
 				j = p.indexOf(' ');
-				gene.curfont = gene.deffont = ly.font
+				set_font(ly.font)
 				if (j > 0)
 					sz = strwh(p.slice(0, j))[0]
 				else

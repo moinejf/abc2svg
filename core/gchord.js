@@ -458,7 +458,7 @@ function draw_gchord(s, gchy_min, gchy_max) {
 	for (ix = 0; ix < s.a_gch.length; ix++) {
 		gch = s.a_gch[ix];
 		use_font(gch.font);
-		gene.curfont = gene.deffont = gch.font;
+		set_font(gch.font);
 		h = gch.font.size;
 		w = gch.w;
 		x = s.x + gch.x;

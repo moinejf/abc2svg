@@ -3072,7 +3072,7 @@ function set_indent(first) {
 			continue
 		if (!font) {
 			font = get_font("voice");
-			gene.curfont = gene.deffont = font
+			set_font(font);
 		}
 		i = 0
 		while (1) {

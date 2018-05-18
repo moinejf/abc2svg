@@ -94,7 +94,9 @@ function strwh(str) {
 
 // set the default and current font
 function set_font(xxx) {
-	gene.curfont = gene.deffont = get_font(xxx)
+	if (typeof xxx == "string")
+		xxx = get_font(xxx);
+	gene.curfont = gene.deffont = xxx
 }
 
 // output a string handling the font changes
@@ -659,7 +661,7 @@ function write_headform(lwidth) {
 			sz = font.size * 1.1
 			if (info_sz[c])
 				sz += info_sz[c];
-			set_font(font_name);
+			set_font(font);
 			x = xa[align];
 			y = ya[align] + sz
 
@@ -688,7 +690,7 @@ function write_headform(lwidth) {
 					sz = font.size * 1.1
 					if (info_sz[c])
 						sz += info_sz[c];
-					set_font(font_name)
+					set_font(font)
 				}
 				while (info_val[c].length > 0) {
 					y += sz;
