@@ -2990,9 +2990,6 @@ function draw_all_slurs(p_voice) {
 
 	/* do unbalanced slurs still left over */
 	for ( ; s; s = s.next) {
-		if (s.type != NOTE && s.type != REST
-		 && s.type != SPACE)
-			continue
 		while (s.slur_end || s.sl2) {
 			if (s.slur_end) {
 				s.slur_end--;
