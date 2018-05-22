@@ -153,20 +153,16 @@ var glyphs = {
 	<circle cx="0" cy="-15" r="1.2"/>\n\
 </g>',
   grm: '<path id="grm" class="fill" d="m-5 -2.5\n\
-	c5 -8.5 5.5 4.5 10 -2\n\
-	-5 8.5 -5.5 -4.5 -10 2"/>',
+	c5 -8.5 5.5 4.5 10 -2 -5 8.5 -5.5 -4.5 -10 2"/>',
   stc: '<circle id="stc" class="fill" cx="0" cy="-3" r="1.2"/>',
   sld: '<path id="sld" class="fill" d="m-7.2 4.8\n\
-	c1.8 .7 4.5 -.2 7.2 -4.8\n\
-	-2.1 5 -5.4 6.8 -7.6 6"/>',
+	c1.8 .7 4.5 -.2 7.2 -4.8 -2.1 5 -5.4 6.8 -7.6 6"/>',
   emb: '<path id="emb" class="stroke" stroke-width="1.2" stroke-linecap="round"\n\
 	d="m-2.5 -3h5"/>',
   roll: '<path id="roll" class="fill" d="m-6 0\n\
-	c0.4 -7.3 11.3 -7.3 11.7 0\n\
-	-1.3 -6 -10.4 -6 -11.7 0"/>',
+	c0.4 -7.3 11.3 -7.3 11.7 0 -1.3 -6 -10.4 -6 -11.7 0"/>',
   upb: '<path id="upb" class="stroke" d="m-2.6 -9.4\n\
-	l2.6 8.8\n\
-	l2.6 -8.8"/>',
+	l2.6 8.8 2.6 -8.8"/>',
   dnb: '<g id="dnb">\n\
 	<path d="M-3.2 -2v-7.2m6.4 0v7.2" class="stroke"/>\n\
 	<path d="M-3.2 -6.8v-2.4l6.4 0v2.4" class="fill"/>\n\
@@ -188,19 +184,15 @@ font-style:italic; font-size:16px">tr</text>',
   opend: '<circle id="opend" class="stroke"\n\
 	cx="0" cy="-3" r="2.5"/>',
   snap: '<path id="snap" class="stroke" d="m-3 -6\n\
-	c0 -5 6 -5 6 0\n\
-	0 5 -6 5 -6 0\n\
+	c0 -5 6 -5 6 0 0 5 -6 5 -6 0\n\
 	M0 -5v6"/>',
   thumb: '<path id="thumb" class="stroke" d="m-2.5 -7\n\
-	c0 -6 5 -6 5 0\n\
-	0 6 -5 6 -5 0\n\
+	c0 -6 5 -6 5 0 0 6 -5 6 -5 0\n\
 	M-2.5 -9v4"/>',
   wedge: '<path id="wedge" class="fill" d="m0 -1l-1.5 -5h3l-1.5 5"/>',
   ltr: '<path id="ltr" class="fill"\n\
-	d="m0 -.4c2 -1.5 3.4 -1.9 3.9 .4\n\
-	0.2 .8 .7 .7 2.1 -.4\n\
-	v0.8c-2 1.5 -3.4 1.9 -3.9 -.4\n\
-	-.2 -.8 -.7 -.7 -2.1 .4z"/>',
+	d="m0 -.4c2 -1.5 3.4 -1.9 3.9 .4 0.2 .8 .7 .7 2.1 -.4\n\
+	v0.8c-2 1.5 -3.4 1.9 -3.9 -.4 -.2 -.8 -.7 -.7 -2.1 .4z"/>',
   custos: '<g id="custos">\n\
 	<path class="fill" d="m-4 0l2 2.5 2 -2.5 2 2.5 2 -2.5\n\
 		-2 -2.5 -2 2.5 -2 -2.5 -2 2.5"/>\n\
