@@ -2430,6 +2430,7 @@ if (st > nst) {
 				// handle %%voicecombine 0
 				if ((s.combine != undefined && s.combine < 0)
 				 || !s.ts_next || s.ts_next.type != REST
+				 || s.ts_next.st != s.st
 				 || s.time != s.ts_next.time
 				 || s.dur != s.ts_next.dur
 				 || s.invis)
