@@ -2499,7 +2499,7 @@ function parse_music_line() {
 					text = line.buffer.slice(line.index + 3, i).trim()
 
 					parse.istart = parse.bol + line.index;
-					parse.iend = parse.bol + i++;
+					parse.iend = parse.bol + ++i;
 					line.index = 0;
 					do_info(c_next, text);
 					line.index = i
