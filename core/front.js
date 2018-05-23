@@ -251,7 +251,7 @@ function tosvg(in_fname,		// file name
 		if (src.indexOf('%') >= 0)
 			src = src.replace(/(.*[^\\])%.*/, '$1')
 				 .replace(/\\%/g, '%');
-		src = src.trim()
+		src = src.replace(/\s+$/, '')
 		if (do_escape && src.indexOf('\\') >= 0)
 			return cnv_escape(src)
 		return src
@@ -497,7 +497,17 @@ function tosvg(in_fname,		// file name
 		}
 
 		// information fields
-		text = uncomment(file.slice(bol + 2, eol), true)
+		bol += 2
+		while (1) {
+			switch (file[bol]) {
+			case ' ':
+			case '\t':
+				bol++
+				continue
+			}
+			break
+		}
+		text = uncomment(file.slice(bol, eol), true)
 		if (line0 == '+') {
 			if (!last_info) {
 				syntax(1, "+: without previous info field")
