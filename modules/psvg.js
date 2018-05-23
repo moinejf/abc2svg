@@ -754,9 +754,13 @@ abc2svg.modules.psvg = {
 		this.psvg.ps_eval.call(this.psvg, text)
 	},
 	psdeco: function(of, f, x, y, de) {
+		if (!this.psvg)			// no %%beginps yet
+			return false
 		return this.psvg.psdeco.call(this.psvg, f, x, y, de)
 	},
 	psxygl: function(of, x, y, gl) {
+		if (!this.psvg)
+			return false
 		return this.psvg.psxygl.call(this.psvg, x, y, gl)
 	}
 }
