@@ -84,13 +84,13 @@ user.textrans = {
 	"Erroneous end of voice overlay": "Fin de superposition de voix erronée",
 	"Incorrect 1st value in %%repeat": "Première valeur incorrecte dans %%repeat",
 	"Incorrect 2nd value in %%repeat": "Deuxième valeur incorrecte dans %%repeat",
-	"Invalid 'r' in tuplet": "'r' invalide dans des tuplets",
+	"Invalid 'r' in tuplet": "'r' invalide dans le tuplet",
 	"Invalid decoration '$1'": "Décoration '$1' invalide",
 	"Invalid note duration $1": "Durée de note $1 invalide",
-	"Lack of ']'": "']' manque",
+	"Lack of ']'": "']' manquant",
 	"Lack of ending $1 in U:/%%user": "Pas de $1 terminant U:/%%user",
 	'Lack of starting ! or " in U: / %%user':
-				'U: / %%user ne commence pas par ! or "',
+				'U: / %%user ne commence pas par ! ou "',
 	"Line split problem - adjust maxshrink and/or breaklimit":
 		"Problème de découpe en lignes - ajuster maxshrink et/ou breaklimit",
 	"Line too much shrunk $1 $2 $3": "Ligne trop compressée $1 $2 $3",
@@ -151,5 +151,5 @@ user.textrans = {
 	"Voice overlay already started": "Superposition de voix déjà démarrée",
 	"w: without music": "w: sans musique",
 	"Wrong duration in voice overlay":
-				"Mauvaise durée de la voix superposée",
+				"Mauvaise durée de la voix superposée"
 }
