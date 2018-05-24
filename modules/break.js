@@ -21,7 +21,7 @@ abc2svg.break = {
 			b = a[n];
 			c = b.match(/(\d)([a-z]?)(:\d\/\d)?/)
 			if (!c) {
-				this.syntax(1, err_bad_val_s, "%%break")
+				this.syntax(1, errs.bad_val, "%%break")
 				continue
 			}
 			if (c[2])
@@ -106,7 +106,7 @@ abc2svg.break = {
 
 abc2svg.modules.hooks.push(
 // export
-	"err_bad_val_s",
+	"errs",
 	"syntax",
 // hooks
 	[ "do_pscom", "abc2svg.break.do_pscom" ],

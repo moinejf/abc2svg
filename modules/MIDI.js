@@ -66,7 +66,7 @@ abc2svg.MIDI = {
 		n = norm(a[2]);
 		v = tonote(a[3]);
 		if (!n || !v) {
-			this.syntax(1, abc.err_bad_val_s, "%%MIDI drummap")
+			this.syntax(1, abc.errs.bad_val, "%%MIDI drummap")
 			break
 		}
 		if (!maps.MIDIdrum)
@@ -142,7 +142,7 @@ abc2svg.MIDI = {
 
 abc2svg.modules.hooks.push(
 // export
-	"err_bad_val_s",
+	"errs",
 	"set_v_param",
 	"syntax",
 // hooks

@@ -84,6 +84,21 @@ var	BAR = 0,
 	CM = 37.8,		// 1 inch = 2.54 centimeter
 	YSTEP = 256		/* number of steps for y offsets */
 
+// error texts
+var errs = {
+	bad_char: "Bad character '$1'",
+	bad_val: "Bad value in $1",
+	bar_grace: "Cannot have a bar in grace notes",
+	ignored: "$1: inside tune - ignored",
+	misplaced: "Misplaced '$1' in %%staves",
+	must_note: "!$1! must be on a note",
+	must_note_rest: "!$1! must be on a note or a rest",
+	nonote_vo: "No note in voice overlay",
+	not_enough_n: 'Not enough notes/rests for %%repeat',
+	not_enough_m: 'Not enough measures for %%repeat',
+	not_ascii: "Not an ASCII character"
+}
+
 var	glovar = {
 		meter: {
 			type: METER,		// meter in tune header

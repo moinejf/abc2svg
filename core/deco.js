@@ -735,14 +735,14 @@ function deco_cnv(a_dcn, s, prev) {
 //			if (s.type != NOTE && s.type != REST) {
 			if (!s.notes) {
 				error(1, s,
-					"!$1! must be on a note or a rest", dd.name)
+					errs.must_note_rest, dd.name)
 				continue
 			}
 			break
 		case 8:			// gliss
 			if (s.type != NOTE) {
 				error(1, s,
-					"!$1! must be on a note", dd.name)
+					errs.must_note, dd.name)
 				continue
 			}
 			note = s.notes[s.nhd] // move to the upper note of the chord
@@ -753,7 +753,7 @@ function deco_cnv(a_dcn, s, prev) {
 		case 9:			// alternate head
 			if (!s.notes) {
 				error(1, s,
-					"!$1! must be on a note or rest", dd.name)
+					errs.must_note_rest, dd.name)
 				continue
 			}
 
@@ -829,7 +829,7 @@ function deco_cnv(a_dcn, s, prev) {
 			continue
 		case 36:		/* beambr1 / beambr2 */
 			if (s.type != NOTE) {
-				error(1, s, "!$1! must be on a note", dd.name)
+				error(1, s, errs.must_note, dd.name)
 				continue
 			}
 			if (dd.name[6] == '1')
@@ -842,7 +842,7 @@ function deco_cnv(a_dcn, s, prev) {
 			continue
 		case 38:		/* /, // and /// = tremolo */
 			if (s.type != NOTE) {
-				error(1, s, "!$1! must be on a note", dd.name)
+				error(1, s, errs.must_note, dd.name)
 				continue
 			}
 			s.trem1 = true;
@@ -854,7 +854,7 @@ function deco_cnv(a_dcn, s, prev) {
 			continue
 		case 39:		/* beam-accel/beam-rall */
 			if (s.type != NOTE) {
-				error(1, s, "!$1! must be on a note", dd.name)
+				error(1, s, errs.must_note, dd.name)
 				continue
 			}
 			s.feathered_beam = dd.name[5] == 'a' ? 1 : -1;

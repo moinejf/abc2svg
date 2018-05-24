@@ -25,9 +25,7 @@ var	a_gch,		// array of parsed guitar chords
 			//	[0] array of heads
 			//	[1] print
 			//	[2] color
-var	not_ascii = "Not an ASCII character",
-	bar_grace = "Cannot have a bar in grace notes",
-	qplet_tb = new Int8Array([ 0, 1, 3, 2, 3, 0, 2, 0, 3, 0 ]),
+var	qplet_tb = new Int8Array([ 0, 1, 3, 2, 3, 0, 2, 0, 3, 0 ]),
 	ntb = "CDEFGABcdefgab"
 
 
@@ -264,7 +262,7 @@ function set_user(parm) {
 
 	k = c.charCodeAt(0)
 	if (k >= 128) {
-		syntax(1, not_ascii)
+		syntax(1, errs.not_ascii)
 		return
 	}
 	switch (char_tb[k][0]) {
@@ -348,7 +346,7 @@ function set_vp(a) {
 			break
 		if (item[item.length - 1] == '='
 		 && a.length == 0) {
-			syntax(1, err_bad_val_s, item)
+			syntax(1, errs.bad_val, item)
 			break
 		}
 		switch (item) {
@@ -374,13 +372,13 @@ function set_vp(a) {
 					break
 				}
 			}
-			syntax(1, err_bad_val_s, item)
+			syntax(1, errs.bad_val, item)
 			break
 		case "octave=":
 		case "uscale=":			// %%microscale
 			val = parseInt(a.shift())
 			if (isNaN(val))
-				syntax(1, err_bad_val_s, item)
+				syntax(1, errs.bad_val, item)
 			else
 				curvoice[item.slice(0, -1)] = val
 			break
@@ -409,7 +407,7 @@ function set_vp(a) {
 				item = ["stm", a.shift()];
 			val = posval[item[1]]
 			if (val == undefined) {
-				syntax(1, err_bad_val_s, item[0])
+				syntax(1, errs.bad_val, item[0])
 				break
 			}
 			if (!pos)
@@ -419,7 +417,7 @@ function set_vp(a) {
 		case "scale=":			// %%voicescale
 			val = parseFloat(a.shift())
 			if (isNaN(val) || val < .6 || val > 1.5)
-				syntax(1, err_bad_val_s, "%%voicescale")
+				syntax(1, errs.bad_val, "%%voicescale")
 			else
 				curvoice.scale = val
 			break
@@ -1337,8 +1335,6 @@ function new_bar() {
 	}
 }
 
-var err_mispl_sta_s = "Misplaced '$1' in %%staves"
-
 // parse %%staves / %%score
 // return an array of [vid, flags] / null
 function parse_staves(p) {
@@ -1360,7 +1356,7 @@ function parse_staves(p) {
 			break
 		case '[':
 			if (parenth || brace + bracket >= 2) {
-				syntax(1, err_mispl_sta_s, '[');
+				syntax(1, errs.misplaced, '[');
 				err = true
 				break
 			}
@@ -1371,7 +1367,7 @@ function parse_staves(p) {
 			break
 		case '{':
 			if (parenth || brace || bracket >= 2) {
-				syntax(1, err_mispl_sta_s, '{');
+				syntax(1, errs.misplaced, '{');
 				err = true
 				break
 			}
@@ -1382,7 +1378,7 @@ function parse_staves(p) {
 			break
 		case '(':
 			if (parenth) {
-				syntax(1, err_mispl_sta_s, '(');
+				syntax(1, errs.misplaced, '(');
 				err = true
 				break
 			}
@@ -1419,7 +1415,7 @@ function parse_staves(p) {
 					continue
 				case ']':
 					if (!(flags_st & OPEN_BRACKET)) {
-						syntax(1, err_mispl_sta_s, ']');
+						syntax(1, errs.misplaced, ']');
 						err = true
 						break
 					}
@@ -1431,7 +1427,7 @@ function parse_staves(p) {
 					continue
 				case '}':
 					if (!(flags_st & OPEN_BRACE)) {
-						syntax(1, err_mispl_sta_s, '}');
+						syntax(1, errs.misplaced, '}');
 						err = true
 						break
 					}
@@ -1444,7 +1440,7 @@ function parse_staves(p) {
 					continue
 				case ')':
 					if (!(flags_st & OPEN_PARENTH)) {
-						syntax(1, err_mispl_sta_s, ')');
+						syntax(1, errs.misplaced, ')');
 						err = true
 						break
 					}
@@ -1920,7 +1916,7 @@ function new_note(grace, tp_fact) {
 						break
 					i = c.charCodeAt(0);
 					if (i >= 128) {
-						syntax(1, not_ascii)
+						syntax(1, errs.not_ascii)
 						return null
 					}
 					type = char_tb[i]
@@ -2295,7 +2291,7 @@ function parse_music_line() {
 
 			idx = c.charCodeAt(0);
 			if (idx >= 128) {
-				syntax(1, not_ascii);
+				syntax(1, errs.not_ascii);
 				line.index++
 				break
 			}
@@ -2344,7 +2340,7 @@ function parse_music_line() {
 				break
 			case '&':			// voice overlay
 				if (grace) {
-					syntax(1, "Bad character '$1'", c)
+					syntax(1, errs.bad_char, c)
 					break
 				}
 				c = line.next_char()
@@ -2395,7 +2391,7 @@ function parse_music_line() {
 				}
 				if (c == '&') {		// voice overlay start
 					if (grace) {
-						syntax(1, "Bad character '$1'", c)
+						syntax(1, errs.bad_char, c)
 						break
 					}
 					get_vover('(')
@@ -2421,7 +2417,7 @@ function parse_music_line() {
 					}
 				}
 				if (!s) {
-					syntax(1, "Bad character '$1'", c)
+					syntax(1, errs.bad_char, c)
 					break
 				}
 				if (s.slur_end)
@@ -2484,7 +2480,7 @@ function parse_music_line() {
 				if ('|[]: "'.indexOf(c_next) >= 0
 				 || (c_next >= '1' && c_next <= '9')) {
 					if (grace) {
-						syntax(1, bar_grace)
+						syntax(1, errs.bar_grace)
 						break
 					}
 					new_bar()
@@ -2618,7 +2614,7 @@ function parse_music_line() {
 				continue
 			case '|':
 				if (grace) {
-					syntax(1, bar_grace)
+					syntax(1, errs.bar_grace)
 					break
 				}
 				c = line.buffer[line.index - 1];
@@ -2629,7 +2625,7 @@ function parse_music_line() {
 			case '}':
 				s = curvoice.last_note
 				if (!grace || !s) {
-					syntax(1, "Bad character '$1'", c)
+					syntax(1, errs.bad_char, c)
 					break
 				}
 				if (a_dcn)
@@ -2662,7 +2658,7 @@ function parse_music_line() {
 				}
 				// fall thru
 			default:
-				syntax(1, "Bad character '$1'", c)
+				syntax(1, errs.bad_char, c)
 				break
 			}
 			line.index++

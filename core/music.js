@@ -1085,9 +1085,6 @@ function to_rest(s) {
 }
 
 /* -- set the repeat sequences / measures -- */
-var	err_no_s = 'Not enough notes/rests for %%repeat',
-	err_no_m = 'Not enough measures for %%repeat'
-
 function set_repeat(s) {	// first note
 	var	s2, s3,  i, j, dur,
 		n = s.repeat_n,
@@ -1113,7 +1110,7 @@ function set_repeat(s) {	// first note
 				break
 		}
 		if (!s3) {
-			error(1, s, err_no_s)
+			error(1, s, errs.not_enough_n)
 			return
 		}
 		dur = s.time - s3.time;
@@ -1132,7 +1129,7 @@ function set_repeat(s) {	// first note
 		}
 		if (!s2
 		 || !s2.next) {		/* should have some symbol */
-			error(1, s, err_no_s)
+			error(1, s, errs.not_enough_n)
 			return
 		}
 		for (s2 = s.prev; s2 != s3; s2 = s2.prev) {
@@ -1183,7 +1180,7 @@ function set_repeat(s) {	// first note
 		}
 	}
 	if (!s2) {
-		error(1, s, err_no_m)
+		error(1, s, errs.not_enough_m)
 		return
 	}
 
@@ -1200,7 +1197,7 @@ function set_repeat(s) {	// first note
 		}
 	}
 	if (!s2) {
-		error(1, s, err_no_m)
+		error(1, s, errs.not_enough_m)
 		return
 	}
 
@@ -1210,7 +1207,7 @@ function set_repeat(s) {	// first note
 	if (n == 2 && i > 1) {
 		s2 = s2.next
 		if (!s2) {
-			error(1, s, err_no_m)
+			error(1, s, errs.not_enough_m)
 			return
 		}
 		s2.repeat_n = n;

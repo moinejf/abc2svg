@@ -33,7 +33,7 @@ abc2svg.clip = {
 		a = parm.split(/[ -]/)
 
 		if (a.length != 3) {
-			this.syntax(1, this.err_bad_val_s, "%%clip")
+			this.syntax(1, this.errs.bad_val, "%%clip")
 			return
 		}
 		if (!a[1])
@@ -42,7 +42,7 @@ abc2svg.clip = {
 			b = get_symsel(a[1]);
 		c = get_symsel(a[2])
 		if (!b || !c) {
-			this.syntax(1, this.err_bad_val_s, "%%clip")
+			this.syntax(1, this.errs.bad_val, "%%clip")
 			return
 		}
 		this.clip = [b, c]
@@ -198,7 +198,7 @@ abc2svg.clip = {
 abc2svg.modules.hooks.push(
 // export
 	"clone",
-	"err_bad_val_s",
+	"errs",
 	"syntax",
 // hooks
 	[ "do_pscom", "abc2svg.clip.do_pscom" ],

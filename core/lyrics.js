@@ -90,7 +90,7 @@ function get_sym(p, cont) {
 					break
 				}
 			}
-			syntax(1, "Bad character '$1'", c)
+			syntax(1, errs.bad_char, c)
 			break
 		}
 

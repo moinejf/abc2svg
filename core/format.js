@@ -392,7 +392,7 @@ function set_format(cmd, param, lock) {
 	case "microscale":
 		f = parseInt(param)
 		if (isNaN(f) || f < 4 || f > 256 || f % 1) {
-			syntax(1, err_bad_val_s, "%%" + cmd)
+			syntax(1, errs.bad_val, "%%" + cmd)
 			break
 		}
 		set_v_param("uscale", f)
@@ -413,7 +413,7 @@ function set_format(cmd, param, lock) {
 	case "stretchlast":
 		f = parseFloat(param)
 		if (isNaN(f)) {
-			syntax(1, err_bad_val_s, '%%' + cmd)
+			syntax(1, errs.bad_val, '%%' + cmd)
 			break
 		}
 		switch (cmd) {
@@ -475,7 +475,7 @@ function set_format(cmd, param, lock) {
 	case "wordsspace":
 		f = get_unit(param)	// normally, unit in points - 72 DPI accepted
 		if (isNaN(f))
-			syntax(1, err_bad_val_s, '%%' + cmd)
+			syntax(1, errs.bad_val, '%%' + cmd)
 		else
 			cfmt[cmd] = f
 		break
@@ -492,7 +492,7 @@ function set_format(cmd, param, lock) {
 //	case "topmargin":
 		f = get_unit(param)	// normally unit in cm or in - 96 DPI
 		if (isNaN(f)) {
-			syntax(1, err_bad_val_s, '%%' + cmd)
+			syntax(1, errs.bad_val, '%%' + cmd)
 			break
 		}
 		cfmt[cmd] = f;
@@ -540,7 +540,7 @@ function set_format(cmd, param, lock) {
 	case "notespacingfactor":
 		f = parseFloat(param)
 		if (isNaN(f) || f < 1 || f > 2) {
-			syntax(1, err_bad_val_s, "%%" + cmd)
+			syntax(1, errs.bad_val, "%%" + cmd)
 			break
 		}
 		i = 5;				// index of crotchet
@@ -569,7 +569,7 @@ function set_format(cmd, param, lock) {
 	case "staffwidth":
 		v = get_unit(param)
 		if (isNaN(v)) {
-			syntax(1, err_bad_val_s, '%%' + cmd)
+			syntax(1, errs.bad_val, '%%' + cmd)
 			break
 		}
 		if (v < 100) {

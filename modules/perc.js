@@ -219,7 +219,7 @@ var prn = {
 
 	n = norm(a[1])
 	if (!n) {
-		this.syntax(1, abc.err_bad_val_s, "%%percmap")
+		this.syntax(1, abc.errs.bad_val, "%%percmap")
 		return
 	}
 	if (this.cfmt().sound != "play") {		// !play
@@ -229,7 +229,7 @@ var prn = {
 			maps.MIDIdrum = {}
 		v = tonote(n)
 		if (!v) {
-			this.syntax(1, abc.err_bad_val_s, "%%percmap")
+			this.syntax(1, abc.errs.bad_val, "%%percmap")
 			return
 		}
 		delete v.acc
@@ -237,7 +237,7 @@ var prn = {
 	} else {					// play
 		v = tonote(a[2])
 		if (!v) {
-			this.syntax(1, abc.err_bad_val_s, "%%percmap")
+			this.syntax(1, abc.errs.bad_val, "%%percmap")
 			return
 		}
 		if (!maps.MIDIdrum)
@@ -281,7 +281,7 @@ var prn = {
 
 abc2svg.modules.hooks.push(
 // export
-	"err_bad_val_s",
+	"errs",
 	"syntax",
 // hooks
 	[ "do_pscom", "abc2svg.perc.do_pscom" ],

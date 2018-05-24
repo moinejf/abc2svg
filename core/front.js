@@ -208,9 +208,6 @@ function do_include(fn) {
 	include--
 }
 
-var	err_ign_s = "$1: inside tune - ignored",
-	err_bad_val_s = "Bad value in $1"
-
 // parse ABC code
 function tosvg(in_fname,		// file name
 		file,			// file content
@@ -520,7 +517,7 @@ function tosvg(in_fname,		// file name
 		switch (line0) {
 		case 'X':			// start of tune
 			if (parse.state != 0) {
-				syntax(1, err_ign_s, line0)
+				syntax(1, errs.ignored, line0)
 				continue
 			}
 			if (parse.select
@@ -585,7 +582,7 @@ function tosvg(in_fname,		// file name
 
 		case 'm':
 			if (parse.state >= 2) {
-				syntax(1, err_ign_s, line0)
+				syntax(1, errs.ignored, line0)
 				continue
 			}
 			if ((!cfmt.sound || cfmt.sound != "play")
@@ -593,7 +590,7 @@ function tosvg(in_fname,		// file name
 				break
 			a = text.match(/(.*?)[= ]+(.*)/)
 			if (!a || !a[2]) {
-				syntax(1, err_bad_val_s, "m:")
+				syntax(1, errs.bad_val, "m:")
 				continue
 			}
 			mac[a[1]] = a[2];
@@ -627,7 +624,7 @@ function tosvg(in_fname,		// file name
 		default:
 			if ("ABCDFGHOSZ".indexOf(line0) >= 0) {
 				if (parse.state >= 2) {
-					syntax(1, err_ign_s, line0)
+					syntax(1, errs.ignored, line0)
 					continue
 				}
 //				if (cfmt.writefields.indexOf(c) < 0)

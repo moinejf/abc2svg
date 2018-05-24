@@ -884,7 +884,7 @@ function do_pscom(text) {
 		}
 		n = parseInt(param)
 		if (isNaN(n) || n < -2 || n > 2) {
-			syntax(1, err_bad_val_s, "%%ottava")
+			syntax(1, errs.bad_val, "%%ottava")
 			return
 		}
 		switch (curvoice.ottava) {
@@ -1578,8 +1578,6 @@ function get_staves(cmd, parm) {
 	curvoice = parse.state >= 2 ? voice_tb[par_sy.top_voice] : null
 }
 
-var err_no_strt_ov = "No note in voice overlay"
-
 /* -- get a voice overlay -- */
 function get_vover(type) {
 	var	p_voice2, p_voice3, range, s, time, v, v2, v3,
@@ -1618,7 +1616,7 @@ function get_vover(type) {
 	if (type == '|'
 	 || type == ')')  {
 		if (!curvoice.last_note) {
-			syntax(1, err_no_strt_ov)
+			syntax(1, errs.nonote_vo)
 			return
 		}
 		curvoice.last_note.beam_end = true
@@ -1652,7 +1650,7 @@ function get_vover(type) {
 	/* (here is treated a new overlay - '&') */
 	/* create the extra voice if not done yet */
 	if (!curvoice.last_note) {
-		syntax(1, err_no_strt_ov)
+		syntax(1, errs.nonote_vo)
 		return
 	}
 	curvoice.last_note.beam_end = true;
