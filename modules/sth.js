@@ -100,7 +100,7 @@ abc2svg.sth = {
     set_format: function(of, cmd, param, lock) {
 	if (cmd == "sth") {
 	    var	curvoice = this.get_curvoice()
-		if (parse.state == 2)
+		if (this.parse.state == 2)
 			this.goto_tune()
 		if (curvoice)
 			curvoice.sth = param.split(/[ \t;-]+/)
@@ -119,6 +119,7 @@ abc2svg.sth = {
 abc2svg.modules.hooks.push(
 // export
 	"goto_tune",
+	"parse",
 // hooks
 	[ "calculate_beam", "abc2svg.sth.calculate_beam" ],
 	[ "new_note", "abc2svg.sth.new_note" ],
