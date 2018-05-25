@@ -73,8 +73,7 @@ Abc.prototype.svg_flush = svg_flush;
 		for (var k = 0; k < hs.length; k++) {
 			h = hs[k]
 			if (typeof h == "string") {
-				if (!Abc.prototype[h])
-					eval("Abc.prototype." + h + "=" + h)
+				eval("Abc.prototype." + h + "=" + h)
 			} else {
 				eval("of=" + h[0] + ";" +
 					h[0] + "=" + h[1] + ".bind(self,of)")
