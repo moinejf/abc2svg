@@ -45,7 +45,7 @@ abc2svg.clip = {
 			this.syntax(1, this.errs.bad_val, "%%clip")
 			return
 		}
-		this.clip = [b, c]
+		this.cfmt().clip = [b, c]
     }, // get_clip()
 
     // cut the tune
@@ -55,7 +55,8 @@ abc2svg.clip = {
 	KEY = 5,
 	METER = 6,
 	STAVES = 12
-    var	voice_tb = this.get_voice_tb()
+    var	voice_tb = this.get_voice_tb(),
+	cfmt = this.cfmt()
 
 	// go to a global (measure + time)
 	function go_global_time(s, sel) {
@@ -113,9 +114,9 @@ abc2svg.clip = {
 
 		// remove the beginning of the tune
 		s = this.get_tsfirst()
-		if (this.clip[0].m > 0
-		 || this.clip[0].t > 0) {
-			s = go_global_time(s, this.clip[0])
+		if (cfmt.clip[0].m > 0
+		 || cfmt.clip[0].t > 0) {
+			s = go_global_time(s, cfmt.clip[0])
 			if (!s) {
 				this.set_tsfirst(null)
 				return
@@ -155,7 +156,7 @@ abc2svg.clip = {
 		}
 
 		/* remove the end of the tune */
-		s = go_global_time(s, this.clip[1])
+		s = go_global_time(s, cfmt.clip[1])
 		if (!s)
 			return
 
@@ -190,7 +191,7 @@ abc2svg.clip = {
 
     set_bar_num: function(of) {
 	of()
-	if (this.clip)
+	if (this.cfmt().clip)
 		abc2svg.clip.do_clip.call(this)
     }
 } // clip

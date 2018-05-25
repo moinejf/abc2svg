@@ -13,10 +13,11 @@ abc2svg.break = {
 	get_break: function(parm) {
 	    var	BASE_LEN = 1536		// constant from the abc2svg core
 	    var	b, c, d, sq,
-		a = parm.split(/[ ,]/);
+		a = parm.split(/[ ,]/),
+		cfmt = this.cfmt()
 
-		if (!this.break)
-			this.break = []
+		if (!cfmt.break)
+			cfmt.break = []
 		for (n = 1; n < a.length; n++) {
 			b = a[n];
 			c = b.match(/(\d)([a-z]?)(:\d\/\d)?/)
@@ -27,7 +28,7 @@ abc2svg.break = {
 			if (c[2])
 				sq = c[2].charCodeAt(0) - 0x61
 			if (!c[3]) {
-				this.break.push({	// on measure bar
+				cfmt.break.push({	// on measure bar
 						m: c[1],
 						t: 0,
 						sq: sq})
@@ -38,7 +39,7 @@ abc2svg.break = {
 				this.syntax(1, "Bad denominator in %%break")
 				continue
 			}
-			this.break.push({
+			cfmt.break.push({
 					m: c[1],
 					t: d[1] * BASE_LEN / d[2],
 					sq: sq})
@@ -50,10 +51,11 @@ abc2svg.break = {
 	    var	i, m, t, brk, seq,
 		voice_tb = this.get_voice_tb()
 		v = this.get_cur_sy().top_voice,
-		s1 = voice_tb[v].sym
+		s1 = voice_tb[v].sym,
+		cfmt = this.cfmt()
 
-		for (i = 0; i < this.break.length; i++) {
-			brk = this.break[i];
+		for (i = 0; i < cfmt.break.length; i++) {
+			brk = cfmt.break[i];
 			m = brk.m
 			for (s = s1; s; s = s.next) {
 				if (s.bar_type && s.bar_num == m)
@@ -99,7 +101,7 @@ abc2svg.break = {
 
     set_bar_num: function(of) {
 	of()
-	if (this.break)
+	if (this.cfmt().break)
 		abc2svg.break.do_break.call(this)
     }
 } // break
