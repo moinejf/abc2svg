@@ -953,9 +953,9 @@ function draw_all_deco() {
 				f = f.slice(i + 1)
 		}
 
-		// no scale if staff decoration
+		// no voice scale if staff decoration
 		if (f_staff[dd.func])
-			set_sscale(-1)
+			set_sscale(s.st)
 		else
 			set_scale(s);
 
