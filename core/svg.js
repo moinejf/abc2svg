@@ -743,11 +743,11 @@ function out_tubrn(x, y, dx, dy, up, str) {
     var	sw = str.length * 10,
 	h = up ? -3 : 3;
 
-	dx /= stv_g.scale;
 	out_XYAB('<text style="font-family:serif; font-style:italic; font-size:12px"\n\
 	x="X" y="Y" text-anchor="middle">A</text>\n',
 		x + dx / 2, y + dy / 2, str);
 
+	dx /= stv_g.scale
 	if (!up)
 		y += 6;
 	output.push('<path class="stroke" d="m');
