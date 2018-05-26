@@ -231,7 +231,7 @@ function tosvg(in_fname,		// file name
 			return false
 		}
 		i = file.indexOf('\n', i)
-		if (parse.select.test(file.slice(bol, i)))
+		if (parse.select.test(file.slice(parse.bol, i)))
 			return true
 		re = /\n\w*\n/;
 		re.lastIndex = i;
