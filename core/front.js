@@ -280,9 +280,7 @@ function tosvg(in_fname,		// file name
 
 	// initialize
 	parse.file = file;		// used for errors
-	parse.ctx = {
-		fname: in_fname
-	}
+	parse.fname = in_fname
 
 	// scan the file
 	if (bol == undefined)

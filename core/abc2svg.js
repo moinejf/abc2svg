@@ -187,8 +187,8 @@ function error(sev, s, msg, a1, a2, a3, a4) {
 			default  : return a4
 			}
 		})
-	if (s && s.ctx)
-		errbld(sev, msg, s.ctx.fname, s.istart)
+	if (s && s.fname)
+		errbld(sev, msg, s.fname, s.istart)
 	else
 		errbld(sev, msg)
 }
@@ -217,7 +217,7 @@ function scanBuf() {
 
 function syntax(sev, msg, a1, a2, a3, a4) {
     var	s = {
-		ctx: parse.ctx,
+		fname: parse.fname,
 		istart: parse.istart + parse.line.index
 	}
 

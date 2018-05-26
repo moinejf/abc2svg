@@ -1005,7 +1005,7 @@ function add_end_bar(s) {
 	return {
 		type: BAR,
 		bar_type: "|",
-		ctx: s.ctx,
+		fname: s.fname,
 		istart: s.istart,
 		iend: s.iend,
 		v: s.v,
@@ -2652,7 +2652,7 @@ function new_sym(type, p_voice,
 			last_s) {	/* symbol at same time */
 	var s = {
 		type: type,
-		ctx: last_s.ctx,
+		fname: last_s.fname,
 //		istart: last_s.istart,
 //		iend: last_s.iend,
 		v: p_voice.v,

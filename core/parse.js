@@ -31,7 +31,7 @@ var	qplet_tb = new Int8Array([ 0, 1, 3, 2, 3, 0, 2, 0, 3, 0 ]),
 
 // set the source references of a symbol
 function set_ref(s) {
-	s.ctx = parse.ctx;
+	s.fname = parse.fname;
 	s.istart = parse.istart;
 	s.iend = parse.iend
 }
@@ -1110,7 +1110,7 @@ function new_bar() {
 		line = parse.line,
 		s = {
 			type: BAR,
-			ctx: parse.ctx,
+			fname: parse.fname,
 			istart: parse.bol + line.index,
 			dur: 0,
 			multi: 0		// needed for decorations
@@ -1315,7 +1315,7 @@ function new_bar() {
 	 && !(par_sy.staves[curvoice.st - 1].flags & STOP_BAR)) {
 		s2 = {
 			type: BAR,
-			ctx: s.ctx,
+			fname: s.fname,
 			istart: s.istart,
 			iend: s.iend,
 			bar_type: "[",
@@ -1830,7 +1830,7 @@ function new_note(grace, tp_fact) {
 	parse.stemless = false;
 	s = {
 		type: NOTE,
-		ctx: parse.ctx,
+		fname: parse.fname,
 		stem: 0,
 		multi: 0,
 		nhd: 0,
@@ -2591,7 +2591,7 @@ function parse_music_line() {
 				a_dcn = undefined;
 				grace = {
 					type: GRACE,
-					ctx: parse.ctx,
+					fname: parse.fname,
 					istart: parse.bol + line.index,
 					dur: 0,
 					multi: 0

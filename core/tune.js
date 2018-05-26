@@ -44,7 +44,7 @@ function voice_filter() {
 
 /* -- link a ABC symbol into the current voice -- */
 function sym_link(s) {
-	if (!s.ctx)
+	if (!s.name)
 		set_ref(s)
 	if (!curvoice.ignore) {
 		parse.last_sym = s;
@@ -84,7 +84,7 @@ function sym_add(p_voice, type) {
 	if (!s2)
 		s2 = s.next
 	if (s2) {
-		s.ctx = s2.ctx;
+		s.fname = s2.fname;
 		s.istart = s2.istart;
 		s.iend = s2.iend
 	}
@@ -1959,10 +1959,10 @@ function do_cloning(vs) {
 
 	// insert the music sequence in each voice
 	include++;
-	tosvg(parse.ctx.fname, file, start, eol)	// first voice
+	tosvg(parse.fname, file, start, eol)	// first voice
 	for (i = 0; i < vs.length; i++) {
 		get_voice(vs[i]);
-		tosvg(parse.ctx.fname, file, start, eol)
+		tosvg(parse.fname, file, start, eol)
 	}
 	include--
 }
