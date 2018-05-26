@@ -486,10 +486,10 @@ function draw_beams(bm) {
 		x2 /= stv_g.scale;
 		dy2 = bm.a * x2 * stv_g.scale;
 		xypath(x1, y1, true);
-		output.push('l' + x2.toFixed(2) + ' ' + (-dy2).toFixed(2) +
+		output += 'l' + x2.toFixed(2) + ' ' + (-dy2).toFixed(2) +
 			'v' + h.toFixed(2) +
 			'l' + (-x2).toFixed(2) + ' ' + dy2.toFixed(2) +
-			'z"/>\n')
+			'z"/>\n'
 	} // draw_beam()
 
 	anno_start(s1, 'beam')
@@ -682,7 +682,7 @@ function draw_lstaff(x) {
 	yb = staff_tb[j].y + staff_tb[j].botbar * staff_tb[j].staffscale;
 	h = staff_tb[i].y + staff_tb[i].topbar * staff_tb[i].staffscale - yb;
 	xypath(x, yb);
-	output.push("v" + (-h).toFixed(2) + '"/>\n')
+	output += "v" + (-h).toFixed(2) + '"/>\n'
 	for (i = 0; i <= nst; i++) {
 		if (cur_sy.staves[i].flags & OPEN_BRACE)
 			draw_sysbra(x, i, CLOSE_BRACE)
@@ -1267,9 +1267,9 @@ function draw_gracenotes(s) {
 
 	anno_start(s, 'slur');
 	xypath(x0, y0 + staff_tb[s.st].y);
-	output.push('c' + x1.toFixed(2) + ' ' + (-y1).toFixed(2) +
+	output += 'c' + x1.toFixed(2) + ' ' + (-y1).toFixed(2) +
 		' ' + x2.toFixed(2) + ' ' + (-y2).toFixed(2) +
-		' ' + (x3 - x0).toFixed(2) + ' ' + (-y3 + y0).toFixed(2) + '"/>\n');
+		' ' + (x3 - x0).toFixed(2) + ' ' + (-y3 + y0).toFixed(2) + '"/>\n';
 	anno_stop(s, 'slur')
 }
 
@@ -1645,28 +1645,28 @@ function slur_out(x1, y1, x2, y2, dir, height, dotted) {
 	
 	var scale_y = stv_g.v ? stv_g.scale : 1
 	if (!dotted)
-		output.push('<path class="fill" d="M')
+		output += '<path class="fill" d="M'
 	else
-		output.push('<path class="stroke" stroke-dasharray="5,5" d="M');
+		output += '<path class="stroke" stroke-dasharray="5,5" d="M';
 	out_sxsy(x1, ' ', y1);
-	output.push('c' +
+	output += 'c' +
 		((xx1 - x1) / stv_g.scale).toFixed(2) + ' ' +
 		((y1 - yy1) / scale_y).toFixed(2) + ' ' +
 		((xx2 - x1) / stv_g.scale).toFixed(2) + ' ' +
 		((y1 - yy2) / scale_y).toFixed(2) + ' ' +
 		((x2 - x1) / stv_g.scale).toFixed(2) + ' ' +
-		((y1 - y2) / scale_y).toFixed(2))
+		((y1 - y2) / scale_y).toFixed(2)
 
 	if (!dotted)
-		output.push('\n\tv' +
+		output += '\n\tv' +
 			(-dz).toFixed(2) + 'c' +
 			((xx2 - dx - x2) / stv_g.scale).toFixed(2) + ' ' +
 			((y2 + dz - yy2 - dy) / scale_y).toFixed(2) + ' ' +
 			((xx1 + dx - x2) / stv_g.scale).toFixed(2) + ' ' +
 			((y2 + dz - yy1 - dy) / scale_y).toFixed(2) + ' ' +
 			((x1 - x2) / stv_g.scale).toFixed(2) + ' ' +
-			((y2 + dz - y1) / scale_y).toFixed(2));
-	output.push('"/>\n')
+			((y2 + dz - y1) / scale_y).toFixed(2);
+	output += '"/>\n'
 }
 
 /* -- check if slur sequence in a multi-voice staff -- */
@@ -3049,7 +3049,10 @@ function draw_all_slurs(p_voice) {
  * The buffer output is delayed until the definition of the staff system
  */
 function draw_sym_near() {
-	var p_voice, p_st, s, v, st, y, g, w, i, st, dx, top, bot
+	var p_voice, p_st, s, v, st, y, g, w, i, st, dx, top, bot, output_sav;
+
+	output_sav = output;
+	output = ""
 
 	/* calculate the beams but don't draw them (the staves are not yet defined) */
 	for (v = 0; v < voice_tb.length; v++) {
@@ -3204,10 +3207,10 @@ function draw_sym_near() {
 	set_color(undefined);
 	draw_deco_note()
 	draw_deco_staff();
-	set_sscale(-1);		/* restore the scale parameters */
 
 	/* if any lyric, draw them now as unscaled */
 	set_dscale(-1)
+//	set_sscale(-1)
 	for (v = 0; v < voice_tb.length; v++) {
 		p_voice = voice_tb[v]
 		if (p_voice.have_ly) {
@@ -3217,7 +3220,10 @@ function draw_sym_near() {
 	}
 
 	if (cfmt.measurenb >= 0)
-		draw_measnb()
+		draw_measnb();
+
+	set_dscale(-1);
+	output = output_sav
 }
 
 /* -- draw the name/subname of the voices -- */

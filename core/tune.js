@@ -982,9 +982,9 @@ function do_pscom(text) {
 		}
 		blk_out();
 		vskip(h1);
-		output.push('<path class="stroke"\n\td="M');
+		output += '<path class="stroke"\n\td="M';
 		out_sxsy((lwidth - len) / 2 / cfmt.scale, ' ', 0);
-		output.push('h' + (len / cfmt.scale).toFixed(2) + '"/>\n');
+		output += 'h' + (len / cfmt.scale).toFixed(2) + '"/>\n';
 		vskip(h2);
 		blk_flush()
 		return

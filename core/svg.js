@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
 
-var	output = [],		// output buffer
+var	output = "",		// output buffer
 	style = '\n.fill {fill: currentColor}\
 \n.stroke {stroke: currentColor; fill: none}\
 \n.music text, .music tspan {fill:currentColor}',
@@ -276,7 +276,7 @@ function set_g() {
 	// close the previous sequence
 	if (stv_g.started) {
 		stv_g.started = false;
-		output.push("</g>\n")
+		output += "</g>\n"
 	}
 
 	// check if new sequence needed
@@ -284,19 +284,19 @@ function set_g() {
 		return
 
 	// open the new sequence
-	output.push('<g ')
+	output += '<g '
 	if (stv_g.scale != 1) {
 		if (stv_g.st >= 0)
-			output.push(staff_tb[stv_g.st].scale_str)
+			output += staff_tb[stv_g.st].scale_str
 		else
-			output.push(voice_tb[stv_g.v].scale_str)
+			output += voice_tb[stv_g.v].scale_str
 	}
 	if (stv_g.color) {
 		if (stv_g.scale != 1)
-			output.push(' ');
-		output.push('style="color:' + stv_g.color + '"')
+			output += ' ';
+		output += 'style="color:' + stv_g.color + '"'
 	}
-	output.push(">\n");
+	output += ">\n";
 	stv_g.started = true
 }
 
@@ -349,14 +349,20 @@ function set_scale(s) {
 
 // -- set the staff output buffer and scale when delayed output
 function set_dscale(st, no_scale) {
-	if (st < 0) {
-		stv_g.scale = 1;
-		output = staff_tb[0].output
-	} else {
-		stv_g.scale = no_scale ? 1 : staff_tb[st].staffscale;
-		output = stv_g.scale == 1 ? staff_tb[st].output :
-					staff_tb[st].sc_out
+	if (output) {
+		if (stv_g.st < 0) {
+			staff_tb[0].output += output
+		} else if (stv_g.scale == 1) {
+			staff_tb[stv_g.st].output += output
+		} else {
+			staff_tb[stv_g.st].sc_out += output
+		}
+		output = ""
 	}
+	if (st < 0)
+		stv_g.scale = 1
+	else
+		stv_g.scale = no_scale ? 1 : staff_tb[st].staffscale;
 	stv_g.st = st;
 	stv_g.dy = 0
 }
@@ -365,26 +371,25 @@ function set_dscale(st, no_scale) {
 function delayed_update() {
 	var st, new_out, text
 
-//	stv_g.delayed = false
 	for (st = 0; st <= nstaff; st++) {
-		if (staff_tb[st].sc_out.length != 0) {
-			output.push('<g transform="translate(0,' +
+		if (staff_tb[st].sc_out) {
+			output += '<g transform="translate(0,' +
 					(posy - staff_tb[st].y).toFixed(2) +
 					') scale(' +
 					 staff_tb[st].staffscale.toFixed(2) +
-					')">\n');
-			output.push(staff_tb[st].sc_out.join(''));
-			output.push('</g>\n');
-			staff_tb[st].sc_out = []
+					')">\n' +
+				staff_tb[st].sc_out +
+				'</g>\n';
+			staff_tb[st].sc_out = ""
 		}
-		if (staff_tb[st].output.length == 0)
+		if (!staff_tb[st].output)
 			continue
-		output.push('<g transform="translate(0,' +
+		output += '<g transform="translate(0,' +
 				(-staff_tb[st].y).toFixed(2) +
-				')">\n')
-		output.push(staff_tb[st].output.join(''));
-		output.push('</g>\n');
-		staff_tb[st].output = []
+				')">\n' +
+			staff_tb[st].output +
+			'</g>\n';
+		staff_tb[st].output = ""
 	}
 }
 
@@ -430,7 +435,7 @@ var	anno_start = user.anno_start ? a_start : empty_function,
 function out_XYAB(str, x, y, a, b) {
 	x = sx(x);
 	y = sy(y);
-	output.push(str.replace(/X|Y|A|B|F|G/g, function(c) {
+	output += str.replace(/X|Y|A|B|F|G/g, function(c) {
 		switch (c) {
 		case 'X': return x.toFixed(2)
 		case 'Y': return y.toFixed(2)
@@ -440,31 +445,31 @@ function out_XYAB(str, x, y, a, b) {
 //		case 'G':
 		default: return b.toFixed(2)
 		}
-		}))
+		})
 }
 
 // open / close containers
 function g_open(x, y, rot, sx, sy) {
 	out_XYAB('<g transform="translate(X,Y', x, y);
 	if (rot)
-		output.push(') rotate(' + rot.toFixed(2))
+		output += ') rotate(' + rot.toFixed(2)
 	if (sx) {
 		if (sy)
-			output.push(') scale(' + sx.toFixed(2) +
-						', ' + sy.toFixed(2))
+			output += ') scale(' + sx.toFixed(2) +
+						', ' + sy.toFixed(2)
 		else
-			output.push(') scale(' + sx.toFixed(2));
+			output += ') scale(' + sx.toFixed(2)
 	}
-	output.push(')">\n');
+	output += ')">\n';
 	stv_g.g++
 }
 function g_close() {
 	stv_g.g--;
-	output.push('</g>\n')
+	output += '</g>\n'
 }
 
 // external SVG string
-Abc.prototype.out_svg = function(str) { output.push(str) }
+Abc.prototype.out_svg = function(str) { output += str }
 
 // exported functions for the annotation
 function sx(x) {
@@ -504,7 +509,7 @@ Abc.prototype.ah = function(h) {
 function out_sxsy(x, sep, y) {
 	x = sx(x);
 	y = sy(y);
-	output.push(x.toFixed(2) + sep + y.toFixed(2))
+	output += x.toFixed(2) + sep + y.toFixed(2)
 }
 Abc.prototype.out_sxsy = out_sxsy
 
@@ -552,11 +557,11 @@ function out_acciac(x, y, dx, dy, up) {
 }
 // simple /dotted measure bar
 function out_bar(x, y, h, dotted) {
-	output.push('<path class="stroke" stroke-width="1" ' +
+	output += '<path class="stroke" stroke-width="1" ' +
 		(dotted ? 'stroke-dasharray="5,5" ' : '') +
 		'd="m' + (x + posx).toFixed(2) +
 		' ' + (posy - y).toFixed(2) + 'v' + (-h).toFixed(2) +
-		'"/>\n')
+		'"/>\n'
 }
 // tuplet value - the staves are not defined
 function out_bnum(x, y, str) {
@@ -570,10 +575,10 @@ function out_brace(x, y, h) {
 	x += posx - 6;
 	y = posy - y;
 	h /= 24;
-	output.push('<text transform="translate(' +
+	output += '<text transform="translate(' +
 				x.toFixed(2) + ',' + y.toFixed(2) +
 			') scale(2.5,' + h.toFixed(2) +
-			')">' + tgls.brace.c + '</text>\n')
+			')">' + tgls.brace.c + '</text>\n'
 }
 
 // staff system bracket
@@ -581,11 +586,11 @@ function out_bracket(x, y, h) {
 	x += posx - 5;
 	y = posy - y - 3;
 	h += 2;
-	output.push('<path class="fill"\n\
+	output += '<path class="fill"\n\
 	d="m' + x.toFixed(2) + ' ' + y.toFixed(2) + '\n\
 	c10.5 1 12 -4.5 12 -3.5c0 1 -3.5 5.5 -8.5 5.5\n\
 	v' + h.toFixed(2) + '\n\
-	c5 0 8.5 4.5 8.5 5.5c0 1 -1.5 -4.5 -12 -3.5"/>\n')
+	c5 0 8.5 4.5 8.5 5.5c0 1 -1.5 -4.5 -12 -3.5"/>\n'
 }
 // hyphen
 function out_hyph(x, y, w) {
@@ -621,8 +626,8 @@ function out_stem(x, y, h, grace,
 	if (!nflags)
 		return
 
-	output.push('<path class="fill"\n\
-	d="');
+	output += '<path class="fill"\n\
+	d="';
 	y += h
 	if (h > 0) {				// up
 		if (!straight) {
@@ -705,26 +710,26 @@ function out_stem(x, y, h, grace,
 			}
 		}
 	}
-	output.push('"/>\n')
+	output += '"/>\n'
 }
 // thick measure bar
 function out_thbar(x, y, h) {
 	x += posx + 1.5;
 	y = posy - y;
-	output.push('<path class="stroke" stroke-width="3" d="m' +
+	output += '<path class="stroke" stroke-width="3" d="m' +
 		x.toFixed(2) + ' ' + y.toFixed(2) +
-		'v' + (-h).toFixed(2) + '"/>\n')
+		'v' + (-h).toFixed(2) + '"/>\n'
 }
 // tremolo
 function out_trem(x, y, ntrem) {
 	out_XYAB('<path class="fill" d="mX Y\n\t', x - 4.5, y)
 	while (1) {
-		output.push('l9 -3v3l-9 3z');
+		output += 'l9 -3v3l-9 3z'
 		if (--ntrem <= 0)
 			break
-		output.push('m0 5.4')
+		output += 'm0 5.4'
 	}
-	output.push('"/>\n')
+	output += '"/>\n'
 }
 // tuplet bracket - the staves are not defined
 function out_tubr(x, y, dx, dy, up) {
@@ -732,11 +737,11 @@ function out_tubr(x, y, dx, dy, up) {
 
 	y += h;
 	dx /= stv_g.scale;
-	output.push('<path class="stroke" d="m');
+	output += '<path class="stroke" d="m';
 	out_sxsy(x, ' ', y);
-	output.push('v' + h.toFixed(2) +
+	output += 'v' + h.toFixed(2) +
 		'l' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) +
-		'v' + (-h).toFixed(2) + '"/>\n')
+		'v' + (-h).toFixed(2) + '"/>\n'
 }
 // tuplet bracket with number - the staves are not defined
 function out_tubrn(x, y, dx, dy, up, str) {
@@ -746,20 +751,19 @@ function out_tubrn(x, y, dx, dy, up, str) {
 	out_XYAB('<text style="font-family:serif; font-style:italic; font-size:12px"\n\
 	x="X" y="Y" text-anchor="middle">A</text>\n',
 		x + dx / 2, y + dy / 2, str);
-
 	dx /= stv_g.scale
 	if (!up)
 		y += 6;
-	output.push('<path class="stroke" d="m');
+	output += '<path class="stroke" d="m';
 	out_sxsy(x, ' ', y);
-	output.push('v' + h.toFixed(2) +
+	output += 'v' + h.toFixed(2) +
 		'm' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) +
-		'v' + (-h).toFixed(2) + '"/>\n')
-	output.push('<path class="stroke" stroke-dasharray="' +
+		'v' + (-h).toFixed(2) + '"/>\n' +
+		'<path class="stroke" stroke-dasharray="' +
 		((dx - sw) / 2).toFixed(2) + ' ' + sw.toFixed(2) +
-		'" d="m');
+		'" d="m';
 	out_sxsy(x, ' ', y - h);
-	output.push('l' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) + '"/>\n')
+	output += 'l' + dx.toFixed(2) + ' ' + (-dy).toFixed(2) + '"/>\n'
 
 }
 // underscore line
@@ -817,7 +821,7 @@ function out_deco_str(x, y, name, str) {
 		name, a_deco.anchor || "");
 	set_font("annotation");
 	out_str(str);
-	output.push('</text>\n')
+	output += '</text>\n'
 }
 
 function out_arp(x, y, val) {
@@ -837,18 +841,18 @@ function out_cresc(x, y, val, defl) {
 	out_XYAB('<path class="stroke"\n\
 	d="mX YlA ', x, y + 5, val)
 	if (defl.nost)
-		output.push('-2.2m0 -3.6l' + (-val).toFixed(2) + ' -2.2"/>\n')
+		output += '-2.2m0 -3.6l' + (-val).toFixed(2) + ' -2.2"/>\n'
 	else
-		output.push('-4l' + (-val).toFixed(2) + ' -4"/>\n')
+		output += '-4l' + (-val).toFixed(2) + ' -4"/>\n'
 
 }
 function out_dim(x, y, val, defl) {
 	out_XYAB('<path class="stroke"\n\
 	d="mX YlA ', x, y + 5, val)
 	if (defl.noen)
-		output.push('-2.2m0 -3.6l' + (-val).toFixed(2) + ' -2.2"/>\n')
+		output += '-2.2m0 -3.6l' + (-val).toFixed(2) + ' -2.2"/>\n'
 	else
-		output.push('-4l' + (-val).toFixed(2) + ' -4"/>\n')
+		output += '-4l' + (-val).toFixed(2) + ' -4"/>\n'
 }
 function out_ltr(x, y, val) {
 	y += 4;
@@ -976,7 +980,7 @@ function out_gliss(x2, y2, de) {
 	x1 = de1.s.dots ? 13 + de1.s.xmx : 8;
 	len -= x1 + 8;
 	xypath(x1, 0);
-	output.push('l' + len.toFixed(2) + ' 0" stroke-width="1"/>\n');
+	output += 'l' + len.toFixed(2) + ' 0" stroke-width="1"/>\n';
 	g_close()
 }
 
@@ -1001,7 +1005,7 @@ function vskip(h) {
 
 // create the SVG image of the block
 function svg_flush() {
-	if (multicol || output.length == 0 || !user.img_out || posy == 0)
+	if (multicol || !output || !user.img_out || posy == 0)
 		return
 
     var	head = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"\n\
@@ -1057,8 +1061,8 @@ function svg_flush() {
 	if (psvg)			// if PostScript support
 		psvg.ps_flush(true);	// + setg(0)
 
-	user.img_out(head + output.join('') + g + "</svg>");
-	output = []
+	user.img_out(head + output + g + "</svg>");
+	output = ""
 
 	font_style = ''
 	if (cfmt.fullsvg) {

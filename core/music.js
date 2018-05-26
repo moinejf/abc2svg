@@ -1989,8 +1989,8 @@ function set_clefs() {
 			autoclef: true
 		}
 		staff_tb[st] = {
-			output: [],
-			sc_out: []
+			output: "",
+			sc_out: ""
 		}
 	}
 
@@ -4012,9 +4012,9 @@ function block_gen(s) {
 	case "sep":
 		set_page();
 		vskip(s.sk1);
-		output.push('<path class="stroke"\n\td="M');
+		output += '<path class="stroke"\n\td="M';
 		out_sxsy(s.x, ' ', 0);
-		output.push('h' + s.l.toFixed(2) + '"/>\n');
+		output += 'h' + s.l.toFixed(2) + '"/>\n';
 		vskip(s.sk2);
 		break
 	case "text":
@@ -4477,7 +4477,7 @@ function gen_init() {
 
 /* -- generate the music -- */
 function output_music() {
-	var output_sav, v, lwidth, indent, line_height
+	var v, lwidth, indent, line_height
 
 	gen_init()
 	if (!tsfirst)
@@ -4521,10 +4521,7 @@ function output_music() {
 		if (realwidth != 0) {
 			if (indent != 0)
 				posx += indent;
-			output_sav = output;
-			output = undefined;
 			draw_sym_near();		// delayed output
-			output = output_sav;
 			line_height = set_staff();
 			delayed_update();
 			draw_systems(indent);

@@ -1477,12 +1477,11 @@ function draw_deco_staff() {
 					s1.text);
 			xypath(x, y2);
 			if (s1.rbstart == 2)
-				output.push('m0 20v-20');
-			output.push('h');
-			output.push(w.toFixed(2))
+				output += 'm0 20v-20';
+			output+= 'h' + w.toFixed(2)
 			if (s.rbstop == 2)
-				output.push('v20');
-			output.push('"/>\n');
+				output += 'v20';
+			output += '"/>\n';
 			y_set(s1.st, true, x, w, y + 2)
 
 			if (s.rbstart)
@@ -1753,7 +1752,7 @@ function draw_notempo(s, x, y, dur, sc) {
 //useless
 //	// protection against end of container
 //	if (stv_g.started) {
-//		output.push("</g>\n");
+//		output += "</g>\n";
 //		stv_g.started = false
 //	}
 
@@ -1804,7 +1803,7 @@ function draw_notempo(s, x, y, dur, sc) {
 				dx = 6
 		}
 	}
-	output.push('</g>\n')
+	output += '</g>\n'
 	return (dx + 15) * sc
 }
 

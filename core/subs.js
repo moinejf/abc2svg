@@ -105,7 +105,7 @@ function out_str(str) {
 		o_font = gene.curfont,
 		c_font = o_font;
 
-	output.push(str.replace(/<|>|&.*?;|&|  |\$./g, function(c){
+	output += str.replace(/<|>|&.*?;|&|  |\$./g, function(c){
 			switch (c[0]) {
 			case '<': return "&lt;"
 			case '>': return "&gt;"
@@ -134,9 +134,9 @@ function out_str(str) {
 				return c + '<tspan\n\tclass="' +
 						font_class(n_font) + '">'
 			}
-		}))
+		})
 	if (c_font != o_font) {
-		output.push("</tspan>");
+		output += "</tspan>";
 		gene.curfont = c_font	// keep current font for next paragraph
 	}
 }
@@ -153,41 +153,41 @@ function xy_str(x, y, str,
 		 line_w) {
     var	h = strwh(str)[1];
 	y += h * .2;			// a bit upper for the descent
-	output.push('<text class="' + font_class(gene.curfont) + '" x="');
+	output += '<text class="' + font_class(gene.curfont) + '" x="';
 	out_sxsy(x, '" y="', y)
 	switch (action) {
 	case 'c':
-		output.push('" text-anchor="middle">')
+		output += '" text-anchor="middle">'
 		break
 	case 'j':
-		output.push('" textLength="' + line_w.toFixed(2) + '">')
+		output += '" textLength="' + line_w.toFixed(2) + '">'
 		break
 	case 'r':
-		output.push('" text-anchor="end">')
+		output += '" text-anchor="end">'
 		break
 	default:
-		output.push('">')
+		output += '">'
 		break
 	}
 	out_str(str);
-	output.push("</text>\n")
+	output += "</text>\n"
 }
 
 // output a string in a box
 function xy_str_b(x, y, str) {
 // not in the SVG documentation,
 // but this works for almost all browsers but firefox
-//	output.push('<g style="outline: solid black;\
-// outline-width: 1px">\n');
+//	output += '<g style="outline: solid black;\
+// outline-width: 1px">\n';
 //	xy_str(x, y, str, action, line_w);
-//	output.push('</g>\n')
+//	output += '</g>\n'
     var	wh = strwh(str);
 
-	output.push('<rect class="stroke" x="');
+	output += '<rect class="stroke" x="';
 	out_sxsy(x - 2, '" y="', y + wh[1] + 1);
-	output.push('" width="' + (wh[0] + 4).toFixed(2) +
+	output += '" width="' + (wh[0] + 4).toFixed(2) +
 		'" height="' + (wh[1] + 3).toFixed(2) +
-		'"/>\n');
+		'"/>\n';
 	xy_str(x, y, str)
 }
 
