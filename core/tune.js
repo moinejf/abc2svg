@@ -1959,10 +1959,10 @@ function do_cloning(vs) {
 
 	// insert the music sequence in each voice
 	include++;
-	tosvg(parse.ctx.in_fname, file, start, eol)	// first voice
+	tosvg(parse.ctx.fname, file, start, eol)	// first voice
 	for (i = 0; i < vs.length; i++) {
 		get_voice(vs[i]);
-		tosvg(parse.ctx.in_fname, file, start, eol)
+		tosvg(parse.ctx.fname, file, start, eol)
 	}
 	include--
 }
