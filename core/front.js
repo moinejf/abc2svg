@@ -531,13 +531,7 @@ function tosvg(in_fname,		// file name
 
 			cfmt_sav = clone(cfmt);
 			cfmt.pos = clone(cfmt.pos);
-			info_sav = clone(info)
-			if (info.V) {
-				info_sav.V = {}
-				for (i in info.V)
-				    if (info.V.hasOwnProperty(i))
-					info_sav.V[i] = clone(info.V[i])
-			}
+			info_sav = clone(info, 1);
 			char_tb_sav = clone(char_tb);
 			glovar_sav = clone(glovar);
 			maps_sav = clone(maps, 1);
