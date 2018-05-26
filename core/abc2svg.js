@@ -118,13 +118,17 @@ var	glovar = {
 	psvg			// PostScript
 
 // utilities
-function clone(obj) {
+function clone(obj, lvl) {
 	if (!obj)
 		return obj
 	var tmp = new obj.constructor()
 	for (var k in obj)
-	    if (obj.hasOwnProperty(k))
-		tmp[k] = obj[k]
+	    if (obj.hasOwnProperty(k)) {
+		if (lvl && typeof obj[k] == 'object')
+			tmp[k] = clone(obj[k], lvl - 1)
+		else
+			tmp[k] = obj[k]
+	    }
 	return tmp
 }
 
