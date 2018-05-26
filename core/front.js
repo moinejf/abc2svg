@@ -540,7 +540,7 @@ function tosvg(in_fname,		// file name
 			}
 			char_tb_sav = clone(char_tb);
 			glovar_sav = clone(glovar);
-			maps_sav = maps;
+			maps_sav = clone(maps, 1);
 			mac_sav = clone(mac);
 			maci_sav = new Int8Array(maci);
 			info.X = text;
