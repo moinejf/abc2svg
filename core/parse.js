@@ -485,8 +485,12 @@ function set_vp(a) {
 			break
 		}
 	}
-	if (pos)
-		curvoice.pos = clone(curvoice.pos, 1)
+	if (pos) {
+		curvoice.pos = clone(curvoice.pos)
+		for (item in pos)
+			if (pos.hasOwnProperty(item))
+				curvoice.pos[item] = pos[item]
+	}
 
 	if (s) {
 		s = new_clef(s)
