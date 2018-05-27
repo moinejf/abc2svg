@@ -44,7 +44,7 @@ function voice_filter() {
 
 /* -- link a ABC symbol into the current voice -- */
 function sym_link(s) {
-	if (!s.name)
+	if (!s.fname)
 		set_ref(s)
 	if (!curvoice.ignore) {
 		parse.last_sym = s;
