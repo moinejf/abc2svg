@@ -1035,7 +1035,7 @@ function svg_flush() {
 				head += '\n\
 .music {font-family: music; font-size: 24px; fill: currentColor}\n\
 @font-face {\n\
-  font-family: "music";\n\
+  font-family: music;\n\
   src: ' + musicfont + '}';
 			} else {
 				head += '\n\
