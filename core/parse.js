@@ -589,6 +589,14 @@ function new_key(param) {
 		}
 		param = param.slice(i).trim()
 		switch (param.slice(0, 3).toLowerCase()) {
+		default:
+			if (param[0] != 'm'
+			 || (param[1] != ' ' && param[1] != '\t'
+			  && param[1] != '\n')) {
+				key_end = true
+				break
+			}
+			// fall thru ('m')
 		case "aeo":
 		case "m":
 		case "min": s.k_sf -= 3;
@@ -610,16 +618,6 @@ function new_key(param) {
 			break
 		case "phr": s.k_sf -= 4;
 			mode = 2
-			break
-		default:
-			if (param[0] == 'm'
-			 && (param[1] == ' ' || param[1] == '\t'
-			  || param[1] == '\n')) {
-				s.k_sf -= 3;
-				mode = 5
-				break
-			}
-			key_end = true
 			break
 		}
 		if (!key_end)
