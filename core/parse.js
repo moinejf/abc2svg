@@ -556,19 +556,15 @@ function new_key(param) {
 	case 'H':				// bagpipe
 		switch (param[1]) {
 		case 'P':
-			s.k_bagpipe = "P";
-			i++
-			break
 		case 'p':
-			s.k_bagpipe = "p";
-			s.k_sf = 2;
+			s.k_bagpipe = param[1];
+			s.k_sf = param[1] == 'P' ? 0 : 2;
 			i++
 			break
 		default:
 			syntax(1, "Unknown bagpipe-like key")
 			break
 		}
-		key_end = true
 		break
 	case 'P':
 		s.k_drum = true;
