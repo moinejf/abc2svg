@@ -145,8 +145,12 @@ function loadlang(lang, no_memo) {
 // show/hide a popup message
 function popshow(area, visible) {
 	var e = document.getElementById(area)
-	if (pop)
-		pop.style.visibility = 'hidden';
+	if (pop) {
+		if (pop == e)
+			visible = false
+		else
+			pop.style.visibility = 'hidden'
+	}
 	e.style.visibility = visible ? 'visible' : 'hidden';
 	pop = visible ? e : null
 }
