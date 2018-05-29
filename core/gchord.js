@@ -161,10 +161,7 @@ function parse_gchord(type) {
 // transpose a chord symbol
 var	note_names = "CDEFGAB",
 	latin_names = [ "Do", "Re", "Mi", "Fa", "Sol", "La", "Si" ],
-	acc_name = ["bb", "b", "", "#", "##"],
-	note_pit = new Int8Array([0, 2, 4, 5, 7, 9, 11]),
-	pit_note = new Int8Array([0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6]),
-	pit_acc = new Int8Array([2, 3, 2, 1, 2, 2, 3, 2, 1, 2, 1, 2])
+	acc_name = ["bb", "b", "", "#", "##"]
 
 	function gch_tr1(p, i2) {
 		var	new_txt, l,
@@ -265,9 +262,9 @@ var	note_names = "CDEFGAB",
 				ip2++
 			}
 		}
-		i3 = (note_pit[n] + a + i2 + 12) % 12;
-		i4 = pit_note[i3];
-		i1 = pit_acc[i3]
+		i3 = cde2fcg[n] + i2 + a * 7;
+		i4 = cgd2cde[(i3 + 16 * 7) % 7];	// note
+		i1 = ((((i3 + 22) / 7) | 0) + 159) % 5;	// accidental
 		return new_txt + note_names[i4] + acc_name[i1] + p.slice(ip2)
 	} // get_tr1
 
