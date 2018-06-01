@@ -1405,7 +1405,7 @@ function draw_basic_note(x, s, m, y_tb) {
 			break
 		}
 	}
-	if (note.color)
+	if (note.color != undefined)
 		old_color = set_color(note.color)
 	else if (note.map && note.map[2])
 		old_color = set_color(note.map[2])
@@ -1442,7 +1442,7 @@ function draw_basic_note(x, s, m, y_tb) {
 			g_close()
 		}
 	}
-	if (old_color != false)
+	if (old_color != undefined)
 		set_color(old_color)
 }
 

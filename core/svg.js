@@ -303,7 +303,7 @@ function set_g() {
 /* set the color */
 function set_color(color) {
 	if (color == stv_g.color)
-		return null
+		return undefined	// same color
 	var	old_color = stv_g.color;
 	stv_g.color = color;
 	set_g()
