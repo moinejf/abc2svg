@@ -36,9 +36,6 @@
 //
 // set_vol() - get/set the current sound volume
 // @volume: range [0..1] - undefined = return current value
-//
-// set_follow() - get/set the flag to call or not the 'onnote' callback
-// @follow: boolean - undefined = return current value
 
 function AbcPlay(i_conf) {
     var	conf = i_conf,
@@ -66,13 +63,7 @@ function AbcPlay(i_conf) {
 		set_output: set_output,
 		clear: audio.clear,
 		add: audio.add,
-		set_sft: vf
-,
-		set_follow: function(v) {
-			if (v == undefined)
-				return conf.follow
-			conf.follow = v
-		},
+		set_sft: vf,
 		set_sfu: function(v) {
 			if (v == undefined)
 				return conf.sfu
@@ -133,7 +124,6 @@ function AbcPlay(i_conf) {
 	} // set_output()
 
 	// set default configuration values
-	conf.follow = true;
 	conf.gain = 0.7;
 	conf.speed = 1;
 
@@ -145,10 +135,7 @@ function AbcPlay(i_conf) {
 		} catch (e) {
 			return
 		}
-	    var	v = localStorage.getItem("follow")
-		if (v)
-			conf.follow = v != "0";
-		v = localStorage.getItem("sfu")
+	    var	v = localStorage.getItem("sfu")
 		if (v)
 			conf.sfu = v;
 		v = localStorage.getItem("volume")

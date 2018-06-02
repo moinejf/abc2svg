@@ -119,11 +119,10 @@ function Midi5(i_conf) {
 		if (e[5] != 0)		// if not a rest
 			note_run(e, t + stime, d)
 
-		if (conf.follow) {
+		// follow the notes while playing
 			st = t + stime - window.performance.now();
 			setTimeout(onnote, st, e[0], true);
 			setTimeout(onnote, st + d, e[0], false)
-		}
 
 		e = a_e[++evt_idx]
 		if (!e) {

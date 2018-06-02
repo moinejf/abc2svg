@@ -306,13 +306,11 @@ function Audio5(i_conf) {
 			if (e[5] != 0)		// if not a rest
 				note_run(e, t + stime, d)
 
-			if (conf.follow) {
+			// follow the notes while playing
 			    var	i = e[0];
-
 				st = (t + stime - ac.currentTime) * 1000;
 				setTimeout(onnote, st, i, true);
 				setTimeout(onnote, st + d * 1000, i, false)
-			}
 
 			e = a_e[++evt_idx]
 			if (!e) {

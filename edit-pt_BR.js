@@ -15,7 +15,6 @@ function loadtxt() {
 		er: 'Erros',
 		f: 'Arquivo',
 		fl: 'Abrir arquivo ABC',
-		fo: 'Follow music',
 		fs: 'Tamanho da fonte',
 		gv: 'Volume',
 		h: 'Ajuda',

@@ -15,7 +15,6 @@ function loadtxt() {
 		er: 'Errori',
 		f: 'File',
 		fl: 'Carica file',
-		fo: 'Segui la musica',
 		fs: 'Dimensione del font',
 		gv: 'Volume',
 		h: 'Aiuto',
