@@ -2666,15 +2666,6 @@ function draw_note_ties(k1, k2, mhead1, mhead2, job) {
 		}
 
 		y = 3 * (p - 18)
-//fixme: clash when 2 ties on second interval chord
-//		if (p & 1)
-//			y += 2 * dir
-		if (job != 1 && job != 3) {
-			if (dir > 0) {
-				if (!(p & 1) && k1.dots)
-					y = 3 * (p - 18) + 6
-			}
-		}
 
 		h = (.04 * (x2 - x1) + 10) * dir;
 //		anno_start(k1, 'slur');
