@@ -1,3 +1,6 @@
+### Important: this project has moved to
+[chiselapp](https://chiselapp.com/user/moinejf/repository/abc2svg)
+
 ## abc2svg
 
 **abc2svg** is a set of tools written in Javascript and based on
